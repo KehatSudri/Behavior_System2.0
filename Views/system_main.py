@@ -114,10 +114,10 @@ class SystemMainUi(object):
 
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.gridLayout.addWidget(self.scrollArea, 2, 1, 1, 1)
-        #spacer_item = QtWidgets.QSpacerItem(20, 40, QtGui.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Expanding) 
+        #spacer_item = QtWidgets.QSpacerItem(20, 40, QtGui.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Expanding)
         #self.gridLayout.addItem(spacer_item, 2, 2, 1, 1)
 
-        #spacer_item1 = QtWidgets.QSpacerItem(20, 40, QtGui.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Expanding) 
+        #spacer_item1 = QtWidgets.QSpacerItem(20, 40, QtGui.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Expanding)
         #self.gridLayout.addItem(spacer_item1, 2, 0, 1, 1)
         self.gridLayout.setColumnStretch(0, 1)
         self.gridLayout.setColumnStretch(1, 2)

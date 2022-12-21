@@ -50,11 +50,11 @@ class ManagerLoginUi(object):
         self.password_lineEdit.setObjectName("password_lineEdit")
         self.gridLayout_main.addWidget(self.password_lineEdit, 1, 1, 1, 2)
         # set vertical spacer
-        #vertical_spacer_item = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        #self.gridLayout_main.addItem(vertical_spacer_item, 3, 2, 1, 1)
+        vertical_spacer_item = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout_main.addItem(vertical_spacer_item, 3, 2, 1, 1)
         # set a button to login
-        #horizontal_spacer_item1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        #self.gridLayout_main.addItem(horizontal_spacer_item1, 3, 0, 1, 1)
+        horizontal_spacer_item1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout_main.addItem(horizontal_spacer_item1, 3, 0, 1, 1)
         # add a back button
         self.back_pushButton = QtWidgets.QPushButton(self.central_widget)
         self.back_pushButton.setStyleSheet("font: 15pt \"Gabriola\";")
@@ -76,13 +76,13 @@ class ManagerLoginUi(object):
         self.navigation_horizontalLayout.setObjectName("navigation_horizontalLayout")
         # self.gridLayout_main.addWidget(self.login_pushButton, 3, 1, 1, 1)
 
-        #spacer_item5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        #self.navigation_horizontalLayout.addWidget(self.back_pushButton)
+        spacer_item5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.navigation_horizontalLayout.addWidget(self.back_pushButton)
         self.navigation_horizontalLayout.addWidget(self.login_pushButton)
         self.gridLayout_main.addLayout(self.navigation_horizontalLayout, 3, 1, 1, 1)
 
-        #horizontal_spacer_item2 = QtWidgets.QSpacerItem(20, 0, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        #self.gridLayout_main.addItem(horizontal_spacer_item2, 2, 1, 1, 1)
+        horizontal_spacer_item2 = QtWidgets.QSpacerItem(20, 0, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.gridLayout_main.addItem(horizontal_spacer_item2, 2, 1, 1, 1)
 
         self.gridLayout_main.setColumnStretch(0, 1)
         self.gridLayout_main.setColumnStretch(1, 1)
