@@ -1,5 +1,5 @@
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QMessageBox, QLabel, QComboBox
+from PyQt6 import QtWidgets
+from PyQt6.QtWidgets import QMessageBox, QLabel, QComboBox
 import yaml
 
 

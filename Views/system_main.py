@@ -1,4 +1,4 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets
 
 from ViewModels.Bahavior_System_VM import BehaviorSystemViewModel
 from Views.create_new_event import CreateEventUi
@@ -57,7 +57,7 @@ class SystemMainUi(object):
         self.headline_label = QtWidgets.QLabel(self.central_widget)
         self.headline_label.setStyleSheet("font: 55pt \"Gabriola\";")
         self.headline_label.setObjectName("headline_label")
-        self.headline_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.headline_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.gridLayout.addWidget(self.headline_label, 0, 0, 1, 3)
         # set an explanation label
         self.explanation_label = QtWidgets.QLabel(self.central_widget)
@@ -65,7 +65,7 @@ class SystemMainUi(object):
         self.explanation_label.setMaximumSize(QtCore.QSize(16777215, 134))
         self.explanation_label.setBaseSize(QtCore.QSize(0, 0))
         self.explanation_label.setStyleSheet("font: 30pt \"Gabriola\";")
-        self.explanation_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.explanation_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.explanation_label.setObjectName("explanation_label")
         self.gridLayout.addWidget(self.explanation_label, 1, 0, 1, 3)
         # set a scrollArea to present all the options available
@@ -114,10 +114,10 @@ class SystemMainUi(object):
 
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.gridLayout.addWidget(self.scrollArea, 2, 1, 1, 1)
-        spacer_item = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacer_item = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.expandingDirections,QtWidgets.QSizePolicy.Fixed )
         self.gridLayout.addItem(spacer_item, 2, 2, 1, 1)
 
-        spacer_item1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacer_item1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.expandingDirections, QtWidgets.QSizePolicy.Fixed)
         self.gridLayout.addItem(spacer_item1, 2, 0, 1, 1)
         self.gridLayout.setColumnStretch(0, 1)
         self.gridLayout.setColumnStretch(1, 2)

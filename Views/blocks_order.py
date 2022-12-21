@@ -1,8 +1,8 @@
 import threading
 from collections import OrderedDict
 
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QHeaderView, QTableWidgetItem
+from PyQt6 import QtCore, QtWidgets
+from PyQt6.QtWidgets import QHeaderView, QTableWidgetItem
 
 from Models import Trial_Model
 from Views.control_session_board import ControlSessionBoardUi

@@ -1,5 +1,5 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QLabel
+from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QLabel
 
 
 class WarningDialog(QDialog):

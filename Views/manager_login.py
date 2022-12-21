@@ -1,5 +1,5 @@
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QLineEdit
+from PyQt6 import QtCore, QtWidgets
+from PyQt6.QtWidgets import QLineEdit
 
 from Views.utils import error_warning
 

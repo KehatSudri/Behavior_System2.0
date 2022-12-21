@@ -1,7 +1,7 @@
 from collections import defaultdict, OrderedDict
 
-from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit, QComboBox
+from PyQt6 import QtCore, QtWidgets, QtGui
+from PyQt6.QtWidgets import QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit, QComboBox
 
 from Views.utils import error_warning, get_string_dict#, set_conditioned_event
 

@@ -1,7 +1,7 @@
 import threading
 
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QHeaderView, QTableWidgetItem, QAbstractItemView
+from PyQt6 import QtCore, QtWidgets
+from PyQt6.QtWidgets import QHeaderView, QTableWidgetItem, QAbstractItemView
 
 from Views.control_session_board import ControlSessionBoardUi
 from Models import Trial_Model

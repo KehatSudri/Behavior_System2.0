@@ -1,5 +1,5 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QHeaderView, QTableWidgetItem, QAbstractItemView, QDialog, QDialogButtonBox, QVBoxLayout, \
+from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtWidgets import QHeaderView, QTableWidgetItem, QAbstractItemView, QDialog, QDialogButtonBox, QVBoxLayout, \
     QLabel
 
 from ViewModels.Bahavior_System_VM import BehaviorSystemViewModel

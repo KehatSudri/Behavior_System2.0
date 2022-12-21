@@ -6,6 +6,7 @@ from pathlib import Path
 
 import numpy as np
 
+
 import Models.Trial_Model as Trial
 from Models.DB_INIT import DB
 from Models.INotifyPropertyChanged import INotifyPropertyChanged

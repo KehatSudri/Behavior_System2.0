@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QTableView, QHeaderView, QTableWidgetItem, QAbstractItemView
-from PyQt5 import QtCore, QtWidgets
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QTableView, QHeaderView, QTableWidgetItem, QAbstractItemView
+from PyQt6 import QtCore, QtWidgets
 
 from Views.add_trial import AddTrialUi
 from Views.blocks_order import BlocksOrderUi

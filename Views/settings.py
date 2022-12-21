@@ -1,7 +1,7 @@
 import os
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QTableWidgetItem
+from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtWidgets import QMainWindow, QTableWidgetItem
 
 from Views.utils import error_warning
 

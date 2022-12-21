@@ -1,7 +1,7 @@
 from collections import defaultdict
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QLabel, QDialogButtonBox, QVBoxLayout, QLineEdit, QComboBox
+from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtWidgets import QLabel, QDialogButtonBox, QVBoxLayout, QLineEdit, QComboBox
 
 from Views.utils import error_warning, get_string_dict
 

@@ -1,6 +1,6 @@
 import numpy as np
-from PyQt5.QtCore import QTimer
-from PyQt5.QtWidgets import QLabel, QHeaderView, QTableWidgetItem
+from PyQt6.QtCore import QTimer
+from PyQt6.QtWidgets import QLabel, QHeaderView, QTableWidgetItem
 import random
 import matplotlib
 from collections import OrderedDict
@@ -11,7 +11,7 @@ from Views.utils import dict_one_line_style, get_string_dict
 matplotlib.use('Qt5Agg')
 
 import pyqtgraph as pg
-from PyQt5 import QtCore, QtWidgets
+from PyQt6 import QtCore, QtWidgets
 
 
 class ReadOnlyDelegate(QtWidgets.QStyledItemDelegate):
