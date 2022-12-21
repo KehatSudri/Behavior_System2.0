@@ -78,7 +78,7 @@ class SettingsUi(object):
         self.headline_label.setMaximumSize(QtCore.QSize(16777215, 134))
         self.headline_label.setBaseSize(QtCore.QSize(0, 0))
         self.headline_label.setStyleSheet("font: 55pt \"Gabriola\";")
-        self.headline_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.headline_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.headline_label.setObjectName("headline_label")
         self.main_gridLayout.addWidget(self.headline_label, 0, 0, 1, 1)
         self.window_gridLayout.addLayout(self.main_gridLayout, 0, 0, 1, 1)

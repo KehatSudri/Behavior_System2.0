@@ -32,7 +32,7 @@ class ChooseTemplateUi(object):
         # set a header for the window
         self.header_label = QtWidgets.QLabel(dialog)
         self.header_label.setStyleSheet("font: 22pt \"Gabriola\";")
-        self.header_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.header_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.header_label.setObjectName("header_label")
         self.central_gridLayout.addWidget(self.header_label, 0, 0, 1, 3)
         # set radio buttons to choose if display all templates or filter

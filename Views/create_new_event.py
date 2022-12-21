@@ -56,7 +56,7 @@ class CreateEventUi(object):
         # set a header for the window
         self.headline_label = QtWidgets.QLabel(self.central_widget)
         self.headline_label.setStyleSheet("font: 55pt \"Gabriola\";")
-        self.headline_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.headline_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.headline_label.setObjectName("headline_label")
         self.window_verticalLayout.addWidget(self.headline_label)
         # set a scroll area

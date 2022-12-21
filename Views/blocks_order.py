@@ -51,7 +51,7 @@ class BlocksOrderUi(object):
         self.main_gridLayout.addWidget(self.blocks_label, 1, 0, 1, 4)
         self.header_label = QtWidgets.QLabel(dialog)
         self.header_label.setStyleSheet("font: 30pt \"Gabriola\";")
-        self.header_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.header_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.header_label.setObjectName("header_label")
         self.main_gridLayout.addWidget(self.header_label, 0, 0, 1, 4)
         self.blocks_order_label = QtWidgets.QLabel(dialog)

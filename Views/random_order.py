@@ -37,7 +37,7 @@ class RandomOrderUi(object):
         # an explanation about the window's purpose
         self.explanation_label = QtWidgets.QLabel(dialog)
         self.explanation_label.setStyleSheet("font: 25pt \"Gabriola\";")
-        self.explanation_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.explanation_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.explanation_label.setObjectName("explanation_label")
         self.main_window_gridLayout.addWidget(self.explanation_label, 0, 0, 1, 2)
         # label for choosing number of trials

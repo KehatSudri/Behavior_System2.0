@@ -61,7 +61,7 @@ class DeleteSessionTemplate(object):
         # set a header for the window
         self.headline_label = QtWidgets.QLabel(self.central_widget)
         self.headline_label.setStyleSheet("font: 45pt \"Gabriola\";")
-        self.headline_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.headline_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.headline_label.setObjectName("headline_label")
         self.window_gridLayout.addWidget(self.headline_label, 0, 0, 1, 1)
         # set a scroll area

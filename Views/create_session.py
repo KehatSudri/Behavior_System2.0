@@ -125,7 +125,7 @@ class CreateSessionUi(object):
         # set an headline label
         self.headline_label = QtWidgets.QLabel(self.central_widget)
         self.headline_label.setStyleSheet("font: 55pt \"Gabriola\";")
-        self.headline_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.headline_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.headline_label.setObjectName("headline_label")
         self.main_gridLayout.addWidget(self.headline_label, 0, 0, 1, 1)
         # add a choose template push button
@@ -154,7 +154,7 @@ class CreateSessionUi(object):
         self.session_name_and_date_horizontalLayout.setObjectName("session_name_and_date_horizontalLayout")
         self.session_name_label = QtWidgets.QLabel(self.central_widget)
         self.session_name_label.setStyleSheet("font: 12pt \"Gabriola\";")
-        self.session_name_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.session_name_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.session_name_label.setObjectName("session_name_label")
         self.session_name_and_date_horizontalLayout.addWidget(self.session_name_label)
         self.session_name_lineEdit = QtWidgets.QLineEdit(self.central_widget)
@@ -172,7 +172,7 @@ class CreateSessionUi(object):
         self.session_name_and_date_horizontalLayout.addWidget(self.session_name_lineEdit)
         self.date_label = QtWidgets.QLabel(self.central_widget)
         self.date_label.setStyleSheet("font: 12pt \"Gabriola\";")
-        self.date_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.date_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.date_label.setObjectName("date_label")
         self.session_name_and_date_horizontalLayout.addWidget(self.date_label)
         self.date_value_label = QtWidgets.QLabel(self.central_widget)
@@ -195,7 +195,7 @@ class CreateSessionUi(object):
 
         self.subject_id_label = QtWidgets.QLabel(self.central_widget)
         self.subject_id_label.setStyleSheet("font: 12pt \"Gabriola\";")
-        self.subject_id_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.subject_id_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.subject_id_label.setObjectName("subject_id_label")
         self.subject_and_experimenter_name_horizontalLayout.addWidget(self.subject_id_label)
         self.subject_id_lineEdit = QtWidgets.QLineEdit(self.central_widget)
@@ -210,7 +210,7 @@ class CreateSessionUi(object):
         self.subject_and_experimenter_name_horizontalLayout.addWidget(self.subject_id_lineEdit)
         self.experimenter_name_label = QtWidgets.QLabel(self.central_widget)
         self.experimenter_name_label.setStyleSheet("font: 12pt \"Gabriola\";")
-        self.experimenter_name_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.experimenter_name_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.experimenter_name_label.setObjectName("experimenter_name_label")
         self.subject_and_experimenter_name_horizontalLayout.addWidget(self.experimenter_name_label)
         self.experimenter_name_lineEdit = QtWidgets.QLineEdit(self.central_widget)
@@ -509,7 +509,7 @@ class CreateSessionUi(object):
     @QtCore.pyqtSlot(int, int)
     def _cellclicked(self, r, c):
         it = self.trials_tableWidget.item(r, c)
-        it.setTextAlignment(QtCore.Qt.AlignCenter)
+        it.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 
     def iti_cfg(self):
         self.behavior_iti_radioBtn.toggled.connect(lambda: self.iti_state(self.behavior_iti_radioBtn))

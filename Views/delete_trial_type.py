@@ -62,7 +62,7 @@ class DeleteTrialTypeUi(object):
         # set a headline for the window
         self.headline_label = QtWidgets.QLabel(self.central_widget)
         self.headline_label.setStyleSheet("font: 55pt \"Gabriola\";")
-        self.headline_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.headline_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.headline_label.setObjectName("headline_label")
         self.window_gridLayout.addWidget(self.headline_label, 0, 0, 1, 1)
         # set scroll area
