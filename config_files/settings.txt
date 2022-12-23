@@ -1,5 +1,5 @@
-log file location=D:\PycharmProjects\Behavior_System2.0
-database configuration file location=D:\PycharmProjects\Behavior_System2.0\config_files\database.ini
+log file location=/Users/ksudri/Desktop/Studies/Behavior_System2.0
+database configuration file location=/Users/ksudri/Desktop/Studies/Behavior_System2.0/config_files/database.ini
 database section=postgresql
 max number of successive trials=100
 max trial length=60005

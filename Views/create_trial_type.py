@@ -1,5 +1,6 @@
-from PyQt6 import QtCore, QtGui, QtWidgets
-
+from PyQt6 import QtCore, QtGui, QtWidgets 
+from PyQt6.QtWidgets import QHeaderView, QTableWidgetItem, QAbstractItemView, QDialog, QDialogButtonBox, QLabel, \
+    QVBoxLayout
 from Views.utils import error_warning
 
 
@@ -78,7 +79,7 @@ class CreateTrialTypeUi(object):
         self.trial_name_label.setObjectName("trial_name_label")
         self.trial_name_horizontalLayout.addWidget(self.trial_name_label)
         self.trial_type_name_lineEdit = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
-        self.trial_type_name_lineEdit.setInputMethodHints(QtCore.Qt.ImhLatinOnly)
+        ## self.trial_type_name_lineEdit.setInputMethodHints(QtCore.Qt.ImhLatinOnly)
         self.trial_type_name_lineEdit.editingFinished.connect(self.on_trial_type_name_edit)
         self.trial_type_name_lineEdit.setEnabled(True)
         font = QtGui.QFont()
@@ -122,8 +123,8 @@ class CreateTrialTypeUi(object):
         self.remove_event_pushButton.setObjectName("remove_event_pushButton")
         self.remove_event_pushButton.clicked.connect(self.on_remove_click)
         self.remove_horizontalLayout.addWidget(self.remove_event_pushButton)
-        spacer_item = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.remove_horizontalLayout.addItem(spacer_item)
+        ## spacer_item = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        ## self.remove_horizontalLayout.addItem(spacer_item)
         self.remove_horizontalLayout.setStretch(0, 1)
         self.remove_horizontalLayout.setStretch(1, 2)
         self.scroll_verticalLayout.addLayout(self.remove_horizontalLayout)
@@ -134,9 +135,9 @@ class CreateTrialTypeUi(object):
         self.events_tableWidget = QtWidgets.QTableWidget(self.scrollAreaWidgetContents)
         # set an adaptive width for table
         trials_table_adaptive_width = self.events_tableWidget.horizontalHeader()
-        trials_table_adaptive_width.setSectionResizeMode(QHeaderView.Stretch)
-        font = QtGui.QFont()
-        font.setPointSize(15)
+        ##trials_table_adaptive_width.setSectionResizeMode(QHeaderView.Stretch)
+        ##font = QtGui.QFont()
+        ##font.setPointSize(15)
         self.events_tableWidget.setFont(font)
         self.events_tableWidget.setObjectName("events_tableWidget")
         self.events_tableWidget.setColumnCount(2)
@@ -149,7 +150,7 @@ class CreateTrialTypeUi(object):
         # set the table to be read-only
         self.events_tableWidget.setItemDelegateForColumn(0, delegate)
         self.events_tableWidget.setItemDelegateForColumn(1, delegate)
-        self.events_tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows)
+        ##self.events_tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.scroll_verticalLayout.addWidget(self.events_tableWidget)
         self.scroll_verticalLayout.setStretch(0, 1)
         self.scroll_verticalLayout.setStretch(1, 1)
@@ -161,16 +162,16 @@ class CreateTrialTypeUi(object):
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         # set an option to add the new trial type
         self.accept_horizontalLayout.setObjectName("accept_horizontalLayout")
-        right_spacer_item1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding,
-                                                   QtWidgets.QSizePolicy.Minimum)
-        self.accept_horizontalLayout.addItem(right_spacer_item1)
+        ##right_spacer_item1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding,
+        ##                                          QtWidgets.QSizePolicy.Minimum)
+        ##self.accept_horizontalLayout.addItem(right_spacer_item1)
         self.accept_pushButton = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
         self.accept_pushButton.setObjectName("accept_pushButton")
         self.accept_pushButton.clicked.connect(self.accept)
         self.accept_horizontalLayout.addWidget(self.accept_pushButton)
-        right_spacer_item1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding,
-                                                   QtWidgets.QSizePolicy.Minimum)
-        self.accept_horizontalLayout.addItem(right_spacer_item1)
+        ##right_spacer_item1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding,
+        ##                                           QtWidgets.QSizePolicy.Minimum)
+        ##self.accept_horizontalLayout.addItem(right_spacer_item1)
         self.accept_horizontalLayout.setStretch(0, 1)
         self.accept_horizontalLayout.setStretch(1, 1)
         self.accept_horizontalLayout.setStretch(2, 1)
@@ -180,14 +181,14 @@ class CreateTrialTypeUi(object):
 
         # set navigation options
         self.navigation_horizontalLayout.setObjectName("navigation_horizontalLayout")
-        spacer_item1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.navigation_horizontalLayout.addItem(spacer_item1)
+        ##spacer_item1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        ##self.navigation_horizontalLayout.addItem(spacer_item1)
         self.back_pushButton = QtWidgets.QPushButton(self.central_widget)
         self.back_pushButton.setObjectName("back_pushButton")
         self.back_pushButton.clicked.connect(self.on_back_click)
         self.navigation_horizontalLayout.addWidget(self.back_pushButton)
-        spacer_item2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.navigation_horizontalLayout.addItem(spacer_item2)
+        ##spacer_item2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        ##self.navigation_horizontalLayout.addItem(spacer_item2)
         self.navigation_horizontalLayout.setStretch(0, 1)
         self.navigation_horizontalLayout.setStretch(1, 1)
         self.navigation_horizontalLayout.setStretch(2, 1)

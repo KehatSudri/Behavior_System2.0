@@ -149,37 +149,37 @@ class CreateEventUi(object):
         self.main_gridLayout.addLayout(self.analog_horizontalLayout, 7, 0, 1, 1)
         # set an option to add the new event
         self.accept_horizontalLayout.setObjectName("accept_horizontalLayout")
-        right_spacer_item1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding,
-                                                   QtWidgets.QSizePolicy.Minimum)
-        self.accept_horizontalLayout.addItem(right_spacer_item1)
+        ## right_spacer_item1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding,
+        ##                                        QtWidgets.QSizePolicy.Minimum)
+        ##self.accept_horizontalLayout.addItem(right_spacer_item1)
         self.add_pushButton = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
         self.add_pushButton.setObjectName("add_pushButton")
         self.add_pushButton.clicked.connect(self.accept)
         self.accept_horizontalLayout.addWidget(self.add_pushButton)
-        right_spacer_item1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding,
-                                                   QtWidgets.QSizePolicy.Minimum)
-        self.accept_horizontalLayout.addItem(right_spacer_item1)
+        ##right_spacer_item1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding,
+        ##                                           QtWidgets.QSizePolicy.Minimum)
+        ##self.accept_horizontalLayout.addItem(right_spacer_item1)
         self.accept_horizontalLayout.setStretch(0, 1)
         self.accept_horizontalLayout.setStretch(1, 1)
         self.accept_horizontalLayout.setStretch(2, 1)
         self.main_gridLayout.addLayout(self.accept_horizontalLayout, 8, 0, 1, 1)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.window_verticalLayout.addWidget(self.scrollArea)
-        vertical_spacer_item = QtWidgets.QSpacerItem(20, 30, QtWidgets.QSizePolicy.Expanding,
-                                                     QtWidgets.QSizePolicy.Minimum)
-        self.window_verticalLayout.addItem(vertical_spacer_item)
+        ##vertical_spacer_item = QtWidgets.QSpacerItem(20, 30, QtWidgets.QSizePolicy.Expanding,
+        ##                                             QtWidgets.QSizePolicy.Minimum)
+        ##self.window_verticalLayout.addItem(vertical_spacer_item)
         # set an option to go back to the main window
         self.navigation_horizontalLayout.setObjectName("navigation_horizontalLayout")
-        right_spacer_item2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding,
-                                                   QtWidgets.QSizePolicy.Minimum)
-        self.navigation_horizontalLayout.addItem(right_spacer_item2)
+        ##right_spacer_item2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding,
+         ##                                          QtWidgets.QSizePolicy.Minimum)
+       ## self.navigation_horizontalLayout.addItem(right_spacer_item2)
         self.back_pushButton = QtWidgets.QPushButton(self.central_widget)
         self.back_pushButton.setObjectName("back_pushButton")
         self.back_pushButton.clicked.connect(self.on_back_click)
         self.navigation_horizontalLayout.addWidget(self.back_pushButton)
-        left_spacer_item2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding,
-                                                  QtWidgets.QSizePolicy.Minimum)
-        self.navigation_horizontalLayout.addItem(left_spacer_item2)
+        ##left_spacer_item2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding,
+        ##                                          QtWidgets.QSizePolicy.Minimum)
+        ##self.navigation_horizontalLayout.addItem(left_spacer_item2)
         self.navigation_horizontalLayout.setStretch(0, 1)
         self.navigation_horizontalLayout.setStretch(1, 1)
         self.navigation_horizontalLayout.setStretch(2, 1)
