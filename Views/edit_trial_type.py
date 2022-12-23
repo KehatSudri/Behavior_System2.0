@@ -141,8 +141,8 @@ class EditTrialTypeUi(object):
         self.remove_pushButton.setObjectName("remove_pushButton")
         self.remove_pushButton.clicked.connect(self.on_remove_click)
         self.remove_horizontalLayout.addWidget(self.remove_pushButton)
-        spacer_item = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.remove_horizontalLayout.addItem(spacer_item)
+        #spacer_item = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        #self.remove_horizontalLayout.addItem(spacer_item)
         self.remove_horizontalLayout.setStretch(0, 1)
         self.remove_horizontalLayout.setStretch(1, 2)
         self.scroll_verticalLayout.addLayout(self.remove_horizontalLayout)
@@ -160,8 +160,8 @@ class EditTrialTypeUi(object):
         self.window_gridLayout.addWidget(self.scrollArea, 1, 0, 1, 1)
         # add a back button
         self.navigation_horizontalLayout.setObjectName("navigation_horizontalLayout")
-        left_spacer_item = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.navigation_horizontalLayout.addItem(left_spacer_item)
+        #left_spacer_item = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        #self.navigation_horizontalLayout.addItem(left_spacer_item)
         self.back_pushButton = QtWidgets.QPushButton(self.central_widget)
         self.back_pushButton.setObjectName("back_pushButton")
         self.back_pushButton.clicked.connect(self.on_back_click)
@@ -170,9 +170,9 @@ class EditTrialTypeUi(object):
         self.accept_pushButton.setObjectName("accept_pushButton")
         self.accept_pushButton.clicked.connect(self.on_accept_click)
         self.navigation_horizontalLayout.addWidget(self.accept_pushButton)
-        right_spacer_item = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding,
-                                                  QtWidgets.QSizePolicy.Minimum)
-        self.navigation_horizontalLayout.addItem(right_spacer_item)
+        #right_spacer_item = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding,
+        #                                          QtWidgets.QSizePolicy.Minimum)
+        #self.navigation_horizontalLayout.addItem(right_spacer_item)
         self.navigation_horizontalLayout.setStretch(0, 1)
         self.navigation_horizontalLayout.setStretch(1, 1)
         self.navigation_horizontalLayout.setStretch(2, 1)
@@ -188,8 +188,10 @@ class EditTrialTypeUi(object):
         self.events_comboBox.setCurrentIndex(0)
 
     def trial_types_click(self, index):
-        current_trial_type = self.trial_types_names[index]
+        if len(self.trial_types_names) is 0:
+            return
 
+        current_trial_type = self.trial_types_names[index]
         if self.chosen_trial_type_name is not current_trial_type:
             if self.chosen_trial_type_name != "":  # trial type selection was changed
                 dlg = WarningDialog()
@@ -223,11 +225,11 @@ class EditTrialTypeUi(object):
         self.trial_types_tableWidget.setColumnCount(2)
         self.trial_types_tableWidget.setRowCount(0)
         # set table to be scrolled vertically
-        self.trial_types_tableWidget.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
-        self.trial_types_tableWidget.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+        #self.trial_types_tableWidget.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.sectionResized)
+        #self.trial_types_tableWidget.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
         # Set an adaptive width for table
         trials_table_adaptive_width = self.trial_types_tableWidget.horizontalHeader()
-        trials_table_adaptive_width.setSectionResizeMode(QHeaderView.Stretch)
+        #trials_table_adaptive_width.setSectionResizeMode(QHeaderView.Stretch)
         # set headers for columns
         self.trial_types_tableWidget.setHorizontalHeaderItem(0, QtWidgets.QTableWidgetItem("Event"))
         self.trial_types_tableWidget.setHorizontalHeaderItem(1, QtWidgets.QTableWidgetItem("Parameters"))

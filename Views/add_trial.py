@@ -74,7 +74,7 @@ class AddTrialUi(object):
         # set a buttonBom for OK and Cancel buttons
         self.buttonBox = QtWidgets.QDialogButtonBox(dialog)
         # self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
+        #self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.background_gridLayout.addWidget(self.buttonBox, 2, 0, 1, 1)
         self.buttonBox.accepted.connect(self.accept)
@@ -88,7 +88,7 @@ class AddTrialUi(object):
     def update(self):
         self.set_trials_table_pointer = self.parent.set_trials_table_pointer
         # creating a dialog button for ok and cancel
-        self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        #self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         # connect the OK button to function
         self.buttonBox.accepted.connect(self.accept)
         # adding action when form is rejected
@@ -190,6 +190,8 @@ class AddTrialUi(object):
         #TODO verify working properly
         # self.parent.trial_type_name = [*self.parent.trial_types.keys()][index]
         # events_name = [*self.parent.trial_types[self.parent.trial_type_name].keys()]
+        if len(list(self.parent.trial_types.keys())) is 0:
+            return
         self.parent.chosen_trial_type_name = list(self.parent.trial_types.keys())[index]
         events_name = list(self.parent.trial_types[self.parent.chosen_trial_type_name].keys())
 

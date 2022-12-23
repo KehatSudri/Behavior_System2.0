@@ -12,16 +12,16 @@ class WarningDialog(QDialog):
 
         self.setWindowTitle("Warning")
 
-        q_buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+        #q_buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
 
-        self.buttonBox = QDialogButtonBox(q_buttons)
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
+        #self.buttonBox = QDialogButtonBox(q_buttons)
+        #self.buttonBox.accepted.connect(self.accept)
+        #self.buttonBox.rejected.connect(self.reject)
 
         self.layout = QVBoxLayout()
         message = QLabel("Are you sure you want to remove this trial type?")
         self.layout.addWidget(message)
-        self.layout.addWidget(self.buttonBox)
+        #self.layout.addWidget(self.buttonBox)
         self.setLayout(self.layout)
 
 
@@ -54,7 +54,7 @@ class DeleteTrialTypeUi(object):
         self.main_window = main_window
         self.parent.main_window.hide()
         main_window.setObjectName("main_window")
-        main_window.resize(495, 597)
+        #main_window.resize(495, 597)
         self.central_widget = QtWidgets.QWidget(main_window)
         self.central_widget.setObjectName("central_widget")
         self.window_gridLayout = QtWidgets.QGridLayout(self.central_widget)
@@ -67,10 +67,10 @@ class DeleteTrialTypeUi(object):
         self.window_gridLayout.addWidget(self.headline_label, 0, 0, 1, 1)
         # set scroll area
         self.scrollArea = QtWidgets.QScrollArea(self.central_widget)
-        font = QtGui.QFont()
-        font.setFamily("Gabriola")
-        font.setPointSize(15)
-        self.scrollArea.setFont(font)
+        #font = QtGui.QFont()
+        #font.setFamily("Gabriola")
+        #font.setPointSize(15)
+        #self.scrollArea.setFont(font)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
@@ -85,8 +85,8 @@ class DeleteTrialTypeUi(object):
         self.remove_pushButton.setObjectName("remove_pushButton")
         self.remove_pushButton.clicked.connect(self.on_remove_click)
         self.remove_horizontalLayout.addWidget(self.remove_pushButton)
-        spacer_item = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.remove_horizontalLayout.addItem(spacer_item)
+        #spacer_item = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        #self.remove_horizontalLayout.addItem(spacer_item)
         self.remove_horizontalLayout.setStretch(0, 1)
         self.remove_horizontalLayout.setStretch(1, 2)
         self.scroll_verticalLayout.addLayout(self.remove_horizontalLayout)
@@ -96,8 +96,8 @@ class DeleteTrialTypeUi(object):
         # set a table to hold all of the defined trial types
         self.trial_types_tableWidget = QtWidgets.QTableWidget(self.scrollAreaWidgetContents)
         self.trial_types_tableWidget.setObjectName("trial_types_tableWidget")
-        self.trial_types_tableWidget.setEditTriggers(
-            QtWidgets.QAbstractItemView.NoEditTriggers)  # disable editing of the table
+        # self.trial_types_tableWidget.setEditTriggers(
+        #     QtWidgets.QAbstractItemView.NoEditTriggers)  # disable editing of the table TODO check this
         self.trial_types_tableWidget.setColumnCount(2)
         self.trial_types_tableWidget.setRowCount(0)
         # set headers for the table
@@ -108,33 +108,33 @@ class DeleteTrialTypeUi(object):
         item.setText("Parameters")
         self.trial_types_tableWidget.setHorizontalHeaderItem(1, item)
         # set selection by rows
-        self.trial_types_tableWidget.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
-        self.trial_types_tableWidget.setStyleSheet("font: 12pt \"Gabriola\";")
+        #self.trial_types_tableWidget.setSelectionBehavior(QtWidgets.QAbstractItemView.selectRows) TODO check this
+        #self.trial_types_tableWidget.setStyleSheet("font: 12pt \"Gabriola\";")
         # set an adaptive width for table
-        trials_table_adaptive_width = self.trial_types_tableWidget.horizontalHeader()
-        trials_table_adaptive_width.setSectionResizeMode(QHeaderView.Stretch)
+        #trials_table_adaptive_width = self.trial_types_tableWidget.horizontalHeader()
+        #trials_table_adaptive_width.setSectionResizeMode(QHeaderView.Stretch)
         # set the table to scroll vertically
-        self.trial_types_tableWidget.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
-        self.trial_types_tableWidget.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+        #self.trial_types_tableWidget.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        #self.trial_types_tableWidget.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
         self.scroll_verticalLayout.addWidget(self.trial_types_tableWidget)
-        self.scroll_verticalLayout.setStretch(0, 1)
-        self.scroll_verticalLayout.setStretch(2, 5)
+        #self.scroll_verticalLayout.setStretch(0, 1)
+        #self.scroll_verticalLayout.setStretch(2, 5)
         self.gridLayout.addLayout(self.scroll_verticalLayout, 3, 0, 1, 1)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.window_gridLayout.addWidget(self.scrollArea, 1, 0, 1, 1)
         # set a navigation buttons
         self.navigation_horizontalLayout.setObjectName("navigation_horizontalLayout")
-        spacer_item1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.navigation_horizontalLayout.addItem(spacer_item1)
+        #spacer_item1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        #self.navigation_horizontalLayout.addItem(spacer_item1)
         self.back_pushButton = QtWidgets.QPushButton(self.central_widget)
         self.back_pushButton.setObjectName("back_pushButton")
         self.back_pushButton.clicked.connect(self.on_back_click)
         self.navigation_horizontalLayout.addWidget(self.back_pushButton)
-        spacer_item2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.navigation_horizontalLayout.addItem(spacer_item2)
-        self.navigation_horizontalLayout.setStretch(0, 1)
-        self.navigation_horizontalLayout.setStretch(1, 1)
-        self.navigation_horizontalLayout.setStretch(2, 1)
+        #spacer_item2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        #self.navigation_horizontalLayout.addItem(spacer_item2)
+        #self.navigation_horizontalLayout.setStretch(0, 1)
+        #self.navigation_horizontalLayout.setStretch(1, 1)
+        #self.navigation_horizontalLayout.setStretch(2, 1)
         self.window_gridLayout.addLayout(self.navigation_horizontalLayout, 2, 0, 1, 1)
         main_window.setCentralWidget(self.central_widget)
 
