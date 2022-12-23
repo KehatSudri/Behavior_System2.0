@@ -2,7 +2,9 @@ import sys
 from PyQt6 import QtWidgets
 from Models.Behavior_System_Model import BehaviorSystemModel
 from ViewModels.Bahavior_System_VM import BehaviorSystemViewModel
-from Views.create_session import CreateSessionUi #this will be deleted as starting window would be different
+from Views.create_session import CreateSessionUi
+from Views.manager_login import ManagerLoginUi
+from Views.settings import SettingsUi #this will be deleted as starting window would be different
 from Views.system_main import SystemMainUi
 
 if __name__ == "__main__":

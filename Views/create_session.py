@@ -134,15 +134,15 @@ class CreateSessionUi(object):
         self.choose_template_horizontalLayout.setContentsMargins(0, -1, 0, -1)
         # self.choose_template_horizontalLayout.setSpacing(2)
         self.choose_template_horizontalLayout.setObjectName("choose_template_horizontalLayout")
-        spacer_item5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.choose_template_horizontalLayout.addItem(spacer_item5)
+        ##spacer_item5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        ##self.choose_template_horizontalLayout.addItem(spacer_item5)
         # add a choose template push button
         self.choose_template_pushButton = QtWidgets.QPushButton(self.central_widget)
         self.choose_template_pushButton.setObjectName("choose_template_pushButton")
         self.choose_template_pushButton.clicked.connect(self.on_choose_template_click)
         self.choose_template_horizontalLayout.addWidget(self.choose_template_pushButton)
-        spacer_item6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.choose_template_horizontalLayout.addItem(spacer_item6)
+        ##spacer_item6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        ##self.choose_template_horizontalLayout.addItem(spacer_item6)
         self.choose_template_horizontalLayout.setStretch(0, 1)
         self.choose_template_horizontalLayout.setStretch(1, 2)
         self.choose_template_horizontalLayout.setStretch(2, 1)
@@ -163,7 +163,7 @@ class CreateSessionUi(object):
         # self.session_name_lineEdit.setSizePolicy(sizePolicy)
         self.session_name_lineEdit.setMinimumSize(QtCore.QSize(0, 1))
         self.session_name_lineEdit.setStyleSheet("font: 12pt \"Gabriola\";")
-        self.session_name_lineEdit.setInputMethodHints(QtCore.Qt.ImhLatinOnly)
+        ##self.session_name_lineEdit.setInputMethodHints(QtCore.Qt.ImhLatinOnly)
         self.session_name_lineEdit.editingFinished.connect(self.on_session_name_edit)
         # self.session_name_textEdit.setLineWidth(1)
         # self.session_name_textEdit.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
@@ -177,7 +177,7 @@ class CreateSessionUi(object):
         self.session_name_and_date_horizontalLayout.addWidget(self.date_label)
         self.date_value_label = QtWidgets.QLabel(self.central_widget)
         self.date_value_label.setStyleSheet("font: 12pt \"Gabriola\";")
-        self.date_value_label.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        ##self.date_value_label.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
         self.date_value_label.setObjectName("date_value_label")
         self.date_value_label.setText((datetime.now()).strftime("%d/%m/%Y"))
         self.session_name_and_date_horizontalLayout.addWidget(self.date_value_label)
@@ -204,7 +204,7 @@ class CreateSessionUi(object):
 
         self.subject_id_lineEdit.setMinimumSize(QtCore.QSize(0, 1))
         self.subject_id_lineEdit.setStyleSheet("font: 12pt \"Gabriola\";")
-        self.subject_id_lineEdit.setInputMethodHints(QtCore.Qt.ImhLatinOnly)
+        ##self.subject_id_lineEdit.setInputMethodHints(QtCore.Qt.ImhLatinOnly)
 
         self.subject_id_lineEdit.setObjectName("subject_id_lineEdit")
         self.subject_and_experimenter_name_horizontalLayout.addWidget(self.subject_id_lineEdit)
@@ -219,7 +219,7 @@ class CreateSessionUi(object):
 
         self.experimenter_name_lineEdit.setMinimumSize(QtCore.QSize(0, 1))
         self.experimenter_name_lineEdit.setStyleSheet("font: 12pt \"Gabriola\";")
-        self.experimenter_name_lineEdit.setInputMethodHints(QtCore.Qt.ImhLatinOnly)
+        ##self.experimenter_name_lineEdit.setInputMethodHints(QtCore.Qt.ImhLatinOnly)
 
         self.experimenter_name_lineEdit.setObjectName("experimenter_name_lineEdit")
         self.subject_and_experimenter_name_horizontalLayout.addWidget(self.experimenter_name_lineEdit)
@@ -232,11 +232,11 @@ class CreateSessionUi(object):
         # set a grid layout to hold the trials in the session in a table
         self.trials_gridLayout.setObjectName("trials_gridLayout")
         self.trials_tableWidget = QtWidgets.QTableWidget(self.central_widget)
-        self.trials_tableWidget.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
-        self.trials_tableWidget.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+        ##self.trials_tableWidget.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        ##self.trials_tableWidget.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
 
         self.trials_tableWidget.setStyleSheet("font: 12pt \"Gabriola\";")
-        self.trials_tableWidget.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        ##self.trials_tableWidget.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.trials_tableWidget.setColumnCount(2)
         self.trials_tableWidget.setObjectName("trials_tableWidget")
         self.trials_tableWidget.setRowCount(0)
@@ -253,7 +253,7 @@ class CreateSessionUi(object):
         self.trials_gridLayout.setRowStretch(1, 10)
         self.main_gridLayout.addLayout(self.trials_gridLayout, 4, 0, 1, 1)
         # set an horizontal layout to hold the definitions for a trial and handle one
-        self.def_trial_horizontalLayout.setSizeConstraint(QtWidgets.QLayout.SetMinimumSize)
+        ##self.def_trial_horizontalLayout.setSizeConstraint(QtWidgets.QLayout.SetMinimumSize)
         self.def_trial_horizontalLayout.setContentsMargins(20, 10, 20, 0)
         self.def_trial_horizontalLayout.setSpacing(20)
         self.def_trial_horizontalLayout.setObjectName("def_trial_horizontalLayout")
@@ -273,10 +273,10 @@ class CreateSessionUi(object):
         self.order_horizontalLayout.setStretch(0, 1)
         self.order_horizontalLayout.setStretch(1, 1)
         self.def_trial_horizontalLayout.addLayout(self.order_horizontalLayout)
-        spacer_item4 = QtWidgets.QSpacerItem(100, 20, QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Minimum)
-        self.def_trial_horizontalLayout.addItem(spacer_item4)
+        ##spacer_item4 = QtWidgets.QSpacerItem(100, 20, QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Minimum)
+        ##self.def_trial_horizontalLayout.addItem(spacer_item4)
 
-        self.buttons_to_set_trial_horizontalLayout.setSizeConstraint(QtWidgets.QLayout.SetMinimumSize)
+        ##self.buttons_to_set_trial_horizontalLayout.setSizeConstraint(QtWidgets.QLayout.SetMinimumSize)
         self.buttons_to_set_trial_horizontalLayout.setContentsMargins(0, -1, 0, -1)
         self.buttons_to_set_trial_horizontalLayout.setSpacing(2)
         self.buttons_to_set_trial_horizontalLayout.setObjectName("buttons_to_set_trial_horizontalLayout")
@@ -300,8 +300,8 @@ class CreateSessionUi(object):
         self.main_gridLayout.addLayout(self.def_trial_horizontalLayout, 5, 0, 1, 1)
         # set a gridlayout to hold the iti and end definition and navigation buttons
         self.iti_and_end_def_gridLayout.setObjectName("iti_and_end_def_gridLayout")
-        spacer_item = QtWidgets.QSpacerItem(60, 20, QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Minimum)
-        self.iti_and_end_def_gridLayout.addItem(spacer_item, 0, 4, 1, 1)
+        ##spacer_item = QtWidgets.QSpacerItem(60, 20, QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Minimum)
+        ##self.iti_and_end_def_gridLayout.addItem(spacer_item, 0, 4, 1, 1)
 
         self.navigation_gridLayout.setObjectName("navigation_gridLayout")
         self.next_pushBtn = QtWidgets.QPushButton(self.central_widget)
@@ -315,10 +315,10 @@ class CreateSessionUi(object):
         self.navigation_gridLayout.setColumnStretch(0, 1)
         self.navigation_gridLayout.setColumnStretch(1, 1)
         self.iti_and_end_def_gridLayout.addLayout(self.navigation_gridLayout, 5, 1, 1, 3)
-        spacer_item1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.iti_and_end_def_gridLayout.addItem(spacer_item1, 4, 1, 1, 1)
-        spacer_item2 = QtWidgets.QSpacerItem(60, 20, QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Minimum)
-        self.iti_and_end_def_gridLayout.addItem(spacer_item2, 0, 0, 1, 1)
+        ##spacer_item1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        ##self.iti_and_end_def_gridLayout.addItem(spacer_item1, 4, 1, 1, 1)
+        ##spacer_item2 = QtWidgets.QSpacerItem(60, 20, QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Minimum)
+        ##self.iti_and_end_def_gridLayout.addItem(spacer_item2, 0, 0, 1, 1)
 
         self.iti_min_max_values_gridLayout.setObjectName("iti_min_max_values_gridLayout")
         self.min_iti_label = QtWidgets.QLabel(self.central_widget)
@@ -365,12 +365,12 @@ class CreateSessionUi(object):
         self.iti_and_end_def_gridLayout.addWidget(self.end_def_comboBox, 1, 3, 1, 1)
         self.end_def_label = QtWidgets.QLabel(self.central_widget)
         self.end_def_label.setStyleSheet("font: 12pt \"Gabriola\";")
-        self.end_def_label.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        ##self.end_def_label.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
         self.end_def_label.setObjectName("end_def_label")
         self.iti_and_end_def_gridLayout.addWidget(self.end_def_label, 0, 3, 1, 1)
         self.iti_label = QtWidgets.QLabel(self.central_widget)
         self.iti_label.setStyleSheet("font: 12pt \"Gabriola\";")
-        self.iti_label.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        ##self.iti_label.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
         self.iti_label.setObjectName("iti_label")
         self.iti_and_end_def_gridLayout.addWidget(self.iti_label, 0, 1, 1, 1)
 
@@ -384,8 +384,8 @@ class CreateSessionUi(object):
         self.random_iti_radioBtn.setObjectName("random_iti_radioBtn")
         self.iti_def_horizontalLayout.addWidget(self.random_iti_radioBtn)
         self.iti_and_end_def_gridLayout.addLayout(self.iti_def_horizontalLayout, 1, 1, 1, 1)
-        spacer_item3 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.iti_and_end_def_gridLayout.addItem(spacer_item3, 0, 2, 1, 1)
+        ##spacer_item3 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        ##self.iti_and_end_def_gridLayout.addItem(spacer_item3, 0, 2, 1, 1)
 
         self.random_reward_percent_horizontalLayout.setObjectName("random_reward_percent_horizontalLayout")
         self.random_reward_percent_label = QtWidgets.QLabel(self.central_widget)
@@ -421,10 +421,10 @@ class CreateSessionUi(object):
                                    self.min_iti_label, self.max_iti_label]
 
         # disable editing of the table
-        self.trials_tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        ##self.trials_tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.set_trials_table_pointer()
         #
-        self.trials_tableWidget.setSelectionBehavior(QTableView.SelectRows)
+        ##self.trials_tableWidget.setSelectionBehavior(QTableView.SelectRows)
         # hide all the iti widgets for default
         self.hide_show_iti_def(True, 0)
         # define a connection for each option to define an iti
@@ -673,7 +673,7 @@ class CreateSessionUi(object):
                                                     self.trials_in_session[num_trials - 1][trial_name])))
         # Set an adaptive width for table
         trials_table_adaptive_width = self.trials_tableWidget.horizontalHeader()
-        trials_table_adaptive_width.setSectionResizeMode(QHeaderView.Stretch)
+        ##trials_table_adaptive_width.setSectionResizeMode(QHeaderView.Stretch)
 
     def on_back_click(self):
         self.parent.main_window.show()
