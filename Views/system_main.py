@@ -18,18 +18,11 @@ from Views.utils import get_ui_path
 class SystemMainUi(object):
     def __init__(self):
         self.vm = None
-        self.central_widget = None
-        self.verticalLayout_1 = None
-        self.gridLayout = None
         self.scrollArea = None
         self.scrollAreaWidgetContents = None
         self.verticalLayout = None
         self.headline_label = None
         self.explanation_label = None
-        self.manager_login_pushButton = None
-        self.settings_pushButton = None
-        self.create_trial_type_pushButton = None
-        self.create_event_pushButton = None
         self.create_session_pushButton = None
         self.present_session_data_pushButton = None
         self.chosen_window = QtWidgets.QMainWindow()
@@ -45,13 +38,29 @@ class SystemMainUi(object):
         self.control_session_board = None
 
     # def setupUi(self, main_window, sysVM):
-    def setupUi(self, main_window, system_vm):
-        self.main_window = main_window
+    def setupUi(self, main_window, system_vm , isManager=False):
         self.vm = system_vm
-        self.vm.property_changed += self.EventHandler
-        uic.loadUi(get_ui_path('system_main.ui'), self.main_window)
-        self.create_session_pushButton = main_window.findChild(QPushButton, 'create_session_btn')
-        self.create_session_pushButton.clicked.connect(self.on_create_session_click)
+        if isManager:
+            temp=self.main_window
+            self.main_window=main_window
+            self.main_window.show()
+            temp.close()
+
+        else:
+            self.main_window = main_window
+            self.vm.property_changed += self.EventHandler
+            uic.loadUi(get_ui_path('system_main.ui'), self.main_window)
+            manager_login_push_button = self.main_window.findChild(QPushButton, 'manager_login_pushButton')
+            manager_login_push_button.clicked.connect(self.on_manager_login_click)
+
+        create_trial_type_push_button = self.main_window.findChild(QPushButton, 'create_trial_type_pushButton')
+        create_trial_type_push_button.clicked.connect(self.on_create_trial_type)
+
+        create_event_push_button = self.main_window.findChild(QPushButton, 'create_event_pushButton')
+        create_event_push_button.clicked.connect(self.on_create_event_click)
+
+        create_session_push_button = self.main_window.findChild(QPushButton, 'create_session_btn')
+        create_session_push_button.clicked.connect(self.on_create_session_click)
 
     def on_manager_login_click(self):
         self.chosen_window = QtWidgets.QMainWindow()
@@ -61,56 +70,57 @@ class SystemMainUi(object):
 
     def manager_show(self):
         if self.is_manager:
-            self.edit_trial_type_pushButton = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
-            self.edit_trial_type_pushButton.setObjectName("edit_trial_types_pushButton")
-            self.edit_trial_type_pushButton.setText("Edit trial type")
-            self.verticalLayout.addWidget(self.edit_trial_type_pushButton)
+            manager_window = QtWidgets.QMainWindow()
+            uic.loadUi(get_ui_path('system_main_plus.ui'), manager_window)
+            self.edit_trial_type_pushButton = manager_window.findChild(QPushButton, 'edit_trial_types_pushButton')
             self.edit_trial_type_pushButton.clicked.connect(self.on_edit_trial_type_click)
-
-            self.delete_trial_type_pushButton = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
-            self.delete_trial_type_pushButton.setObjectName("delete_trial_types_pushButton")
-            self.delete_trial_type_pushButton.setText("Delete trial type")
-            self.verticalLayout.addWidget(self.delete_trial_type_pushButton)
+            self.delete_trial_type_pushButton = manager_window.findChild(QPushButton, 'delete_trial_types_pushButton')
             self.delete_trial_type_pushButton.clicked.connect(self.on_delete_trial_type_click)
-
-            self.delete_templates_pushButton = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
-            self.delete_templates_pushButton.setObjectName("delete_templates_pushButton")
-            self.delete_templates_pushButton.setText("Delete session templates")
-            self.verticalLayout.addWidget(self.delete_templates_pushButton)
+            self.delete_templates_pushButton = manager_window.findChild(QPushButton, 'delete_templates_pushButton')
             self.delete_templates_pushButton.clicked.connect(self.on_delete_templates_click)
+            self.setupUi(manager_window,self.vm,True)
+
 
     def on_settings_click(self):
+        self.chosen_window = QtWidgets.QMainWindow()
         self.chosen_window_ui = SettingsUi(self)
         self.chosen_window_ui.setupUi(self.chosen_window)
         self.chosen_window.show()
 
     def on_create_trial_type(self):
+        print("fff")
+        self.chosen_window = QtWidgets.QMainWindow()
         self.chosen_window_ui = CreateTrialTypeUi(self)
         self.chosen_window_ui.setupUi(self.chosen_window)
         self.chosen_window.show()
 
     def on_create_event_click(self):
+        self.chosen_window = QtWidgets.QMainWindow()
         self.chosen_window_ui = CreateEventUi(self)
         self.chosen_window_ui.setupUi(self.chosen_window)
         self.chosen_window.show()
 
     def on_create_session_click(self):
+        self.chosen_window = QtWidgets.QMainWindow()
         self.chosen_window_ui = CreateSessionUi(self)
         self.chosen_window_ui.setupUi(self.chosen_window)
         self.chosen_window.show()
         #self.main_window.hide()
 
     def on_edit_trial_type_click(self):
+        self.chosen_window = QtWidgets.QMainWindow()
         self.chosen_window_ui = EditTrialTypeUi(self)
         self.chosen_window_ui.setupUi(self.chosen_window)
         self.chosen_window.show()
 
     def on_delete_trial_type_click(self):
+        self.chosen_window = QtWidgets.QMainWindow()
         self.chosen_window_ui = DeleteTrialTypeUi(self)
         self.chosen_window_ui.setupUi(self.chosen_window)
         self.chosen_window.show()
 
     def on_delete_templates_click(self):
+        self.chosen_window = QtWidgets.QMainWindow()
         self.chosen_window_ui = DeleteSessionTemplate(self)
         self.chosen_window_ui.setupUi(self.chosen_window)
         self.chosen_window.show()
@@ -118,18 +128,6 @@ class SystemMainUi(object):
     def on_present_ctrl_sess_board_click(self):
         self.control_session_board.show()
 
-    def retranslateUi(self, main):
-        return
-        _translate = QtCore.QCoreApplication.translate
-        main.setWindowTitle(_translate("main", "Behavioral System"))
-        self.explanation_label.setText(_translate("main", "Welcome, please choose the option you desire"))
-        self.manager_login_pushButton.setText(_translate("main", "Login as a manager"))
-        self.settings_pushButton.setText(_translate("main", "Settings"))
-        self.create_trial_type_pushButton.setText(_translate("main", "Create a new trial type"))
-        self.create_event_pushButton.setText(_translate("main", "Create a new event"))
-        self.create_session_pushButton.setText(_translate("main", "Create a new session"))
-        self.present_session_data_pushButton.setText(_translate("main", "Open running session controller"))
-        self.headline_label.setText(_translate("main", "Behavioral System"))
 
     def EventHandler(self, sender, *event_args):
         if type(sender) != BehaviorSystemViewModel:

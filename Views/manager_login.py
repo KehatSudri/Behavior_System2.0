@@ -49,11 +49,3 @@ class ManagerLoginUi(object):
         else:
             error_warning("Wrong password")
 
-    def retranslateUi(self, main):
-        _translate = QtCore.QCoreApplication.translate
-        main.setWindowTitle(_translate("main", "Manager Login"))
-        self.password_label.setText(_translate("main", "Password:"))
-        self.back_pushButton.setText(_translate("main", "Back"))
-        self.login_pushButton.setText(_translate("main", "Login"))
-        self.headline_label.setText(_translate("main", "Manager Login"))
-

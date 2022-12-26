@@ -1,4 +1,5 @@
 from PyQt6 import QtCore, QtGui, QtWidgets, uic
+from PyQt6.QtWidgets import QPushButton
 
 from Views.utils import error_warning, notification, get_ui_path
 
@@ -47,8 +48,13 @@ class CreateEventUi(object):
 
     def setupUi(self, main_window):
         uic.loadUi(get_ui_path('create_new_event.ui'), main_window)
-        return
         self.main_window = main_window
+        self.back_pushButton = main_window.findChild(QPushButton, 'back_pushButton')
+        self.back_pushButton.clicked.connect(self.on_back_click)
+
+
+
+
         main_window.setObjectName("main_window")
         main_window.resize(493, 571)
         self.central_widget = QtWidgets.QWidget(main_window)
