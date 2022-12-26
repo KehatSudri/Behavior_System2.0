@@ -71,8 +71,9 @@ class CreateSessionUi(object):
         self.random_reward_percent_horizontalLayout = QtWidgets.QHBoxLayout()
         self.random_reward_percent_label = None
         self.random_reward_percent_spinBox = None
-
-        self.chosen_behavior = self.vm.get_behaviors_list()[0]
+        self.chosen_behavior = None
+        if len(self.vm.get_behaviors_list()) > 0:
+            self.chosen_behavior = self.vm.get_behaviors_list()[0]
         self.chosen_end_def = None
         self.chosen_iti_type = None
         self.trials_ord_window = None
