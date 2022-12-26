@@ -2,14 +2,14 @@ from datetime import datetime
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QTableView, QHeaderView, QTableWidgetItem, QAbstractItemView
-from PyQt6 import QtCore, QtWidgets
+from PyQt6 import QtCore, QtWidgets, uic
 
 from Views.add_trial import AddTrialUi
 from Views.blocks_order import BlocksOrderUi
 from Views.choose_template import ChooseTemplateUi
 
 from Views.edit_trial import EditTrialUi
-from Views.utils import error_warning, dict_yaml_style
+from Views.utils import error_warning, dict_yaml_style, get_ui_path
 from Views.random_order import RandomOrderUi
 
 
@@ -112,6 +112,8 @@ class CreateSessionUi(object):
         self.run_session_window = None
 
     def setupUi(self, main_window):
+        uic.loadUi(get_ui_path('create_session.ui'), main_window)
+        return
         self.main_window = main_window
         self.parent.main_window.hide()
         main_window.setObjectName("main_window")

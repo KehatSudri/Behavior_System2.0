@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QMessageBox, QLabel, QComboBox
 import yaml
@@ -10,6 +12,7 @@ def error_warning(massage):
     # error_msg_box.setText("An error accrued, please try again.")
     error_msg_box.setWindowTitle("Error Warning")
     error_msg_box.exec()
+
 
 def notification(massage):
     notification_msg_box = QMessageBox()
@@ -52,3 +55,7 @@ def list_to_str(my_list):
     for element in my_list:
         result += str(element) + ", "
     return result[:-2]
+
+
+def get_ui_path(name):
+    return str(Path(__file__).parent.parent / 'UI' / name)

@@ -1,9 +1,9 @@
 import os
 
-from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets, uic
 from PyQt6.QtWidgets import QMainWindow, QTableWidgetItem
 
-from Views.utils import error_warning
+from Views.utils import error_warning, get_ui_path
 
 
 class SettingsUi(object):
@@ -61,6 +61,8 @@ class SettingsUi(object):
         self.event_config = self.vm.event_config
 
     def setupUi(self, main_window):
+        uic.loadUi(get_ui_path('settings.ui'), main_window)
+        return
         self.main_window = main_window
         self.parent.main_window.hide()
         main_window.setObjectName("main_window")

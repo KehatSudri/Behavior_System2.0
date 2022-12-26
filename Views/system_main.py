@@ -1,5 +1,6 @@
-from PyQt6 import QtCore, QtGui, QtWidgets
+import sys
 
+from PyQt6 import QtCore, QtGui, QtWidgets, uic
 from ViewModels.Bahavior_System_VM import BehaviorSystemViewModel
 from Views.create_new_event import CreateEventUi
 from Views.create_session import CreateSessionUi
@@ -9,7 +10,7 @@ from Views.delete_trial_type import DeleteTrialTypeUi
 from Views.edit_trial_type import EditTrialTypeUi
 from Views.manager_login import ManagerLoginUi
 from Views.settings import SettingsUi
-
+from Views.utils import get_ui_path
 
 class SystemMainUi(object):
     def __init__(self):
@@ -42,6 +43,8 @@ class SystemMainUi(object):
 
     # def setupUi(self, main_window, sysVM):
     def setupUi(self, main_window, systemVM):
+        uic.loadUi(get_ui_path('system_main.ui'), main_window)
+        return
         self.main_window = main_window
         self.vm = systemVM
         self.vm.property_changed += self.EventHandler
@@ -114,11 +117,11 @@ class SystemMainUi(object):
 
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.gridLayout.addWidget(self.scrollArea, 2, 1, 1, 1)
-        #spacer_item = QtWidgets.QSpacerItem(20, 40, QtGui.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        #self.gridLayout.addItem(spacer_item, 2, 2, 1, 1)
+        # spacer_item = QtWidgets.QSpacerItem(20, 40, QtGui.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        # self.gridLayout.addItem(spacer_item, 2, 2, 1, 1)
 
-        #spacer_item1 = QtWidgets.QSpacerItem(20, 40, QtGui.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        #self.gridLayout.addItem(spacer_item1, 2, 0, 1, 1)
+        # spacer_item1 = QtWidgets.QSpacerItem(20, 40, QtGui.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        # self.gridLayout.addItem(spacer_item1, 2, 0, 1, 1)
         self.gridLayout.setColumnStretch(0, 1)
         self.gridLayout.setColumnStretch(1, 2)
         self.gridLayout.setColumnStretch(2, 1)
@@ -135,6 +138,7 @@ class SystemMainUi(object):
         self.chosen_window.show()
 
     def manager_show(self):
+        return
         if self.is_manager:
             self.edit_trial_type_pushButton = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
             self.edit_trial_type_pushButton.setObjectName("edit_trial_types_pushButton")
@@ -201,6 +205,7 @@ class SystemMainUi(object):
         self.control_session_board.show()
 
     def retranslateUi(self, main):
+        return
         _translate = QtCore.QCoreApplication.translate
         main.setWindowTitle(_translate("main", "Behavioral System"))
         self.explanation_label.setText(_translate("main", "Welcome, please choose the option you desire"))
@@ -218,7 +223,6 @@ class SystemMainUi(object):
         if event_args[0][0] == "VM_is_running_session":
             self.is_session_running = self.vm.is_running_session
             self.is_session_running_changed()
-
 
     def is_session_running_changed(self):
         if self.is_session_running:  # session is running
@@ -247,4 +251,3 @@ class SystemMainUi(object):
                 self.edit_trial_type_pushButton.setEnabled(True)
                 self.delete_template_pushButton.setEnabled(True)
                 self.delete_trial_type_pushButton.setEnabled(True)
-

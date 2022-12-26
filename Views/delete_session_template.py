@@ -1,5 +1,7 @@
-from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets, uic
 from PyQt6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QLabel
+
+from Views.utils import get_ui_path
 
 
 class WarningDialog(QDialog):
@@ -51,6 +53,8 @@ class DeleteSessionTemplate(object):
         self.removed_experimenter_name = ""
 
     def setupUi(self, main_window):
+        uic.loadUi(get_ui_path('delete_session_template.ui'), main_window)
+        return
         self.main_window = main_window
         main_window.setObjectName("main_window")
         #main_window.resize(497, 500)

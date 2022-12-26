@@ -1,9 +1,9 @@
-from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets, uic
 from PyQt6.QtWidgets import QHeaderView, QTableWidgetItem, QAbstractItemView, QDialog, QDialogButtonBox, QVBoxLayout, \
     QLabel
 
 from ViewModels.Bahavior_System_VM import BehaviorSystemViewModel
-from Views.utils import dict_yaml_style, error_warning
+from Views.utils import dict_yaml_style, error_warning, get_ui_path
 
 
 class WarningDialog(QDialog):
@@ -51,6 +51,8 @@ class DeleteTrialTypeUi(object):
         self.is_error = False
 
     def setupUi(self, main_window):
+        uic.loadUi(get_ui_path('delete_trial_type.ui'), main_window)
+        return
         self.main_window = main_window
         self.parent.main_window.hide()
         main_window.setObjectName("main_window")

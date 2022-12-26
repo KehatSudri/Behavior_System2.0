@@ -1,6 +1,6 @@
-from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets, uic
 
-from Views.utils import error_warning, notification
+from Views.utils import error_warning, notification, get_ui_path
 
 
 class CreateEventUi(object):
@@ -46,6 +46,8 @@ class CreateEventUi(object):
         self.digital_or_analog = ""
 
     def setupUi(self, main_window):
+        uic.loadUi(get_ui_path('create_new_event.ui'), main_window)
+        return
         self.main_window = main_window
         main_window.setObjectName("main_window")
         main_window.resize(493, 571)

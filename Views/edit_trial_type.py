@@ -1,11 +1,11 @@
 from collections import OrderedDict
 
-from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets, uic
 from PyQt6.QtWidgets import QHeaderView, QTableWidgetItem, QAbstractItemView, QDialog, QDialogButtonBox, QLabel, \
     QVBoxLayout
 
 from ViewModels.Bahavior_System_VM import BehaviorSystemViewModel
-from Views.utils import error_warning, list_to_str
+from Views.utils import error_warning, list_to_str, get_ui_path
 
 
 class WarningDialog(QDialog):
@@ -67,6 +67,8 @@ class EditTrialTypeUi(object):
         self.is_error = False
 
     def setupUi(self, main_window):
+        uic.loadUi(get_ui_path('edit_trial_type.ui'), main_window)
+        return
         self.main_window = main_window
         main_window.setObjectName("main_window")
         main_window.resize(493, 597)
