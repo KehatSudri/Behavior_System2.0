@@ -39,20 +39,6 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <widget class="QPushButton" name="pushButton">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="manager_login_pushButton">
-            <property name="text">
-             <string>Login as a manager</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QPushButton" name="settings_pushButton">
             <property name="text">
              <string>Settings</string>
