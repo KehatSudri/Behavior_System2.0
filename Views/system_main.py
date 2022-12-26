@@ -25,7 +25,7 @@ class SystemMainUi(object):
         self.explanation_label = None
         self.create_session_pushButton = None
         self.present_session_data_pushButton = None
-        self.chosen_window = QtWidgets.QMainWindow()
+        self.chosen_window = None
         self.chosen_window_ui = None
         self.is_manager = False
         self.main_window = None
@@ -62,6 +62,10 @@ class SystemMainUi(object):
         create_session_push_button = self.main_window.findChild(QPushButton, 'create_session_btn')
         create_session_push_button.clicked.connect(self.on_create_session_click)
 
+        settings_pushButton = self.main_window.findChild(QPushButton, 'settings_pushButton')
+        settings_pushButton.clicked.connect(self.on_settings_click)
+
+
     def on_manager_login_click(self):
         self.chosen_window = QtWidgets.QMainWindow()
         self.chosen_window_ui = ManagerLoginUi(self)
@@ -88,7 +92,6 @@ class SystemMainUi(object):
         self.chosen_window.show()
 
     def on_create_trial_type(self):
-        print("fff")
         self.chosen_window = QtWidgets.QMainWindow()
         self.chosen_window_ui = CreateTrialTypeUi(self)
         self.chosen_window_ui.setupUi(self.chosen_window)
