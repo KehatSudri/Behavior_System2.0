@@ -18,6 +18,7 @@ class CreateSessionUi(object):
         self.parent = parent
         self.vm = parent.vm
         self.main_window = None
+        self.chosen_window = None
 
         self.central_widget = None
         self.window_gridLayout = None
@@ -114,6 +115,8 @@ class CreateSessionUi(object):
 
     def setupUi(self, main_window):
         uic.loadUi(get_ui_path('create_session.ui'), main_window)
+        choose_template_btn = main_window.findChild(QtWidgets.QPushButton, "choose_template_btn")
+        choose_template_btn.clicked.connect(self.on_choose_template_click)
         return
         self.main_window = main_window
         self.parent.main_window.hide()
@@ -437,10 +440,11 @@ class CreateSessionUi(object):
         QtCore.QMetaObject.connectSlotsByName(main_window)
 
     def on_choose_template_click(self):
-        self.choose_template_window = QtWidgets.QDialog()
-        self.choose_template_ui = ChooseTemplateUi(self)
-        self.choose_template_ui.setupUi(self.choose_template_window)
-        self.choose_template_window.show()
+        # TODO add on clicked event handler for component
+        self.chosen_window = QtWidgets.QDialog()
+        choose_template = ChooseTemplateUi(self)
+        choose_template.setupUi(self.chosen_window)
+        self.chosen_window.show()
         # self.second_window_ui = ChooseTemplateUi(self)
         # self.second_window_ui.setupUi(self.second_window)
         # self.second_window.show()

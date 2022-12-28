@@ -517,7 +517,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="choose_template_pushButton_2">
+         <widget class="QPushButton" name="choose_template_btn">
           <property name="text">
            <string>Choose Template</string>
           </property>

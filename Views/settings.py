@@ -11,43 +11,13 @@ class SettingsUi(object):
         self.parent = parent
         self.vm = parent.vm
         self.main_window = None
-        self.central_widget = None
-        self.window_gridLayout = None
-        self.main_gridLayout = None
-        self.headline_label = None
-        self.scrollArea = None
-        self.settings_ok_back_btn = None
-        self.scrollAreaWidgetContents = None
-        self.verticalLayout = None
-        self.log_file_path_label = None
-        self.log_file_path_horizontalLayout = None
         self.insert_log_file_path_radioButton = None
         self.choose_log_file_path_radioButton = None
-        self.log_file_horizontalLayout = None
         self.log_file_path_lineEdit = None
-        self.choose_log_file_folder_pushButton = None
-        self.choose_db_file_folder_pushButton = None
-        self.db_file_path_label = None
-        self.db_file_path_horizontalLayout = QtWidgets.QHBoxLayout()
         self.insert_db_file_path_radioButton = None
         self.choose_db_file_radioButton = None
-        self.db_file_horizontalLayout = QtWidgets.QHBoxLayout()
         self.db_path_textEdit = None
-        self.choose_db_file_pushButton = None
-        self.db_section_horizontalLayout = QtWidgets.QHBoxLayout()
-        self.db_section_label = None
-        self.db_section_lineEdit = None
-        self.max_identical_consecutive_trials_horizontalLayout = QtWidgets.QHBoxLayout()
-        self.max_identical_consecutive_trials_label = None
         self.max_identical_consecutive_trials_spinBox = None
-        self.max_trial_duration_horizontalLayout = QtWidgets.QHBoxLayout()
-        self.max_time_duration_label = None
-        self.max_time_duration_spinBox = None
-        self.events_label = None
-        self.event_port_tableWidget = None
-        self.success_rate_label = None
-        self.navigation_horizontalLayout = None
-        self.back_pushButton = None
 
         self.folder_log_file_path = self.vm.log_file_path
         self.file_db_file_path = self.vm.db_config_file_path
@@ -63,12 +33,10 @@ class SettingsUi(object):
     def setupUi(self, main_window):
         self.main_window = main_window
         uic.loadUi(get_ui_path('settings.ui'), main_window)
-        choose_log_file_folder_pushButton = main_window.findChild(QtWidgets.QPushButton
-                                                                  , "choose_log_file_folder_pushButton")
-        choose_log_file_folder_pushButton.clicked.connect(self.on_log_folder_click)
-        choose_db_file_folder_pushButton = main_window.findChild(QtWidgets.QPushButton
-                                                                 , "choose_db_file_folder_pushButton")
-        choose_db_file_folder_pushButton.clicked.connect(self.on_db_file_click)
+        choose_folder_btn = main_window.findChild(QtWidgets.QPushButton, "choose_folder_btn")
+        choose_folder_btn.clicked.connect(self.on_log_folder_click)
+        choose_file_btn = main_window.findChild(QtWidgets.QPushButton, "choose_file_btn")
+        choose_file_btn.clicked.connect(self.on_db_file_click)
         settings_ok_back_btn = main_window.findChild(QtWidgets.QPushButton, "settings_ok_back_btn")
         settings_ok_back_btn.clicked.connect(self.on_settings_ok_click)
         # data for each: name, port, input/output, digital/analog, is reward

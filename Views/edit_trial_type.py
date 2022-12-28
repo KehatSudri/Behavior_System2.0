@@ -190,7 +190,7 @@ class EditTrialTypeUi(object):
         self.events_comboBox.setCurrentIndex(0)
 
     def trial_types_click(self, index):
-        if len(self.trial_types_names) is 0:
+        if len(self.trial_types_names) == 0:
             return
 
         current_trial_type = self.trial_types_names[index]
