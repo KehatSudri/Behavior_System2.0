@@ -1,13 +1,15 @@
 from PyQt6 import QtCore, QtWidgets, uic
 from collections import OrderedDict
-
-from PyQt6.QtWidgets import QDialogButtonBox, QComboBox
-
 from Views.utils import error_warning, get_ui_path
 
 
 class ChooseTemplateUi(object):
     def __init__(self, parent):
+        self.choose_subject_id_cb = None
+        self.filter_by_id_radio_btn = None
+        self.all_radio_btn = None
+        self.subject_id_cb = None
+        self.choose_template_cb = None
         self.parent = parent
         self.window_gridLayout = None
         self.central_gridLayout = None
@@ -18,18 +20,33 @@ class ChooseTemplateUi(object):
         self.subject_ids = self.parent.vm.get_list_of_subjects()[::-1]
         self.choose_template_label = None
         self.templates_comboBox = None
-        self.templates = []
+        self.templates = {"subject1": ["subject1 template1"],
+                          "subject2": ["subject2 template1"]}  # TODO get from parent cache
+        self.subjects = ["subject1", "subject2"]  # TODO get from parent cache
+        self.current_all_templates = []
         self.buttonBox = None
         self.is_filtered_by_subject = None
 
-    def setupUi(self, dialog):
+    def setupUi(self, dialog, event_handler):
         # self.main_window = main_window
+        self.get_all_templates()
         uic.loadUi(get_ui_path('choose_template.ui'), dialog)
         # TODO implement on clicked event handler given by calling component
-        dialog.accepted.connect(lambda: print('ok'))
+        dialog.accepted.connect(lambda: event_handler(self.choose_template_cb.currentText()))
         dialog.rejected.connect(lambda: print('cancel'))
-        self.templates_comboBox = dialog.findChild(QComboBox, 'templates_comboBox')
-        self.templates_comboBox.addItems(self.templates)
+        self.choose_template_cb = dialog.findChild(QtWidgets.QComboBox, 'choose_template_cb')
+        self.choose_template_cb.addItems(self.current_all_templates)
+
+        self.choose_subject_id_cb = dialog.findChild(QtWidgets.QComboBox, 'choose_subject_id_cb')
+        self.choose_subject_id_cb.setEnabled(False)
+        self.choose_subject_id_cb.addItems(self.subjects)
+        self.choose_subject_id_cb.currentTextChanged.connect(lambda: self.on_filter_by_id_change_event_handler())
+
+        self.all_radio_btn = dialog.findChild(QtWidgets.QRadioButton, 'all_radio_btn')
+        self.filter_by_id_radio_btn = dialog.findChild(QtWidgets.QRadioButton, 'filter_by_id_radio_btn')
+        self.all_radio_btn.toggled.connect(lambda: self.on_radio_change_event_handler())
+        self.all_radio_btn.toggle()
+
         return
         dialog.setObjectName("dialog")
         dialog.resize(434, 301)
@@ -246,13 +263,29 @@ class ChooseTemplateUi(object):
         self.parent.vm.choose_template_from_list(chosen_temp_id)
         self.set_template_data_in_parent(chosen_temp_id)
         self.set_subject_id_in_parent()
-
         self.parent.choose_template_window.close()
 
-    def retranslateUi(self, dialog):
-        _translate = QtCore.QCoreApplication.translate
-        dialog.setWindowTitle(_translate("Dialog", "Choose template"))
-        self.header_label.setText(_translate("Dialog", "Using ready template"))
-        self.choose_template_label.setText(_translate("Dialog", "Choose template:"))
-        self.filter_by_subject_id_radioButton.setText(_translate("Dialog", "Filter by subject id"))
-        self.all_radioButton.setText(_translate("Dialog", "All"))
+    # we need this
+    def get_all_templates(self):
+        concat_list = []
+        for template_list in self.templates.values():
+            concat_list = concat_list + template_list
+        self.current_all_templates = concat_list
+
+    # we need this
+    def on_radio_change_event_handler(self):
+        if self.all_radio_btn.isChecked():
+            self.choose_subject_id_cb.setEnabled(False)
+            self.choose_template_cb.clear()
+            self.choose_template_cb.addItems(self.current_all_templates)
+        elif self.filter_by_id_radio_btn.isChecked():
+            self.choose_subject_id_cb.setEnabled(True)
+            self.choose_template_cb.clear()
+            template_key = self.choose_subject_id_cb.currentText()
+            self.choose_template_cb.addItems(self.templates[template_key])
+
+    # we need this
+    def on_filter_by_id_change_event_handler(self):
+        self.choose_template_cb.clear()
+        template_key = self.choose_subject_id_cb.currentText()
+        self.choose_template_cb.addItems(self.templates[template_key])

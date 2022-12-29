@@ -38,11 +38,11 @@ class SystemMainUi(object):
         self.control_session_board = None
 
     # def setupUi(self, main_window, sysVM):
-    def setupUi(self, main_window, system_vm , isManager=False):
+    def setupUi(self, main_window, system_vm, isManager=False):
         self.vm = system_vm
         if isManager:
-            temp=self.main_window
-            self.main_window=main_window
+            temp = self.main_window
+            self.main_window = main_window
             self.main_window.show()
             temp.close()
 
@@ -65,7 +65,6 @@ class SystemMainUi(object):
         settings_pushButton = self.main_window.findChild(QPushButton, 'settings_pushButton')
         settings_pushButton.clicked.connect(self.on_settings_click)
 
-
     def on_manager_login_click(self):
         self.chosen_window = QtWidgets.QMainWindow()
         self.chosen_window_ui = ManagerLoginUi(self)
@@ -82,8 +81,7 @@ class SystemMainUi(object):
             self.delete_trial_type_pushButton.clicked.connect(self.on_delete_trial_type_click)
             self.delete_templates_pushButton = manager_window.findChild(QPushButton, 'delete_templates_pushButton')
             self.delete_templates_pushButton.clicked.connect(self.on_delete_templates_click)
-            self.setupUi(manager_window,self.vm,True)
-
+            self.setupUi(manager_window, self.vm, True)
 
     def on_settings_click(self):
         self.chosen_window = QtWidgets.QMainWindow()
@@ -108,7 +106,7 @@ class SystemMainUi(object):
         self.chosen_window_ui = CreateSessionUi(self)
         self.chosen_window_ui.setupUi(self.chosen_window)
         self.chosen_window.show()
-        #self.main_window.hide()
+        # self.main_window.hide()
 
     def on_edit_trial_type_click(self):
         self.chosen_window = QtWidgets.QMainWindow()
@@ -130,7 +128,6 @@ class SystemMainUi(object):
 
     def on_present_ctrl_sess_board_click(self):
         self.control_session_board.show()
-
 
     def EventHandler(self, sender, *event_args):
         if type(sender) != BehaviorSystemViewModel:

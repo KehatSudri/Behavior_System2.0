@@ -443,7 +443,7 @@ class CreateSessionUi(object):
         # TODO add on clicked event handler for component
         self.chosen_window = QtWidgets.QDialog()
         choose_template = ChooseTemplateUi(self)
-        choose_template.setupUi(self.chosen_window)
+        choose_template.setupUi(self.chosen_window, self.on_template_change_event_handler)
         self.chosen_window.show()
         # self.second_window_ui = ChooseTemplateUi(self)
         # self.second_window_ui.setupUi(self.second_window)
@@ -761,6 +761,12 @@ class CreateSessionUi(object):
             trials_names += name
             trials_params.append(param)
         return trials_names, trials_params
+
+    # we need this
+    def on_template_change_event_handler(self, template):
+        print(template)
+        # TODO insert template details to session
+
     # def dict_str_style(self, d):
     #     d_casting_int = self.get_string_dict(d)
     #
