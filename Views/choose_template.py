@@ -253,10 +253,7 @@ class ChooseTemplateUi(object):
 
     # we need this
     def get_all_templates(self):
-        concat_list = []
-        for template_list in self.templates.values():
-            concat_list = concat_list + template_list
-        self.current_all_templates = concat_list
+        self.current_all_templates = [template for sublist in self.templates.values() for template in sublist]
 
     # we need this
     def on_radio_change_event_handler(self):
