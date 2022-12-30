@@ -364,7 +364,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QTextEdit" name="session_name">
+         <widget class="QTextEdit" name="session_name_te">
           <property name="maximumSize">
            <size>
             <width>100</width>
@@ -630,7 +630,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QTextEdit" name="sunject_name">
+         <widget class="QTextEdit" name="subject_id_te">
           <property name="maximumSize">
            <size>
             <width>100</width>
@@ -653,7 +653,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QTextEdit" name="exp_name">
+         <widget class="QTextEdit" name="exp_name_te">
           <property name="maximumSize">
            <size>
             <width>100</width>

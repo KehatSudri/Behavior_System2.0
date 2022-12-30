@@ -15,6 +15,9 @@ from Views.random_order import RandomOrderUi
 
 class CreateSessionUi(object):
     def __init__(self, parent):
+        self.exp_name_te = None
+        self.subject_id_te = None
+        self.session_name_te = None
         self.parent = parent
         self.vm = parent.vm
         self.main_window = None
@@ -117,6 +120,11 @@ class CreateSessionUi(object):
         uic.loadUi(get_ui_path('create_session.ui'), main_window)
         choose_template_btn = main_window.findChild(QtWidgets.QPushButton, "choose_template_btn")
         choose_template_btn.clicked.connect(self.on_choose_template_click)
+
+        self.session_name_te = main_window.findChild(QtWidgets.QTextEdit, "session_name_te")
+        self.subject_id_te = main_window.findChild(QtWidgets.QTextEdit, "subject_id_te")
+        self.exp_name_te = main_window.findChild(QtWidgets.QTextEdit, "exp_name_te")
+
         return
         self.main_window = main_window
         self.parent.main_window.hide()
@@ -443,7 +451,7 @@ class CreateSessionUi(object):
         # TODO add on clicked event handler for component
         self.chosen_window = QtWidgets.QDialog()
         choose_template = ChooseTemplateUi(self)
-        choose_template.setupUi(self.chosen_window, self.on_template_change_event_handler)
+        choose_template.setup_ui(self.chosen_window, self.on_template_change_event_handler)
         self.chosen_window.show()
         # self.second_window_ui = ChooseTemplateUi(self)
         # self.second_window_ui.setupUi(self.second_window)
@@ -765,7 +773,9 @@ class CreateSessionUi(object):
     # we need this
     def on_template_change_event_handler(self, template):
         print(template)
-        # TODO insert template details to session
+        self.session_name_te.setHtml("sessionNameMock")
+        self.subject_id_te.setHtml("subjectIdMock")
+        self.exp_name_te.setHtml("experimentorMock")
 
     # def dict_str_style(self, d):
     #     d_casting_int = self.get_string_dict(d)

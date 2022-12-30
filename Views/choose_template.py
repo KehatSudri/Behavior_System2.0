@@ -5,38 +5,24 @@ from Views.utils import error_warning, get_ui_path
 
 class ChooseTemplateUi(object):
     def __init__(self, parent):
+        self.parent = parent
         self.choose_subject_id_cb = None
         self.filter_by_id_radio_btn = None
         self.all_radio_btn = None
-        self.subject_id_cb = None
         self.choose_template_cb = None
-        self.parent = parent
-        self.window_gridLayout = None
-        self.central_gridLayout = None
-        self.header_label = None
-        self.all_radioButton = None
-        self.filter_by_subject_id_radioButton = None
-        self.subject_id_comboBox = None
-        self.subject_ids = self.parent.vm.get_list_of_subjects()[::-1]
-        self.choose_template_label = None
-        self.templates_comboBox = None
+        self.subject_ids = self.parent.vm.get_list_of_subjects()[::-1]  # check this func
+        self.current_all_templates = []
         self.templates = {"subject1": ["subject1 template1"],
                           "subject2": ["subject2 template1"]}  # TODO get from parent cache
         self.subjects = ["subject1", "subject2"]  # TODO get from parent cache
-        self.current_all_templates = []
-        self.buttonBox = None
-        self.is_filtered_by_subject = None
 
-    def setupUi(self, dialog, event_handler):
-        # self.main_window = main_window
-        self.get_all_templates()
+    def setup_ui(self, dialog, event_handler):
+        self.all_templates = self.get_all_templates()
         uic.loadUi(get_ui_path('choose_template.ui'), dialog)
         # TODO implement on clicked event handler given by calling component
         dialog.accepted.connect(lambda: event_handler(self.choose_template_cb.currentText()))
         dialog.rejected.connect(lambda: print('cancel'))
         self.choose_template_cb = dialog.findChild(QtWidgets.QComboBox, 'choose_template_cb')
-        self.choose_template_cb.addItems(self.current_all_templates)
-
         self.choose_subject_id_cb = dialog.findChild(QtWidgets.QComboBox, 'choose_subject_id_cb')
         self.choose_subject_id_cb.setEnabled(False)
         self.choose_subject_id_cb.addItems(self.subjects)
