@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>434</width>
-    <height>301</height>
+    <width>386</width>
+    <height>252</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <layout class="QGridLayout" name="central_gridLayout" rowstretch="2,1,2,2,100,2,0" columnstretch="1,1,1" rowminimumheight="0,0,0,0,0,0,0" columnminimumwidth="0,0,0">
+    <layout class="QGridLayout" name="central_gridLayout" rowstretch="2,0,0,0,0,0,0" columnstretch="1,0,0">
      <property name="sizeConstraint">
       <enum>QLayout::SetDefaultConstraint</enum>
      </property>
@@ -25,9 +25,6 @@
      <property name="rightMargin">
       <number>20</number>
      </property>
-     <item row="4" column="1" colspan="2">
-      <widget class="QComboBox" name="templates_comboBox"/>
-     </item>
      <item row="0" column="0" colspan="3">
       <widget class="QLabel" name="header_label">
        <property name="styleSheet">
@@ -41,31 +38,8 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="choose_template_label">
-       <property name="styleSheet">
-        <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
-       </property>
-       <property name="text">
-        <string>Choose template:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QRadioButton" name="filter_by_subject_id_radioButton">
-       <property name="styleSheet">
-        <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
-       </property>
-       <property name="text">
-        <string>Filter by subject id</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QComboBox" name="subject_id_comboBox"/>
-     </item>
      <item row="1" column="0">
-      <widget class="QRadioButton" name="all_radioButton">
+      <widget class="QRadioButton" name="all_radio_btn">
        <property name="styleSheet">
         <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
        </property>
@@ -74,15 +48,18 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="1" colspan="2">
-      <spacer name="verticalSpacer">
+     <item row="4" column="1" colspan="2">
+      <widget class="QComboBox" name="choose_template_cb"/>
+     </item>
+     <item row="2" column="1" rowspan="2">
+      <spacer name="verticalSpacer_2">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>40</height>
+         <height>10</height>
         </size>
        </property>
       </spacer>
@@ -97,18 +74,41 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1" rowspan="2">
-      <spacer name="verticalSpacer_2">
+     <item row="1" column="2">
+      <widget class="QComboBox" name="choose_subject_id_cb"/>
+     </item>
+     <item row="5" column="1" colspan="2">
+      <spacer name="verticalSpacer">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>10</height>
+         <height>40</height>
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="choose_template_label">
+       <property name="styleSheet">
+        <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Choose template:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QRadioButton" name="filter_by_id_radio_btn">
+       <property name="styleSheet">
+        <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Filter by subject id</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

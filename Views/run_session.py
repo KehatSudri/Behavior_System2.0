@@ -395,6 +395,8 @@ class RunningGraphsUi(object):
             # change the property
             # self.is_running_session = self.model.is_running_session #is this necessary or it updates on its own
 
+
+
 # if __name__ == "__main__":
 #     import sys
 #

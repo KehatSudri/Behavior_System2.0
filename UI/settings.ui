@@ -26,7 +26,7 @@
          <x>0</x>
          <y>0</y>
          <width>480</width>
-         <height>688</height>
+         <height>722</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -80,7 +80,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="log_file_horizontalLayout" stretch="3,1">
+         <layout class="QHBoxLayout" name="log_file_horizontalLayout" stretch="3,0">
           <item>
            <widget class="QTextEdit" name="log_file_path_textEdit">
             <property name="sizePolicy">
@@ -99,7 +99,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="choose_log_file_folder_pushButton">
+           <widget class="QPushButton" name="choose_folder_btn">
             <property name="text">
              <string>Folder</string>
             </property>
@@ -177,7 +177,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="choose_db_file_folder_pushButton">
+           <widget class="QPushButton" name="choose_file_btn">
             <property name="text">
              <string>File</string>
             </property>
