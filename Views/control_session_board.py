@@ -140,14 +140,3 @@ class ControlSessionBoardUi(object):
     def on_finish_click(self):
         pass
 
-    def retranslateUi(self, dialog):
-        _translate = QtCore.QCoreApplication.translate
-        dialog.setWindowTitle(_translate("dialog", "Control session board"))
-        self.stop_pushButton.setText(_translate("dialog", "Stop"))
-        self.pause_pushButton.setText(_translate("dialog", "Pause"))
-        self.resume_pushButton.setText(_translate("dialog", "Resume"))
-        self.repeat_trial_pushButton.setText(_translate("dialog", "Repeat trial"))
-        self.present_data_pushButton.setText(_translate("dialog", "Present data"))
-        self.reward_pushButton.setText(_translate("dialog", "Give reward"))
-        self.finish_pushButton.setText(_translate("dialog", "Finish"))
-
