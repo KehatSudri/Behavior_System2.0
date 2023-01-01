@@ -2,7 +2,7 @@ from collections import OrderedDict
 
 from PyQt6 import QtCore, QtGui, QtWidgets, uic
 from PyQt6.QtWidgets import QHeaderView, QTableWidgetItem, QAbstractItemView, QDialog, QDialogButtonBox, QLabel, \
-    QVBoxLayout
+    QVBoxLayout, QPushButton
 
 from ViewModels.Bahavior_System_VM import BehaviorSystemViewModel
 from Views.utils import error_warning, list_to_str, get_ui_path
@@ -67,9 +67,16 @@ class EditTrialTypeUi(object):
         self.is_error = False
 
     def setupUi(self, main_window):
-        uic.loadUi(get_ui_path('edit_trial_type.ui'), main_window)
-        return
         self.main_window = main_window
+        uic.loadUi(get_ui_path('edit_trial_type.ui'), main_window)
+
+        self.back_pushButton = main_window.findChild(QPushButton, 'back_pushButton')
+        self.back_pushButton.clicked.connect(self.on_back_click)
+
+        self.Add_event_pushButton = main_window.findChild(QPushButton, 'Add_event_pushButton')
+        self.Add_event_pushButton.clicked.connect(self.on_add_click)
+
+        return
         main_window.setObjectName("main_window")
         main_window.resize(493, 597)
         self.central_widget = QtWidgets.QWidget(main_window)

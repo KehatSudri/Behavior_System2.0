@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>496</width>
-    <height>600</height>
+    <width>618</width>
+    <height>780</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -116,15 +116,15 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>476</width>
-         <height>389</height>
+         <width>592</width>
+         <height>601</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
         <item row="3" column="0">
-         <layout class="QVBoxLayout" name="scroll_verticalLayout" stretch="1,1,1,1,1,5">
+         <layout class="QVBoxLayout" name="scroll_verticalLayout" stretch="1,1,1,1,1,0">
           <item>
-           <layout class="QHBoxLayout" name="trial_name_horizontalLayout" stretch="1,2">
+           <layout class="QHBoxLayout" name="trial_name_horizontalLayout" stretch="1,0">
             <item>
              <widget class="QLabel" name="trial_name_label_2">
               <property name="text">
@@ -133,23 +133,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QTextEdit" name="trial_name_textEdit">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <family>Segoe UI</family>
-                <pointsize>15</pointsize>
-               </font>
-              </property>
-              <property name="tabStopWidth">
-               <number>80</number>
-              </property>
-             </widget>
+             <widget class="QTextEdit" name="textEdit"/>
             </item>
            </layout>
           </item>
@@ -227,7 +211,7 @@
            <widget class="QTableWidget" name="events_tableWidget">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-              <horstretch>1</horstretch>
+              <horstretch>0</horstretch>
               <verstretch>100</verstretch>
              </sizepolicy>
             </property>
@@ -236,6 +220,69 @@
               <pointsize>15</pointsize>
              </font>
             </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QAbstractScrollArea::AdjustIgnored</enum>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
+            </property>
+            <property name="alternatingRowColors">
+             <bool>false</bool>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <property name="gridStyle">
+             <enum>Qt::CustomDashLine</enum>
+            </property>
+            <attribute name="horizontalHeaderCascadingSectionResizes">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>true</bool>
+            </attribute>
+            <attribute name="verticalHeaderCascadingSectionResizes">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="verticalHeaderStretchLastSection">
+             <bool>false</bool>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>Event</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+               <kerning>false</kerning>
+              </font>
+             </property>
+             <property name="textAlignment">
+              <set>AlignCenter</set>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Simple/Contingent</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+               <kerning>false</kerning>
+              </font>
+             </property>
+             <property name="textAlignment">
+              <set>AlignCenter</set>
+             </property>
+            </column>
            </widget>
           </item>
          </layout>
@@ -245,31 +292,21 @@
      </widget>
     </item>
     <item row="2" column="0">
-     <layout class="QHBoxLayout" name="navigation_horizontalLayout" stretch="1,1,1">
-      <item>
-       <spacer name="left_horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
+     <layout class="QHBoxLayout" name="navigation_horizontalLayout" stretch="0,0,0">
       <item>
        <widget class="QPushButton" name="back_pushButton">
         <property name="text">
-         <string>Back</string>
+         <string>Cancel</string>
         </property>
        </widget>
       </item>
       <item>
-       <spacer name="right_horizontalSpacer">
+       <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Preferred</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -278,6 +315,13 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="create_trial_btn">
+        <property name="text">
+         <string>Create Trial</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>

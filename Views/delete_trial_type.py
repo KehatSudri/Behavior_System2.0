@@ -1,6 +1,6 @@
 from PyQt6 import QtCore, QtGui, QtWidgets, uic
 from PyQt6.QtWidgets import QHeaderView, QTableWidgetItem, QAbstractItemView, QDialog, QDialogButtonBox, QVBoxLayout, \
-    QLabel
+    QLabel, QPushButton
 
 from ViewModels.Bahavior_System_VM import BehaviorSystemViewModel
 from Views.utils import dict_yaml_style, error_warning, get_ui_path
@@ -51,9 +51,12 @@ class DeleteTrialTypeUi(object):
         self.is_error = False
 
     def setupUi(self, main_window):
-        uic.loadUi(get_ui_path('delete_trial_type.ui'), main_window)
-        return
         self.main_window = main_window
+        uic.loadUi(get_ui_path('delete_trial_type.ui'), main_window)
+
+        self.back_pushButton = main_window.findChild(QPushButton, 'back_pushButton')
+        self.back_pushButton.clicked.connect(self.on_back_click)
+        return
         self.parent.main_window.hide()
         main_window.setObjectName("main_window")
         #main_window.resize(495, 597)
