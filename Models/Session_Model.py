@@ -147,6 +147,7 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
     def __init__(self):
         SessionTemplate.__init__(self)
         INotifyPropertyChanged.__init__(self)
+        self.is_session_running = False
         self._subject_id = None
         # get params and set params of template
         self._session_id = None  # Generate unique id for session
