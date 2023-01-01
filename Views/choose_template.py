@@ -19,7 +19,6 @@ class ChooseTemplateUi(object):
     def setup_ui(self, dialog, event_handler):
         self.all_templates = self.get_all_templates()
         uic.loadUi(get_ui_path('choose_template.ui'), dialog)
-        # TODO implement on clicked event handler given by calling component
         dialog.accepted.connect(lambda: event_handler(self.choose_template_cb.currentText()))
         dialog.rejected.connect(lambda: print('cancel'))
         self.choose_template_cb = dialog.findChild(QtWidgets.QComboBox, 'choose_template_cb')

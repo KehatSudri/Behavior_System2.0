@@ -1,6 +1,7 @@
-from PyQt6 import QtCore, QtGui,QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets, uic
 
 from Views.run_session import RunningGraphsUi
+from Views.utils import get_ui_path
 
 
 class ControlSessionBoardUi(object):
@@ -25,6 +26,8 @@ class ControlSessionBoardUi(object):
         self.data_ui = None
 
     def setupUi(self, dialog):
+        uic.loadUi(get_ui_path('control_session_board.ui'), dialog)
+        return
         # open a session's data in the background
         self.data_ui = RunningGraphsUi(self)
         self.data_ui.setupUi(self.data_window)
