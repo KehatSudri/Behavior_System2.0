@@ -61,16 +61,17 @@ class CreateTrialTypeUi(object):
         self.events_comboBox.addItems(self.events)
 
         self.events_tableWidget = main_window.findChild(QTableWidget, 'events_tableWidget')
-        delegate = ReadOnlyDelegate(self.events_tableWidget)
-        # set the table to be read-only
-        self.events_tableWidget.setItemDelegateForColumn(0, delegate)
-        self.events_tableWidget.setItemDelegateForColumn(1, delegate)
+        #self.events_tableWidget.resizeColumnsToContents()
+        self.events_tableWidget.setColumnWidth(0, int(self.events_tableWidget.width()/2))
 
         self.add_event_pushButton = main_window.findChild(QPushButton, 'Add_event_pushButton')
         self.add_event_pushButton.clicked.connect(self.on_add_click)
 
         self.remove_event_pushButton = main_window.findChild(QPushButton, 'pushButton_2')
         self.remove_event_pushButton.clicked.connect(self.on_remove_click)
+
+        self.accept_pushButton = main_window.findChild(QPushButton, 'create_trial_btn')
+        self.accept_pushButton.clicked.connect(self.accept)
 
         return
 
@@ -254,6 +255,9 @@ class CreateTrialTypeUi(object):
             self.events_tableWidget.setItem(row_position, 1, QTableWidgetItem("Contingent"))
         self.events_order.append(current_event)
         self.is_contingent_order.append(self.chosen_is_contingent)
+        #self.events_tableWidget.resizeColumnsToContents()
+        self.events_tableWidget.setColumnWidth(0, int(self.events_tableWidget.width()/2))
+
 
     def on_remove_click(self):
         is_not_empty = len(self.events_order) > 0
@@ -273,6 +277,8 @@ class CreateTrialTypeUi(object):
             error_warning("There are no events in the current session.")
 
     def accept(self):
+        #TODO need to check if table empty before
+        print("cc")
         name = self.trial_type_name
         events = self.events_order
         self.parent.vm.add_trial_type(name, events)
