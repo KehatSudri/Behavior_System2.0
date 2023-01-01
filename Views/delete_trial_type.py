@@ -201,11 +201,3 @@ class DeleteTrialTypeUi(object):
             self.is_error = True
         elif event_args[0][0] == "VM_delete_trial_types_success":
             self.is_error = False
-
-    def retranslateUi(self, main):
-        _translate = QtCore.QCoreApplication.translate
-        main.setWindowTitle(_translate("main", "Delete trial type"))
-        self.headline_label.setText(_translate("main", "Delete trial type"))
-        self.remove_pushButton.setText(_translate("main", "Remove"))
-        self.trial_types_label.setText(_translate("main", "Trial types:"))
-        self.back_pushButton.setText(_translate("main", "Back"))

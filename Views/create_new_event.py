@@ -260,19 +260,3 @@ class CreateEventUi(object):
     def on_back_click(self):
         self.parent.main_window.show()
         self.main_window.close()
-
-    def retranslateUi(self, main):
-        _translate = QtCore.QCoreApplication.translate
-        main.setWindowTitle(_translate("main", "Create a new event"))
-        self.headline_label.setText(_translate("main", "Create a new event"))
-        self.add_pushButton.setText(_translate("main", "Add event"))
-        self.is_reward_label.setText(_translate("main", "Is reward event:"))
-        self.input_radioButton.setText(_translate("main", "Input"))
-        self.output_radioButton.setText(_translate("main", "Output"))
-        self.digital_radioButton.setText(_translate("main", "Digital"))
-        self.analog_radioButton.setText(_translate("main", "Analog"))
-        self.event_name_label.setText(_translate("main", "Event name:"))
-        self.event_port_label.setText(_translate("main", "Port:"))
-        self.digital_description_label.setText(_translate("main", "Duration"))
-        self.analog_description_label.setText(_translate("main", "Duration, frequency, amplitude"))
-        self.back_pushButton.setText(_translate("main", "Back"))

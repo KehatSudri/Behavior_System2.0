@@ -289,14 +289,3 @@ class EditTrialTypeUi(object):
         elif event_args[0][0] == "VM_edit_trial_types_success":
             self.is_error = False
 
-    def retranslateUi(self, main):
-        _translate = QtCore.QCoreApplication.translate
-        main.setWindowTitle(_translate("main", "Edit trial type"))
-        self.headline_label.setText(_translate("main", "Edit trial type"))
-        self.choose_trial_type_label.setText(_translate("main", "Choose trial type:"))
-        self.change_trial_type_label.setText(_translate("main", "Edit trial type name:"))
-        self.Add_event_pushButton.setText(_translate("main", "Add event"))
-        self.remove_pushButton.setText(_translate("main", "Remove"))
-        self.events_order_label.setText(_translate("main", "Events order:"))
-        self.back_pushButton.setText(_translate("main", "Back"))
-        self.accept_pushButton.setText(_translate("main", "Accept"))

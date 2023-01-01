@@ -249,9 +249,3 @@ class AddTrialUi(object):
         # update trials table on the window
         self.set_trials_table_pointer()
         self.parent.add_window.close()
-
-    def retranslateUi(self, dialog):
-        _translate = QtCore.QCoreApplication.translate
-        dialog.setWindowTitle(_translate("dialog", "Add a trial"))
-        self.trial_types_label.setText(_translate("dialog", "Trial types: "))
-        self.add_trial_label.setText(_translate("dialog", "Add Trial"))

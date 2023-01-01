@@ -254,16 +254,3 @@ class CreateTrialTypeUi(object):
     def on_back_click(self):
         self.parent.main_window.show()
         self.main_window.close()
-
-    def retranslateUi(self, main):
-        _translate = QtCore.QCoreApplication.translate
-        main.setWindowTitle(_translate("main", "Create trial type"))
-        self.headline_label.setText(_translate("main", "Create trial type"))
-        self.trial_name_label.setText(_translate("main", "Trial name:"))
-        self.simple_radioButton.setText(_translate("main", "Simple event"))
-        self.contingent_radioButton.setText(_translate("main", "Contingent event"))
-        self.add_event_pushButton.setText(_translate("main", "Add event"))
-        self.remove_event_pushButton.setText(_translate("main", "Remove event"))
-        self.events_label.setText(_translate("main", "Events:"))
-        self.accept_pushButton.setText(_translate("main", "Add trial type"))
-        self.back_pushButton.setText(_translate("main", "Back"))

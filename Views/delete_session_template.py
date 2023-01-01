@@ -209,14 +209,3 @@ class DeleteSessionTemplate(object):
                 self.experimenter_names_comboBox.addItems(self.experimenter_names)
         else:  # cancel case
             pass
-
-
-    def retranslateUi(self, main):
-        _translate = QtCore.QCoreApplication.translate
-        main.setWindowTitle(_translate("main", "Delete Session Template"))
-        self.headline_label.setText(_translate("main", "Delete session template"))
-        self.subject_id_radioButton.setText(_translate("main", "Subject id:"))
-        self.experimenter_name_radioButton.setText(_translate("main", "Experimenter name:"))
-        self.remove_by_label.setText(_translate("main", "Remove by:"))
-        self.accept_pushButton.setText(_translate("main", "Accept"))
-        self.back_pushButton.setText(_translate("main", "Back"))

@@ -7,6 +7,7 @@ from PyQt6 import QtCore, QtWidgets, uic
 from Views.add_trial import AddTrialUi
 from Views.blocks_order import BlocksOrderUi
 from Views.choose_template import ChooseTemplateUi
+from Views.control_session_board import ControlSessionBoardUi
 
 from Views.edit_trial import EditTrialUi
 from Views.utils import error_warning, dict_yaml_style, get_ui_path
@@ -15,6 +16,9 @@ from Views.random_order import RandomOrderUi
 
 class CreateSessionUi(object):
     def __init__(self, parent):
+        self.trials_ord_dialog_ui = None
+        self.trials_ord_dialog = None
+        self.trials_order_cb = None
         self.exp_name_te = None
         self.subject_id_te = None
         self.session_name_te = None
@@ -117,14 +121,17 @@ class CreateSessionUi(object):
         self.run_session_window = None
 
     def setupUi(self, main_window):
-        uic.loadUi(get_ui_path('create_session.ui'), main_window)
-        choose_template_btn = main_window.findChild(QtWidgets.QPushButton, "choose_template_btn")
+        self.main_window = main_window
+        uic.loadUi(get_ui_path('create_session.ui'), self.main_window)
+        choose_template_btn = self.main_window.findChild(QtWidgets.QPushButton, "choose_template_btn")
         choose_template_btn.clicked.connect(self.on_choose_template_click)
-
-        self.session_name_te = main_window.findChild(QtWidgets.QTextEdit, "session_name_te")
-        self.subject_id_te = main_window.findChild(QtWidgets.QTextEdit, "subject_id_te")
-        self.exp_name_te = main_window.findChild(QtWidgets.QTextEdit, "exp_name_te")
-
+        self.trials_order_cb = self.main_window.findChild(QtWidgets.QComboBox, 'trials_order_cb')
+        self.trials_order_cb.addItems(["random", "blocks"])
+        self.session_name_te = self.main_window.findChild(QtWidgets.QTextEdit, "session_name_te")
+        self.subject_id_te = self.main_window.findChild(QtWidgets.QTextEdit, "subject_id_te")
+        self.exp_name_te = self.main_window.findChild(QtWidgets.QTextEdit, "exp_name_te")
+        next_btn = self.main_window.findChild(QtWidgets.QPushButton, "next_btn")
+        next_btn.clicked.connect(self.on_next_click)
         return
         self.main_window = main_window
         self.parent.main_window.hide()
@@ -578,12 +585,13 @@ class CreateSessionUi(object):
                 is_end_def_empty or is_end_def_empty:
             return False
         return True
-
+    
+    # we need this
     def set_vm_data(self):
         min_iti, max_iti, iti_behavior = None, None, None
         # get trials order
         # order = self.vm.sessionVM.trials_order
-        iti_type = self.chosen_iti_type
+        iti_type = self.trials_order_cb.currentText()
         if iti_type == "random":
             # get value  accordingly - min,max for random, description for behavior
             min_iti = self.min_iti_spinBox.value()
@@ -603,24 +611,24 @@ class CreateSessionUi(object):
         # self.vm.set_trials_list(trials) NOT RELEVANT AT THIS PART
 
     def on_next_click(self):
-        if not self.is_valid_input():
-            if self.max_iti_spinBox.value() < self.min_iti_spinBox.value():
-                error_warning("An error accrued, please choose a valid iti range.")
-                return
-            error_warning("An error accrued, please try again.")
-            return
-        self.set_vm_data()
-        order = self.vm.sessionVM.trials_order
+        # if not self.is_valid_input():
+        #     if self.max_iti_spinBox.value() < self.min_iti_spinBox.value():
+        #         error_warning("An error accrued, please choose a valid iti range.")
+        #         return
+        #     error_warning("An error accrued, please try again.")
+        #     return
+        # self.set_vm_data() TODO
+        order = self.trials_order_cb.currentText()
+        # order = self.vm.sessionVM.trials_order
         # if self.trials_ord_window is None:
+        self.trials_ord_dialog = QtWidgets.QDialog()
         if order == "random":
-            self.trials_ord_window = QtWidgets.QDialog()
-            self.trials_ord_window_ui = RandomOrderUi(self)
-            self.trials_ord_window_ui.setupUi(self.trials_ord_window)
+            self.trials_ord_dialog_ui = RandomOrderUi(self)
+            self.trials_ord_dialog_ui.setupUi(self.trials_ord_dialog, self.on_session_define_event_handler)
         else:
-            self.trials_ord_window = QtWidgets.QDialog()
-            self.trials_ord_window_ui = BlocksOrderUi(self)
-            self.trials_ord_window_ui.setupUi(self.trials_ord_window)
-        self.trials_ord_window.show()
+            self.trials_ord_dialog_ui = BlocksOrderUi(self)
+            self.trials_ord_dialog_ui.setupUi(self.trials_ord_dialog, self.on_session_define_event_handler)
+        self.trials_ord_dialog.show()
 
     def on_session_name_edit(self):
         session_name = self.session_name_lineEdit.text()
@@ -694,72 +702,6 @@ class CreateSessionUi(object):
         self.parent.main_window.show()
         self.main_window.close()
 
-    def retranslateUi(self, main):
-        _translate = QtCore.QCoreApplication.translate
-        main.setWindowTitle(_translate("main", "Create a new session"))
-        self.subject_id_label.setText(_translate("main", "Subject ID: "))
-        self.subject_id_lineEdit.setToolTip(_translate("main",
-                                                       "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" "
-                                                       "\"http://www.w3.org/TR/REC-html40/strict.dtd\">\n "
-                                                       "<html><head><meta name=\"qrichtext\" content=\"1\" /><style "
-                                                       "type=\"text/css\">\n "
-                                                       "p, li { white-space: pre-wrap; }\n"
-                                                       "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; "
-                                                       "font-size:8pt; font-weight:400; font-style:normal;\">\n "
-                                                       "<p style=\"-qt-paragraph-type:empty; margin-top:0px; "
-                                                       "margin-bottom:0px; margin-left:0px; margin-right:0px; "
-                                                       "-qt-block-indent:0; text-indent:0px;\"><br "
-                                                       "/></p></body></html>"))
-        self.experimenter_name_label.setText(_translate("main", "Experimenter name:"))
-        self.experimenter_name_lineEdit.setToolTip(_translate("main",
-                                                              "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" "
-                                                              "\"http://www.w3.org/TR/REC-html40/strict.dtd\">\n "
-                                                              "<html><head><meta name=\"qrichtext\" content=\"1\" "
-                                                              "/><style type=\"text/css\">\n "
-                                                              "p, li { white-space: pre-wrap; }\n"
-                                                              "</style></head><body style=\" font-family:\'MS Shell "
-                                                              "Dlg 2\'; font-size:8pt; font-weight:400; "
-                                                              "font-style:normal;\">\n "
-                                                              "<p style=\"-qt-paragraph-type:empty; margin-top:0px; "
-                                                              "margin-bottom:0px; margin-left:0px; margin-right:0px; "
-                                                              "-qt-block-indent:0; text-indent:0px;\"><br "
-                                                              "/></p></body></html>"))
-        self.session_name_label.setText(_translate("main", "Session name:"))
-        self.session_name_lineEdit.setToolTip(_translate("main",
-                                                         "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" "
-                                                         "\"http://www.w3.org/TR/REC-html40/strict.dtd\">\n "
-                                                         "<html><head><meta name=\"qrichtext\" content=\"1\" /><style "
-                                                         "type=\"text/css\">\n "
-                                                         "p, li { white-space: pre-wrap; }\n"
-                                                         "</style></head><body style=\" font-family:\'MS Shell Dlg "
-                                                         "2\'; font-size:8pt; font-weight:400; font-style:normal;\">\n "
-                                                         "<p style=\"-qt-paragraph-type:empty; margin-top:0px; "
-                                                         "margin-bottom:0px; margin-left:0px; margin-right:0px; "
-                                                         "-qt-block-indent:0; text-indent:0px;\"><br "
-                                                         "/></p></body></html>"))
-        self.date_label.setText(_translate("main", "Date:"))
-        # self.date_value_label.setText(_translate("main", "self.date_value_label"))
-        item = self.trials_tableWidget.horizontalHeaderItem(0)
-        item.setText(_translate("main", "type"))
-        item = self.trials_tableWidget.horizontalHeaderItem(1)
-        item.setText(_translate("main", "parameters"))
-        self.trials_label.setText(_translate("main", "Trials: "))
-        self.headline_label.setText(_translate("main", "Create a session"))
-        self.next_pushBtn.setText(_translate("main", "Next"))
-        self.back_pushBtn.setText(_translate("main", "Back"))
-        self.min_iti_label.setText(_translate("main", "min: "))
-        self.max_iti_label.setText(_translate("main", "max: "))
-        self.end_def_label.setText(_translate("main", "End definition:"))
-        self.iti_label.setText(_translate("main", "ITI:"))
-        self.behavior_iti_radioBtn.setText(_translate("main", "behavior"))
-        self.random_iti_radioBtn.setText(_translate("main", "random"))
-        self.random_reward_percent_label.setText(_translate("main", "Random reward percent"))
-        self.trials_order_label.setText(_translate("main", "Order:"))
-        self.add_trial_pushButton.setText(_translate("main", "Add"))
-        self.edit_trial_pushButton.setText(_translate("main", "Edit"))
-        self.remove_trial_pushButton.setText(_translate("main", "Remove"))
-        self.choose_template_pushButton.setText(_translate("main", "Choose Template"))
-
     def parse_trial_params(self, trials):
         trials_names, trials_params = [], []
         for trial in trials:
@@ -776,6 +718,16 @@ class CreateSessionUi(object):
         self.session_name_te.setHtml("sessionNameMock")
         self.subject_id_te.setHtml("subjectIdMock")
         self.exp_name_te.setHtml("experimentorMock")
+
+    def on_session_define_event_handler(self):
+        print("session start")
+        self.main_window.close()
+        self.main_window = QtWidgets.QDialog()
+
+        control_session_board = ControlSessionBoardUi(self)
+        control_session_board.setupUi(self.main_window)
+
+        self.main_window.show()
 
     # def dict_str_style(self, d):
     #     d_casting_int = self.get_string_dict(d)

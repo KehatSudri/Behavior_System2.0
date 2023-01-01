@@ -1,6 +1,7 @@
-from PyQt6 import QtCore, QtGui,QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets, uic
 
 from Views.run_session import RunningGraphsUi
+from Views.utils import get_ui_path
 
 
 class ControlSessionBoardUi(object):
@@ -25,6 +26,8 @@ class ControlSessionBoardUi(object):
         self.data_ui = None
 
     def setupUi(self, dialog):
+        uic.loadUi(get_ui_path('control_session_board.ui'), dialog)
+        return
         # open a session's data in the background
         self.data_ui = RunningGraphsUi(self)
         self.data_ui.setupUi(self.data_window)
@@ -136,15 +139,4 @@ class ControlSessionBoardUi(object):
 
     def on_finish_click(self):
         pass
-
-    def retranslateUi(self, dialog):
-        _translate = QtCore.QCoreApplication.translate
-        dialog.setWindowTitle(_translate("dialog", "Control session board"))
-        self.stop_pushButton.setText(_translate("dialog", "Stop"))
-        self.pause_pushButton.setText(_translate("dialog", "Pause"))
-        self.resume_pushButton.setText(_translate("dialog", "Resume"))
-        self.repeat_trial_pushButton.setText(_translate("dialog", "Repeat trial"))
-        self.present_data_pushButton.setText(_translate("dialog", "Present data"))
-        self.reward_pushButton.setText(_translate("dialog", "Give reward"))
-        self.finish_pushButton.setText(_translate("dialog", "Finish"))
 

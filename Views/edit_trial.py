@@ -215,10 +215,6 @@ class EditTrialUi(object):
         self.set_trials_table_pointer()
         self.parent.edit_window.close()
 
-    def retranslateUi(self, dialog):
-        _translate = QtCore.QCoreApplication.translate
-        dialog.setWindowTitle(_translate("dialog", "Edit trial"))
-        self.edit_trial_label.setText(_translate("dialog", "Edit trial"))
 
 # if __name__ == "__main__":
 #     import sys

@@ -1,12 +1,12 @@
 import threading
 from collections import OrderedDict
 
-from PyQt6 import QtCore, QtWidgets
+from PyQt6 import QtCore, QtWidgets, uic
 from PyQt6.QtWidgets import QHeaderView, QTableWidgetItem
 
 from Models import Trial_Model
 from Views.control_session_board import ControlSessionBoardUi
-from Views.utils import error_warning, dict_one_line_style
+from Views.utils import error_warning, dict_one_line_style, get_ui_path
 
 
 class BlocksOrderUi(object):
@@ -37,7 +37,11 @@ class BlocksOrderUi(object):
         # self.blocks_in_session = []
         #self.blocks_in_session = self.parent.blocks_ord
 
-    def setupUi(self, dialog):
+    def setupUi(self, dialog, event_handler):
+        uic.loadUi(get_ui_path('blocks_order.ui'), dialog)
+        dialog.accepted.connect(lambda: event_handler())
+        dialog.rejected.connect(lambda: print('cancel'))
+        return
         dialog.setObjectName("dialog")
         dialog.resize(596, 506)
         self.window_gridLayout = QtWidgets.QGridLayout(dialog)
@@ -336,17 +340,6 @@ class BlocksOrderUi(object):
             error_warning("A block is not selected.")
         else:
             error_warning("There are no block in the current session.")
-
-    def retranslateUi(self, dialog):
-        _translate = QtCore.QCoreApplication.translate
-        dialog.setWindowTitle(_translate("dialog", "Blocks order"))
-        self.blocks_label.setText(_translate("dialog", "Blocks:"))
-        self.header_label.setText(_translate("dialog", "Define blocks order session"))
-        self.blocks_order_label.setText(_translate("dialog", "Blocks order:"))
-        self.add_pushButton.setText(_translate("dialog", "Add"))
-        self.remove_pushButton.setText(_translate("dialog", "Remove"))
-        self.set_new_block_pushButton.setText(_translate("dialog", "Set a new block"))
-        self.remove_block_pushButton.setText(_translate("dialog", "Remove a block"))
 
     def parse_trial_params(self):
         trials_names, trials_params = [], []

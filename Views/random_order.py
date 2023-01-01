@@ -1,11 +1,11 @@
 import threading
 
-from PyQt6 import QtCore, QtWidgets
+from PyQt6 import QtCore, QtWidgets, uic
 from PyQt6.QtWidgets import QHeaderView, QTableWidgetItem, QAbstractItemView
 
 from Views.control_session_board import ControlSessionBoardUi
 from Models import Trial_Model
-from Views.utils import error_warning, dict_one_line_style
+from Views.utils import error_warning, dict_one_line_style, get_ui_path
 
 
 class ReadOnlyDelegate(QtWidgets.QStyledItemDelegate):
@@ -28,7 +28,12 @@ class RandomOrderUi(object):
         self.num_of_rows = len(self.parent.trials_in_session)
         self.set_trials_table_pointer = None
 
-    def setupUi(self, dialog):
+    def setupUi(self, dialog, event_handler):
+        uic.loadUi(get_ui_path('random_order.ui'), dialog)
+        # dialog.accepted.connect(lambda: event_handler(self.choose_template_cb.currentText()))
+        dialog.accepted.connect(lambda: event_handler())
+        dialog.rejected.connect(lambda: print('cancel'))
+        return
         dialog.setObjectName("dialog")
         dialog.resize(401, 355)
         self.window_gridLayout = QtWidgets.QGridLayout(dialog)
@@ -180,18 +185,6 @@ class RandomOrderUi(object):
 
     def reject(self):
         self.parent.trials_ord_window.close()
-
-    def retranslateUi(self, dialog):
-        _translate = QtCore.QCoreApplication.translate
-        dialog.setWindowTitle(_translate("dialog", "Random order define"))
-        item = self.trials_tableWidget.horizontalHeaderItem(0)
-        item.setText(_translate("dialog", "Trial name"))
-        item = self.trials_tableWidget.horizontalHeaderItem(1)
-        item.setText(_translate("dialog", "Parameters"))
-        item = self.trials_tableWidget.horizontalHeaderItem(2)
-        item.setText(_translate("dialog", "Percent in session"))
-        self.explanation_label.setText(_translate("dialog", "Define a random ordered session"))
-        self.total_num_of_trials_label.setText(_translate("dialog", "Total number of trials:"))
 
 
 if __name__ == "__main__":
