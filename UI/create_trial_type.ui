@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>496</width>
-    <height>600</height>
+    <width>734</width>
+    <height>780</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -116,15 +116,15 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>476</width>
-         <height>389</height>
+         <width>708</width>
+         <height>601</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
         <item row="3" column="0">
          <layout class="QVBoxLayout" name="scroll_verticalLayout" stretch="1,1,1,1,1,5">
           <item>
-           <layout class="QHBoxLayout" name="trial_name_horizontalLayout" stretch="1,2">
+           <layout class="QHBoxLayout" name="trial_name_horizontalLayout" stretch="1,0">
             <item>
              <widget class="QLabel" name="trial_name_label_2">
               <property name="text">
@@ -133,23 +133,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QTextEdit" name="trial_name_textEdit">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <family>Segoe UI</family>
-                <pointsize>15</pointsize>
-               </font>
-              </property>
-              <property name="tabStopWidth">
-               <number>80</number>
-              </property>
-             </widget>
+             <widget class="QTextEdit" name="textEdit"/>
             </item>
            </layout>
           </item>
@@ -236,6 +220,16 @@
               <pointsize>15</pointsize>
              </font>
             </property>
+            <column>
+             <property name="text">
+              <string>Event</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Simple/Contingent</string>
+             </property>
+            </column>
            </widget>
           </item>
          </layout>

@@ -1,7 +1,7 @@
-from PyQt6 import QtCore, QtGui, QtWidgets 
+from PyQt6 import QtCore, QtGui, QtWidgets, uic
 from PyQt6.QtWidgets import QHeaderView, QTableWidgetItem, QAbstractItemView, QDialog, QDialogButtonBox, QLabel, \
-    QVBoxLayout
-from Views.utils import error_warning
+    QVBoxLayout, QComboBox, QPushButton, QTableWidget, QRadioButton
+from Views.utils import error_warning, get_ui_path
 
 
 class ReadOnlyDelegate(QtWidgets.QStyledItemDelegate):
@@ -48,6 +48,33 @@ class CreateTrialTypeUi(object):
 
     def setupUi(self, main_window):
         self.main_window = main_window
+        uic.loadUi(get_ui_path('create_trial_type.ui'), main_window)
+
+        self.back_pushButton = main_window.findChild(QPushButton, 'back_pushButton')
+        self.back_pushButton.clicked.connect(self.on_back_click)
+
+        # define if simple or contingent event (radio buttons)
+        self.simple_radioButton = main_window.findChild(QRadioButton, 'simple_radioButton')
+        self.simple_radioButton.setChecked(True)
+
+        self.events_comboBox = main_window.findChild(QComboBox, 'comboBox')
+        self.events_comboBox.addItems(self.events)
+
+        self.events_tableWidget = main_window.findChild(QTableWidget, 'events_tableWidget')
+        delegate = ReadOnlyDelegate(self.events_tableWidget)
+        # set the table to be read-only
+        self.events_tableWidget.setItemDelegateForColumn(0, delegate)
+        self.events_tableWidget.setItemDelegateForColumn(1, delegate)
+
+        self.add_event_pushButton = main_window.findChild(QPushButton, 'Add_event_pushButton')
+        self.add_event_pushButton.clicked.connect(self.on_add_click)
+
+        self.remove_event_pushButton = main_window.findChild(QPushButton, 'pushButton_2')
+        self.remove_event_pushButton.clicked.connect(self.on_remove_click)
+
+        return
+
+
         main_window.setObjectName("main_window")
         main_window.resize(496, 600)
         self.central_widget = QtWidgets.QWidget(main_window)
@@ -207,13 +234,13 @@ class CreateTrialTypeUi(object):
         self.simple_radioButton.toggled.connect(lambda: self.is_contingent_state(self.simple_radioButton))
         self.contingent_radioButton.toggled.connect(lambda: self.is_contingent_state(self.contingent_radioButton))
 
-    def is_contingent_state(self, btn):
-        # check if the event is simple or contingent
-        if btn.isChecked():
-            if btn.text() == "Simple event":
-                self.chosen_is_contingent = False
-            if btn.text() == "Contingent event":
-                self.chosen_is_contingent = True
+    # def is_contingent_state(self, btn):
+    #     # check if the event is simple or contingent
+    #     if btn.isChecked():
+    #         if btn.text() == "Simple event":
+    #             self.chosen_is_contingent = False
+    #         if btn.text() == "Contingent event":
+    #             self.chosen_is_contingent = True
 
     def on_add_click(self):
         # add an event to the current trial type
@@ -221,10 +248,10 @@ class CreateTrialTypeUi(object):
         current_event = self.events_comboBox.currentText()
         self.events_tableWidget.setRowCount(row_position + 1)
         self.events_tableWidget.setItem(row_position, 0, QTableWidgetItem(current_event))
-        if self.chosen_is_contingent:
-            self.events_tableWidget.setItem(row_position, 1, QTableWidgetItem("Contingent"))
-        else:
+        if self.simple_radioButton.isChecked():
             self.events_tableWidget.setItem(row_position, 1, QTableWidgetItem("Simple"))
+        else:
+            self.events_tableWidget.setItem(row_position, 1, QTableWidgetItem("Contingent"))
         self.events_order.append(current_event)
         self.is_contingent_order.append(self.chosen_is_contingent)
 

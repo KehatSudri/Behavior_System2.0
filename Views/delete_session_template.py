@@ -1,5 +1,5 @@
 from PyQt6 import QtCore, QtGui, QtWidgets, uic
-from PyQt6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QLabel
+from PyQt6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QPushButton
 
 from Views.utils import get_ui_path
 
@@ -53,9 +53,13 @@ class DeleteSessionTemplate(object):
         self.removed_experimenter_name = ""
 
     def setupUi(self, main_window):
-        uic.loadUi(get_ui_path('delete_session_template.ui'), main_window)
-        return
         self.main_window = main_window
+        uic.loadUi(get_ui_path('delete_session_template.ui'), main_window)
+
+        self.back_pushButton = main_window.findChild(QPushButton, 'back_pushButton')
+        self.back_pushButton.clicked.connect(self.on_back_click)
+
+        return
         main_window.setObjectName("main_window")
         #main_window.resize(497, 500)
         self.central_widget = QtWidgets.QWidget(main_window)
