@@ -1,16 +1,16 @@
+import sys
 import threading
 from collections import OrderedDict
 from datetime import datetime
 from importlib import import_module
-from pathlib import Path
 
 import numpy as np
-
+import logging
 
 import Models.Trial_Model as Trial
 from Models.DB_INIT import DB
 from Models.INotifyPropertyChanged import INotifyPropertyChanged
-from Models.Session_Model import SessionModel, BehaviourInterval, SessionTemplate
+from Models.Session_Model import BehaviourInterval, SessionTemplate
 from Models.Trial_Model import TrialModel, RandInterval
 
 
@@ -38,11 +38,13 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     def __init__(self, settings_file=None):
         super(BehaviorSystemModel, self).__init__()
         # settings
-        self.settings_file = str(Path(__file__).parent.parent / 'config_files' / 'settings.txt')
-        self._db_config_file_path = str(Path(__file__).parent.parent/'config_files'/'database.ini')
-        self.db_section = None
+        self.settings_file = None
+        self.db_config_file_path = None
         if settings_file is not None:
             self.settings_file = settings_file
+        else:
+            self.settings_file = 'config_files/settings.txt'
+            self.db_config_file_path = 'config_files/database.ini'
 
         # other
         self.input_ports = ['Dev1/ai0', 'Dev1/ai3', 'Dev1/ai9', 'Dev1/ai15']
@@ -57,63 +59,63 @@ class BehaviorSystemModel(INotifyPropertyChanged):
                              ('RoterB', 'Dev1/ai9', 'Input', 'Analog', 'False')]
         self.digital_params = ['duration']
         self.analog_params = ['duration', 'frequency', 'amplitude']
-
         self._max_successive_trials = 1000
-        self._log_file_path = ""
         self._max_trial_length = 60000
+        self._log_file_path = ""
         self._log_file = None
-        self.parse_settings(self.settings_file)
 
-        # session
-        self._is_running_session = False
-        self._curr_session = SessionModel()  # give it all the devices
+        self.parse_settings_file()
 
         # DB
-        self._DB = DB(self.db_config_file_path)  # add connection to the DB
+        self.db = DB(self.db_config_file_path)  # add connection to the DB
 
         self._trial_types = None
         self._session_templates = None
         self._session_trials = None
         self._subject_sessions = None
         self._session_events = None
-        # get data from DB
-        self.connect_to_DB()
+        # # get data from DB
+        # self.connect_to_DB()
         self.get_templates_from_DB()
         for i in range(len(self.event_config)):
-            self.DB.insert_hardware_event(self.event_config[i][0], self.event_config[i][1], self.event_config[i][2],
+            self.db.insert_hardware_event(self.event_config[i][0], self.event_config[i][1], self.event_config[i][2],
                                           self.event_config[i][3], self.event_config[i][4])
         self.get_trial_types_from_DB()
         self.get_hardware_events_from_DB()
 
+    # we need this
+    def parse_settings_file(self):
+        with open(self.settings_file, 'r', encoding='utf-8') as f:
+            for line in f.readlines():
+                if line == "\n":
+                    pass
+                split_line = line.split("=")
+                header, val = split_line[0], split_line[1].strip("\n")
+                if header == "log file location":
+                    self.log_file_path = val
+                elif header == "database configuration file location":
+                    self.db_config_file_path = val
+                elif header == "max trial length":
+                    try:
+                        self.max_trial_length = int(val)
+                    except Exception:
+                        logging.error(f'value "{val}" in "max trial length" is not a number')
+                        sys.exit()
+                elif header == "max number of successive trials":
+                    try:
+                        self.max_successive_trials = int(val)
+                    except Exception:
+                        logging.error(f'value "{val}" in "max number of successive trials" is not a number')
+                        sys.exit()
+
     def get_hardware_events_from_DB(self):
-        self.event_config = self.DB.get_hardware_events()
+        self.event_config = self.db.get_hardware_events()
         self.parse_ports()
         pass
 
     def insert_hardware_event_to_DB(self, name, port, in_out, dig_an, is_rew):
         self.DB.insert_hardware_event(name, port, in_out, dig_an, is_rew)
         self.get_hardware_events_from_DB()
-
-    def parse_settings(self, settings_file):
-        f = open(settings_file, 'r', encoding='utf-8')
-        lines = f.readlines()
-        for line in lines:
-            if line == "\n":
-                pass
-            # other
-            split_line = line.split("=")
-            header, val = split_line[0], split_line[1].strip("\n")
-            if header == "log file location":
-                self.log_file_path = val
-            elif header == "database configuration file location":
-                self.db_config_file_path = val
-            elif header == "max trial length":
-                self.max_trial_length = int(val)
-            elif header == "max number of successive trials":
-                self.max_successive_trials = int(val)
-            elif header == "database section":
-                self.db_section = val
-        f.close()
 
     def parse_ports(self):
         self.input_ports, self.input_events_names, self.output_ports, self.output_events_names = [], [], [], []
@@ -126,16 +128,6 @@ class BehaviorSystemModel(INotifyPropertyChanged):
                 self.output_ports.append(port)
                 self.output_events_names.append(name)
         pass
-
-    @property
-    def db_config_file_path(self):
-        return self._db_config_file_path
-
-    @db_config_file_path.setter
-    def db_config_file_path(self, value):
-        if self._db_config_file_path != value:
-            self._db_config_file_path = value
-            self.notifyPropertyChanged("db_config_file_path")
 
     # @property
     # def db_config_file_path(self):
@@ -170,16 +162,6 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         if self._max_successive_trials != value:
             self._max_successive_trials = value
             self.notifyPropertyChanged("max_successive_trials")
-
-    @property
-    def DB(self):
-        return self._DB
-
-    @DB.setter
-    def DB(self, value):
-        if self._DB != value:
-            self._DB = value
-            self.notifyPropertyChanged("DB")
 
     @property
     def subject_sessions(self):
@@ -343,7 +325,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         for tmp in self.session_templates:
             # extract all data of current template
             t_sess_id, t_sess_name, t_exp_name, t_iti_type, t_iti_min, t_iti_max, t_iti_behave, t_end_def, t_end_val, \
-            t_trials_order, t_total, t_block_sizes, t_blocks_ord, t_rnd_rew, date = tmp
+                t_trials_order, t_total, t_block_sizes, t_blocks_ord, t_rnd_rew, date = tmp
             # if there is a template with the exact data, proceed to validate it's trials
             if t_exp_name == exp_name and t_sess_name == sess_name and t_iti_type == iti_type and (
                     t_end_def, t_end_val) == end_def and t_trials_order == trials_order and \
@@ -555,19 +537,19 @@ class BehaviorSystemModel(INotifyPropertyChanged):
 
     # connect to the path, info is located in the given file path
     def connect_to_DB(self, path=None):
-        if self.DB is None:
+        if self.db is not None:
             # establish connection with the given info in path
             self.DB = DB(path)
-        self.DB.connect(self._DB.db_conf)
+        self.DB.connect(self._DB.db_config)
 
     def get_templates_from_DB(self):
-        self.session_templates = self._DB.get_session_templates()
-        self.session_trials = self._DB.get_all_session_trials()
-        self.session_events = self._DB.get_all_events()
-        self.subject_sessions = self._DB.get_all_subject_sessions()
+        self.session_templates = self.db.get_session_templates()
+        self.session_trials = self.db.get_all_session_trials()
+        self.session_events = self.db.get_all_events()
+        self.subject_sessions = self.db.get_all_subject_sessions()
 
     def get_trial_types_from_DB(self):
-        self._trial_types = self._DB.get_trial_types()
+        self._trial_types = self.db.get_trial_types()
 
     def get_trial_types(self):
         if self.trial_types is None:
@@ -586,14 +568,14 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     # get the type of the given event id
     def get_event_type_by_id(self, event_id):
         # get events
-        all_events = self._DB.get_all_events()
+        all_events = self.db.get_all_events()
         for i in range(len(all_events)):
             if all_events[i][0] == int(event_id):
                 return all_events[i][1]
 
     def get_events(self, event_list):
         # get events
-        all_events = self._DB.get_all_events()
+        all_events = self.db.get_all_events()
         event_list = event_list.split(",")[:-1]
         list_TrialEvents = []
         for e in event_list:
