@@ -51,7 +51,7 @@ class CreateEventUi(object):
         self.main_window = main_window
         self.back_pushButton = main_window.findChild(QPushButton, 'back_pushButton')
         self.back_pushButton.clicked.connect(self.on_back_click)
-
+        return
 
 
 
