@@ -245,6 +245,8 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
     def add_trial_type(self, name, events):
         self.model.add_trial_type(name, events)
 
+    def verify_trial_insert(self, name, events):
+        return self.model.verify_trial_insert(name, events)
     # validate this
     def update_trial_type(self, name, new_name, new_events):
         self.model.update_trial_type(name, new_name, new_events)

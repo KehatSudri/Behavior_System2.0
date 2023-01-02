@@ -806,15 +806,21 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         pass
 
     def add_trial_type(self, name, events):
+        events_str = ""
+        for e in events:
+            events_str += e + ","
+        self.db.insert_trial_type(name, events_str)
+
+    def verify_trial_insert(self, name, events):
         # before adding the trial type, check that name or list of events is not already in it
         events_str = ""
         for e in events:
             events_str += e + ","
-        type_id = self._DB.insert_trial_type(name, events_str)
-        if type_id is None:
-            pass  # didnt work
-        else:
-            self.get_trial_types_from_DB()
+        trials_names = self.db.get_trial_types_names(name)
+        if trials_names is not None:
+            return -1
+        trials_events = self.db.get_trial_name_by_events(events_str)
+        return trials_events
 
     def get_behaviors_list(self):
         return self.input_events_names

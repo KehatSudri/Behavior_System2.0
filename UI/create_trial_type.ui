@@ -133,7 +133,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QTextEdit" name="textEdit"/>
+             <widget class="QLineEdit" name="lineEdit"/>
             </item>
            </layout>
           </item>

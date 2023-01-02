@@ -29,8 +29,13 @@ class DB:
     def __init__(self, filename):
         self.conn = None
         db_config = config(filename)
+        temp = db_config['database']
+        db_config['database'] = 'postgres'
         self.connect(db_config)
         self.config_system_db()
+        db_config['database'] = temp
+        self.disconnect()
+        self.connect(db_config)
 
     def connect(self, params):
         """ Connect to the PostgreSQL database server """
@@ -101,20 +106,13 @@ class DB:
             return -1
 
     def insert_trial_type(self, name, events=None):
-        sql = """INSERT INTO trialTypes(trial_name ,events) VALUES (%s,%s) ON CONFLICT DO NOTHING RETURNING type_id"""
+        sql = """INSERT INTO trialTypes(trial_name ,events) VALUES (%s,%s)"""
         cur = self.conn.cursor()
-        # cur.execute(sql, ("A15B6", "behaviour", None, None, 15, 20, "time"))
         cur.execute(sql, (name, events,))
-        fetch = cur.fetchone()
-        type_id = None
-        if cur.statusmessage != "INSERT 0 0":
-            type_id = fetch[0]
-            self.conn.commit()
         # close communication with the PostgreSQL database server
         cur.close()
         # commit the changes
         self.conn.commit()
-        return type_id
 
     def insert_session_trials(self, session_id, trial_type_id, percent_in_session=None,
                               percent_in_block=None, block_number=None, event_list=None, interval_list=None):
@@ -197,6 +195,19 @@ class DB:
             cur.execute("SELECT * FROM trialTypes")
             trials_types = cur.fetchall()
         return trials_types
+
+    def get_trial_types_names(self, name):
+        with self.conn.cursor() as cur:
+            temp = f"SELECT trial_name FROM trialTypes WHERE trial_name = '{name}'"
+            cur.execute(temp)
+            trials_types_names = cur.fetchone()
+        return trials_types_names
+
+    def get_trial_name_by_events(self, events):
+        with self.conn.cursor() as cur:
+            cur.execute(f"SELECT trial_name FROM trialTypes WHERE events = '{events}'")
+            trials_types_events = cur.fetchone()
+        return trials_types_events
 
     def get_all_events(self):
         with self.conn.cursor() as cur:
