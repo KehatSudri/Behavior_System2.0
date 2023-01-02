@@ -3,7 +3,6 @@ import threading
 from collections import OrderedDict
 from datetime import datetime
 from importlib import import_module
-from pathlib import Path
 
 import numpy as np
 import logging
@@ -11,7 +10,7 @@ import logging
 import Models.Trial_Model as Trial
 from Models.DB_INIT import DB
 from Models.INotifyPropertyChanged import INotifyPropertyChanged
-from Models.Session_Model import SessionModel, BehaviourInterval, SessionTemplate
+from Models.Session_Model import BehaviourInterval, SessionTemplate
 from Models.Trial_Model import TrialModel, RandInterval
 
 
@@ -67,9 +66,6 @@ class BehaviorSystemModel(INotifyPropertyChanged):
 
         self.parse_settings_file()
 
-        # session
-        self.model = SessionModel()
-
         # DB
         self.db = DB(self.db_config_file_path)  # add connection to the DB
 
@@ -78,11 +74,11 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         self._session_trials = None
         self._subject_sessions = None
         self._session_events = None
-        # get data from DB
-        self.connect_to_DB()
+        # # get data from DB
+        # self.connect_to_DB()
         self.get_templates_from_DB()
         for i in range(len(self.event_config)):
-            self.DB.insert_hardware_event(self.event_config[i][0], self.event_config[i][1], self.event_config[i][2],
+            self.db.insert_hardware_event(self.event_config[i][0], self.event_config[i][1], self.event_config[i][2],
                                           self.event_config[i][3], self.event_config[i][4])
         self.get_trial_types_from_DB()
         self.get_hardware_events_from_DB()
@@ -113,7 +109,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
                         sys.exit()
 
     def get_hardware_events_from_DB(self):
-        self.event_config = self.DB.get_hardware_events()
+        self.event_config = self.db.get_hardware_events()
         self.parse_ports()
         pass
 
@@ -541,19 +537,19 @@ class BehaviorSystemModel(INotifyPropertyChanged):
 
     # connect to the path, info is located in the given file path
     def connect_to_DB(self, path=None):
-        if self.DB is None:
+        if self.db is not None:
             # establish connection with the given info in path
             self.DB = DB(path)
         self.DB.connect(self._DB.db_config)
 
     def get_templates_from_DB(self):
-        self.session_templates = self._DB.get_session_templates()
-        self.session_trials = self._DB.get_all_session_trials()
-        self.session_events = self._DB.get_all_events()
-        self.subject_sessions = self._DB.get_all_subject_sessions()
+        self.session_templates = self.db.get_session_templates()
+        self.session_trials = self.db.get_all_session_trials()
+        self.session_events = self.db.get_all_events()
+        self.subject_sessions = self.db.get_all_subject_sessions()
 
     def get_trial_types_from_DB(self):
-        self._trial_types = self._DB.get_trial_types()
+        self._trial_types = self.db.get_trial_types()
 
     def get_trial_types(self):
         if self.trial_types is None:
@@ -572,14 +568,14 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     # get the type of the given event id
     def get_event_type_by_id(self, event_id):
         # get events
-        all_events = self._DB.get_all_events()
+        all_events = self.db.get_all_events()
         for i in range(len(all_events)):
             if all_events[i][0] == int(event_id):
                 return all_events[i][1]
 
     def get_events(self, event_list):
         # get events
-        all_events = self._DB.get_all_events()
+        all_events = self.db.get_all_events()
         event_list = event_list.split(",")[:-1]
         list_TrialEvents = []
         for e in event_list:

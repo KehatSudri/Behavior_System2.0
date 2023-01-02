@@ -3,10 +3,9 @@ from Models.Session_Model import SessionModel
 
 
 class SessionViewModel(INotifyPropertyChanged):
-    def __init__(self, m: SessionModel):
+    def __init__(self):
         super(SessionViewModel, self).__init__()
-        self.model = m
-        self.model.property_changed += self.SessionVMEventHandler
+        self.model = SessionModel()
 
     @property
     def trial_types_successive_counter(self):

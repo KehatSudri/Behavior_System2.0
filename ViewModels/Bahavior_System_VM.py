@@ -8,13 +8,11 @@ from ViewModels.Session_VM import SessionViewModel
 
 # changed in Model currently changes properties in VM. make sure this change go through into view
 class BehaviorSystemViewModel(INotifyPropertyChanged):
-    def __init__(self, m: BehaviorSystemModel):
+    def __init__(self):
         super(BehaviorSystemViewModel, self).__init__()
-        self.model = m
-        self.model.property_changed += self.SystemVMEventHandler
-        self.sessionVM = SessionViewModel(self.model.curr_session)
+        self.model = BehaviorSystemModel()
+        self.sessionVM = SessionViewModel()
         self.timer = None
-        # self.DB = None  # add connection to the DB
 
     @property
     def is_running_session(self):
@@ -63,6 +61,7 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
     @output_events_names.setter
     def output_events_names(self, value):
         self.model.output_events_names = value
+
     @property
     def input_events_names(self):
         return self.model.input_events_names
@@ -70,13 +69,15 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
     @input_events_names.setter
     def input_events_names(self, value):
         self.model.input_events_names = value
+
     @property
     def event_config(self):
         return self.model.event_config
 
     @event_config.setter
     def event_config(self, value):
-            self.model.event_config = value
+        self.model.event_config = value
+
     @property
     def input_ports(self):
         return self.model.input_ports
@@ -84,8 +85,10 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
     @input_ports.setter
     def input_ports(self, value):
         self.model.input_ports = value
+
     def give_reward(self, name):
         self.model.give_reward(name)
+
     @property
     def session_templates(self):
         return self.model.session_templates
@@ -154,8 +157,10 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
 
     def get_reward_list_for_session(self):
         return self.model.get_reward_list_for_session()
+
     def get_reward_name_list_for_session(self):
         return self.model.get_reward_name_list_for_session()
+
     def start_Session(self):
         self.model.start_Session()
         if self.curr_session is not None:
@@ -229,13 +234,17 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
     def insert_trial_type(self, name, events):
         self.insert_trial_type(name, events)
 
-    def set_settings(self, log_file_path, db_file_path, db_section, max_successive_trials, max_length_trials, e_2_p=None):
-        self.model.set_settings(log_file_path, db_file_path, db_section, max_successive_trials, max_length_trials, e_2_p)
+    def set_settings(self, log_file_path, db_file_path, db_section, max_successive_trials, max_length_trials,
+                     e_2_p=None):
+        self.model.set_settings(log_file_path, db_file_path, db_section, max_successive_trials, max_length_trials,
+                                e_2_p)
 
     def insert_hardware_event_to_DB(self, name, port, in_out, dig_an, is_rew):
         self.model.insert_hardware_event_to_DB(name, port, in_out, dig_an, is_rew)
+
     def add_trial_type(self, name, events):
         self.model.add_trial_type(name, events)
+
     # validate this
     def update_trial_type(self, name, new_name, new_events):
         self.model.update_trial_type(name, new_name, new_events)
@@ -260,4 +269,3 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
 
     def is_contingent(self, event: str):
         return False
-

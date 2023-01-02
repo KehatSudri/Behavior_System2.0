@@ -27,12 +27,10 @@ def config(filename):
 
 class DB:
     def __init__(self, filename):
-        print(filename)
         self.conn = None
         db_config = config(filename)
         self.connect(db_config)
         self.config_system_db()
-        self.disconnect()
 
     def connect(self, params):
         """ Connect to the PostgreSQL database server """
