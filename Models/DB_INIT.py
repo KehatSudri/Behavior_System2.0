@@ -4,6 +4,7 @@ import sys
 
 import psycopg2
 from configparser import ConfigParser
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 
 def config(filename):
@@ -32,10 +33,12 @@ class DB:
         temp = db_config['database']
         db_config['database'] = 'postgres'
         self.connect(db_config)
-        self.config_system_db()
+        self.conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        self.create_db()
         db_config['database'] = temp
         self.disconnect()
         self.connect(db_config)
+        self.create_tables()
 
     def connect(self, params):
         """ Connect to the PostgreSQL database server """
@@ -50,17 +53,13 @@ class DB:
         if self.conn is not None:
             self.conn.close()
 
-    def config_system_db(self):
-        self.create_db()
-        self.create_tables()
-
     def create_db(self):
         with self.conn.cursor() as cur:
             cur.execute("SELECT 1 FROM pg_catalog.pg_database WHERE datname = 'Behavior_sys'")
             exists = cur.fetchone()
+            print(exists)
             if exists is None:
-                cur.execute('CREATE DATABASE Behavior_sys')
-                self.conn.commit()
+                cur.execute('CREATE DATABASE "Behavior_sys"')
             else:
                 pass
 
