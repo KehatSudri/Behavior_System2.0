@@ -874,7 +874,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
 
     def get_list_of_subjects(self):
         # check if not Null
-        self.subject_sessions = self._DB.get_all_subject_sessions()
+        self.subject_sessions = self.db.get_all_subject_sessions()
         return list(set([sub[0] for sub in self.subject_sessions]))
 
     def get_data_for_template_id(self, sess_id):
