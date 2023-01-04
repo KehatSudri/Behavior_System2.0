@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>493</width>
-    <height>571</height>
+    <width>466</width>
+    <height>570</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -116,104 +116,24 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>473</width>
-         <height>313</height>
+         <width>446</width>
+         <height>323</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="8" column="0">
-         <layout class="QHBoxLayout" name="accept_horizontalLayout" stretch="1,1,1">
+        <item row="7" column="0">
+         <layout class="QHBoxLayout" name="io_description_horizontalLayout" stretch="0,0">
           <item>
-           <spacer name="left_horizontalSpacer1">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="add_pushButton">
+           <widget class="QLabel" name="digital_description_label">
             <property name="text">
-             <string>Add event</string>
+             <string>Duration</string>
             </property>
            </widget>
           </item>
           <item>
-           <spacer name="right_horizontalSpacer1">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item row="5" column="0">
-         <layout class="QHBoxLayout" name="is_reward_horizontalLayout" stretch="0,0">
-          <item>
-           <widget class="QLabel" name="is_reward_label">
+           <widget class="QLabel" name="analog_description_label">
             <property name="text">
-             <string>Is reward event:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="is_reward_comboBox">
-            <item>
-             <property name="text">
-              <string>Yes</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>No</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="4" column="0">
-         <layout class="QHBoxLayout" name="io_horizontalLayout" stretch="0,0">
-          <item>
-           <widget class="QRadioButton" name="input_radioButton">
-            <property name="text">
-             <string>Input</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="output_radioButton">
-            <property name="text">
-             <string>Output</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="6" column="0">
-         <layout class="QHBoxLayout" name="io_horizontalLayout_2" stretch="0,0">
-          <item>
-           <widget class="QRadioButton" name="digital_radioButton">
-            <property name="text">
-             <string>Digital</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="analog_radioButton">
-            <property name="text">
-             <string>Analog</string>
+             <string>Duration, frequency, amplitude</string>
             </property>
            </widget>
           </item>
@@ -237,23 +157,160 @@
           </item>
          </layout>
         </item>
-        <item row="7" column="0">
-         <layout class="QHBoxLayout" name="io_description_horizontalLayout" stretch="0,0">
+        <item row="5" column="0">
+         <layout class="QHBoxLayout" name="is_reward_horizontalLayout" stretch="0,0">
           <item>
-           <widget class="QLabel" name="digital_description_label">
+           <widget class="QLabel" name="is_reward_label">
             <property name="text">
-             <string>Duration</string>
+             <string>Is reward event:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="analog_description_label">
-            <property name="text">
-             <string>Duration, frequency, amplitude</string>
-            </property>
+           <widget class="QComboBox" name="is_reward_comboBo">
+            <item>
+             <property name="text">
+              <string>Yes</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>No</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>
+        </item>
+        <item row="6" column="0">
+         <widget class="QGroupBox" name="groupBox_3">
+          <property name="title">
+           <string/>
+          </property>
+          <widget class="QWidget" name="layoutWidget_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>451</width>
+             <height>41</height>
+            </rect>
+           </property>
+           <layout class="QHBoxLayout" name="io_horizontalLayout_4" stretch="0,0">
+            <item>
+             <widget class="QRadioButton" name="digital_radio_btn">
+              <property name="text">
+               <string>Digital</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="analog_radio_btn">
+              <property name="text">
+               <string>Analog</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <layout class="QHBoxLayout" name="accept_horizontalLayout" stretch="1,1,1">
+          <item>
+           <spacer name="left_horizontalSpacer1">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="add_event_btn">
+            <property name="text">
+             <string>Add event</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="right_horizontalSpacer1">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item row="4" column="0">
+         <widget class="QGroupBox" name="groupBox">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="title">
+           <string/>
+          </property>
+          <widget class="QWidget" name="layoutWidget">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>451</width>
+             <height>41</height>
+            </rect>
+           </property>
+           <layout class="QHBoxLayout" name="io_horizontalLayout_3" stretch="0,0">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <property name="sizeConstraint">
+             <enum>QLayout::SetMinAndMaxSize</enum>
+            </property>
+            <item>
+             <widget class="QRadioButton" name="input_radio_btn">
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Input</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="output_radio_btn">
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Output</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -264,10 +321,13 @@
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Minimum</enum>
+      </property>
       <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
-        <height>40</height>
+        <height>30</height>
        </size>
       </property>
      </spacer>
@@ -288,7 +348,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="back_pushButton">
+       <widget class="QPushButton" name="back_btn">
         <property name="text">
          <string>Back</string>
         </property>

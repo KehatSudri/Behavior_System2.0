@@ -59,3 +59,7 @@ def list_to_str(my_list):
 
 def get_ui_path(name):
     return str(Path(__file__).parent.parent / 'UI' / name)
+
+
+def get_qss_path(name):
+    return str(Path(__file__).parent.parent / 'QSS' / name)

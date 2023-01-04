@@ -1,11 +1,15 @@
 from PyQt6 import QtCore, QtGui, QtWidgets, uic
 from PyQt6.QtWidgets import QPushButton
 
-from Views.utils import error_warning, notification, get_ui_path
+from Views.utils import error_warning, notification, get_ui_path, get_qss_path
 
 
 class CreateEventUi(object):
     def __init__(self, parent):
+        self.digital_radio_btn = None
+        self.analog_radio_btn = None
+        self.output_radio_btn = None
+        self.input_radio_btn = None
         self.parent = parent
         self.vm = self.parent.vm
         self.main_window = None
@@ -48,9 +52,22 @@ class CreateEventUi(object):
 
     def setupUi(self, main_window):
         uic.loadUi(get_ui_path('create_new_event.ui'), main_window)
+        qss = get_qss_path('create_new_event')
+        with open(qss, "r") as fh:
+            main_window.setStyleSheet(fh.read())
         self.main_window = main_window
-        self.back_pushButton = main_window.findChild(QPushButton, 'back_pushButton')
+        self.back_pushButton = main_window.findChild(QPushButton, 'back_btn')
         self.back_pushButton.clicked.connect(self.on_back_click)
+
+        self.input_radio_btn = main_window.findChild(QtWidgets.QRadioButton, 'input_radio_btn')
+        self.output_radio_btn = main_window.findChild(QtWidgets.QRadioButton, 'output_radio_btn')
+
+        self.analog_radio_btn = main_window.findChild(QtWidgets.QRadioButton, 'analog_radio_btn')
+        self.digital_radio_btn = main_window.findChild(QtWidgets.QRadioButton, 'digital_radio_btn')
+        # self.all_radio_btn.toggled.connect(lambda: self.on_radio_change_event_handler())
+        # self.all_radio_btn.toggle()
+
+
         return
 
 
@@ -258,5 +275,5 @@ class CreateEventUi(object):
         pass
 
     def on_back_click(self):
-        self.parent.main_window.show()
+        #self.parent.main_window.show()
         self.main_window.close()
