@@ -57,7 +57,6 @@ class DB:
         with self.conn.cursor() as cur:
             cur.execute("SELECT 1 FROM pg_catalog.pg_database WHERE datname = 'Behavior_sys'")
             exists = cur.fetchone()
-            print(exists)
             if exists is None:
                 cur.execute('CREATE DATABASE "Behavior_sys"')
             else:

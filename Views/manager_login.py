@@ -8,15 +8,8 @@ class ManagerLoginUi(object):
     def __init__(self, parent):
         self.parent = parent
         self.main_window = None
-        self.central_widget = None
-        self.gridLayout_window = None
-        self.gridLayout_main = None
-        self.headline_label = None
-        self.password_label = None
-        self.password_lineEdit = None
         self.back_pushButton = None
         self.login_pushButton = None
-        self.navigation_horizontalLayout = QtWidgets.QHBoxLayout()
 
     def setupUi(self, main_window):
         self.main_window = main_window
@@ -33,10 +26,7 @@ class ManagerLoginUi(object):
 
     def on_back_click(self):
         self.setupUi(self.main_window)
-        #self.parent.main_window.show()
         self.main_window.close()
-        #self.parent.main_window.show()
-        #self.main_window.close()
 
     def on_login_click(self):
         password = self.password_lineEdit.text()

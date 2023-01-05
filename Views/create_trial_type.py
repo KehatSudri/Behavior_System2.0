@@ -17,8 +17,6 @@ class CreateTrialTypeUi(object):
         self.events_tableWidget = None
         self.accept_pushButton = None
 
-        # values to return
-        # self.trial_type_name = ""
         self.chosen_is_contingent = False
         self.events_order = []
         self.is_contingent_order = []

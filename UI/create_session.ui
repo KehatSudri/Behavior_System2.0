@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>609</width>
+    <width>610</width>
     <height>704</height>
    </rect>
   </property>
@@ -280,7 +280,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="buttons_to_set_trial_horizontalLayout_2" stretch="0,0,0">
+         <layout class="QHBoxLayout" name="buttons_to_set_trial_horizontalLayout_2" stretch="0,0">
           <property name="spacing">
            <number>2</number>
           </property>
@@ -294,7 +294,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QPushButton" name="add_trial_pushButton">
+           <widget class="QPushButton" name="add_trial">
             <property name="text">
              <string>Add</string>
             </property>
@@ -303,13 +303,6 @@
               <width>16</width>
               <height>16</height>
              </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="edit_trial_pushButton">
-            <property name="text">
-             <string>Edit</string>
             </property>
            </widget>
           </item>
