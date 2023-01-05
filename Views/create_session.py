@@ -16,6 +16,8 @@ from Views.random_order import RandomOrderUi
 
 class CreateSessionUi(object):
     def __init__(self, parent):
+        self.add_ui = None
+        self.add_window = None
         self.trials_ord_dialog_ui = None
         self.trials_ord_dialog = None
         self.trials_order_cb = None
@@ -132,6 +134,10 @@ class CreateSessionUi(object):
         self.exp_name_te = self.main_window.findChild(QtWidgets.QTextEdit, "exp_name_te")
         next_btn = self.main_window.findChild(QtWidgets.QPushButton, "next_btn")
         next_btn.clicked.connect(self.on_next_click)
+        self.add_trial_pushButton = self.main_window.findChild(QtWidgets.QPushButton, "add_trial")
+        self.add_trial_pushButton.clicked.connect(self.on_add_click)
+        self.remove_trial_pushButton = self.main_window.findChild(QtWidgets.QPushButton, "remove_trial_pushButton")
+        self.remove_trial_pushButton.clicked.connect(self.on_remove_click)
         return
         self.main_window = main_window
         self.parent.main_window.hide()
@@ -469,9 +475,7 @@ class CreateSessionUi(object):
         self.add_ui = AddTrialUi(self)
         self.add_ui.setupUi(self.add_window)
         self.add_window.show()
-        # self.second_window_ui = AddTrialUi(self)
-        # self.second_window_ui.setupUi(self.second_window)
-        # self.second_window.show()
+        
 
     def deal_with_trial(self, treatment):
         is_not_empty = len(self.trials_in_session) > 0

@@ -1,9 +1,9 @@
 from collections import defaultdict, OrderedDict
 
-from PyQt6 import QtCore, QtWidgets, QtGui
+from PyQt6 import QtCore, QtWidgets, QtGui, uic
 from PyQt6.QtWidgets import QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit, QComboBox
 
-from Views.utils import error_warning, get_string_dict#, set_conditioned_event
+from Views.utils import error_warning, get_string_dict, get_ui_path  # , set_conditioned_event
 
 
 class AddTrialUi(object):
@@ -32,71 +32,31 @@ class AddTrialUi(object):
         # self.contingents = OrderedDict()
 
     def setupUi(self, dialog):
-        dialog.setObjectName("dialog")
-        dialog.resize(354, 323)
-        self.background_gridLayout = QtWidgets.QGridLayout(dialog)
-        self.background_gridLayout.setObjectName("window_gridLayout")
-        self.main_verticalLayout = QtWidgets.QVBoxLayout()
-        self.main_verticalLayout.setObjectName("main_verticalLayout")
-        # set header
-        self.add_trial_label = QtWidgets.QLabel(dialog)
-        self.add_trial_label.setStyleSheet("font: 22pt \"Gabriola\";")
-        self.add_trial_label.setObjectName("add_trial_label")
-        self.main_verticalLayout.addWidget(self.add_trial_label)
-        # set a
-        self.trial_types_label = QtWidgets.QLabel(dialog)
-        self.trial_types_label.setStyleSheet("font: 12pt \"Gabriola\";")
-        self.trial_types_label.setObjectName("trial_types_label")
-        self.main_verticalLayout.addWidget(self.trial_types_label)
-        self.trial_types_comboBox = QtWidgets.QComboBox(dialog)
-        self.trial_types_comboBox.setObjectName("trial_types_comboBox")
+        uic.loadUi(get_ui_path('add_trial.ui'), dialog)
+        self.trial_types_comboBox = dialog.findChild(QtWidgets.QComboBox, 'trial_types_comboBox')
         self.trial_types_comboBox.addItems([*self.parent.trial_types.keys()])
         self.trial_types_comboBox.activated.connect(self.trial_types_click)
-        self.main_verticalLayout.addWidget(self.trial_types_comboBox)
-        # add a scroll area to set a value for each param of chosen trial
-        self.scrollArea = QtWidgets.QScrollArea(dialog)
-        self.scrollArea.setWidgetResizable(True)
-        self.scrollArea.setObjectName("scrollArea")
-        self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 378, 305))
-        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.formLayout = QtWidgets.QFormLayout()
-        self.formLayout.setObjectName("formLayout")
-        self.verticalLayout.addLayout(self.formLayout)
-        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-        self.main_verticalLayout.addWidget(self.scrollArea)
-        self.main_verticalLayout.setStretch(2, 3)
-        self.main_verticalLayout.setStretch(3, 10)
-        self.background_gridLayout.addLayout(self.main_verticalLayout, 0, 0, 1, 1)
-        self.retranslateUi(dialog)
-        # set a buttonBom for OK and Cancel buttons
-        self.buttonBox = QtWidgets.QDialogButtonBox(dialog)
-        # self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        #self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
-        self.buttonBox.setObjectName("buttonBox")
-        self.background_gridLayout.addWidget(self.buttonBox, 2, 0, 1, 1)
+        self.buttonBox = dialog.findChild(QtWidgets.QDialogButtonBox, 'buttonBox')
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(dialog.reject)
-        QtCore.QMetaObject.connectSlotsByName(dialog)
+
         # present params of the chosen trial
-        self.update()
-        # present first trial type as default
+        #self.update()
+        #present first trial type as default
         self.trial_types_click(0)
 
-    def update(self):
-        self.set_trials_table_pointer = self.parent.set_trials_table_pointer
-        # creating a dialog button for ok and cancel
-        #self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-        # connect the OK button to function
-        self.buttonBox.accepted.connect(self.accept)
-        # adding action when form is rejected
-        # self.buttonBox.rejected.connect(reject)
-        # creating a vertical layout
-        main_layout = QVBoxLayout()
-        # adding button box to the layout
-        main_layout.addWidget(self.buttonBox)
+    # def update(self):
+    #     self.set_trials_table_pointer = self.parent.set_trials_table_pointer
+    #     # creating a dialog button for ok and cancel
+    #     #self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+    #     # connect the OK button to function
+    #     self.buttonBox.accepted.connect(self.accept)
+    #     # adding action when form is rejected
+    #     # self.buttonBox.rejected.connect(reject)
+    #     # creating a vertical layout
+    #     main_layout = QVBoxLayout()
+    #     # adding button box to the layout
+    #     main_layout.addWidget(self.buttonBox)
 
     def delete_params(self):
         for i in range(len(self.trial_params_labels)):
@@ -234,6 +194,7 @@ class AddTrialUi(object):
                              enumerate(event_params)}
             new_trial[event] = params_values
         # check if not an empty input
+        print(new_trial)
         if not self.are_valid_values(new_trial):
             error_warning("An error accrued, please try again.")
             return

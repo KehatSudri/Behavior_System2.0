@@ -296,7 +296,7 @@
       <item>
        <widget class="QPushButton" name="back_pushButton">
         <property name="text">
-         <string>Cancel</string>
+         <string>Back to menu</string>
         </property>
        </widget>
       </item>

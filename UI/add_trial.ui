@@ -15,7 +15,7 @@
   </property>
   <layout class="QGridLayout" name="main_gridLayout">
    <item row="0" column="0">
-    <layout class="QGridLayout" name="central_gridLayout" columnstretch="1,1,0,0">
+    <layout class="QGridLayout" name="central_gridLayout" columnstretch="1,0,0,0">
      <item row="2" column="2">
       <spacer name="verticalSpacer">
        <property name="orientation">
@@ -29,13 +29,16 @@
        </property>
       </spacer>
      </item>
+     <item row="2" column="0" colspan="2">
+      <layout class="QFormLayout" name="formLayout"/>
+     </item>
      <item row="1" column="0">
       <widget class="QLabel" name="trial_types_label">
        <property name="styleSheet">
         <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
        </property>
        <property name="text">
-        <string>Trial types: </string>
+        <string>Trial name: </string>
        </property>
       </widget>
      </item>
@@ -64,13 +67,16 @@
      </item>
      <item row="0" column="3" rowspan="4">
       <widget class="QScrollBar" name="verticalScrollBar">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
       </widget>
-     </item>
-     <item row="2" column="0" colspan="2">
-      <layout class="QFormLayout" name="formLayout"/>
      </item>
     </layout>
    </item>
