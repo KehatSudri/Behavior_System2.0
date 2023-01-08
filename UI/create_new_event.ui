@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>466</width>
-    <height>570</height>
+    <width>551</width>
+    <height>787</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -116,73 +116,12 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>446</width>
-         <height>323</height>
+         <width>525</width>
+         <height>566</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="7" column="0">
-         <layout class="QHBoxLayout" name="io_description_horizontalLayout" stretch="0,0">
-          <item>
-           <widget class="QLabel" name="digital_description_label">
-            <property name="text">
-             <string>Duration</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="analog_description_label">
-            <property name="text">
-             <string>Duration, frequency, amplitude</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="3" column="0">
-         <layout class="QVBoxLayout" name="scroll_verticalLayout" stretch="1">
-          <item>
-           <layout class="QHBoxLayout" name="event_name_horizontalLayout" stretch="1,1">
-            <item>
-             <widget class="QLabel" name="event_name_label">
-              <property name="text">
-               <string>Event name:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="event_name_lineEdit"/>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
-        <item row="5" column="0">
-         <layout class="QHBoxLayout" name="is_reward_horizontalLayout" stretch="0,0">
-          <item>
-           <widget class="QLabel" name="is_reward_label">
-            <property name="text">
-             <string>Is reward event:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="is_reward_comboBo">
-            <item>
-             <property name="text">
-              <string>Yes</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>No</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="6" column="0">
+        <item row="4" column="0">
          <widget class="QGroupBox" name="groupBox_3">
           <property name="title">
            <string/>
@@ -192,7 +131,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>451</width>
+             <width>501</width>
              <height>41</height>
             </rect>
            </property>
@@ -213,46 +152,35 @@
             </item>
            </layout>
           </widget>
+          <widget class="QWidget" name="layoutWidget">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>30</y>
+             <width>501</width>
+             <height>123</height>
+            </rect>
+           </property>
+           <layout class="QHBoxLayout" name="io_description_horizontalLayout" stretch="0,0">
+            <item>
+             <widget class="QLabel" name="digital_description_label">
+              <property name="text">
+               <string>Duration</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="analog_description_label">
+              <property name="text">
+               <string>Duration, frequency, amplitude</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </widget>
         </item>
-        <item row="8" column="0">
-         <layout class="QHBoxLayout" name="accept_horizontalLayout" stretch="1,1,1">
-          <item>
-           <spacer name="left_horizontalSpacer1">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="add_event_btn">
-            <property name="text">
-             <string>Add event</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="right_horizontalSpacer1">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item row="4" column="0">
+        <item row="3" column="0">
          <widget class="QGroupBox" name="groupBox">
           <property name="enabled">
            <bool>true</bool>
@@ -271,7 +199,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>451</width>
+             <width>501</width>
              <height>41</height>
             </rect>
            </property>
@@ -310,6 +238,142 @@
             </item>
            </layout>
           </widget>
+          <widget class="QWidget" name="layoutWidget">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>40</y>
+             <width>501</width>
+             <height>96</height>
+            </rect>
+           </property>
+           <layout class="QHBoxLayout" name="is_reward_horizontalLayout" stretch="0,0">
+            <item>
+             <widget class="QLabel" name="is_reward_label">
+              <property name="text">
+               <string>Is reward event:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="is_reward_comboBox">
+              <item>
+               <property name="text">
+                <string>Yes</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>No</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QFrame" name="frame">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="0" column="0">
+            <widget class="QFrame" name="frame_2">
+             <property name="minimumSize">
+              <size>
+               <width>230</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <widget class="QLabel" name="label">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>10</y>
+                <width>81</width>
+                <height>41</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Event name</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QFrame" name="frame_4">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <widget class="QLabel" name="label_2">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>20</y>
+                <width>60</width>
+                <height>16</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Port</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QFrame" name="frame_3">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_3">
+              <item>
+               <widget class="QLineEdit" name="event_name_lineEdit"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QFrame" name="frame_5">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_2">
+              <item>
+               <widget class="QLineEdit" name="event_port_lineEdit"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -333,7 +397,31 @@
      </spacer>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="navigation_horizontalLayout" stretch="1,1,1">
+     <layout class="QHBoxLayout" name="navigation_horizontalLayout" stretch="0,0,1,0,0">
+      <item>
+       <layout class="QHBoxLayout" name="accept_horizontalLayout" stretch="1">
+        <item>
+         <spacer name="left_horizontalSpacer1">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QPushButton" name="back_btn">
+        <property name="text">
+         <string>Back</string>
+        </property>
+       </widget>
+      </item>
       <item>
        <spacer name="left_horizontalSpacer2">
         <property name="orientation">
@@ -348,14 +436,14 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="back_btn">
+       <widget class="QPushButton" name="add_event_btn">
         <property name="text">
-         <string>Back</string>
+         <string>Add event</string>
         </property>
        </widget>
       </item>
       <item>
-       <spacer name="right_horizontalSpacer2">
+       <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>

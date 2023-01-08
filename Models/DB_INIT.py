@@ -172,7 +172,7 @@ class DB:
 
     def get_hardware_events(self):
         with self.conn.cursor() as cur:
-            cur.execute("SELECT * FROM hardwareEvents")
+            cur.execute("SELECT * FROM hardwarEevents")
             events = cur.fetchall()
         return events
 
