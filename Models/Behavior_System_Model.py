@@ -1,3 +1,4 @@
+import os.path
 import sys
 import threading
 from collections import OrderedDict
@@ -43,6 +44,12 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         if settings_file is not None:
             self.settings_file = settings_file
         else:
+            if os.path.exists('config_files/database2.ini'):
+                print('yes')
+            else:
+                print('no')
+                with open('config_files/database2.ini', 'x') as f:
+                    f.write('[postgresql]\nhost=localhost\ndatabase=Behavior_sys\nuser=postgres\npassword=doc417')
             self.settings_file = 'config_files/settings.txt'
             self.db_config_file_path = 'config_files/database.ini'
 
@@ -93,8 +100,6 @@ class BehaviorSystemModel(INotifyPropertyChanged):
                 header, val = split_line[0], split_line[1].strip("\n")
                 if header == "log file location":
                     self.log_file_path = val
-                elif header == "database configuration file location":
-                    self.db_config_file_path = val
                 elif header == "max trial length":
                     try:
                         self.max_trial_length = int(val)

@@ -21,7 +21,7 @@ class SettingsUi(object):
 
         self.folder_log_file_path = self.vm.log_file_path
         self.file_db_file_path = self.vm.db_config_file_path
-        self.db_section = self.vm.db_section
+        #self.db_section = self.vm.db_section
         self.max_identical_consecutive_trial = self.vm.max_successive_trials
         self.max_time_duration = self.vm.max_trial_length
         self.input_events = self.vm.input_events_names
