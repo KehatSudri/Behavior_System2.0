@@ -6,12 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
-    <height>901</height>
+    <width>420</width>
+    <height>416</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
+  </property>
+  <property name="animated">
+   <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -25,13 +28,19 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>480</width>
-         <height>722</height>
+         <width>400</width>
+         <height>237</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QLabel" name="log_file_path_label">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>30</height>
+           </size>
+          </property>
           <property name="font">
            <font>
             <family>Gabriola</family>
@@ -59,8 +68,14 @@
               <pointsize>15</pointsize>
              </font>
             </property>
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Insert path</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -83,11 +98,20 @@
          <layout class="QHBoxLayout" name="log_file_horizontalLayout" stretch="3,0">
           <item>
            <widget class="QTextEdit" name="log_file_path_textEdit">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
             </property>
             <property name="font">
              <font>
@@ -100,113 +124,11 @@
           </item>
           <item>
            <widget class="QPushButton" name="choose_folder_btn">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Folder</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QLabel" name="db_file_path_label">
-          <property name="font">
-           <font>
-            <family>Gabriola</family>
-            <pointsize>15</pointsize>
-            <weight>50</weight>
-            <italic>false</italic>
-            <bold>false</bold>
-            <underline>false</underline>
-            <kerning>false</kerning>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">font: 15pt &quot;Gabriola&quot;;</string>
-          </property>
-          <property name="text">
-           <string>Database file path:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="db_file_path_horizontalLayout" stretch="1,1">
-          <item>
-           <widget class="QRadioButton" name="insert_db_file_pathradioButton">
-            <property name="font">
-             <font>
-              <family>Gabriola</family>
-              <pointsize>15</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Insert path</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="choose_db_file_radioButton">
-            <property name="font">
-             <font>
-              <family>Gabriola</family>
-              <pointsize>15</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Choose file</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="db_file_horizontalLayout" stretch="3,1">
-          <item>
-           <widget class="QTextEdit" name="db_path_textEdit">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <family>David</family>
-              <pointsize>15</pointsize>
-             </font>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="choose_file_btn">
-            <property name="text">
-             <string>File</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="db_section_horizontalLayout" stretch="1,1">
-          <item>
-           <widget class="QLabel" name="db_section_label">
-            <property name="styleSheet">
-             <string notr="true">font: 15pt &quot;Gabriola&quot;;</string>
-            </property>
-            <property name="text">
-             <string>Database section: </string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QTextEdit" name="db_section_textEdit">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;David&quot;;</string>
             </property>
            </widget>
           </item>
@@ -225,7 +147,14 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="max_identical_consecutive_trials_spinBox"/>
+           <widget class="QSpinBox" name="max_identical_consecutive_trials_spinBox">
+            <property name="maximumSize">
+             <size>
+              <width>180</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -242,36 +171,16 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="max_time_duration_spinBox"/>
+           <widget class="QSpinBox" name="max_time_duration_spinBox">
+            <property name="maximumSize">
+             <size>
+              <width>180</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
           </item>
          </layout>
-        </item>
-        <item>
-         <widget class="QLabel" name="events_label">
-          <property name="styleSheet">
-           <string notr="true">font: 15pt &quot;Gabriola&quot;;</string>
-          </property>
-          <property name="text">
-           <string>Events to port:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTableWidget" name="event_port_tableWidget">
-          <property name="styleSheet">
-           <string notr="true">font: 12pt &quot;David&quot;;</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="success_rate_label">
-          <property name="styleSheet">
-           <string notr="true">font: 15pt &quot;Gabriola&quot;;</string>
-          </property>
-          <property name="text">
-           <string>Success definition:</string>
-          </property>
-         </widget>
         </item>
        </layout>
       </widget>

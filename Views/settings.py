@@ -35,8 +35,6 @@ class SettingsUi(object):
         uic.loadUi(get_ui_path('settings.ui'), main_window)
         choose_folder_btn = main_window.findChild(QtWidgets.QPushButton, "choose_folder_btn")
         choose_folder_btn.clicked.connect(self.on_log_folder_click)
-        choose_file_btn = main_window.findChild(QtWidgets.QPushButton, "choose_file_btn")
-        choose_file_btn.clicked.connect(self.on_db_file_click)
         settings_ok_back_btn = main_window.findChild(QtWidgets.QPushButton, "settings_ok_back_btn")
         settings_ok_back_btn.clicked.connect(self.on_settings_ok_click)
         # data for each: name, port, input/output, digital/analog, is reward
