@@ -1,4 +1,6 @@
+import os.path
 import sys
+from pathlib import Path
 import threading
 from collections import OrderedDict
 from datetime import datetime
@@ -43,8 +45,22 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         if settings_file is not None:
             self.settings_file = settings_file
         else:
-            self.settings_file = 'config_files/settings.txt'
-            self.db_config_file_path = 'config_files/database.ini'
+            config_path = str(Path(__file__).parent.parent / 'config_files')
+            log_path = str(Path(__file__).parent.parent / 'logs')
+            database_path = str(Path(__file__).parent.parent / 'config_files' / 'database.ini')
+            settings_path = str(Path(__file__).parent.parent / 'config_files' / 'settings.txt')
+            if not os.path.exists(config_path):
+                os.makedirs(config_path)
+                os.makedirs(log_path)
+            if not os.path.exists(database_path):
+                with open(database_path, 'x') as f:
+                    f.write('[postgresql]\nhost=localhost\ndatabase=Behavior_sys\nuser=postgres\npassword=doc417')
+            if not os.path.exists(settings_path):
+                with open(settings_path, 'x') as g:
+                    g.write(
+                        f'log file location={log_path}\nmax number of successive trials=100\nmax trial length=60000')
+            self.settings_file = settings_path
+            self.db_config_file_path = database_path
 
         # other
         self.input_ports = ['Dev1/ai0', 'Dev1/ai3', 'Dev1/ai9', 'Dev1/ai15']
@@ -59,11 +75,9 @@ class BehaviorSystemModel(INotifyPropertyChanged):
                              ('RoterB', 'Dev1/ai9', 'Input', 'Analog', 'False')]
         self.digital_params = ['duration']
         self.analog_params = ['duration', 'frequency', 'amplitude']
-        self._max_successive_trials = 1000
-        self._max_trial_length = 60000
-        self._log_file_path = ""
-        self._log_file = None
-
+        self.max_successive_trials = 0
+        self.max_trial_length = 0
+        self.logs_path = ""
         self.parse_settings_file()
 
         # DB
@@ -92,9 +106,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
                 split_line = line.split("=")
                 header, val = split_line[0], split_line[1].strip("\n")
                 if header == "log file location":
-                    self.log_file_path = val
-                elif header == "database configuration file location":
-                    self.db_config_file_path = val
+                    self.logs_path = val
                 elif header == "max trial length":
                     try:
                         self.max_trial_length = int(val)
@@ -146,26 +158,6 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     #         self._db_config_file_path = value
     #     # self._log_file_path = "log.txt"
     #     self.notifyPropertyChanged("db_config_file_path")
-
-    @property
-    def max_trial_length(self):
-        return self._max_trial_length
-
-    @max_trial_length.setter
-    def max_trial_length(self, value):
-        if self._max_trial_length != value:
-            self._max_trial_length = value
-            self.notifyPropertyChanged("max_trial_length")
-
-    @property
-    def max_successive_trials(self):
-        return self._max_successive_trials
-
-    @max_successive_trials.setter
-    def max_successive_trials(self, value):
-        if self._max_successive_trials != value:
-            self._max_successive_trials = value
-            self.notifyPropertyChanged("max_successive_trials")
 
     @property
     def subject_sessions(self):
@@ -227,26 +219,6 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         if self._session_trials != value:
             self._session_trials = value
             self.notifyPropertyChanged("session_trials")
-
-    @property
-    def log_file_path(self):
-        return self._log_file_path
-
-    @log_file_path.setter
-    def log_file_path(self, value):
-        if self._log_file_path != value:
-            self._log_file_path = value
-            self.notifyPropertyChanged("log_file_path")
-
-    @property
-    def log_file(self):
-        return self._log_file
-
-    @log_file.setter
-    def log_file(self, value):
-        if self._log_file != value:
-            self._log_file = value
-            self.notifyPropertyChanged("log_file")
 
     def set_settings(self, log_file_path, db_file_path, db_section, max_successive_trials, max_length_trials,
                      events_config):

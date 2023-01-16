@@ -30,12 +30,12 @@ class DB:
     def __init__(self, filename):
         self.conn = None
         db_config = config(filename)
-        temp = db_config['database']
+        self.db_name = db_config['database']
         db_config['database'] = 'postgres'
         self.connect(db_config)
         self.conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         self.create_db()
-        db_config['database'] = temp
+        db_config['database'] = self.db_name
         self.disconnect()
         self.connect(db_config)
         self.create_tables()
@@ -55,7 +55,7 @@ class DB:
 
     def create_db(self):
         with self.conn.cursor() as cur:
-            cur.execute("SELECT 1 FROM pg_catalog.pg_database WHERE datname = 'Behavior_sys'")
+            cur.execute(f"SELECT 1 FROM pg_catalog.pg_database WHERE datname = '{self.db_name}'")
             exists = cur.fetchone()
             if exists is None:
                 cur.execute('CREATE DATABASE "Behavior_sys"')

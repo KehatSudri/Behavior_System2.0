@@ -1,4 +1,0 @@
-log file location=D:\PycharmProjects\Behavior_System2.0
-database configuration file location=D:\PycharmProjects\Behavior_System2.0\config_files\database.ini
-max number of successive trials=100
-max trial length=60005
