@@ -126,12 +126,18 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         return self.event_config
 
     def verify_insert_hardware_event(self,name, port, in_out, dig_an, is_rew):
-        print(self.get_hardware_events_from_DB())
+        events = self.get_hardware_events_from_DB()
+        for event in events:
+            if event[1]==name:
+                return -1
+            if list(event[2:]) == [port, in_out, dig_an, is_rew]:
+                return event[1]
+        return 0
 
 
     def insert_hardware_event_to_DB(self, name, port, in_out, dig_an, is_rew):
         self.db.insert_hardware_event(name, port, in_out, dig_an, is_rew)
-        self.get_hardware_events_from_DB()
+        #self.get_hardware_events_from_DB()
 
     def parse_ports(self):
         self.input_ports, self.input_events_names, self.output_ports, self.output_events_names = [], [], [], []
