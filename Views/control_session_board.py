@@ -27,6 +27,15 @@ class ControlSessionBoardUi(object):
 
     def setupUi(self, dialog):
         uic.loadUi(get_ui_path('control_session_board.ui'), dialog)
+        start_push_btn = dialog.findChild(QtWidgets.QPushButton, 'start_push_btn')
+        start_push_btn.clicked.connect(lambda: self.start_session())
+
+        pause_push_btn = dialog.findChild(QtWidgets.QPushButton, 'pause_push_btn')
+        pause_push_btn.clicked.connect(lambda: print('pause'))
+
+        resume_push_btn = dialog.findChild(QtWidgets.QPushButton, 'resume_push_btn')
+        resume_push_btn.clicked.connect(lambda: print('res'))
+
         return
         # open a session's data in the background
         self.data_ui = RunningGraphsUi(self)
@@ -107,6 +116,9 @@ class ControlSessionBoardUi(object):
 
         self.retranslateUi(dialog)
         QtCore.QMetaObject.connectSlotsByName(dialog)
+
+    def start_session(self):
+        self.vm.sessionVM.start_session()
 
     def on_give_reward_click(self):
         curr_text = self.reward_comboBox.currentText()

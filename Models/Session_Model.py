@@ -168,7 +168,7 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
         self._output_ports = None
         self.output_events_name_list = None
         self.output_vals = None
-        self._input_ports = None
+        self.input_ports = []
         self.input_events_name_list = None
         self.input_flags = None
         self.buffer_in = None
@@ -180,20 +180,54 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
         self.success_rate = 0
         self.reward_list_in_sess = None
         self.data_log_file = None
-        self.data=np.zeros((1,1))
-    def give_reward(self, reward_name):
-        self.reward_to_give = reward_name# self.output_events_name_list.index(reward_name)
-        self.is_give_reward=True
-    @property
-    def input_ports(self):
-        return self._input_ports
+        self.data = np.zeros((1, 1))
 
-    @input_ports.setter
-    def input_ports(self, value):
-        if self.input_ports != value:
-            self._input_ports = value
-            self.input_flags = [False] * len(value)
-            self.notifyPropertyChanged("input_ports")
+    def give_reward(self, reward_name):
+        self.reward_to_give = reward_name  # self.output_events_name_list.index(reward_name)
+        self.is_give_reward = True
+
+    def start(self):
+        self.is_session_running = True
+        self.input_ports.append('Dev1/ai1')
+        t = self.get_read_in_task()
+        t.start()
+
+        # while 1:
+        #     print(t.read(2))
+        #     time.sleep(2)
+        # with nidaqmx.Task() as task:
+        #     task.ai_channels.add_ai_voltage_chan('Dev1/ai1')
+        #     while self.is_session_running:
+        #         data = task.read(number_of_samples_per_channel=2)
+        #         print(data)
+        #         time.sleep(1)
+
+    def get_read_in_task(self):
+        read_input_task = nidaqmx.Task()
+        for port in self.input_ports:
+            read_input_task.ai_channels.add_ai_voltage_chan(port, terminal_config=TerminalConfiguration.RSE)
+            # set sampling rate per channel per second!
+            read_input_task.timing.cfg_samp_clk_timing(self.sampling_rate, source="", active_edge=Edge.RISING,
+                                                       sample_mode=AcquisitionType.CONTINUOUS)
+        self.stream_in = AnalogMultiChannelReader(read_input_task.in_stream)
+        read_input_task.register_every_n_samples_acquired_into_buffer_event(10, self.reading_task_data_callback)
+        return read_input_task
+
+    def reading_task_data_callback(self, task_idx, event_type, num_samples,
+                                   callback_data):  # bufsize_callback is passed to num_samples
+        size = 500
+        if not self.end_session:
+            # It may be wiser to read slightly more than num_samples here, to make sure one does not miss any sample,
+            # see: https://documentation.help/NI-DAQmx-Key-Concepts/contCAcqGen.html
+            self.buffer_in = np.zeros((len(self.input_ports), size))  # double definition ???
+            self.stream_in.read_many_sample(self.buffer_in, size, timeout=WAIT_INFINITELY)
+            # self.stream_in.read_one_sample(self.buffer_in2, timeout=WAIT_INFINITELY)
+            print(self.buffer_in)
+            # self.data = np.append(self.data, self.buffer_in, axis=1)  # appends buffered data to total variable data
+            # self.input_to_read = np.append(self.input_to_read, self.buffer_in, axis=1)
+            #    pass
+            # self.input_to_read.put(self.buffer_in)
+        return 0
 
     @property
     def output_ports(self):
@@ -432,20 +466,6 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
     def repeat_same_trial(self):
         self.repeat_trial = True
 
-    def reading_task_data_callback(self, task_idx, event_type, num_samples,
-                                   callback_data):  # bufsize_callback is passed to num_samples
-        if not self.end_session:
-            # It may be wiser to read slightly more than num_samples here, to make sure one does not miss any sample,
-            # see: https://documentation.help/NI-DAQmx-Key-Concepts/contCAcqGen.html
-            self.buffer_in = np.zeros((len(self.input_ports), 500))  # double definition ???
-            self.stream_in.read_many_sample(self.buffer_in, 500, timeout=WAIT_INFINITELY)
-            # self.stream_in.read_one_sample(self.buffer_in2, timeout=WAIT_INFINITELY)
-            self.data = np.append(self.data, self.buffer_in, axis=1)  # appends buffered data to total variable data
-            self.input_to_read = np.append(self.input_to_read, self.buffer_in, axis=1)
-            #    pass
-            # self.input_to_read.put(self.buffer_in)
-        return 0
-
     # def reading_task_queue_callback(self, task_idx, event_type, num_samples,
     #                                 callback_data):  # bufsize_callback is passed to num_samples
     #     if not self.end_session:
@@ -455,19 +475,6 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
     #         self.stream_in.read_one_sample(self.buffer_in, timeout=WAIT_INFINITELY)
     #         self.input_to_read.put(self.buffer_in)  # appends buffered data to total variable data
     #     return 0
-
-    def get_read_in_task(self):
-        read_input_task = nidaqmx.Task()
-        for port in self.input_ports:
-            read_input_task.ai_channels.add_ai_voltage_chan(port, terminal_config=TerminalConfiguration.RSE)
-            # set sampling rate per channel per second!
-            read_input_task.timing.cfg_samp_clk_timing(self.sampling_rate, source="", active_edge=Edge.RISING,
-                                                       sample_mode=AcquisitionType.CONTINUOUS)
-        self.stream_in = AnalogMultiChannelReader(read_input_task.in_stream)
-        read_input_task.register_every_n_samples_acquired_into_buffer_event(10,
-                                                                            self.reading_task_data_callback)
-        # read_input_task.register_every_n_samples_acquired_into_buffer_event(1, self.reading_task_queue_callback)
-        return read_input_task
 
     def get_write_out_task(self):
         write_task = nidaqmx.Task()
@@ -685,9 +692,8 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
                 reading_input_task.start()
             # verify session ending
             if self.validate_ending(trial_idx, event_idx == 0):
-
                 self.session_ending(writing_output_task, reading_input_task, "end definition satisfied, ",
-                                   datetime.now().time(), paused_time)
+                                    datetime.now().time(), paused_time)
                 stopped_flag = True
                 break
             # turn off all finished outputs
@@ -702,7 +708,7 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
                     self.add_int_delta_to_time(max_trial_length, trial_start_time), datetime.now().time()):
                 self.log_queue.put(str(datetime.now()) + "   - Trial reached maximum time. moving to next trial\n")
 
-                event_idx = len(trials_to_run[trial_idx].events) -1
+                event_idx = len(trials_to_run[trial_idx].events) - 1
                 dur = int(trials_to_run[trial_idx].events[event_idx].getDuration())
                 read_input_idx += int((dur + 50) * self.sampling_rate / 1000)
 
@@ -734,17 +740,16 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
                 if event_to_give is not None:
                     self.output_vals[output_idx] = True
                     output_times[output_idx] = self.add_int_delta_to_time(int(r.getDuration()),
-                                                                            datetime.now().time())
+                                                                          datetime.now().time())
                     writing_output_task.write(self.output_vals)
 
             # read the input
             if read_input_idx < len(self.input_to_read.T):
-                #input = self.input_to_read[:, read_input_idx]
+                # input = self.input_to_read[:, read_input_idx]
                 input = self.input_to_read[:, read_input_idx]
                 read_input_idx += 10
                 if not iti_flag_is_random and input[iti_input_index] > 3:
                     self.input_flag = True
-
 
             # run the next event for one of the following options -
             # 1. middle of trial and interval between events passed
@@ -757,7 +762,8 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
                 stop_events_flag = True
                 if event_idx == 0:
                     self.log_queue.put(
-                        str(datetime.now().time()) + "   - Trial #" + str(trial_idx+1) + " starting: " + trials_to_run[
+                        str(datetime.now().time()) + "   - Trial #" + str(trial_idx + 1) + " starting: " +
+                        trials_to_run[
                             trial_idx].name + "\n")
                     trials_start_time = datetime.now().time()
                 while stop_events_flag:
@@ -821,12 +827,13 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
                     interval = trials_to_run[trial_idx].intervals[event_idx - 1]
                     next_interval = np.random.randint(int(interval[0]), int(interval[1]) + 1)
             # TODO validate
-            if iti_flag_is_random and len(self.reward_list_in_sess) > 0 and len(idxs) > rew_count and not given_rnd_interval:
+            if iti_flag_is_random and len(self.reward_list_in_sess) > 0 and len(
+                    idxs) > rew_count and not given_rnd_interval:
                 if iti_idx == idxs[rew_count]:
                     if self.is_delta_more_than_time(
                             self.add_int_delta_to_time(short_itis[rew_count], self.interval_start_time),
                             datetime.now().time()):
-                        rnd_idx = random.randint(0, len(self.reward_list_in_sess)-1)
+                        rnd_idx = random.randint(0, len(self.reward_list_in_sess) - 1)
                         output_event_idx = self.output_events_name_list.index(
                             self.reward_list_in_sess[rnd_idx].get_type_str())
                         self.output_vals[output_event_idx] = True
@@ -834,10 +841,8 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
                                                                                     datetime.now().time())
                         writing_output_task.write(self.output_vals)
 
-
                         given_rnd_interval = True
                         rew_count += 1
-
 
             # while self.repeat_trial:
             #     self.repeat_trial = False
@@ -847,7 +852,7 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
 
         if not stopped_flag:
             self.session_ending(writing_output_task, reading_input_task, "finished trials, ", datetime.now().time(),
-                               paused_time)
+                                paused_time)
 
         finish_all_output = True
         while not finish_all_output:

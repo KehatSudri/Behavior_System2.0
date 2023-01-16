@@ -7,6 +7,9 @@ class SessionViewModel(INotifyPropertyChanged):
         super(SessionViewModel, self).__init__()
         self.model = SessionModel()
 
+    def start_session(self):
+        self.model.start()
+
     @property
     def trial_types_successive_counter(self):
         return self.model.trial_types_successive_counter

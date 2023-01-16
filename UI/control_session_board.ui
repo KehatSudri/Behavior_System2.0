@@ -17,23 +17,23 @@
    <item row="2" column="0">
     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,1,0,1,1">
      <item>
-      <widget class="QPushButton" name="stop_pushButton">
+      <widget class="QPushButton" name="start_push_btn">
        <property name="text">
-        <string>Stop</string>
+        <string>Start</string>
        </property>
       </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="running_buttons_horizontalLayout">
        <item>
-        <widget class="QPushButton" name="pause_pushButton">
+        <widget class="QPushButton" name="pause_push_btn">
          <property name="text">
           <string>Pause</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="resume_pushButton">
+        <widget class="QPushButton" name="resume_push_btn">
          <property name="text">
           <string>Resume</string>
          </property>
