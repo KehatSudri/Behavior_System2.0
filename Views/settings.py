@@ -1,13 +1,13 @@
 import os
 
-from PyQt6 import QtCore, QtGui, QtWidgets, uic
-from PyQt6.QtWidgets import QMainWindow, QTableWidgetItem
-
+from PyQt6 import QtCore, QtWidgets, uic
 from Views.utils import error_warning, get_ui_path
 
 
 class SettingsUi(object):
     def __init__(self, parent):
+        self.log_file_path_text_edit = None
+        self.new_folder_path = None
         self.parent = parent
         self.vm = parent.vm
         self.main_window = None
@@ -18,10 +18,8 @@ class SettingsUi(object):
         self.choose_db_file_radioButton = None
         self.db_path_textEdit = None
         self.max_identical_consecutive_trials_spinBox = None
-
-        self.folder_log_file_path = self.vm.log_file_path
         self.file_db_file_path = self.vm.db_config_file_path
-        #self.db_section = self.vm.db_section
+        # self.db_section = self.vm.db_section
         self.max_identical_consecutive_trial = self.vm.max_successive_trials
         self.max_time_duration = self.vm.max_trial_length
         self.input_events = self.vm.input_events_names
@@ -37,6 +35,13 @@ class SettingsUi(object):
         choose_folder_btn.clicked.connect(self.on_log_folder_click)
         settings_ok_back_btn = main_window.findChild(QtWidgets.QPushButton, "settings_ok_back_btn")
         settings_ok_back_btn.clicked.connect(self.on_settings_ok_click)
+        choose_folder_radio_btn = main_window.findChild(QtWidgets.QRadioButton, "choose_folder_radio_btn")
+        choose_folder_radio_btn.toggled.connect(
+            lambda: choose_folder_btn.setEnabled(choose_folder_radio_btn.isChecked()))
+        self.log_file_path_text_edit = main_window.findChild(QtWidgets.QTextEdit, "log_file_path_text_edit")
+        insert_path_radio_btn = main_window.findChild(QtWidgets.QRadioButton, "insert_path_radio_btn")
+        insert_path_radio_btn.toggled.connect(
+            lambda: self.log_file_path_text_edit.setEnabled(insert_path_radio_btn.isChecked()))
         # data for each: name, port, input/output, digital/analog, is reward
         # for i in range(5):
         #     column_position = self.event_port_tableWidget.columnCount()
@@ -109,59 +114,18 @@ class SettingsUi(object):
         # self.max_identical_consecutive_trials_spinBox.setValue(self.vm.max_successive_trials)
         # self.max_time_duration_spinBox.setValue(self.vm.max_trial_length)
 
-    def log_file_path_cfg(self):
-        self.insert_log_file_path_radioButton.toggled \
-            .connect(lambda: self.log_file_path_state(self.insert_log_file_path_radioButton))
-        self.choose_log_file_path_radioButton.toggled \
-            .connect(lambda: self.log_file_path_state(self.choose_log_file_path_radioButton))
-
-    def log_file_path_state(self, btn):
-        # check if one of the radio buttons was pressed
-        if btn.isChecked():
-            if btn.text() == "Insert path":
-                self.choose_log_file_folder_pushButton.setEnabled(False)
-                self.log_file_path_lineEdit.setEnabled(True)
-                self.log_file_path_lineEdit.setInputMethodHints(QtCore.Qt.ImhLatinOnly)
-                self.log_file_path_lineEdit.editingFinished.connect(self.on_log_file_path_changed)
-            if btn.text() == "Choose folder":
-                self.choose_log_file_folder_pushButton.setEnabled(True)
-                self.log_file_path_lineEdit.setEnabled(False)
-
-    def on_log_file_path_changed(self):
-        self.folder_log_file_path = self.log_file_path_lineEdit.text()
-
     def on_log_folder_click(self):
         dialog = QtWidgets.QFileDialog()
-        folder_path = dialog.getExistingDirectory(None, "Select Folder")
-        print(folder_path)
-        #self.folder_log_file_path = folder_path
-        # self.log_file_path_lineEdit.setText(self.folder_log_file_path) TODO
-
-    def db_file_path_cfg(self):
-        self.insert_db_file_path_radioButton.toggled \
-            .connect(lambda: self.db_file_path_state(self.insert_db_file_path_radioButton))
-        self.choose_db_file_radioButton.toggled \
-            .connect(lambda: self.db_file_path_state(self.choose_db_file_radioButton))
-
-    def db_file_path_state(self, btn):
-        # check if one of the radio buttons was pressed
-        if btn.isChecked():
-            if btn.text() == "Insert path":
-                self.choose_db_file_pushButton.setEnabled(False)
-                self.db_path_textEdit.setEnabled(True)
-            if btn.text() == "Choose file":
-                self.choose_db_file_pushButton.setEnabled(True)
-                self.db_path_textEdit.setEnabled(False)
-
-    def on_db_file_click(self):
-        dialog = QtWidgets.QFileDialog()
-        file_path = dialog.getOpenFileName(None, "Select File")
-        print(file_path[0])
-        # self.file_db_file_path = file_path[0]
-        # self.db_path_textEdit.setText(self.file_db_file_path) TODO
+        self.new_folder_path = dialog.getExistingDirectory(None, "Select Folder")
+        self.log_file_path_text_edit.setText(self.new_folder_path)
 
     def on_settings_ok_click(self):
-        # TODO add logic
+        with open(self.vm.model.settings_file, 'r') as f:
+            lines = f.readlines()
+        lines[0] = f'log file location={self.new_folder_path}\n'
+        with open(self.vm.model.settings_file, 'w') as f:
+            for line in lines:
+                f.write(line)
         self.main_window.close()
 
     def get_max_identical_consecutive_trial(self):
@@ -169,13 +133,6 @@ class SettingsUi(object):
 
     def get_max_time_duration(self):
         self.max_time_duration = self.max_time_duration_spinBox.value()
-
-    def on_db_section_changed(self):
-        self.db_section = self.db_section_lineEdit.text()
-
-    def on_back_click(self):
-        self.parent.main_window.show()
-        self.main_window.close
 
     def accept(self):
         from os import path

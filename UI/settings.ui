@@ -61,7 +61,7 @@
         <item>
          <layout class="QHBoxLayout" name="log_file_path_horizontalLayout" stretch="1,1">
           <item>
-           <widget class="QRadioButton" name="insert_log_file_path_radioButton">
+           <widget class="QRadioButton" name="insert_path_radio_btn">
             <property name="font">
              <font>
               <family>Gabriola</family>
@@ -80,7 +80,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="choose_log_file_path_radioButton">
+           <widget class="QRadioButton" name="choose_folder_radio_btn">
             <property name="font">
              <font>
               <family>Gabriola</family>
@@ -97,7 +97,7 @@
         <item>
          <layout class="QHBoxLayout" name="log_file_horizontalLayout" stretch="3,0">
           <item>
-           <widget class="QTextEdit" name="log_file_path_textEdit">
+           <widget class="QTextEdit" name="log_file_path_text_edit">
             <property name="enabled">
              <bool>true</bool>
             </property>

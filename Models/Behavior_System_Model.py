@@ -59,8 +59,8 @@ class BehaviorSystemModel(INotifyPropertyChanged):
                 with open(settings_path, 'x') as g:
                     g.write(
                         f'log file location={log_path}\nmax number of successive trials=100\nmax trial length=60000')
-            self.settings_file = 'config_files/settings.txt'
-            self.db_config_file_path = 'config_files/database.ini'
+            self.settings_file = settings_path
+            self.db_config_file_path = database_path
 
         # other
         self.input_ports = ['Dev1/ai0', 'Dev1/ai3', 'Dev1/ai9', 'Dev1/ai15']
