@@ -71,16 +71,14 @@ class DB:
     def insert_hardware_event(self, name, port, in_out, digital_analog, is_reward):
         sql = """
             INSERT INTO hardwareEvents(event_name,port,input_output ,digital_analog,is_reward) VALUES (%s,%s,%s,%s,%s)
-             ON CONFLICT (event_name) DO UPDATE SET port=%s,input_output=%s ,digital_analog=%s,is_reward=%s RETURNING event_id"""
-        try:
-            with self.conn.cursor() as cur:
-                cur.execute(sql,
-                            (name, port, in_out, digital_analog, is_reward, port, in_out, digital_analog, is_reward,))
-                e_id = cur.fetchone()[0]
-                self.conn.commit()
-            return e_id
-        except Exception:
-            return -1
+            ON CONFLICT (event_name) DO UPDATE SET port=%s,input_output=%s ,digital_analog=%s,is_reward=%s RETURNING event_id"""
+        with self.conn.cursor() as cur:
+            cur.execute(sql,
+                        (name, port, in_out, digital_analog, is_reward, port, in_out, digital_analog, is_reward,))
+            e_id = cur.fetchone()[0]
+            self.conn.commit()
+        return e_id
+
 
     def insert_session(self, iti_type, end_def, end_val, trials_order, iti_min_range=None, iti_max_range=None,
                        iti_behave_def=None, total_num=None, block_size=None, blocks_ord=None, sess_name=None,

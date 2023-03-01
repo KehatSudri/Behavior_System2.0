@@ -1,2 +1,1 @@
 QGroupBox { border: 0 }
-*{background-color: rgba(148, 152, 204, 0.7)}
