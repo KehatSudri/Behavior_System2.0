@@ -17,23 +17,29 @@
    <item row="2" column="0">
     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,1,0,1,1">
      <item>
-      <widget class="QPushButton" name="stop_pushButton">
+      <widget class="QPushButton" name="start_push_btn">
        <property name="text">
-        <string>Stop</string>
+        <string>Start</string>
        </property>
       </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="running_buttons_horizontalLayout">
        <item>
-        <widget class="QPushButton" name="pause_pushButton">
+        <widget class="QPushButton" name="pause_push_btn">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Pause</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="resume_pushButton">
+        <widget class="QPushButton" name="resume_push_btn">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Resume</string>
          </property>
@@ -57,7 +63,10 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="repeat_trial_pushButton">
+        <widget class="QPushButton" name="repeat_trial_push_btn">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Repeat trial</string>
          </property>
@@ -65,6 +74,9 @@
        </item>
        <item>
         <widget class="QPushButton" name="present_data_pushButton">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Present data</string>
          </property>
@@ -102,6 +114,9 @@
        </item>
        <item>
         <widget class="QPushButton" name="reward_pushButton">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Give reward</string>
          </property>
@@ -139,7 +154,10 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="finish_pushButton">
+      <widget class="QPushButton" name="finish_push_btn">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Finish</string>
        </property>
