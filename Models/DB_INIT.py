@@ -173,6 +173,12 @@ class DB:
             cur.execute("SELECT * FROM hardwarEevents")
             events = cur.fetchall()
         return events
+    def get_hardware_events_byname(self):
+        with self.conn.cursor() as cur:
+            cur.execute("SELECT event_name FROM hardwarEevents")
+            names = cur.fetchall()
+        return names
+
 
     def get_session_trials(self, sess_id):
         with self.conn.cursor() as cur:

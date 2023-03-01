@@ -80,9 +80,10 @@ class CreateEventUi(object):
         if error_value == -1:
             error_warning("Event name already exist")
             return
-        elif not error_value == 0:
-            error_warning(f'There is already event with these parameters called "{error_value}"')
-            return
+        # this check cancelled
+        #elif not error_value == 0:
+        #    error_warning(f'There is already event with these parameters called "{error_value}"')
+        #    return
         self.vm.insert_hardware_event_to_DB(self.event_name_lineEdit.text(), self.event_port_lineEdit.text(),
                                             io_btn_val,
                                             analog_digital_val,

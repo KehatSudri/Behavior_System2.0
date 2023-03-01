@@ -11,7 +11,7 @@ class CreateTrialTypeUi(object):
         self.trial_type_name_lineEdit = None
         self.simple_radioButton = None
         self.add_event_pushButton = None
-        self.events = self.parent.vm.model.output_events_names
+        self.events = self.parent.vm.model.get_all_events_by_name()
         self.events_comboBox = None
         self.remove_event_pushButton = None
         self.events_tableWidget = None
@@ -29,7 +29,7 @@ class CreateTrialTypeUi(object):
         self.simple_radioButton = main_window.findChild(QtWidgets.QRadioButton, 'simple_radioButton')
         self.simple_radioButton.setChecked(True)
         self.events_comboBox = main_window.findChild(QtWidgets.QComboBox, 'comboBox')
-        self.events_comboBox.addItems(self.events)
+        self.events_comboBox.addItems([event[0] for event in self.events])
         self.events_tableWidget = main_window.findChild(QtWidgets.QTableWidget, 'events_tableWidget')
         self.events_tableWidget.setColumnWidth(0, int(self.events_tableWidget.width() / 2))
         self.add_event_pushButton = main_window.findChild(QtWidgets.QPushButton, 'Add_event_pushButton')

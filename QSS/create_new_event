@@ -1,1 +1,3 @@
-QGroupBox { border: 0 }
+
+QPushButton { color: red; background-color: white;border-radius:2px; }
+QPushButton:hover { color: black }
