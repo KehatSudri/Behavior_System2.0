@@ -159,7 +159,6 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
         self._trial_types_successive_counter = []
         self.input_flag = False
         self.input_has_come = threading.Event()
-        self.pause = False
         self.repeat_trial = False
         self.is_give_reward = False
         self.reward_to_give = None
@@ -168,7 +167,7 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
         self._output_ports = None
         self.output_events_name_list = None
         self.output_vals = None
-        self.input_ports = []
+        self.input_ports = ['Dev1/ai1']
         self.input_events_name_list = None
         self.input_flags = None
         self.buffer_in = None
@@ -181,16 +180,37 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
         self.reward_list_in_sess = None
         self.data_log_file = None
         self.data = np.zeros((1, 1))
+        self.running_session = None
+        self.should_pause = False
 
     def give_reward(self, reward_name):
         self.reward_to_give = reward_name  # self.output_events_name_list.index(reward_name)
         self.is_give_reward = True
 
     def start(self):
-        self.is_session_running = True
-        self.input_ports.append('Dev1/ai1')
-        t = self.get_read_in_task()
-        t.start()
+        if self.running_session is None:
+            self.is_session_running = True
+            self.running_session = self.get_read_in_task()
+            self.running_session.start()
+
+    def pause(self):
+        if not self.is_session_running or self.should_pause:
+            return
+        self.should_pause = True
+        self.running_session.stop()
+
+    def resume(self):
+        if not self.is_session_running or not self.should_pause:
+            return
+        self.should_pause = False
+        self.running_session.start()
+
+    def finish(self):
+        if not self.is_session_running:
+            return
+        self.is_session_running = False
+        self.running_session.close()
+        self.running_session = None
 
         # while 1:
         #     print(t.read(2))
@@ -216,7 +236,7 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
     def reading_task_data_callback(self, task_idx, event_type, num_samples,
                                    callback_data):  # bufsize_callback is passed to num_samples
         size = 500
-        if not self.end_session:
+        if self.is_session_running:
             # It may be wiser to read slightly more than num_samples here, to make sure one does not miss any sample,
             # see: https://documentation.help/NI-DAQmx-Key-Concepts/contCAcqGen.html
             self.buffer_in = np.zeros((len(self.input_ports), size))  # double definition ???

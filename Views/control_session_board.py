@@ -2,10 +2,16 @@ from PyQt6 import QtCore, QtGui, QtWidgets, uic
 
 from Views.run_session import RunningGraphsUi
 from Views.utils import get_ui_path
+import threading
 
 
 class ControlSessionBoardUi(object):
     def __init__(self, parent):
+        self.repeat_trial_push_btn = None
+        self.finish_push_btn = None
+        self.resume_push_btn = None
+        self.pause_push_btn = None
+        self.start_push_btn = None
         self.parent = parent
         # self.create_session_ui = parent.parent.main_window
         self.vm = self.parent.vm
@@ -27,14 +33,20 @@ class ControlSessionBoardUi(object):
 
     def setupUi(self, dialog):
         uic.loadUi(get_ui_path('control_session_board.ui'), dialog)
-        start_push_btn = dialog.findChild(QtWidgets.QPushButton, 'start_push_btn')
-        start_push_btn.clicked.connect(lambda: self.start_session())
+        self.start_push_btn = dialog.findChild(QtWidgets.QPushButton, 'start_push_btn')
+        self.start_push_btn.clicked.connect(lambda: self.start_session())
 
-        pause_push_btn = dialog.findChild(QtWidgets.QPushButton, 'pause_push_btn')
-        pause_push_btn.clicked.connect(lambda: print('pause'))
+        self.pause_push_btn = dialog.findChild(QtWidgets.QPushButton, 'pause_push_btn')
+        self.pause_push_btn.clicked.connect(lambda: self.pause_session())
 
-        resume_push_btn = dialog.findChild(QtWidgets.QPushButton, 'resume_push_btn')
-        resume_push_btn.clicked.connect(lambda: print('res'))
+        self.resume_push_btn = dialog.findChild(QtWidgets.QPushButton, 'resume_push_btn')
+        self.resume_push_btn.clicked.connect(lambda: self.resume_session())
+
+        self.finish_push_btn = dialog.findChild(QtWidgets.QPushButton, 'finish_push_btn')
+        self.finish_push_btn.clicked.connect(lambda: self.finish_session())
+
+        self.repeat_trial_push_btn = dialog.findChild(QtWidgets.QPushButton, 'repeat_trial_push_btn')
+        self.repeat_trial_push_btn.clicked.connect(lambda: self.start_session())
 
         return
         # open a session's data in the background
@@ -118,7 +130,29 @@ class ControlSessionBoardUi(object):
         QtCore.QMetaObject.connectSlotsByName(dialog)
 
     def start_session(self):
-        self.vm.sessionVM.start_session()
+        self.start_push_btn.setEnabled(False)
+        self.pause_push_btn.setEnabled(True)
+        self.finish_push_btn.setEnabled(True)
+        session_thread = threading.Thread(target=self.vm.sessionVM.start_session)
+        session_thread.start()
+        session_thread.join()
+
+    def pause_session(self):
+        self.vm.sessionVM.pause_session()
+        self.pause_push_btn.setEnabled(False)
+        self.resume_push_btn.setEnabled(True)
+
+    def resume_session(self):
+        self.vm.sessionVM.resume_session()
+        self.pause_push_btn.setEnabled(True)
+        self.resume_push_btn.setEnabled(False)
+
+    def finish_session(self):
+        self.vm.sessionVM.finish_session()
+        self.pause_push_btn.setEnabled(False)
+        self.resume_push_btn.setEnabled(False)
+        self.repeat_trial_push_btn.setEnabled(True)
+
 
     def on_give_reward_click(self):
         curr_text = self.reward_comboBox.currentText()
