@@ -69,18 +69,17 @@ class DB:
             self.conn.commit()
 
     def insert_hardware_event(self, name, port, in_out, digital_analog, is_reward):
+        print(digital_analog)
         sql = """
             INSERT INTO hardwareEvents(event_name,port,input_output ,digital_analog,is_reward) VALUES (%s,%s,%s,%s,%s)
-             ON CONFLICT (event_name) DO UPDATE SET port=%s,input_output=%s ,digital_analog=%s,is_reward=%s RETURNING event_id"""
-        try:
-            with self.conn.cursor() as cur:
-                cur.execute(sql,
-                            (name, port, in_out, digital_analog, is_reward, port, in_out, digital_analog, is_reward,))
-                e_id = cur.fetchone()[0]
-                self.conn.commit()
-            return e_id
-        except Exception:
-            return -1
+            ON CONFLICT (event_name) DO UPDATE SET port=%s,input_output=%s ,digital_analog=%s,is_reward=%s RETURNING event_id"""
+        with self.conn.cursor() as cur:
+            cur.execute(sql,
+                        (name, port, in_out, digital_analog, is_reward, port, in_out, digital_analog, is_reward,))
+            e_id = cur.fetchone()[0]
+            self.conn.commit()
+        return e_id
+
 
     def insert_session(self, iti_type, end_def, end_val, trials_order, iti_min_range=None, iti_max_range=None,
                        iti_behave_def=None, total_num=None, block_size=None, blocks_ord=None, sess_name=None,
@@ -328,11 +327,10 @@ commands = (
         event_name VARCHAR(250) NOT NULL UNIQUE,
         port VARCHAR(100),
         input_output VARCHAR(20) NOT NULL,
-        digital_analog VARCHAR(20) NOT NULL,
+        digital_analog VARCHAR(20) ,
         is_reward VARCHAR(20) NOT NULL,       
         CONSTRAINT hardwareEvents_pkey PRIMARY KEY (event_id),
         CONSTRAINT input_output_ck CHECK (input_output in ('Input', 'Output')),
-        CONSTRAINT digital_analog_ck CHECK (digital_analog in ('Digital', 'Analog')),
         CONSTRAINT is_reward_ck CHECK (is_reward in ('True', 'False'))
     )
     """,

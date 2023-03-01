@@ -91,9 +91,9 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         # # get data from DB
         # self.connect_to_DB()
         self.get_templates_from_DB()
-        for i in range(len(self.event_config)):
-            self.db.insert_hardware_event(self.event_config[i][0], self.event_config[i][1], self.event_config[i][2],
-                                          self.event_config[i][3], self.event_config[i][4])
+        #for i in range(len(self.event_config)):
+        #    self.db.insert_hardware_event(self.event_config[i][0], self.event_config[i][1], self.event_config[i][2],
+        #                                  self.event_config[i][3], self.event_config[i][4])
         self.get_trial_types_from_DB()
         self.get_hardware_events_from_DB()
 
@@ -126,12 +126,18 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         return self.event_config
 
     def verify_insert_hardware_event(self,name, port, in_out, dig_an, is_rew):
-        print(self.get_hardware_events_from_DB())
+        events = self.get_hardware_events_from_DB()
+        for event in events:
+            if event[1]==name:
+                return -1
+            if list(event[2:]) == [port, in_out, dig_an, is_rew]:
+                return event[1]
+        return 0
 
 
     def insert_hardware_event_to_DB(self, name, port, in_out, dig_an, is_rew):
         self.db.insert_hardware_event(name, port, in_out, dig_an, is_rew)
-        self.get_hardware_events_from_DB()
+        #self.get_hardware_events_from_DB()
 
     def parse_ports(self):
         self.input_ports, self.input_events_names, self.output_ports, self.output_events_names = [], [], [], []
@@ -240,9 +246,9 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         self.db_section = db_section
         self.max_trial_length = max_length_trials
         self.max_successive_trials = max_successive_trials
-        if events_config is not None:
-            for e in events_config:
-                self.DB.insert_hardware_event(e[0], e[1], e[2], e[3], e[4])
+        #if events_config is not None:
+        #    for e in events_config:
+        #        self.DB.insert_hardware_event(e[0], e[1], e[2], e[3], e[4])
         self.get_hardware_events_from_DB()
         pass
 

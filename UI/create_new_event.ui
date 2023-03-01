@@ -116,8 +116,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>525</width>
-         <height>566</height>
+         <width>531</width>
+         <height>540</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
@@ -132,12 +132,15 @@
              <x>0</x>
              <y>0</y>
              <width>501</width>
-             <height>41</height>
+             <height>43</height>
             </rect>
            </property>
            <layout class="QHBoxLayout" name="io_horizontalLayout_4" stretch="0,0">
             <item>
              <widget class="QRadioButton" name="digital_radio_btn">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
                <string>Digital</string>
               </property>
@@ -145,6 +148,9 @@
             </item>
             <item>
              <widget class="QRadioButton" name="analog_radio_btn">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
                <string>Analog</string>
               </property>
@@ -200,7 +206,7 @@
              <x>0</x>
              <y>0</y>
              <width>501</width>
-             <height>41</height>
+             <height>43</height>
             </rect>
            </property>
            <layout class="QHBoxLayout" name="io_horizontalLayout_3" stretch="0,0">
