@@ -242,6 +242,7 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
 
             # ------------------------------
             self._listeners = []
+
             output_len = len(self._output_ports)
             for i in range(output_len):
                 new_listener = Listener(i, output_len, self._running_session_task_writer)
