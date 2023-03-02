@@ -46,7 +46,7 @@ class DeleteTrialTypeUi(object):
         self.back_pushButton = None
         self.trial_types = self.vm.get_list_trials_types_def()
         self.selected_trial_type = None
-
+        self.trials_names = self.vm.get_trial_names()
         self.vm.property_changed += self.EventHandler
         self.is_error = False
 

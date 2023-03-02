@@ -20,13 +20,12 @@ class AddTrialUi(object):
         self.verticalLayout = None
         self.buttonBox = None
         self.verticalScrollBar = None
-        self.formLayout = QtWidgets.QFormLayout()
-        self.formLayout.setObjectName("formLayout")
+        self.formLayout = parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
 
         self.trial_params_labels = []
         self.trial_params_widgets = defaultdict(list)
         self.set_trials_table_pointer = None
-        self.trial_types_click(0)
+        #self.trial_types_click(0)
         # TODO delete when self.vm.is_contingent(event_name) implemented
         self.are_contingents = []
         # self.contingents = OrderedDict()
@@ -34,7 +33,7 @@ class AddTrialUi(object):
     def setupUi(self, dialog):
         uic.loadUi(get_ui_path('add_trial.ui'), dialog)
         self.trial_types_comboBox = dialog.findChild(QtWidgets.QComboBox, 'trial_types_comboBox')
-        self.trial_types_comboBox.addItems([*self.parent.trial_types.keys()])
+        self.trial_types_comboBox.addItems([name[0] for name in self.parent.trials_names])
         self.trial_types_comboBox.activated.connect(self.trial_types_click)
         self.buttonBox = dialog.findChild(QtWidgets.QDialogButtonBox, 'buttonBox')
         self.buttonBox.accepted.connect(self.accept)
@@ -43,7 +42,7 @@ class AddTrialUi(object):
         # present params of the chosen trial
         #self.update()
         #present first trial type as default
-        self.trial_types_click(0)
+        #self.trial_types_click(0)
 
     # def update(self):
     #     self.set_trials_table_pointer = self.parent.set_trials_table_pointer
@@ -61,7 +60,7 @@ class AddTrialUi(object):
     def delete_params(self):
         for i in range(len(self.trial_params_labels)):
             label = self.trial_params_labels.pop()
-            self.formLayout.removeRow(label)
+            self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').removeRow(label)
         # init the lists tha holds the widgets for each row
         self.trial_params_labels = []
         self.trial_params_widgets = defaultdict(list)
@@ -81,7 +80,8 @@ class AddTrialUi(object):
                 label = QLabel(event_name + ":")
                 label.setFont(event_name_font)
                 self.trial_params_labels.append(label)
-                self.formLayout.addRow(label)
+                formLayout=self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
+                formLayout.addRow(label)
             # add line edit accordingly for the parameters
             self.set_trial_form_handler(event_name, is_contingent)
 
@@ -136,28 +136,23 @@ class AddTrialUi(object):
                             self.formLayout.addRow(label, spin_box)
         else:
             # simple event case
-            for event_parameter in self.parent.trial_types[self.parent.chosen_trial_type_name][event_name]:  # event's
+            for event_parameter in [name[0] for name in self.parent.trials_names]:  # event's
                 # params
                 label = QLabel(event_parameter)
                 line_edit = QLineEdit()
                 self.trial_params_labels.append(label)
                 self.trial_params_widgets[event_name].append(line_edit)
-                self.formLayout.addRow(label, line_edit)
+                self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').addRow(label, line_edit)
 
     def trial_types_click(self, index):
         self.parent.trial_index = index
         # get the chosen trial type and set it's parameters
-        #TODO verify working properly
-        # self.parent.trial_type_name = [*self.parent.trial_types.keys()][index]
-        # events_name = [*self.parent.trial_types[self.parent.trial_type_name].keys()]
-        if len(list(self.parent.trial_types.keys())) is 0:
+        if len(self.parent.trials_names) == 0:
             return
-        self.parent.chosen_trial_type_name = list(self.parent.trial_types.keys())[index]
-        events_name = list(self.parent.trial_types[self.parent.chosen_trial_type_name].keys())
-
-
+        chosen = self.parent.chosen_trial_type_name = [name[0] for name in self.parent.trials_names][index]
+        events_name = self.vm.get_events_by_trial_name(chosen)
         self.clear_form()
-        self.set_trial_form(events_name)
+        self.set_trial_form(events_name[0].split(",")[:-1])
 
     def clear_form(self):
         if len(self.trial_params_labels) != 0:
@@ -187,19 +182,20 @@ class AddTrialUi(object):
         return True
 
     def accept(self):
-        new_trial = self.parent.trial_types[self.parent.chosen_trial_type_name]
+        new_trial = self.parent.trial_types[1]
+        print(new_trial)
         # update new trial parameters
-        for event, event_params in new_trial.items():
-            params_values = {param: self.trial_params_widgets[event][i].text() for i, param in
-                             enumerate(event_params)}
-            new_trial[event] = params_values
+        # for event, event_params in new_trial.items():
+        #     params_values = {param: self.trial_params_widgets[event][i].text() for i, param in
+        #                      enumerate(event_params)}
+        #     new_trial[event] = params_values
         # check if not an empty input
         print(new_trial)
-        if not self.are_valid_values(new_trial):
-            error_warning("An error accrued, please try again.")
-            return
+        # if not self.are_valid_values(new_trial):
+        #     error_warning("An error accrued, please try again.")
+        #     return
         # validate parameters values
-        self.are_valid_values(new_trial)
+        #self.are_valid_values(new_trial)
         # add new trial
         self.parent.trials_in_session.append(get_string_dict({self.parent.chosen_trial_type_name: new_trial}))
         self.parent.percentages.append(0)

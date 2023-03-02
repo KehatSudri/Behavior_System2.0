@@ -116,15 +116,22 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>592</width>
-         <height>601</height>
+         <width>598</width>
+         <height>569</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
+        <item row="4" column="0">
+         <widget class="QPushButton" name="pushButton_2">
+          <property name="text">
+           <string>Remove event</string>
+          </property>
+         </widget>
+        </item>
         <item row="3" column="0">
-         <layout class="QVBoxLayout" name="scroll_verticalLayout" stretch="1,1,1,1,1,0">
+         <layout class="QVBoxLayout" name="scroll_verticalLayout" stretch="1,0,1,0,1,0,1,1,0,0">
           <item>
-           <layout class="QHBoxLayout" name="trial_name_horizontalLayout" stretch="1,0">
+           <layout class="QHBoxLayout" name="trial_name_horizontalLayout" stretch="0,0">
             <item>
              <widget class="QLabel" name="trial_name_label_2">
               <property name="text">
@@ -136,6 +143,19 @@
              <widget class="QLineEdit" name="lineEdit"/>
             </item>
            </layout>
+          </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
           </item>
           <item>
            <layout class="QHBoxLayout" name="is_contigent_horizontalLayout">
@@ -156,7 +176,20 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="add_event_horizontalLayout" stretch="1,2">
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="add_event_horizontalLayout" stretch="0,0,0,0">
             <item>
              <widget class="QPushButton" name="Add_event_pushButton">
               <property name="text">
@@ -174,31 +207,33 @@
               </property>
              </widget>
             </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="remove_horizontalLayout" stretch="1,2">
             <item>
-             <widget class="QPushButton" name="pushButton_2">
+             <widget class="QLabel" name="label_2">
               <property name="text">
-               <string>Remove event</string>
+               <string>       Contingent On :</string>
               </property>
              </widget>
             </item>
             <item>
-             <spacer name="horizontalSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
+             <widget class="QComboBox" name="comboBox_3"/>
             </item>
            </layout>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="remove_horizontalLayout" stretch=""/>
           </item>
           <item>
            <widget class="QLabel" name="label">
@@ -259,8 +294,6 @@
              </property>
              <property name="font">
               <font>
-               <weight>75</weight>
-               <bold>true</bold>
                <kerning>false</kerning>
               </font>
              </property>
@@ -270,12 +303,23 @@
             </column>
             <column>
              <property name="text">
-              <string>Simple/Contingent</string>
+              <string>Simple \ Contongent</string>
              </property>
              <property name="font">
               <font>
-               <weight>75</weight>
-               <bold>true</bold>
+               <kerning>false</kerning>
+              </font>
+             </property>
+             <property name="textAlignment">
+              <set>AlignCenter</set>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Contingent On</string>
+             </property>
+             <property name="font">
+              <font>
                <kerning>false</kerning>
               </font>
              </property>
@@ -285,7 +329,30 @@
             </column>
            </widget>
           </item>
+          <item>
+           <widget class="QFrame" name="frame">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+           </widget>
+          </item>
          </layout>
+        </item>
+        <item row="5" column="0">
+         <spacer name="verticalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>

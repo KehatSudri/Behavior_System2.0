@@ -91,7 +91,9 @@ class CreateSessionUi(object):
         self.behavior_iti_widgets = None
         self.random_iti_widgets = None
 
-        self.trial_types = self.vm.get_list_trials_types_def()
+        self.trial_types = self.vm.get_list_trials_names()
+        self.trials_names = self.vm.get_trial_names()
+
         self.trials_in_session = []  # holds all the trials in the current session
         self.selected_trial = -1  # holds the trial that the user tap on the table
 

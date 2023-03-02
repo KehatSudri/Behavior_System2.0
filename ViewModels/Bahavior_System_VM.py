@@ -187,10 +187,16 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
         pass
 
     def get_trial_names(self):
-        return self.model.get_trial_names()
+        return self.model.get_trials_names()
 
     def get_list_trials_types_def(self):
         return self.model.get_list_trials_types_def()
+
+    def get_list_trials_names(self):
+        return self.model.get_trials_names()
+
+    def get_events_by_trial_name(self,trial):
+        return self.model.get_events_by_trial_name(trial)
 
     def get_behaviors_list(self):
         return self.model.get_behaviors_list()
