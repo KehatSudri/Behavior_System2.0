@@ -736,7 +736,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
             "%m_%d_%Y, %H_%M_%S") + "," + self.curr_session.experimenter_name + "," + self.curr_session.subject_id
         while self.log_file is None:
             self.create_log_file()
-        self.curr_session.input_ports = self.input_ports
+        self.curr_session._input_ports = self.input_ports
         self.curr_session.output_ports = self.output_ports
         self.curr_session.output_events_name_list = self.output_events_names
         self.curr_session.input_events_name_list = self.input_events_names

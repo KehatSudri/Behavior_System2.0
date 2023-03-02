@@ -23,7 +23,7 @@ class SettingsUi(object):
         self.max_identical_consecutive_trial = self.vm.max_successive_trials
         self.max_time_duration = self.vm.max_trial_length
         self.input_events = self.vm.input_events_names
-        self.input_ports = self.vm.input_ports
+        self.input_ports = self.vm._input_ports
         self.output_events = self.vm.output_events_names
         self.output_ports = self.vm.output_ports
         self.event_config = self.vm.event_config

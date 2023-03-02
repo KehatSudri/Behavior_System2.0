@@ -235,7 +235,7 @@ class RunningGraphsUi(object):
                 break
 
     def update_output_plot_data(self, number_of_inputs):
-        data = self.vm.curr_session.output_vals
+        data = self.vm.curr_session._output_vals
         data_binary = []
         for i in range(len(data)):
             if data[i]:
