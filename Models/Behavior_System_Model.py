@@ -122,7 +122,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
 
     def get_hardware_events_from_DB(self):
         self.event_config = self.db.get_hardware_events()
-        #self.parse_ports()
+        # self.parse_ports()
         return self.event_config
 
     def verify_insert_hardware_event(self, name, port, in_out, dig_an, is_rew):
@@ -677,7 +677,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     def get_trials_names(self):
         return self.db.get_trial_names()
 
-    def get_events_by_trial_name(self,trial):
+    def get_events_by_trial_name(self, trial):
         return self.db.get_events_by_trial_name(trial)
 
     def get_last_session_for_subject(self, sub_id):
@@ -803,6 +803,9 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         for e in events:
             events_str += e + ","
         self.db.insert_trial_type(name, events_str)
+
+    def events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
+        self.db.events_to_trials(trial_name, event_name, is_contingent, contingent_on)
 
     def verify_trial_insert(self, name, events):
         # before adding the trial type, check that name or list of events is not already in it

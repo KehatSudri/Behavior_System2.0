@@ -195,7 +195,7 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
     def get_list_trials_names(self):
         return self.model.get_trials_names()
 
-    def get_events_by_trial_name(self,trial):
+    def get_events_by_trial_name(self, trial):
         return self.model.get_events_by_trial_name(trial)
 
     def get_behaviors_list(self):
@@ -254,8 +254,12 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
     def add_trial_type(self, name, events):
         self.model.add_trial_type(name, events)
 
+    def events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
+        self.model.events_to_trials(trial_name, event_name, is_contingent, contingent_on)
+
     def verify_trial_insert(self, name, events):
         return self.model.verify_trial_insert(name, events)
+
     # validate this
     def update_trial_type(self, name, new_name, new_events):
         self.model.update_trial_type(name, new_name, new_events)
