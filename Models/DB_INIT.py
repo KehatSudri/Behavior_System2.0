@@ -109,6 +109,12 @@ class DB:
         cur.close()
         # commit the changes
         self.conn.commit()
+    def events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
+        sql = """INSERT INTO events_to_trials(trial_name,event_name ,iscontigent,contingent_on) VALUES (%s,%s,%s,%s)"""
+        cur = self.conn.cursor()
+        cur.execute(sql, (trial_name,event_name ,is_contingent,contingent_on,))
+        cur.close()
+        self.conn.commit()
 
     def insert_session_trials(self, session_id, trial_type_id, percent_in_session=None,
                               percent_in_block=None, block_number=None, event_list=None, interval_list=None):
