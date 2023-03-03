@@ -534,7 +534,10 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         self.subject_sessions = self.db.get_all_subject_sessions()
 
     def get_trial_types_from_DB(self):
-        self._trial_types = self.db.get_trial_types()
+        return self.db.get_trial_types()
+
+    # def get_trial_names(self):
+    #     self._trial_names = self.db.get_trial_names()
 
     def get_trial_types(self):
         if self.trial_types is None:
@@ -666,11 +669,16 @@ class BehaviorSystemModel(INotifyPropertyChanged):
             trials[name] = event_dict
         return trials
 
-    def get_trial_names(self):
-        trials = []
-        for trial in self._trial_types:
-            trials.append(trial[1])
-        return trials
+    # def get_trial_names(self):
+    #     trials = []
+    #     for trial in self._trial_types:
+    #         trials.append(trial[1])
+    #     return trials
+    def get_trials_names(self):
+        return self.db.get_trial_names()
+
+    def get_events_by_trial_name(self,trial):
+        return self.db.get_events_by_trial_name(trial)
 
     def get_last_session_for_subject(self, sub_id):
         for temp in self._session_templates:

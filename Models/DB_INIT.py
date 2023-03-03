@@ -197,6 +197,11 @@ class DB:
             cur.execute("SELECT * FROM trialTypes")
             trials_types = cur.fetchall()
         return trials_types
+    def get_trial_names(self):
+        with self.conn.cursor() as cur:
+            cur.execute("SELECT trial_name FROM trialTypes")
+            trials_types = cur.fetchall()
+        return trials_types
 
     def get_trial_types_names(self, name):
         with self.conn.cursor() as cur:
@@ -210,6 +215,12 @@ class DB:
             cur.execute(f"SELECT trial_name FROM trialTypes WHERE events = '{events}'")
             trials_types_events = cur.fetchone()
         return trials_types_events
+
+    def get_events_by_trial_name(self, trial):
+        with self.conn.cursor() as cur:
+            cur.execute(f"SELECT events FROM trialTypes WHERE trial_name = '{trial}'")
+            events = cur.fetchone()
+        return events
 
     def get_all_events(self):
         with self.conn.cursor() as cur:
@@ -402,6 +413,15 @@ commands = (
         parameters VARCHAR(255),
         constraint eventid_pkey PRIMARY KEY (event_id), 
         constraint type_params_unq UNIQUE (event_type, parameters)
+    )
+    """,
+"""
+    CREATE TABLE IF NOT EXISTS public.events_to_trials (
+        event_name VARCHAR(100) REFERENCES hardwareevents(event_name),
+        trial_name VARCHAR(255) REFERENCES trialtypes(trial_name),
+        iscontigent BOOLEAN not null,
+        contingent_on VARCHAR(100),
+        constraint pkey PRIMARY KEY (event_name,trial_name,iscontigent)
     )
     """
 )

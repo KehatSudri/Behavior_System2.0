@@ -7,7 +7,6 @@ class CreateTrialTypeUi(object):
         self.parent = parent
         self.main_window = None
         self.scrollArea = None
-        self.main_gridLayout = None
         self.trial_type_name_lineEdit = None
         self.simple_radioButton = None
         self.add_event_pushButton = None
@@ -28,6 +27,8 @@ class CreateTrialTypeUi(object):
         back_btn.clicked.connect(self.on_back_click)
         self.simple_radioButton = main_window.findChild(QtWidgets.QRadioButton, 'simple_radioButton')
         self.simple_radioButton.setChecked(True)
+        self.conti_radioButton = main_window.findChild(QtWidgets.QRadioButton, 'contigent_radioButton')
+        self.conti_radioButton.clicked.connect(self.contingent_combo)
         self.events_comboBox = main_window.findChild(QtWidgets.QComboBox, 'comboBox')
         self.events_comboBox.addItems([event[0] for event in self.events])
         self.events_tableWidget = main_window.findChild(QtWidgets.QTableWidget, 'events_tableWidget')
@@ -69,14 +70,16 @@ class CreateTrialTypeUi(object):
         elif is_not_empty:
             error_warning("An event is not selected.")
         else:
-            error_warning("There are no events in the current session.")
+            error_warning("There are no events in the current trial.")
 
+    def contingent_combo(self):
+        self.main_window
     def create_trial(self):
         msgBox = QtWidgets.QMessageBox()
         name = self.trial_type_name_lineEdit.text()
         events = self.events_order
         if len(events) == 0:
-            error_warning("There are no events in the current session.")
+            error_warning("There are no events in the current trial.")
             return
         if len(name) == 0 or name.isspace():
             error_warning("Please enter name for this trial.")
