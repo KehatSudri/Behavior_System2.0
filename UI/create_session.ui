@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>610</width>
-    <height>704</height>
+    <width>604</width>
+    <height>769</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -531,64 +531,6 @@
         </item>
        </layout>
       </item>
-      <item row="5" column="0">
-       <layout class="QGridLayout" name="trials_gridLayout_3" rowstretch="1,0" columnstretch="1">
-        <item row="1" column="0">
-         <widget class="QTableWidget" name="trials_tableWidget">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>582</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>538</width>
-            <height>130</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
-          </property>
-          <property name="selectionMode">
-           <enum>QAbstractItemView::ExtendedSelection</enum>
-          </property>
-          <property name="selectionBehavior">
-           <enum>QAbstractItemView::SelectRows</enum>
-          </property>
-          <property name="columnCount">
-           <number>2</number>
-          </property>
-          <column>
-           <property name="text">
-            <string>type</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>parameters</string>
-           </property>
-          </column>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="trials_label">
-          <property name="styleSheet">
-           <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
-          </property>
-          <property name="text">
-           <string>Trials: </string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
       <item row="3" column="0">
        <layout class="QHBoxLayout" name="subject_and_experimenter_name_horizontalLayout" stretch="1,0,1,0">
         <property name="spacing">
@@ -658,6 +600,73 @@
             <width>100</width>
             <height>30</height>
            </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="4" column="0" rowspan="2">
+       <layout class="QGridLayout" name="trials_gridLayout_3" rowstretch="1,0" columnstretch="0">
+        <item row="1" column="0">
+         <widget class="QTableWidget" name="trials_tableWidget">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>582</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>538</width>
+            <height>150</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::ExtendedSelection</enum>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+          <property name="columnCount">
+           <number>2</number>
+          </property>
+          <column>
+           <property name="text">
+            <string>type</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>parameters</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="trials_label">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>50</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+          </property>
+          <property name="text">
+           <string>Trials: </string>
           </property>
          </widget>
         </item>

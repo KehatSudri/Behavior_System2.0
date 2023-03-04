@@ -18,44 +18,43 @@ class AddTrialUi(object):
         self.scrollArea = None
         self.scrollAreaWidgetContents = None
         self.verticalLayout = None
-        self.buttonBox = None
+        self.ok_btn = None
         self.verticalScrollBar = None
-        self.formLayout = parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
-
+        self.set_trials_table_pointer = None
         self.trial_params_labels = []
         self.trial_params_widgets = defaultdict(list)
-        self.set_trials_table_pointer = None
-        #self.trial_types_click(0)
         # TODO delete when self.vm.is_contingent(event_name) implemented
         self.are_contingents = []
         # self.contingents = OrderedDict()
+        self.formLayout = parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
 
     def setupUi(self, dialog):
         uic.loadUi(get_ui_path('add_trial.ui'), dialog)
         self.trial_types_comboBox = dialog.findChild(QtWidgets.QComboBox, 'trial_types_comboBox')
         self.trial_types_comboBox.addItems([name[0] for name in self.parent.trials_names])
         self.trial_types_comboBox.activated.connect(self.trial_types_click)
-        self.buttonBox = dialog.findChild(QtWidgets.QDialogButtonBox, 'buttonBox')
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(dialog.reject)
+        self.trial_types_click(0)
+        self.ok_btn = dialog.findChild(QtWidgets.QDialogButtonBox, 'ok_btn')
+        self.ok_btn.accepted.connect(self.accept)
+        self.ok_btn.rejected.connect(dialog.reject)
 
         # present params of the chosen trial
-        #self.update()
-        #present first trial type as default
-        #self.trial_types_click(0)
+        # self.update()
+        # present first trial type as default
+        # self.trial_types_click(0)
 
     # def update(self):
     #     self.set_trials_table_pointer = self.parent.set_trials_table_pointer
     #     # creating a dialog button for ok and cancel
-    #     #self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+    #     #self.ok_btn = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
     #     # connect the OK button to function
-    #     self.buttonBox.accepted.connect(self.accept)
+    #     self.ok_btn.accepted.connect(self.accept)
     #     # adding action when form is rejected
-    #     # self.buttonBox.rejected.connect(reject)
+    #     # self.ok_btn.rejected.connect(reject)
     #     # creating a vertical layout
     #     main_layout = QVBoxLayout()
     #     # adding button box to the layout
-    #     main_layout.addWidget(self.buttonBox)
+    #     main_layout.addWidget(self.ok_btn)
 
     def delete_params(self):
         for i in range(len(self.trial_params_labels)):
@@ -70,7 +69,8 @@ class AddTrialUi(object):
         index = 0  # TODO delete when self.vm.is_contingent(event_name) implemented
         # add row for each event and it's parameters
         for event_name in events_name:
-            is_contingent = self.vm.is_contingent(event_name)  # TODO remove when self.vm.is_contingent(event_name) implemented
+            is_contingent = self.vm.is_contingent(
+                event_name)  # TODO remove when self.vm.is_contingent(event_name) implemented
             # self.are_contingents.append(is_contingent)
             # index += 1
             if not is_contingent:
@@ -80,7 +80,7 @@ class AddTrialUi(object):
                 label = QLabel(event_name + ":")
                 label.setFont(event_name_font)
                 self.trial_params_labels.append(label)
-                formLayout=self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
+                formLayout = self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
                 formLayout.addRow(label)
             # add line edit accordingly for the parameters
             self.set_trial_form_handler(event_name, is_contingent)
@@ -162,7 +162,7 @@ class AddTrialUi(object):
         index = 0
         for event, event_params in new_trial.items():
             if self.vm.is_contingent(event):
-            #if self.are_contingents[index]:
+                # if self.are_contingents[index]:
                 for parameter, value in event.items():  # event's
                     if type(value) != bool:  # check if range case
                         for key, val in value.items():
@@ -195,7 +195,7 @@ class AddTrialUi(object):
         #     error_warning("An error accrued, please try again.")
         #     return
         # validate parameters values
-        #self.are_valid_values(new_trial)
+        # self.are_valid_values(new_trial)
         # add new trial
         self.parent.trials_in_session.append(get_string_dict({self.parent.chosen_trial_type_name: new_trial}))
         self.parent.percentages.append(0)
