@@ -66,24 +66,28 @@ class AddTrialUi(object):
         self.are_contingents.clear()  # TODO delete when self.vm.is_contingent(event_name) implemented
 
     def set_trial_form(self, events_name: list):
-        index = 0  # TODO delete when self.vm.is_contingent(event_name) implemented
         # add row for each event and it's parameters
+        print(events_name)
         for event_name in events_name:
+            #print(self.parent.trial_types[0])
             is_contingent = self.vm.is_contingent(
-                event_name)  # TODO remove when self.vm.is_contingent(event_name) implemented
-            # self.are_contingents.append(is_contingent)
-            # index += 1
-            if not is_contingent:
+                event_name,self.parent.chosen_trial_type_name)[0]
+            print(event_name, is_contingent)
+
+            # is_simple_event = self.vm.is_simple_event(
+            #     event_name,self.parent.chosen_trial_type_name)[0]
+
+            #if not is_contingent:
                 # add a label for the event name
-                event_name_font = QtGui.QFont()
-                event_name_font.setBold(True)
-                label = QLabel(event_name + ":")
-                label.setFont(event_name_font)
-                self.trial_params_labels.append(label)
-                formLayout = self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
-                formLayout.addRow(label)
-            # add line edit accordingly for the parameters
-            self.set_trial_form_handler(event_name, is_contingent)
+            event_name_font = QtGui.QFont()
+            event_name_font.setBold(True)
+            label = QLabel(event_name + ":")
+            label.setFont(event_name_font)
+            self.trial_params_labels.append(label)
+            formLayout = self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
+            formLayout.addRow(label)
+        # add line edit accordingly for the parameters
+            self.set_trial_form_handler(event_name, False)#change the false
 
     def set_trial_form_handler(self, event_name: str, is_contingent: bool):
         if is_contingent:
@@ -92,9 +96,11 @@ class AddTrialUi(object):
             event_dict = {"Conditioned event": True, "Interval from input": False, "Wanted event": True,
                           "Wanted event time range": {"Min": False, "Max": False}, "Not wanted event": True,
                           "Not wanted event time range": {"Min": False, "Max": False}}
+
             events = ["None", "A", "B", "C"]
 
             for parameter, value in event_dict.items():  # event's
+
                 if type(value) == bool:  # check if not range case
                     # params
                     if value:  # check if ComboBox case
@@ -136,15 +142,20 @@ class AddTrialUi(object):
                             self.formLayout.addRow(label, spin_box)
         else:
             # simple event case
-            for event_parameter in [name[0] for name in self.parent.trials_names]:  # event's
+            events= (self.vm.get_events_by_trial_name(self.parent.chosen_trial_type_name))
+            events=''.join(events)
+            events=events.split(",")
+            for param in {"Duration","Frequency","Amplitude"}:  # event's
                 # params
-                label = QLabel(event_parameter)
+                print("for")
+                label = QLabel(param)
                 line_edit = QLineEdit()
                 self.trial_params_labels.append(label)
                 self.trial_params_widgets[event_name].append(line_edit)
                 self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').addRow(label, line_edit)
 
     def trial_types_click(self, index):
+        print("add clicked")
         self.parent.trial_index = index
         # get the chosen trial type and set it's parameters
         if len(self.parent.trials_names) == 0:
@@ -152,6 +163,8 @@ class AddTrialUi(object):
         chosen = self.parent.chosen_trial_type_name = [name[0] for name in self.parent.trials_names][index]
         events_name = self.vm.get_events_by_trial_name(chosen)
         self.clear_form()
+        #print("chosen="+str(chosen))
+        #print(events_name[0].split(",")[:-1])
         self.set_trial_form(events_name[0].split(",")[:-1])
 
     def clear_form(self):
@@ -161,7 +174,7 @@ class AddTrialUi(object):
     def are_valid_values(self, new_trial):
         index = 0
         for event, event_params in new_trial.items():
-            if self.vm.is_contingent(event):
+            if self.vm.is_contingent(event,new_trial):
                 # if self.are_contingents[index]:
                 for parameter, value in event.items():  # event's
                     if type(value) != bool:  # check if range case

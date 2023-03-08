@@ -281,6 +281,6 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
             # change the property
             # self.is_running_session = self.model.is_running_session #is this necessary or it updates on its own
             self.notifyPropertyChanged("VM_" + event_args[0][0])
+    def is_contingent(self, event,trial):
+        return self.model.is_contingent(event,trial)
 
-    def is_contingent(self, event: str):
-        return False

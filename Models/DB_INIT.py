@@ -319,6 +319,11 @@ class DB:
         cur.execute("DELETE FROM subjectSession WHERE session_id=%s, subject_id=%s", (sess_id, sub_id))
         self.conn.commit()
         cur.close()
+    def is_contingent(self,event,trial):
+        with self.conn.cursor() as cur:
+            cur.execute(f"SELECT iscontigent FROM events_to_trials WHERE event_name='{event}' AND trial_name='{trial}'")
+            isContingent = cur.fetchone()
+        return isContingent
 
     # TODO delete
     def delete_all_rows(self):

@@ -61,6 +61,7 @@ class CreateTrialTypeUi(object):
         self.contingent_comboBox.addItems([current_event])
         self.events_tableWidget.setColumnWidth(0, int(self.events_tableWidget.width() / 2))
 
+
     def on_remove_click(self):
         is_not_empty = len(self.events_order) > 0
         chosen_row = self.events_tableWidget.currentRow()
@@ -121,6 +122,8 @@ class CreateTrialTypeUi(object):
         self.events_order = []
         while self.events_tableWidget.rowCount() > 0:
             self.events_tableWidget.removeRow(0)
+        self.contingent_comboBox.clear()
+
 
     def on_back_click(self):
         self.parent.main_window.show()
