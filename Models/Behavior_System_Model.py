@@ -540,6 +540,9 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     #     self._trial_names = self.db.get_trial_names()
     def is_contingent(self,event,trial):
         return self.db.is_contingent(event,trial)
+
+    def is_input_event(self, event):
+        return self.db.is_input_event(event)
     def get_trial_types(self):
         if self.trial_types is None:
             self.get_trial_types_from_DB()

@@ -324,6 +324,11 @@ class DB:
             cur.execute(f"SELECT iscontigent FROM events_to_trials WHERE event_name='{event}' AND trial_name='{trial}'")
             isContingent = cur.fetchone()
         return isContingent
+    def is_input_event(self,event):
+        with self.conn.cursor() as cur:
+            cur.execute(f"SELECT input_output FROM hardwareevents WHERE event_name='{event}'")
+            isInput = cur.fetchone()
+        return isInput
 
     # TODO delete
     def delete_all_rows(self):

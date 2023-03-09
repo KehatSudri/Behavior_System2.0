@@ -284,3 +284,6 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
     def is_contingent(self, event,trial):
         return self.model.is_contingent(event,trial)
 
+    def is_input_event(self,event):
+        return self.model.is_input_event(event)
+
