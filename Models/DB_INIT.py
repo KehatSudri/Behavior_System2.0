@@ -203,6 +203,13 @@ class DB:
             cur.execute("SELECT * FROM trialTypes")
             trials_types = cur.fetchall()
         return trials_types
+    def get_ports(self,trial_name):
+        with self.conn.cursor() as cur:
+            temp=f"SELECT port,input_output FROM hardwareevents,events_to_trials WHERE hardwareevents.event_name = events_to_trials.event_name AND events_to_trials.trial_name = '{trial_name}' "
+            cur.execute(temp)
+            ports = cur.fetchall()
+        return ports
+
     def get_trial_names(self):
         with self.conn.cursor() as cur:
             cur.execute("SELECT trial_name FROM trialTypes")
@@ -319,6 +326,16 @@ class DB:
         cur.execute("DELETE FROM subjectSession WHERE session_id=%s, subject_id=%s", (sess_id, sub_id))
         self.conn.commit()
         cur.close()
+    def is_contingent(self,event,trial):
+        with self.conn.cursor() as cur:
+            cur.execute(f"SELECT iscontigent FROM events_to_trials WHERE event_name='{event}' AND trial_name='{trial}'")
+            isContingent = cur.fetchone()
+        return isContingent
+    def is_input_event(self,event):
+        with self.conn.cursor() as cur:
+            cur.execute(f"SELECT input_output FROM hardwareevents WHERE event_name='{event}'")
+            isInput = cur.fetchone()
+        return isInput
 
     # TODO delete
     def delete_all_rows(self):

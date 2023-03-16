@@ -40,6 +40,17 @@
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
            <widget class="QPushButton" name="manager_login_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <family>David</family>
+             </font>
+            </property>
             <property name="text">
              <string>Login as a manager</string>
             </property>
@@ -47,6 +58,17 @@
           </item>
           <item>
            <widget class="QPushButton" name="settings_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <family>David</family>
+             </font>
+            </property>
             <property name="text">
              <string>Settings</string>
             </property>
@@ -54,6 +76,17 @@
           </item>
           <item>
            <widget class="QPushButton" name="create_trial_type_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <family>David</family>
+             </font>
+            </property>
             <property name="text">
              <string>Create a new trial type</string>
             </property>
@@ -61,6 +94,17 @@
           </item>
           <item>
            <widget class="QPushButton" name="create_event_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <family>David</family>
+             </font>
+            </property>
             <property name="text">
              <string>Create a new event</string>
             </property>
@@ -68,6 +112,17 @@
           </item>
           <item>
            <widget class="QPushButton" name="create_session_btn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <family>David</family>
+             </font>
+            </property>
             <property name="text">
              <string>Create a new session</string>
             </property>

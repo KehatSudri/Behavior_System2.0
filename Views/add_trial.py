@@ -1,13 +1,14 @@
 from collections import defaultdict, OrderedDict
 
 from PyQt6 import QtCore, QtWidgets, QtGui, uic
-from PyQt6.QtWidgets import QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit, QComboBox
+from PyQt6.QtWidgets import QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit, QComboBox ,QFormLayout
 
 from Views.utils import error_warning, get_string_dict, get_ui_path  # , set_conditioned_event
 
 
 class AddTrialUi(object):
     def __init__(self, parent):
+        self.index=0
         self.parent = parent
         self.vm = parent.vm
         self.background_gridLayout = None
@@ -43,18 +44,18 @@ class AddTrialUi(object):
         # present first trial type as default
         # self.trial_types_click(0)
 
-    # def update(self):
-    #     self.set_trials_table_pointer = self.parent.set_trials_table_pointer
-    #     # creating a dialog button for ok and cancel
-    #     #self.ok_btn = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-    #     # connect the OK button to function
-    #     self.ok_btn.accepted.connect(self.accept)
-    #     # adding action when form is rejected
-    #     # self.ok_btn.rejected.connect(reject)
-    #     # creating a vertical layout
-    #     main_layout = QVBoxLayout()
-    #     # adding button box to the layout
-    #     main_layout.addWidget(self.ok_btn)
+    def update(self):
+        self.set_trials_table_pointer = self.parent.set_trials_table_pointer
+        # creating a dialog button for ok and cancel
+        #self.ok_btn = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        # connect the OK button to function
+        self.ok_btn.accepted.connect(self.accept)
+        # adding action when form is rejected
+        # self.ok_btn.rejected.connect(reject)
+        # creating a vertical layout
+        main_layout = QVBoxLayout()
+        # adding button box to the layout
+        main_layout.addWidget(self.ok_btn)
 
     def delete_params(self):
         for i in range(len(self.trial_params_labels)):
@@ -66,83 +67,97 @@ class AddTrialUi(object):
         self.are_contingents.clear()  # TODO delete when self.vm.is_contingent(event_name) implemented
 
     def set_trial_form(self, events_name: list):
-        index = 0  # TODO delete when self.vm.is_contingent(event_name) implemented
         # add row for each event and it's parameters
         for event_name in events_name:
+            #print(self.parent.trial_types[0])
             is_contingent = self.vm.is_contingent(
-                event_name)  # TODO remove when self.vm.is_contingent(event_name) implemented
-            # self.are_contingents.append(is_contingent)
-            # index += 1
-            if not is_contingent:
+                event_name,self.parent.chosen_trial_type_name)[0]
+
+            is_input_event =False
+            if self.vm.is_input_event(event_name)[0]=="Input":
+                is_input_event= True
+
+
+
+            #if not is_contingent:
                 # add a label for the event name
-                event_name_font = QtGui.QFont()
-                event_name_font.setBold(True)
-                label = QLabel(event_name + ":")
-                label.setFont(event_name_font)
-                self.trial_params_labels.append(label)
-                formLayout = self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
-                formLayout.addRow(label)
-            # add line edit accordingly for the parameters
-            self.set_trial_form_handler(event_name, is_contingent)
+            event_name_font = QtGui.QFont()
+            event_name_font.setBold(True)
+            label = QLabel(event_name + ":")
+            label.setFont(event_name_font)
+            self.trial_params_labels.append(label)
+            formLayout = self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
+            formLayout.addRow(label)
+        # add line edit accordingly for the parameters
+            self.set_trial_form_handler(event_name, is_input_event)#change the false to is_contingent
 
-    def set_trial_form_handler(self, event_name: str, is_contingent: bool):
-        if is_contingent:
-            # contingent event case
-            # key: parameter_label, val: is_text
-            event_dict = {"Conditioned event": True, "Interval from input": False, "Wanted event": True,
-                          "Wanted event time range": {"Min": False, "Max": False}, "Not wanted event": True,
-                          "Not wanted event time range": {"Min": False, "Max": False}}
-            events = ["None", "A", "B", "C"]
-
-            for parameter, value in event_dict.items():  # event's
-                if type(value) == bool:  # check if not range case
-                    # params
-                    if value:  # check if ComboBox case
-                        label = QLabel(parameter)
-                        combo_box = QComboBox()
-                        combo_box.addItems(events)  # TODO need to get list of events
-                        combo_box.setCurrentIndex(0)
-                        self.trial_params_labels.append(label)
-                        self.trial_params_widgets[event_name].append(combo_box)
-                        self.formLayout.addRow(label, combo_box)
-                    else:
-                        # SpinBox case
-                        label = QLabel(parameter)
-                        spin_box = QtWidgets.QSpinBox()
-                        spin_box.setMaximum(100000)
-                        self.trial_params_labels.append(label)
-                        self.trial_params_widgets[event_name].append(spin_box)
-                        self.formLayout.addRow(label, spin_box)
-                else:  # range case
-                    label = QLabel(parameter)
-                    self.trial_params_labels.append(label)
-                    self.formLayout.addRow(label)
-                    for key, val in value.items():
-                        if val:  # check if ComboBox case
-                            label = QLabel(key)
-                            combo_box = QComboBox()
-                            combo_box.addItems(events)  # TODO need to get list of events
-                            combo_box.setCurrentIndex(0)
-                            self.trial_params_labels.append(label)
-                            self.trial_params_widgets[event_name].append(combo_box)
-                            self.formLayout.addRow(label, combo_box)
-                        else:
-                            # SpinBox case
-                            label = QLabel(key)
-                            spin_box = QtWidgets.QSpinBox()
-                            spin_box.setMaximum(100000)
-                            self.trial_params_labels.append(label)
-                            self.trial_params_widgets[event_name].append(spin_box)
-                            self.formLayout.addRow(label, spin_box)
+    def set_trial_form_handler(self, event_name: str, is_input_event):
+        # if is_contingent:
+        #     # contingent event case
+        #     # key: parameter_label, val: is_text
+        #     event_dict = {"Conditioned event": True, "Interval from input": False, "Wanted event": True,
+        #                   "Wanted event time range": {"Min": False, "Max": False}, "Not wanted event": True,
+        #                   "Not wanted event time range": {"Min": False, "Max": False}}
+        #
+        #     events = ["None", "A", "B", "C"]
+        #
+        #     for parameter, value in event_dict.items():  # event's
+        #
+        #         if type(value) == bool:  # check if not range case
+        #             # params
+        #             if value:  # check if ComboBox case
+        #                 label = QLabel(parameter)
+        #                 combo_box = QComboBox()
+        #                 combo_box.addItems(events)  # TODO need to get list of events
+        #                 combo_box.setCurrentIndex(0)
+        #                 self.trial_params_labels.append(label)
+        #                 self.trial_params_widgets[event_name].append(combo_box)
+        #                 self.formLayout.addRow(label, combo_box)
+        #             else:
+        #                 # SpinBox case
+        #                 label = QLabel(parameter)
+        #                 spin_box = QtWidgets.QSpinBox()
+        #                 spin_box.setMaximum(100000)
+        #                 self.trial_params_labels.append(label)
+        #                 self.trial_params_widgets[event_name].append(spin_box)
+        #                 self.formLayout.addRow(label, spin_box)
+        #         else:  # range case
+        #             label = QLabel(parameter)
+        #             self.trial_params_labels.append(label)
+        #             self.formLayout.addRow(label)
+        #             for key, val in value.items():
+        #                 if val:  # check if ComboBox case
+        #                     label = QLabel(key)
+        #                     combo_box = QComboBox()
+        #                     combo_box.addItems(events)  # TODO need to get list of events
+        #                     combo_box.setCurrentIndex(0)
+        #                     self.trial_params_labels.append(label)
+        #                     self.trial_params_widgets[event_name].append(combo_box)
+        #                     self.formLayout.addRow(label, combo_box)
+        #                 else:
+        #                     # SpinBox case
+        #                     label = QLabel(key)
+        #                     spin_box = QtWidgets.QSpinBox()
+        #                     spin_box.setMaximum(100000)
+        #                     self.trial_params_labels.append(label)
+        #                     self.trial_params_widgets[event_name].append(spin_box)
+        #                     self.formLayout.addRow(label, spin_box)
+        # else:
+        if is_input_event:
+            dict = {"Duration","Frequency","Amplitude"}
         else:
+            dict = {"Duration"}
             # simple event case
-            for event_parameter in [name[0] for name in self.parent.trials_names]:  # event's
-                # params
-                label = QLabel(event_parameter)
-                line_edit = QLineEdit()
-                self.trial_params_labels.append(label)
-                self.trial_params_widgets[event_name].append(line_edit)
-                self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').addRow(label, line_edit)
+        #events= (self.vm.get_events_by_trial_name(self.parent.chosen_trial_type_name))
+        #events=''.join(events)
+        #events=events.split(",")
+        for param in dict:
+            label = QLabel(param)
+            line_edit = QLineEdit()
+            self.trial_params_labels.append(label)
+            self.trial_params_widgets[event_name].append(line_edit)
+            self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').addRow(label, line_edit)
+
 
     def trial_types_click(self, index):
         self.parent.trial_index = index
@@ -152,6 +167,8 @@ class AddTrialUi(object):
         chosen = self.parent.chosen_trial_type_name = [name[0] for name in self.parent.trials_names][index]
         events_name = self.vm.get_events_by_trial_name(chosen)
         self.clear_form()
+        #print("chosen="+str(chosen))
+        #print(events_name[0].split(",")[:-1])
         self.set_trial_form(events_name[0].split(",")[:-1])
 
     def clear_form(self):
@@ -161,7 +178,7 @@ class AddTrialUi(object):
     def are_valid_values(self, new_trial):
         index = 0
         for event, event_params in new_trial.items():
-            if self.vm.is_contingent(event):
+            if self.vm.is_contingent(event,new_trial):
                 # if self.are_contingents[index]:
                 for parameter, value in event.items():  # event's
                     if type(value) != bool:  # check if range case
@@ -182,27 +199,46 @@ class AddTrialUi(object):
         return True
 
     def accept(self):
-        new_trial = self.parent.trial_types[1]
-        print(new_trial)
+        new_trial = self.parent.chosen_trial_type_name
+        #print(new_trial)
+        event_and_params ={}
+        params=[]
+        for i in range(self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').rowCount()):
+            field = self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').itemAt(i, QFormLayout.ItemRole.FieldRole)
+            if not isinstance(field.widget(), QLineEdit):
+                event = field.widget().text().split(":")[0]
+                params = []
+            else:
+                params.append(field.widget().text())
+
+            event_and_params[event] = params
+        #print(event_and_params)
+
         # update new trial parameters
         # for event, event_params in new_trial.items():
         #     params_values = {param: self.trial_params_widgets[event][i].text() for i, param in
         #                      enumerate(event_params)}
         #     new_trial[event] = params_values
         # check if not an empty input
-        print(new_trial)
+
         # if not self.are_valid_values(new_trial):
         #     error_warning("An error accrued, please try again.")
         #     return
         # validate parameters values
         # self.are_valid_values(new_trial)
         # add new trial
-        self.parent.trials_in_session.append(get_string_dict({self.parent.chosen_trial_type_name: new_trial}))
-        self.parent.percentages.append(0)
-        self.parent.percent_per_block.append([0] * len(self.parent.block_list))
+
+        self.parent.trials_in_session.extend([new_trial,event_and_params])
+        #print(self.parent.trials_in_session)
+
+        #self.parent.percentages.append(0)
+        #self.parent.percent_per_block.append([0] * len(self.parent.block_list))
         # add a percentage to each block
         # for i in range(len(self.parent.block_list)):
         #     self.parent.prcnt_per_block[i].append()
         # update trials table on the window
-        self.set_trials_table_pointer()
+        self.parent.set_trials_table()
+        #self.index+=1
+        #print(self.index)
+        #self.set_trials_table_pointer()
         self.parent.add_window.close()

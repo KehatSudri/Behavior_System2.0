@@ -538,7 +538,11 @@ class BehaviorSystemModel(INotifyPropertyChanged):
 
     # def get_trial_names(self):
     #     self._trial_names = self.db.get_trial_names()
+    def is_contingent(self,event,trial):
+        return self.db.is_contingent(event,trial)
 
+    def is_input_event(self, event):
+        return self.db.is_input_event(event)
     def get_trial_types(self):
         if self.trial_types is None:
             self.get_trial_types_from_DB()
@@ -676,6 +680,8 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     #     return trials
     def get_trials_names(self):
         return self.db.get_trial_names()
+    def get_ports(self,trial_name):
+        return self.db.get_ports(trial_name)
 
     def get_events_by_trial_name(self, trial):
         return self.db.get_events_by_trial_name(trial)
@@ -1014,3 +1020,5 @@ class BehaviorSystemModel(INotifyPropertyChanged):
             list_events.append(e)
         # return list(set(list_events))
         return list_events
+
+

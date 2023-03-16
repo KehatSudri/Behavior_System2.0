@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QTableView, QHeaderView, QTableWidgetItem, QAbstractItemView
+from PyQt6.QtWidgets import QTableView, QHeaderView, QTableWidgetItem, QAbstractItemView,QAbstractScrollArea
 from PyQt6 import QtCore, QtWidgets, uic
 
 from Views.add_trial import AddTrialUi
@@ -90,7 +90,7 @@ class CreateSessionUi(object):
         #
         self.behavior_iti_widgets = None
         self.random_iti_widgets = None
-
+        self.trials_table = None
         self.trial_types = self.vm.get_list_trials_names()
         self.trials_names = self.vm.get_trial_names()
 
@@ -140,6 +140,8 @@ class CreateSessionUi(object):
         self.add_trial_pushButton.clicked.connect(self.on_add_click)
         self.remove_trial_pushButton = self.main_window.findChild(QtWidgets.QPushButton, "remove_trial_pushButton")
         self.remove_trial_pushButton.clicked.connect(self.on_remove_click)
+        self.trials_table=self.main_window.findChild(QtWidgets.QTableWidget, "trials_tableWidget")
+        #self.trials_gridLayout=self.main_window.findChild(QtWidgets.QGridLayout, "trials_gridLayout_3")
         return
         self.main_window = main_window
         self.parent.main_window.hide()
@@ -278,8 +280,8 @@ class CreateSessionUi(object):
         self.trials_label.setStyleSheet("font: 12pt \"Gabriola\";")
         self.trials_label.setObjectName("trials_label")
         self.trials_gridLayout.addWidget(self.trials_label, 0, 0, 1, 1)
-        self.trials_gridLayout.setColumnStretch(0, 1)
-        self.trials_gridLayout.setRowStretch(1, 10)
+        self.trials_gridLayout.setColumnStretch(15, 15)
+        self.trials_gridLayout.setRowStretch(15, 15)
         self.main_gridLayout.addLayout(self.trials_gridLayout, 4, 0, 1, 1)
         # set an horizontal layout to hold the definitions for a trial and handle one
         ##self.def_trial_horizontalLayout.setSizeConstraint(QtWidgets.QLayout.SetMinimumSize)
@@ -481,7 +483,7 @@ class CreateSessionUi(object):
 
     def deal_with_trial(self, treatment):
         is_not_empty = len(self.trials_in_session) > 0
-        is_row_selected = self.trials_tableWidget.currentRow() != -1
+        is_row_selected = self.trials_table.currentRow() != -1
         # check if there are trials and a trial was selected
         if is_not_empty and is_row_selected:
             if treatment == 0:  # edit case
@@ -494,11 +496,11 @@ class CreateSessionUi(object):
                 # self.second_window.show()
             else:  # remove case
                 # get the chosen block's row and remove it
-                index = self.trials_tableWidget.currentRow()  # ignore 0th which represents blocks parameters
+                index = self.trials_table.currentRow()  # ignore 0th which represents blocks parameters
                 del self.trials_in_session[index]
-                self.trials_tableWidget.removeRow(index)
+                self.trials_table.removeRow(index)
                 # set current row to be unselected
-                self.trials_tableWidget.setCurrentCell(-1, self.trials_tableWidget.currentColumn())
+                self.trials_table.setCurrentCell(-1, self.trials_table.currentColumn())
 
                 # chosen_row = self.trials_tableWidget.currentRow()
                 # self.trials_tableWidget.removeRow(chosen_row)
@@ -524,6 +526,7 @@ class CreateSessionUi(object):
 
     def on_remove_click(self):
         self.deal_with_trial(1)
+
 
     def on_row_selection_changed(self):
         # set row selection on default
@@ -617,6 +620,10 @@ class CreateSessionUi(object):
         # self.vm.set_trials_list(trials) NOT RELEVANT AT THIS PART
 
     def on_next_click(self):
+        print("next")
+        trial_name="first"
+        ports=self.vm.get_ports(trial_name)
+
         # if not self.is_valid_input():
         #     if self.max_iti_spinBox.value() < self.min_iti_spinBox.value():
         #         error_warning("An error accrued, please choose a valid iti range.")
@@ -678,31 +685,47 @@ class CreateSessionUi(object):
         self.vm.sessionVM.trials_order = order
 
     def set_trials_table(self):
-        self.trials_tableWidget.setRowCount(len(self.trials_in_session))
+        params=""
+        table= self.trials_table
+        index = table.rowCount()
+        table.insertRow(index)
+        table.setItem(index, 0, QTableWidgetItem(self.trials_in_session[index*2]))
+        for event, parameters in self.trials_in_session[index*2+1].items():
+            if len(parameters)==3:
+                params+= event + ":" + " Duration - " +parameters[0]+", Frequency - " +parameters[1]+", Amplitude - " +parameters[2]+"\n"
+            else:
+                params+= event + ":" + " Duration - " + parameters[0]+"\n"
+            print(params)
+            table.setItem(index, 1, QTableWidgetItem(params))
+            #table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
+            table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
+
+
+        #self.trials_tableWidget.setRowCount(len(self.trials_in_session))
         # edit case
-        if self.selected_trial >= 0:  # edit case
-            self.selected_trial = -1
-            row = self.trials_tableWidget.currentRow()
-            new_values = self.trials_in_session[len(self.trials_in_session) - 1]
-            # trial_name = [*new_values.keys()][0]
-            self.trials_in_session[row] = new_values
-            self.trials_tableWidget.setRowCount(len(self.trials_in_session))
-            self.trials_tableWidget.setItem(row, 1,
-                                            QTableWidgetItem(dict_yaml_style(self.trials_in_session[row])))
-        else:  # add case
-            num_trials = len(self.trials_in_session)
-            if num_trials != 0:
-                trial_name = [*self.trials_in_session[-1].keys()][0]
-                self.trials_tableWidget.setItem(num_trials - 1, 0, QTableWidgetItem(trial_name))
-                # self.trials_tableWidget.setItem(num_trials - 1, 1,
-                #                                 QTableWidgetItem(
-                #                                     str(self.trials_in_session[num_trials - 1][trial_name])))
-                self.trials_tableWidget.setItem(num_trials - 1, 1,
-                                                QTableWidgetItem(dict_yaml_style(
-                                                    self.trials_in_session[num_trials - 1][trial_name])))
-        # Set an adaptive width for table
-        trials_table_adaptive_width = self.trials_tableWidget.horizontalHeader()
-        ##trials_table_adaptive_width.setSectionResizeMode(QHeaderView.Stretch)
+        # if self.selected_trial >= 0:  # edit case
+        #     self.selected_trial = -1
+        #     row = self.trials_tableWidget.currentRow()
+        #     new_values = self.trials_in_session[len(self.trials_in_session) - 1]
+        #     # trial_name = [*new_values.keys()][0]
+        #     self.trials_in_session[row] = new_values
+        #     self.trials_tableWidget.setRowCount(len(self.trials_in_session))
+        #     self.trials_tableWidget.setItem(row, 1,
+        #                                     QTableWidgetItem(dict_yaml_style(self.trials_in_session[row])))
+        # else:  # add case
+        #     num_trials = len(self.trials_in_session)
+        #     if num_trials != 0:
+        #         trial_name = [*self.trials_in_session[-1].keys()][0]
+        #         self.trials_tableWidget.setItem(num_trials - 1, 0, QTableWidgetItem(trial_name))
+        #         # self.trials_tableWidget.setItem(num_trials - 1, 1,
+        #         #                                 QTableWidgetItem(
+        #         #                                     str(self.trials_in_session[num_trials - 1][trial_name])))
+        #         self.trials_tableWidget.setItem(num_trials - 1, 1,
+        #                                         QTableWidgetItem(dict_yaml_style(
+        #                                             self.trials_in_session[num_trials - 1][trial_name])))
+        # # Set an adaptive width for table
+        # trials_table_adaptive_width = self.trials_tableWidget.horizontalHeader()
+        # ##trials_table_adaptive_width.setSectionResizeMode(QHeaderView.Stretch)
 
     def on_back_click(self):
         self.parent.main_window.show()
