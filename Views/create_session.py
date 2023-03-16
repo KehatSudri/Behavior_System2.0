@@ -142,7 +142,6 @@ class CreateSessionUi(object):
         self.remove_trial_pushButton.clicked.connect(self.on_remove_click)
         self.trials_table=self.main_window.findChild(QtWidgets.QTableWidget, "trials_tableWidget")
         #self.trials_gridLayout=self.main_window.findChild(QtWidgets.QGridLayout, "trials_gridLayout_3")
-
         return
         self.main_window = main_window
         self.parent.main_window.hide()
@@ -484,7 +483,7 @@ class CreateSessionUi(object):
 
     def deal_with_trial(self, treatment):
         is_not_empty = len(self.trials_in_session) > 0
-        is_row_selected = self.trials_tableWidget.currentRow() != -1
+        is_row_selected = self.trials_table.currentRow() != -1
         # check if there are trials and a trial was selected
         if is_not_empty and is_row_selected:
             if treatment == 0:  # edit case
@@ -497,11 +496,11 @@ class CreateSessionUi(object):
                 # self.second_window.show()
             else:  # remove case
                 # get the chosen block's row and remove it
-                index = self.trials_tableWidget.currentRow()  # ignore 0th which represents blocks parameters
+                index = self.trials_table.currentRow()  # ignore 0th which represents blocks parameters
                 del self.trials_in_session[index]
-                self.trials_tableWidget.removeRow(index)
+                self.trials_table.removeRow(index)
                 # set current row to be unselected
-                self.trials_tableWidget.setCurrentCell(-1, self.trials_tableWidget.currentColumn())
+                self.trials_table.setCurrentCell(-1, self.trials_table.currentColumn())
 
                 # chosen_row = self.trials_tableWidget.currentRow()
                 # self.trials_tableWidget.removeRow(chosen_row)
@@ -527,6 +526,7 @@ class CreateSessionUi(object):
 
     def on_remove_click(self):
         self.deal_with_trial(1)
+
 
     def on_row_selection_changed(self):
         # set row selection on default
@@ -620,6 +620,10 @@ class CreateSessionUi(object):
         # self.vm.set_trials_list(trials) NOT RELEVANT AT THIS PART
 
     def on_next_click(self):
+        print("next")
+        trial_name="first"
+        ports=self.vm.get_ports(trial_name)
+
         # if not self.is_valid_input():
         #     if self.max_iti_spinBox.value() < self.min_iti_spinBox.value():
         #         error_warning("An error accrued, please choose a valid iti range.")

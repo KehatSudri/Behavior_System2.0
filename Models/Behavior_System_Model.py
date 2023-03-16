@@ -680,6 +680,8 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     #     return trials
     def get_trials_names(self):
         return self.db.get_trial_names()
+    def get_ports(self,trial_name):
+        return self.db.get_ports(trial_name)
 
     def get_events_by_trial_name(self, trial):
         return self.db.get_events_by_trial_name(trial)

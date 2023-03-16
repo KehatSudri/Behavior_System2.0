@@ -188,7 +188,8 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
 
     def get_trial_names(self):
         return self.model.get_trials_names()
-
+    def get_ports(self,trial_mame):
+        return self.model.get_ports(trial_mame)
     def get_list_trials_types_def(self):
         return self.model.get_list_trials_types_def()
 

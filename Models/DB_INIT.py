@@ -203,6 +203,13 @@ class DB:
             cur.execute("SELECT * FROM trialTypes")
             trials_types = cur.fetchall()
         return trials_types
+    def get_ports(self,trial_name):
+        with self.conn.cursor() as cur:
+            temp=f"SELECT port,input_output FROM hardwareevents,events_to_trials WHERE hardwareevents.event_name = events_to_trials.event_name AND events_to_trials.trial_name = '{trial_name}' "
+            cur.execute(temp)
+            ports = cur.fetchall()
+        return ports
+
     def get_trial_names(self):
         with self.conn.cursor() as cur:
             cur.execute("SELECT trial_name FROM trialTypes")
