@@ -142,6 +142,8 @@ class CreateSessionUi(object):
         self.remove_trial_pushButton.clicked.connect(self.on_remove_click)
         self.trials_table=self.main_window.findChild(QtWidgets.QTableWidget, "trials_tableWidget")
         #self.trials_gridLayout=self.main_window.findChild(QtWidgets.QGridLayout, "trials_gridLayout_3")
+        back_btn = self.main_window.findChild(QtWidgets.QPushButton, "back_btn")
+        back_btn.clicked.connect(self.on_back_click)
         return
         self.main_window = main_window
         self.parent.main_window.hide()
