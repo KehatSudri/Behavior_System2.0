@@ -210,6 +210,13 @@ class DB:
             ports = cur.fetchall()
         return ports
 
+    def get_dependencies(self, trial_name):
+        with self.conn.cursor() as cur:
+            temp = f"SELECT h1.port,h2.port FROM hardwareevents as h1,hardwareevents as h2,events_to_trials WHERE h1.event_name = events_to_trials.event_name AND h2.event_name = events_to_trials.contingent_on AND events_to_trials.contingent_on IS NOT NULL AND events_to_trials.trial_name = '{trial_name}' "
+            cur.execute(temp)
+            dependencies = cur.fetchall()
+        return dependencies
+
     def get_trial_names(self):
         with self.conn.cursor() as cur:
             cur.execute("SELECT trial_name FROM trialTypes")

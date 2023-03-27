@@ -486,15 +486,15 @@ class CreateSessionUi(object):
         is_row_selected = self.trials_table.currentRow() != -1
         # check if there are trials and a trial was selected
         if is_not_empty and is_row_selected:
-            if treatment == 0:  # edit case
-                self.edit_window = QtWidgets.QDialog()
-                self.edit_ui = EditTrialUi(self)
-                self.edit_ui.setupUi(self.edit_window)
-                self.edit_window.show()
+           # if treatment == 0:  # edit case
+           #     self.edit_window = QtWidgets.QDialog()
+           #     self.edit_ui = EditTrialUi(self)
+           #     self.edit_ui.setupUi(self.edit_window)
+           #     self.edit_window.show()
                 # self.second_window_ui = EditTrialUi(self)
                 # self.second_window_ui.setupUi(self.second_window)
                 # self.second_window.show()
-            else:  # remove case
+           # else:  # remove case
                 # get the chosen block's row and remove it
                 index = self.trials_table.currentRow()  # ignore 0th which represents blocks parameters
                 del self.trials_in_session[index]
@@ -505,9 +505,10 @@ class CreateSessionUi(object):
                 # chosen_row = self.trials_tableWidget.currentRow()
                 # self.trials_tableWidget.removeRow(chosen_row)
                 # if len(self.percentages) != 0:
-                del self.percentages[index]
+                print(index)
+                #del self.percentages[index]
                 # else:
-                del self.percent_per_block[index]
+                #del self.percent_per_block[index]
                 # del self.trials_in_session[self.trials_tableWidget.currentRow()]
                 # self.trials_tableWidget.removeRow(self.trials_tableWidget.currentRow())
                 # if len(self.percentages)!=0:
@@ -621,8 +622,11 @@ class CreateSessionUi(object):
 
     def on_next_click(self):
         print("next")
-        trial_name="first"
+        trial_name="second"
         ports=self.vm.get_ports(trial_name)
+        print(ports)
+        dependencies = self.vm.get_dependencies(trial_name)
+        print(dependencies)
 
         # if not self.is_valid_input():
         #     if self.max_iti_spinBox.value() < self.min_iti_spinBox.value():

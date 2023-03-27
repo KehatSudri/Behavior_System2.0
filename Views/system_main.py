@@ -46,6 +46,14 @@ class SystemMainUi(object):
             self.main_window.show()
             temp.close()
 
+            create_event_push_button = self.main_window.findChild(QPushButton, 'create_event_pushButton')
+            create_event_push_button.clicked.connect(self.on_create_event_click)
+            settings_pushButton = self.main_window.findChild(QPushButton, 'settings_pushButton')
+            settings_pushButton.clicked.connect(self.on_settings_click)
+            back_pushButton =self.main_window.findChild(QPushButton, 'back_pushButton')
+            back_pushButton.clicked.connect(self.on_back_click)
+
+
         else:
             self.main_window = main_window
             self.vm.property_changed += self.EventHandler
@@ -53,17 +61,15 @@ class SystemMainUi(object):
             manager_login_push_button = self.main_window.findChild(QPushButton, 'manager_login_pushButton')
             manager_login_push_button.clicked.connect(self.on_manager_login_click)
 
-        create_trial_type_push_button = self.main_window.findChild(QPushButton, 'create_trial_type_pushButton')
-        create_trial_type_push_button.clicked.connect(self.on_create_trial_type)
+            create_trial_type_push_button = self.main_window.findChild(QPushButton, 'create_trial_type_pushButton')
+            create_trial_type_push_button.clicked.connect(self.on_create_trial_type)
 
-        create_event_push_button = self.main_window.findChild(QPushButton, 'create_event_pushButton')
-        create_event_push_button.clicked.connect(self.on_create_event_click)
 
-        create_session_push_button = self.main_window.findChild(QPushButton, 'create_session_btn')
-        create_session_push_button.clicked.connect(self.on_create_session_click)
 
-        settings_pushButton = self.main_window.findChild(QPushButton, 'settings_pushButton')
-        settings_pushButton.clicked.connect(self.on_settings_click)
+            create_session_push_button = self.main_window.findChild(QPushButton, 'create_session_btn')
+            create_session_push_button.clicked.connect(self.on_create_session_click)
+
+
 
     def on_manager_login_click(self):
         self.chosen_window = QtWidgets.QMainWindow()
@@ -75,12 +81,12 @@ class SystemMainUi(object):
         if self.is_manager:
             manager_window = QtWidgets.QMainWindow()
             uic.loadUi(get_ui_path('system_main_plus.ui'), manager_window)
-            self.edit_trial_type_pushButton = manager_window.findChild(QPushButton, 'edit_trial_types_pushButton')
-            self.edit_trial_type_pushButton.clicked.connect(self.on_edit_trial_type_click)
-            self.delete_trial_type_pushButton = manager_window.findChild(QPushButton, 'delete_trial_types_pushButton')
-            self.delete_trial_type_pushButton.clicked.connect(self.on_delete_trial_type_click)
-            self.delete_templates_pushButton = manager_window.findChild(QPushButton, 'delete_templates_pushButton')
-            self.delete_templates_pushButton.clicked.connect(self.on_delete_templates_click)
+            # self.edit_trial_type_pushButton = manager_window.findChild(QPushButton, 'edit_trial_types_pushButton')
+            # self.edit_trial_type_pushButton.clicked.connect(self.on_edit_trial_type_click)
+            # self.delete_trial_type_pushButton = manager_window.findChild(QPushButton, 'delete_trial_types_pushButton')
+            # self.delete_trial_type_pushButton.clicked.connect(self.on_delete_trial_type_click)
+            # self.delete_templates_pushButton = manager_window.findChild(QPushButton, 'delete_templates_pushButton')
+            # self.delete_templates_pushButton.clicked.connect(self.on_delete_templates_click)
             self.setupUi(manager_window, self.vm, True)
 
     def on_settings_click(self):
@@ -88,6 +94,11 @@ class SystemMainUi(object):
         self.chosen_window_ui = SettingsUi(self)
         self.chosen_window_ui.setupUi(self.chosen_window)
         self.chosen_window.show()
+    def on_back_click(self):
+        self.setupUi(self.main_window,self.vm)
+
+
+
 
     def on_create_trial_type(self):
         self.chosen_window = QtWidgets.QMainWindow()

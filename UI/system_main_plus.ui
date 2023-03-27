@@ -34,10 +34,49 @@
            <x>0</x>
            <y>0</y>
            <width>382</width>
-           <height>296</height>
+           <height>325</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QPushButton" name="delete_trial_types_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Delete trial type</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="edit_trial_types_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Edit trial type</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="delete_templates_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Delete session templates</string>
+            </property>
+           </widget>
+          </item>
           <item>
            <widget class="QPushButton" name="settings_pushButton">
             <property name="sizePolicy">
@@ -48,19 +87,6 @@
             </property>
             <property name="text">
              <string>Settings</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="create_trial_type_pushButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Create a new trial type</string>
             </property>
            </widget>
           </item>
@@ -78,7 +104,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="create_session_btn">
+           <widget class="QPushButton" name="back_pushButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
@@ -86,7 +112,7 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>Create a new session</string>
+             <string>Back to menu</string>
             </property>
            </widget>
           </item>
@@ -289,27 +315,6 @@
          </size>
         </property>
        </spacer>
-      </item>
-      <item row="2" column="0">
-       <widget class="QPushButton" name="edit_trial_types_pushButton">
-        <property name="text">
-         <string>Edit trial type</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QPushButton" name="delete_trial_types_pushButton">
-        <property name="text">
-         <string>Delete trial type</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QPushButton" name="delete_templates_pushButton">
-        <property name="text">
-         <string>Delete session templates</string>
-        </property>
-       </widget>
       </item>
      </layout>
     </item>
