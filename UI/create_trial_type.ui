@@ -233,7 +233,7 @@
            </spacer>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="remove_horizontalLayout" stretch=""/>
+           <layout class="QHBoxLayout" name="remove_horizontalLayout"/>
           </item>
           <item>
            <widget class="QLabel" name="label">
@@ -252,7 +252,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>15</pointsize>
+              <pointsize>10</pointsize>
              </font>
             </property>
             <property name="sizeAdjustPolicy">
@@ -294,6 +294,7 @@
              </property>
              <property name="font">
               <font>
+               <pointsize>10</pointsize>
                <kerning>false</kerning>
               </font>
              </property>
@@ -320,11 +321,42 @@
              </property>
              <property name="font">
               <font>
+               <pointsize>10</pointsize>
                <kerning>false</kerning>
               </font>
              </property>
              <property name="textAlignment">
               <set>AlignCenter</set>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Input \ Output</string>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Random \ Time</string>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Time frequency</string>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
              </property>
             </column>
            </widget>

@@ -19,6 +19,7 @@ class CreateTrialTypeUi(object):
         self.contingent_comboBox = None
         self.events_order = []
         self.is_contingent_order = []
+        self.vm=parent.vm
 
     def setupUi(self, main_window):
         self.main_window = main_window
@@ -27,11 +28,14 @@ class CreateTrialTypeUi(object):
         back_btn.clicked.connect(self.on_back_click)
         self.contingent_comboBox = main_window.findChild(QtWidgets.QComboBox, 'comboBox_3')
         self.contingent_comboBox.setEnabled(False)
+        self.conti_label = main_window.findChild(QtWidgets.QLabel, 'label_2')
+        self.conti_label.setEnabled(False)
         self.simple_radioButton = main_window.findChild(QtWidgets.QRadioButton, 'simple_radioButton')
         self.simple_radioButton.setChecked(True)
         self.conti_radioButton = main_window.findChild(QtWidgets.QRadioButton, 'contigent_radioButton')
-        self.conti_radioButton.toggled.connect(lambda: self.contingent_comboBox.setEnabled(True))
-        self.simple_radioButton.toggled.connect(lambda: self.contingent_comboBox.setEnabled(False))
+        self.conti_radioButton.setEnabled(False)
+        self.conti_radioButton.toggled.connect(lambda: (self.contingent_comboBox.setEnabled(True) , self.conti_label.setEnabled(True)))
+        self.simple_radioButton.toggled.connect(lambda: (self.contingent_comboBox.setEnabled(False), self.conti_label.setEnabled(False)))
         self.events_comboBox = main_window.findChild(QtWidgets.QComboBox, 'comboBox')
         self.events_comboBox.addItems([event[0] for event in self.events])
         self.events_tableWidget = main_window.findChild(QtWidgets.QTableWidget, 'events_tableWidget')
@@ -43,6 +47,7 @@ class CreateTrialTypeUi(object):
         self.accept_pushButton = main_window.findChild(QtWidgets.QPushButton, 'create_trial_btn')
         self.accept_pushButton.clicked.connect(self.create_trial)
         self.trial_type_name_lineEdit = main_window.findChild(QtWidgets.QLineEdit, 'lineEdit')
+
 
     def on_add_click(self):
         # add an event to the current trial type
@@ -56,10 +61,16 @@ class CreateTrialTypeUi(object):
             self.events_tableWidget.setItem(row_position, 1, QtWidgets.QTableWidgetItem("Contingent"))
             self.events_tableWidget.setItem(row_position, 2,
                                             QtWidgets.QTableWidgetItem(self.contingent_comboBox.currentText()))
+        self.events_tableWidget.setItem(row_position, 3,
+                                QtWidgets.QTableWidgetItem(self.vm.is_input_event(current_event)[0]))
         self.events_order.append(current_event)
         self.is_contingent_order.append(self.chosen_is_contingent)
         self.contingent_comboBox.addItems([current_event])
-        self.events_tableWidget.setColumnWidth(0, int(self.events_tableWidget.width() / 2))
+        #self.events_tableWidget.setColumnWidth(0, int(self.events_tableWidget.width() / 2))
+        self.conti_radioButton.setEnabled(True)
+
+
+
 
 
     def on_remove_click(self):
@@ -77,6 +88,15 @@ class CreateTrialTypeUi(object):
             self.events_tableWidget.removeRow(chosen_row)
             # set current column to be unselected
             self.events_tableWidget.setCurrentCell(-1, self.events_tableWidget.currentRow())
+            if len(self.events_order) == 0:
+                self.contingent_comboBox.setEnabled(False)
+                self.conti_label.setEnabled(False)
+                self.conti_radioButton.setEnabled(False)
+                self.simple_radioButton.setChecked(True)
+
+
+
+
         # error cases
         elif is_not_empty:
             error_warning("An event is not selected.")
