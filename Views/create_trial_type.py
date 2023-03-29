@@ -34,7 +34,7 @@ class CreateTrialTypeUi(object):
         self.simple_radioButton.setChecked(True)
         self.conti_radioButton = main_window.findChild(QtWidgets.QRadioButton, 'contigent_radioButton')
         self.conti_radioButton.setEnabled(False)
-        self.conti_radioButton.toggled.connect(lambda: (self.contingent_comboBox.setEnabled(True) , self.conti_label.setEnabled(True)))
+        self.conti_radioButton.toggled.connect(lambda: (self.contingent_comboBox.setEnabled(True) , self.conti_label.setEnabled(True)) if (self.contingent_comboBox.count()>1) else None)
         self.simple_radioButton.toggled.connect(lambda: (self.contingent_comboBox.setEnabled(False), self.conti_label.setEnabled(False)))
         self.events_comboBox = main_window.findChild(QtWidgets.QComboBox, 'comboBox')
         self.events_comboBox.addItems([event[0] for event in self.events])
@@ -65,9 +65,15 @@ class CreateTrialTypeUi(object):
                                 QtWidgets.QTableWidgetItem(self.vm.is_input_event(current_event)[0]))
         self.events_order.append(current_event)
         self.is_contingent_order.append(self.chosen_is_contingent)
-        self.contingent_comboBox.addItems([current_event])
-        #self.events_tableWidget.setColumnWidth(0, int(self.events_tableWidget.width() / 2))
-        self.conti_radioButton.setEnabled(True)
+        # validate that combo not have duplicates
+        flag=0
+        for i in range(self.contingent_comboBox.count()):
+            if self.contingent_comboBox.itemText(i)==current_event:
+                flag=1
+        if not flag :
+            self.contingent_comboBox.addItems([current_event])
+        if self.contingent_comboBox.count() > 1:
+            self.conti_radioButton.setEnabled(True)
 
 
 
@@ -94,9 +100,6 @@ class CreateTrialTypeUi(object):
                 self.conti_radioButton.setEnabled(False)
                 self.simple_radioButton.setChecked(True)
 
-
-
-
         # error cases
         elif is_not_empty:
             error_warning("An event is not selected.")
@@ -119,11 +122,11 @@ class CreateTrialTypeUi(object):
             msgBox.setText("Trial name is already in use.")
             msgBox.exec()
             return
-        elif verify_ans is not None:
-            verify_ans = verify_ans[0]
-            msgBox.setText(f'A Trial with this events order already exist with name "{verify_ans}".')
-            msgBox.exec()
-            return
+        # elif verify_ans is not None:
+        #     verify_ans = verify_ans[0]
+        #     msgBox.setText(f'A Trial with this events order already exist with name "{verify_ans}".')
+        #     msgBox.exec()
+        #     return
 
         self.parent.vm.add_trial_type(name, events)
         for row in range(self.events_tableWidget.rowCount()):
