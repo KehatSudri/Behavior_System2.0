@@ -34,7 +34,7 @@
            <x>0</x>
            <y>0</y>
            <width>382</width>
-           <height>325</height>
+           <height>379</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
@@ -70,7 +70,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Create a new trial type</string>
+             <string>Create new trial</string>
             </property>
            </widget>
           </item>
@@ -88,7 +88,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Create a new session</string>
+             <string>Create new session</string>
             </property>
            </widget>
           </item>

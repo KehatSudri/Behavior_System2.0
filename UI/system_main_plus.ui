@@ -38,8 +38,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>375</width>
-           <height>364</height>
+           <width>382</width>
+           <height>379</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
@@ -57,7 +57,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Delete trial type</string>
+             <string>Delete trial type(should remove)</string>
             </property>
            </widget>
           </item>
@@ -75,7 +75,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Edit trial type</string>
+             <string>Edit trial type(should remove)</string>
             </property>
            </widget>
           </item>
@@ -93,7 +93,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Delete session templates</string>
+             <string>Delete session templates(should remove)</string>
             </property>
            </widget>
           </item>
@@ -111,7 +111,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Create a new event</string>
+             <string>Create new event</string>
             </property>
            </widget>
           </item>
