@@ -197,7 +197,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Name                             </string>
+               <string>Event name                             </string>
               </property>
              </widget>
             </item>

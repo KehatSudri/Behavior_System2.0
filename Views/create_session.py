@@ -144,6 +144,9 @@ class CreateSessionUi(object):
         #self.trials_gridLayout=self.main_window.findChild(QtWidgets.QGridLayout, "trials_gridLayout_3")
         back_btn = self.main_window.findChild(QtWidgets.QPushButton, "back_btn")
         back_btn.clicked.connect(self.on_back_click)
+        self.date_value_label=self.main_window.findChild(QtWidgets.QLabel, "date_value_label")
+        self.date_value_label.setText((datetime.now()).strftime("%d/%m/%Y"))
+
         return
         self.main_window = main_window
         self.parent.main_window.hide()
@@ -208,12 +211,7 @@ class CreateSessionUi(object):
         self.date_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.date_label.setObjectName("date_label")
         self.session_name_and_date_horizontalLayout.addWidget(self.date_label)
-        self.date_value_label = QtWidgets.QLabel(self.central_widget)
-        self.date_value_label.setStyleSheet("font: 12pt \"Gabriola\";")
-        ##self.date_value_label.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
-        self.date_value_label.setObjectName("date_value_label")
-        self.date_value_label.setText((datetime.now()).strftime("%d/%m/%Y"))
-        self.session_name_and_date_horizontalLayout.addWidget(self.date_value_label)
+
         self.session_name_and_date_horizontalLayout.setStretch(0, 1)
         self.session_name_and_date_horizontalLayout.setStretch(1, 1)
         self.session_name_and_date_horizontalLayout.setStretch(2, 1)
@@ -484,6 +482,7 @@ class CreateSessionUi(object):
         
 
     def deal_with_trial(self, treatment):
+
         is_not_empty = len(self.trials_in_session) > 0
         is_row_selected = self.trials_table.currentRow() != -1
         # check if there are trials and a trial was selected
@@ -499,7 +498,10 @@ class CreateSessionUi(object):
             else:  # remove case
                 # get the chosen block's row and remove it
                 index = self.trials_table.currentRow()  # ignore 0th which represents blocks parameters
+                print(self.trials_in_session)
                 del self.trials_in_session[index]
+                del self.trials_in_session[index]
+                print(self.trials_in_session)
                 self.trials_table.removeRow(index)
                 # set current row to be unselected
                 self.trials_table.setCurrentCell(-1, self.trials_table.currentColumn())
@@ -507,9 +509,9 @@ class CreateSessionUi(object):
                 # chosen_row = self.trials_tableWidget.currentRow()
                 # self.trials_tableWidget.removeRow(chosen_row)
                 # if len(self.percentages) != 0:
-                del self.percentages[index]
+                # del self.percentages[index]
                 # else:
-                del self.percent_per_block[index]
+                #del self.percent_per_block[index]
                 # del self.trials_in_session[self.trials_tableWidget.currentRow()]
                 # self.trials_tableWidget.removeRow(self.trials_tableWidget.currentRow())
                 # if len(self.percentages)!=0:
@@ -693,6 +695,7 @@ class CreateSessionUi(object):
         params=""
         table= self.trials_table
         index = table.rowCount()
+        print(self.trials_in_session)
         table.insertRow(index)
         table.setItem(index, 0, QTableWidgetItem(self.trials_in_session[index*2]))
         for event, parameters in self.trials_in_session[index*2+1].items():
