@@ -399,6 +399,7 @@ commands = (
         block_size VARCHAR(100),
         blocks_order VARCHAR(100),
         random_reward_percent integer,
+        subjectID VARCHAR(100),
         last_used DATE NOT NULL,               
         CONSTRAINT sessions_pkey PRIMARY KEY (session_id)
     )

@@ -29,10 +29,16 @@ class RandomOrderUi(object):
         self.set_trials_table_pointer = None
 
     def setupUi(self, dialog, event_handler):
+        print(self.parent.trials_in_session)
         uic.loadUi(get_ui_path('random_order.ui'), dialog)
         # dialog.accepted.connect(lambda: event_handler(self.choose_template_cb.currentText()))
         dialog.accepted.connect(lambda: event_handler())
         dialog.rejected.connect(lambda: print('cancel'))
+        trials_tableWidget = dialog.findChild(QtWidgets.QTableWidget, "trials_tableWidget")
+        print(len(self.parent.trials_in_session))
+        for i in range (int(len(self.parent.trials_in_session)/2))   :
+            trials_tableWidget.insertRow(i)
+            trials_tableWidget.setItem(i, 0, QTableWidgetItem(self.parent.trials_in_session[i*2]))
         return
         dialog.setObjectName("dialog")
         dialog.resize(401, 355)
@@ -158,6 +164,7 @@ class RandomOrderUi(object):
 
 
     def accept(self):
+        print("accept")
         # check if a number was selected for total number of trials
         if self.get_total_num_of_trials() is None:
             error_warning("An error accrued, please try again.")
@@ -176,7 +183,6 @@ class RandomOrderUi(object):
             self.session_ui = ControlSessionBoardUi(self)
             self.session_ui.setupUi(self.session_window)
             self.session_window.show()
-
             # close current window
             self.parent.trials_ord_window.close()
             threading.Thread(target=self.parent.vm.start_Session).start()
@@ -184,6 +190,7 @@ class RandomOrderUi(object):
             self.parent.main_window.close()
 
     def reject(self):
+        print("reject")
         self.parent.trials_ord_window.close()
 
 

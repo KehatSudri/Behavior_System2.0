@@ -39,7 +39,7 @@
            <x>0</x>
            <y>0</y>
            <width>382</width>
-           <height>327</height>
+           <height>379</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
@@ -57,7 +57,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Delete trial type</string>
+             <string>Delete trial type(should remove)</string>
             </property>
            </widget>
           </item>
@@ -75,7 +75,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Edit trial type</string>
+             <string>Edit trial type(should remove)</string>
             </property>
            </widget>
           </item>
@@ -93,7 +93,25 @@
              </font>
             </property>
             <property name="text">
-             <string>Delete session templates</string>
+             <string>Delete session templates(should remove)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="create_event_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <family>David</family>
+             </font>
+            </property>
+            <property name="text">
+             <string>Create new event</string>
             </property>
            </widget>
           </item>
@@ -112,24 +130,6 @@
             </property>
             <property name="text">
              <string>Settings</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="create_event_pushButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <family>David</family>
-             </font>
-            </property>
-            <property name="text">
-             <string>Create a new event</string>
             </property>
            </widget>
           </item>
