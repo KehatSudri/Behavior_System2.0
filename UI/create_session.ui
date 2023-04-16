@@ -719,7 +719,7 @@
           </attribute>
           <column>
            <property name="text">
-            <string>type</string>
+            <string>Trial name</string>
            </property>
           </column>
           <column>
