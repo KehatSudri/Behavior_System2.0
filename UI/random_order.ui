@@ -44,7 +44,7 @@
      <item row="0" column="0" colspan="2">
       <widget class="QLabel" name="explenation_label">
        <property name="styleSheet">
-        <string notr="true">font: 25pt &quot;David&quot;;</string>
+        <string notr="true">font: 20pt &quot;David&quot;;</string>
        </property>
        <property name="text">
         <string>Define a random ordered session</string>
