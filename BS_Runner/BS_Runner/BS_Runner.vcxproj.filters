@@ -29,7 +29,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SessionControlPannel.h">
+    <ClInclude Include="SessionControlPanel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SessionControls.h">
