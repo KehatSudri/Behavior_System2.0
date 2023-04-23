@@ -58,6 +58,7 @@ class AddTrialUi(object):
         main_layout.addWidget(self.ok_btn)
 
     def delete_params(self):
+
         for i in range(len(self.trial_params_labels)):
             label = self.trial_params_labels.pop()
             self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').removeRow(label)
@@ -66,9 +67,17 @@ class AddTrialUi(object):
         self.trial_params_widgets = defaultdict(list)
         self.are_contingents.clear()  # TODO delete when self.vm.is_contingent(event_name) implemented
 
+        for i in range(self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').rowCount() - 1, -1, -1):
+            # Get the widget in the current row
+            widget = self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').itemAt(i).widget()
+            if widget is not None:
+                # Remove the current row from the layout
+                self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').removeRow(i)
+
     def set_trial_form(self, events_name: list):
         # add row for each event and it's parameters
-        for event_name in events_name:
+        for i, event_name in enumerate(events_name):
+            print(events_name)
             #print(self.parent.trial_types[0])
             is_contingent = self.vm.is_contingent(
                 event_name,self.parent.chosen_trial_type_name)[0]
@@ -81,16 +90,36 @@ class AddTrialUi(object):
 
             #if not is_contingent:
                 # add a label for the event name
-            event_name_font = QtGui.QFont()
-            event_name_font.setBold(True)
-            label = QLabel(event_name + ":")
-            label.setFont(event_name_font)
+            bold_font = QtGui.QFont()
+            bold_font.setBold(True)
+            label = QLabel(event_name + "")
+            label.setFont(bold_font)
             self.trial_params_labels.append(label)
             formLayout = self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
             formLayout.addRow(label)
-        # add line edit accordingly for the parameters
-            self.set_trial_form_handler(event_name, is_input_event)#change the false to is_contingent
 
+            # add line edit accordingly for the parameters
+            self.set_trial_form_handler(event_name, is_input_event)
+            if not i == len(events_name) - 1:
+                delay_label = QLabel("Delay")
+                delay_label.setFont(bold_font)
+                line_edit = QLineEdit()
+                formLayout = self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
+                formLayout.addRow(QLabel(""))
+                formLayout.addRow(delay_label, line_edit)
+                formLayout.addRow(QLabel(""))
+
+
+            # if not i == len(events_name) - 1:
+            #     print("dddd")
+            #     delay_label = QLabel("Delay")
+            #     delay_label.setFont(bold_font)
+            #     self.trial_params_labels.append(delay_label)
+            #     formLayout.addRow(label)
+            #     line_edit = QLineEdit()
+            #     # formLayout.addRow(QLabel(""))
+            #     formLayout.addRow(delay_label,line_edit)
+            #     # formLayout.addRow(QLabel(""))
     def set_trial_form_handler(self, event_name: str, is_input_event):
         # if is_contingent:
         #     # contingent event case
@@ -143,21 +172,26 @@ class AddTrialUi(object):
         #                     self.trial_params_widgets[event_name].append(spin_box)
         #                     self.formLayout.addRow(label, spin_box)
         # else:
-        if is_input_event:
-            dict = {"Duration","Frequency","Amplitude"}
+        if event_name == 'Tone':
+              dict =['tone duration', 'tone frequency']
+        if event_name == 'Reward':
+              dict = ['reward duration']
+        elif is_input_event:
+            dict = ["Duration","Frequency","Amplitude"]
         else:
-            dict = {"Duration"}
+            dict = ["Duration"]
             # simple event case
         #events= (self.vm.get_events_by_trial_name(self.parent.chosen_trial_type_name))
         #events=''.join(events)
         #events=events.split(",")
-        for param in dict:
+
+        for  param in dict:
+
             label = QLabel(param)
             line_edit = QLineEdit()
             self.trial_params_labels.append(label)
             self.trial_params_widgets[event_name].append(line_edit)
             self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').addRow(label, line_edit)
-
 
     def trial_types_click(self, index):
         self.parent.trial_index = index
@@ -167,6 +201,7 @@ class AddTrialUi(object):
         chosen = self.parent.chosen_trial_type_name = [name[0] for name in self.parent.trials_names][index]
         events_name = self.vm.get_events_by_trial_name(chosen)
         self.clear_form()
+        print('clear')
         #print("chosen="+str(chosen))
         #print(events_name[0].split(",")[:-1])
         self.set_trial_form(events_name[0].split(",")[:-1])
