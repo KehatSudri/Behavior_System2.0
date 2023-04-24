@@ -4,6 +4,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QTableView, QHeaderView, QTableWidgetItem, QAbstractItemView,QAbstractScrollArea
 from PyQt6 import QtCore, QtWidgets, uic
 
+from Models.prepare_session_information import prepare_session_information
 from Views.add_trial import AddTrialUi
 from Views.blocks_order import BlocksOrderUi
 from Views.choose_template import ChooseTemplateUi
@@ -498,10 +499,10 @@ class CreateSessionUi(object):
             else:  # remove case
                 # get the chosen block's row and remove it
                 index = self.trials_table.currentRow()  # ignore 0th which represents blocks parameters
-                print(self.trials_in_session)
+                # print(self.trials_in_session)
                 del self.trials_in_session[index]
                 del self.trials_in_session[index]
-                print(self.trials_in_session)
+                # print(self.trials_in_session)
                 self.trials_table.removeRow(index)
                 # set current row to be unselected
                 self.trials_table.setCurrentCell(-1, self.trials_table.currentColumn())
@@ -625,11 +626,13 @@ class CreateSessionUi(object):
 
     def on_next_click(self):
         print("next")
-        trial_name="second"
+        trial_name="first"
         ports=self.vm.get_ports(trial_name)
         print(ports) #for backend !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         dependencies = self.vm.get_dependencies(trial_name)
         print(dependencies)
+        print(self.trials_in_session)
+        prepare_session_information(ports,dependencies,self.trials_in_session)
 
         # if not self.is_valid_input():
         #     if self.max_iti_spinBox.value() < self.min_iti_spinBox.value():
@@ -695,17 +698,18 @@ class CreateSessionUi(object):
         params=""
         table= self.trials_table
         index = table.rowCount()
-        print(self.trials_in_session)
+        # print(self.trials_in_session)
         table.insertRow(index)
         table.setItem(index, 0, QTableWidgetItem(self.trials_in_session[index*2]))
         for event, parameters in self.trials_in_session[index*2+1].items():
-            if len(parameters)==3:
-                params+= event + ":" + " Duration - " +parameters[0]+", Frequency - " +parameters[1]+", Amplitude - " +parameters[2]+"\n"
+            if event == 'Tone':
+                params += event + ":" + " delay - " + parameters[0] + ", tone duration - " + parameters[1] + ", tone frequency - " + parameters[2] + "\n"
+            elif event == 'Reward':
+                params += event + ":" + " delay - " + parameters[0] + ", reward duration - " + parameters[1]  + "\n"
             else:
-                params+= event + ":" + " Duration - " + parameters[0]+"\n"
-            print(params)
+                params += event + ":" + " delay - " + parameters[0] + ", Duration - " + parameters[1]+", Frequency - " + parameters[2]+", Amplitude - " + parameters[3]+"\n"
+
             table.setItem(index, 1, QTableWidgetItem(params))
-            #table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
             table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
 
 
