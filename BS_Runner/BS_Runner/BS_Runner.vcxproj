@@ -131,21 +131,21 @@
   <ItemGroup>
     <ClCompile Include="IOEvents.cpp" />
     <ClCompile Include="SessionConf.cpp" />
-    <ClCompile Include="SessionControlPanel.cpp" />
+    <ClCompile Include="SessionController.cpp" />
     <ClCompile Include="SessionControls.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Consts.h" />
     <ClInclude Include="IOEvents.h" />
     <ClInclude Include="SessionConf.h" />
-    <ClInclude Include="SessionControlPanel.h">
+    <ClInclude Include="SessionController.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="SessionControls.h" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SessionControlPanel.resx">
-      <DependentUpon>SessionControlPanel.h</DependentUpon>
+    <EmbeddedResource Include="SessionController.resx">
+      <DependentUpon>SessionController.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __SessionControlPanel__
-#define __SessionControlPanel__
+#ifndef __SessionController__
+#define __SessionController__
 #include "SessionControls.h"
 #include <string>
 
@@ -12,16 +12,16 @@ namespace BSRunner {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
-	public ref class SessionControlPanel : public System::Windows::Forms::Form
+	public ref class SessionController : public System::Windows::Forms::Form
 	{
 	public:
-		SessionControlPanel(void)
+		SessionController(void)
 		{
 			InitializeComponent();
 		}
 
 	protected:
-		~SessionControlPanel()
+		~SessionController()
 		{
 			if (components)
 			{
@@ -59,7 +59,7 @@ namespace BSRunner {
 			this->StartBtn->TabIndex = 0;
 			this->StartBtn->Text = L"Start";
 			this->StartBtn->UseVisualStyleBackColor = true;
-			this->StartBtn->Click += gcnew System::EventHandler(this, &SessionControlPanel::StartBtn_Click);
+			this->StartBtn->Click += gcnew System::EventHandler(this, &SessionController::StartBtn_Click);
 			// 
 			// PauseBtn
 			// 
@@ -70,7 +70,7 @@ namespace BSRunner {
 			this->PauseBtn->TabIndex = 1;
 			this->PauseBtn->Text = L"Pause";
 			this->PauseBtn->UseVisualStyleBackColor = true;
-			this->PauseBtn->Click += gcnew System::EventHandler(this, &SessionControlPanel::PauseBtn_Click);
+			this->PauseBtn->Click += gcnew System::EventHandler(this, &SessionController::PauseBtn_Click);
 			// 
 			// ResumeBtn
 			// 
@@ -81,7 +81,7 @@ namespace BSRunner {
 			this->ResumeBtn->TabIndex = 2;
 			this->ResumeBtn->Text = L"Resume";
 			this->ResumeBtn->UseVisualStyleBackColor = true;
-			this->ResumeBtn->Click += gcnew System::EventHandler(this, &SessionControlPanel::ResumeBtn_Click);
+			this->ResumeBtn->Click += gcnew System::EventHandler(this, &SessionController::ResumeBtn_Click);
 			// 
 			// RewardBtn
 			// 
@@ -92,7 +92,7 @@ namespace BSRunner {
 			this->RewardBtn->TabIndex = 3;
 			this->RewardBtn->Text = L"Give Reward";
 			this->RewardBtn->UseVisualStyleBackColor = true;
-			this->RewardBtn->Click += gcnew System::EventHandler(this, &SessionControlPanel::RewardBtn_Click);
+			this->RewardBtn->Click += gcnew System::EventHandler(this, &SessionController::RewardBtn_Click);
 			// 
 			// FinishBtn
 			// 
@@ -103,7 +103,7 @@ namespace BSRunner {
 			this->FinishBtn->TabIndex = 4;
 			this->FinishBtn->Text = L"Finish";
 			this->FinishBtn->UseVisualStyleBackColor = true;
-			this->FinishBtn->Click += gcnew System::EventHandler(this, &SessionControlPanel::FinishBtn_Click);
+			this->FinishBtn->Click += gcnew System::EventHandler(this, &SessionController::FinishBtn_Click);
 			// 
 			// panel1
 			// 
@@ -120,15 +120,15 @@ namespace BSRunner {
 			this->panel1->Size = System::Drawing::Size(235, 231);
 			this->panel1->TabIndex = 5;
 			// 
-			// SessionControlPanel
+			// SessionController
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(257, 253);
 			this->Controls->Add(this->panel1);
-			this->Name = L"SessionControlPanel";
+			this->Name = L"SessionController";
 			this->Text = L"Control Board";
-			this->Load += gcnew System::EventHandler(this, &SessionControlPanel::SessionControlPanel_Load);
+			this->Load += gcnew System::EventHandler(this, &SessionController::SessionControlPanel_Load);
 			this->panel1->ResumeLayout(false);
 			this->ResumeLayout(false);
 
@@ -153,4 +153,4 @@ namespace BSRunner {
 	}
 };
 }
-#endif // __SessionControlPanel__
+#endif // __SessionController__
