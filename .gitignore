@@ -1,5 +1,4 @@
-/config_files/database.ini
-/config_files/settings.txt
 .idea
+/config_files/
 /vs_buildtools.exe
 /venv/
