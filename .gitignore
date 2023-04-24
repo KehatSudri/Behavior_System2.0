@@ -2,3 +2,4 @@
 /config_files/settings.txt
 .idea
 /vs_buildtools.exe
+/venv/
