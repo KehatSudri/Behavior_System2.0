@@ -16,7 +16,7 @@ public:
     void attachListener(Listener* listener);
     void detachListener(Listener* listener);
     void notifyListeners();
-    void update(float value);
+    void set(float64 value);
 private:
     std::vector<Listener*> listeners_;
     bool beenUpdated_;
@@ -27,36 +27,46 @@ public:
     virtual void update(Event* event) = 0;
 };
 
-class SimpleOutputer {
+class Outputer {
 public:
-    SimpleOutputer(TaskHandle handler, int delay, int duration, int frequency) : handler_(handler), delay_(delay), duration_(duration), frequency_(frequency) {
-        isOutputing_ = false;
-    }
-    void run();
-    bool getIsOutputing_() {
-        return isOutputing_;
-    }
-private:
+    Outputer(TaskHandle handler, int duration, int delay = 0 , int frequency = 0) : handler_(handler), delay_(delay), duration_(duration), frequency_(frequency) {}
+    virtual void output() = 0;
+protected:
     TaskHandle handler_;
     int delay_;
     int duration_;
     int frequency_;
-    bool isOutputing_;
 };
 
-class ContingentOutputer : public Listener{
+class SimpleOutputer : public Outputer {
 public:
-    ContingentOutputer(TaskHandle handler, int delay, int duration) : handler_(handler), delay_(delay), duration_(duration) {}
+    SimpleOutputer(TaskHandle handler, int duration, int delay = 0, int frequency = 0) : Outputer(handler, duration, delay, frequency) {}
+    void output() override;
+};
+
+class EnvironmentOutputer {
+public:
+    EnvironmentOutputer(Outputer* outputer) : outputer_(outputer) {}
+    void output();
+private:
+    Outputer* outputer_;
+};
+
+class ContingentOutputer : public Listener {
+public:
+    ContingentOutputer(Outputer* outputer) : outputer_(outputer) {}
     void update(Event* event) override;
 private:
-    TaskHandle handler_;
-    int delay_;
-    int duration_;
+    Outputer* outputer_;
 };
 
-class ComplexListener : public ContingentOutputer, public SimpleOutputer {
+class SerialOutputer {
 public:
-    ComplexListener(TaskHandle handler, int delay, int duration, int frequency) : ContingentOutputer(handler, delay, duration), SimpleOutputer(handler, delay, duration, frequency) {}
-    void update(Event* event) override;
+    SerialOutputer(Outputer* outputer) : outputer_(outputer) {}
+    void run();
+
+private:
+    Outputer* outputer_;
 };
+
 #endif // __IOEvents__

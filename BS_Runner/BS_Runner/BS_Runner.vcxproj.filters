@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SessionControlPannel.cpp">
+    <ClCompile Include="SessionControlPanel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SessionControls.cpp">

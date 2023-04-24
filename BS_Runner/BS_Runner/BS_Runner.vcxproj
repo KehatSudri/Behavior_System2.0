@@ -131,7 +131,7 @@
   <ItemGroup>
     <ClCompile Include="IOEvents.cpp" />
     <ClCompile Include="SessionConf.cpp" />
-    <ClCompile Include="SessionControlPannel.cpp" />
+    <ClCompile Include="SessionControlPanel.cpp" />
     <ClCompile Include="SessionControls.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -2,7 +2,7 @@
 #include "SessionControls.h"
 #include <thread>
 
-void writeOutput(TaskHandle taskHandle, int delay, int duration) {
+void writeOutput(TaskHandle taskHandle, int duration, int delay = 0) {
     auto start_time = std::chrono::high_resolution_clock::now();
     while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < delay) {
         continue;
@@ -32,7 +32,7 @@ void Event::notifyListeners() {
     }
 }
 
-void Event::update(float value) {
+void Event::set(float64 value) {
     if (!this->beenUpdated_ && value > 3.5) {       
         this->beenUpdated_ = true;
         notifyListeners();
@@ -42,29 +42,26 @@ void Event::update(float value) {
     }
 }
 
-void SimpleOutputer::run() {
+void SimpleOutputer::output() {
+    writeOutput(handler_, duration_, delay_);
+}
+
+void EnvironmentOutputer::output() {
+    std::thread t(&Outputer::output, this->outputer_);
+    t.detach();
+}
+
+void ContingentOutputer::update(Event* event) {
+    std::thread t(&Outputer::output, this->outputer_);
+    t.detach();
+}
+
+void SerialOutputer::run() {
     bool& isRunning = SessionControls::getInstance().getIsRunning();
     bool& isPaused = SessionControls::getInstance().getIsPaused();
     while (isRunning) {
         if (!isPaused) {
-            this->isOutputing_ = true;
-            writeOutput(this->handler_, this->delay_, this->duration_);
-            this->isOutputing_ = false;
-            auto start_time = std::chrono::high_resolution_clock::now();
-            while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < this->frequency_) {
-                continue;
-            }
+            this->outputer_->output();
         }
-    }
-}
-
-void ContingentOutputer::update(Event* event) {
-    std::thread t(writeOutput, this->handler_, this->delay_, this->duration_);
-    t.detach();
-}
-
-void ComplexListener::update(Event* event) {
-    if (!this->getIsOutputing_()) {
-        ContingentOutputer::update(event);
     }
 }
