@@ -625,14 +625,21 @@ class CreateSessionUi(object):
         # self.vm.set_trials_list(trials) NOT RELEVANT AT THIS PART
 
     def on_next_click(self):
-        print("next")
-        trial_name="first"
-        ports=self.vm.get_ports(trial_name)
-        print(ports) #for backend !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        dependencies = self.vm.get_dependencies(trial_name)
+        ports=[]
+        dependencies=[]
+        # print(self.vm.get_ports('newnew'))
+        for i in range(0, len(self.trials_in_session), 2):
+            ports+=( self.vm.get_ports(self.trials_in_session[i]))
+            dependencies += self.vm.get_dependencies(self.trials_in_session[i])
+
+        # print(ports) #for backend !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         print(dependencies)
-        print(self.trials_in_session)
+        # print(self.trials_in_session)
         prepare_session_information(ports,dependencies,self.trials_in_session)
+
+
+
+
 
         # if not self.is_valid_input():
         #     if self.max_iti_spinBox.value() < self.min_iti_spinBox.value():

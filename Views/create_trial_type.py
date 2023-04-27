@@ -153,7 +153,8 @@ class CreateTrialTypeUi(object):
                 item = self.events_tableWidget.item(row, col)
                 if item is not None:
                     row_items.append(item.text())
-            if len(row_items) == 3:
+            print(row_items)
+            if row_items[1]=="Contingent":
                 self.parent.vm.events_to_trials(name, row_items[0], True, row_items[2])
             else:
                 self.parent.vm.events_to_trials(name, row_items[0], False, None)

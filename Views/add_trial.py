@@ -78,8 +78,8 @@ class AddTrialUi(object):
         for i, event_name in enumerate(events_name):
             print(events_name)
             #print(self.parent.trial_types[0])
-            is_contingent = self.vm.is_contingent(
-                event_name,self.parent.chosen_trial_type_name)[0]
+            # is_contingent = self.vm.is_contingent(
+            #     event_name,self.parent.chosen_trial_type_name)[0]
 
             is_input_event =False
             if self.vm.is_input_event(event_name)[0]=="Input":
