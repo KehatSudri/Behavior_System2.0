@@ -1,6 +1,6 @@
 import os
-def prepare_session_information(ports,dependencies,trial_name):
-    # print(trials_in_session)
+def prepare_session_information(ports,dependencies,trial_name,index,trials_in_session):
+    # print(ports)
     input_ports = []
     output_ports=[]
     dependencies_string="None"
@@ -9,6 +9,10 @@ def prepare_session_information(ports,dependencies,trial_name):
             input_ports.append(port)
         elif type == 'Output':
             output_ports.append(port)
+            parameters=trials_in_session[index+1][name]
+            parameters_string = str(parameters).replace(",", " ").replace("'", "")
+            parameters_string = "[" + parameters_string[1:-1] + "]"
+            output_ports.append(parameters_string)
     if not input_ports :
         input_ports_string ='None'
     else:
@@ -16,6 +20,7 @@ def prepare_session_information(ports,dependencies,trial_name):
     if not output_ports :
         output_ports_string ='None'
     else:
+        print(output_ports)
         output_ports_string = ",".join(output_ports)
     if dependencies != "":
         dependencies_string = ','.join(['('+','.join(pair)+')' for pair in dependencies])

@@ -627,15 +627,12 @@ class CreateSessionUi(object):
     def on_next_click(self):
         ports=[]
         dependencies=[]
-        # print(self.vm.get_ports('newnew'))
+        print(self.trials_in_session)
         for i in range(0, len(self.trials_in_session), 2):
             ports=( self.vm.get_ports(self.trials_in_session[i]))
             dependencies = self.vm.get_dependencies(self.trials_in_session[i])
-            prepare_session_information(ports,dependencies,self.trials_in_session[i])
+            prepare_session_information(ports,dependencies,self.trials_in_session[i],i,self.trials_in_session)
 
-        # print(ports) #for backend !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        print(dependencies)
-        # print(self.trials_in_session)
 
 
 
