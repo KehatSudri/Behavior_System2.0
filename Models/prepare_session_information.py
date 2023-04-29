@@ -32,5 +32,7 @@ def prepare_session_information(ports,dependencies,trial_name,index,trials_in_se
         file.write("Dependencies\n" + dependencies_string + "\n")
         file.write("Input Ports\n"+input_ports_string+"\n")
         file.write("Output Ports\n" + output_ports_string+"\n")
+        file.write("\n")
+
 
 
