@@ -375,6 +375,10 @@ commands = (
         input_output VARCHAR(20) NOT NULL,
         digital_analog VARCHAR(20) NOT NULL,
         is_reward VARCHAR(20) NOT NULL,       
+        CONSTRAINT hardwareEvents_pkey PRIMARY KEY (event_id),
+        CONSTRAINT input_output_ck CHECK (input_output in ('Input', 'Output')),
+        CONSTRAINT digital_analog_ck CHECK (digital_analog in ('Digital', 'Analog')),
+        CONSTRAINT is_reward_ck CHECK (is_reward in ('True', 'False'))
     )
     """,
     """
@@ -397,6 +401,7 @@ commands = (
         random_reward_percent integer,
         subjectID VARCHAR(100),
         last_used DATE NOT NULL,               
+        CONSTRAINT sessions_pkey PRIMARY KEY (session_id)
     )
     """,
     """
@@ -405,6 +410,7 @@ commands = (
         ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
         trial_name VARCHAR(255) UNIQUE,
         events VARCHAR(255) UNIQUE,
+        constraint trial_pkey PRIMARY KEY (type_id)
         )
     """,
     """
@@ -418,6 +424,7 @@ commands = (
         block_number VARCHAR(100),
         event_list VARCHAR(255),
         interval_list VARCHAR(255),
+        constraint sessiontrial_pkey PRIMARY KEY (session_trial_id)
     )
     """,
     """
@@ -426,6 +433,7 @@ commands = (
         session_id integer REFERENCES sessions,
         counter integer,
         last_used DATE NOT NULL,
+        constraint sbjsess_pkey PRIMARY KEY (subject_id, session_id)
     )
     """,
     """
@@ -434,6 +442,8 @@ commands = (
         ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
         event_type VARCHAR(100),
         parameters VARCHAR(255),
+        constraint eventid_pkey PRIMARY KEY (event_id), 
+        constraint type_params_unq UNIQUE (event_type, parameters)
     )
     """,
 """
@@ -442,6 +452,7 @@ commands = (
         trial_name VARCHAR(255) REFERENCES trialtypes(trial_name),
         iscontigent BOOLEAN not null,
         contingent_on VARCHAR(100),
+        constraint pkey PRIMARY KEY (event_name,trial_name,iscontigent)
     )
     """
 )
