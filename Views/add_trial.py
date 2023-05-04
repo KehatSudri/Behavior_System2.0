@@ -5,7 +5,6 @@ from PyQt6.QtWidgets import QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit, QC
 
 from Views.utils import error_warning, get_string_dict, get_ui_path  # , set_conditioned_event
 
-
 class AddTrialUi(object):
     def __init__(self, parent):
         self.index=0
@@ -79,8 +78,8 @@ class AddTrialUi(object):
         for i, event_name in enumerate(events_name):
             print(events_name)
             #print(self.parent.trial_types[0])
-            is_contingent = self.vm.is_contingent(
-                event_name,self.parent.chosen_trial_type_name)[0]
+            # is_contingent = self.vm.is_contingent(
+            #     event_name,self.parent.chosen_trial_type_name)[0]
 
             is_input_event =False
             if self.vm.is_input_event(event_name)[0]=="Input":
@@ -100,14 +99,15 @@ class AddTrialUi(object):
 
             # add line edit accordingly for the parameters
             self.set_trial_form_handler(event_name, is_input_event)
-            if not i == len(events_name) - 1:
-                delay_label = QLabel("Delay")
-                delay_label.setFont(bold_font)
-                line_edit = QLineEdit()
-                formLayout = self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
-                formLayout.addRow(QLabel(""))
-                formLayout.addRow(delay_label, line_edit)
-                formLayout.addRow(QLabel(""))
+            # if not i == len(events_name) - 1:
+            #     delay_label = QLabel("Delay")
+            #     delay_label.setFont(bold_font)
+            #     line_edit = QLineEdit()
+            #     formLayout = self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
+            #     formLayout.addRow(QLabel(""))
+            #     line_edit.setText("0")
+            #     formLayout.addRow(delay_label, line_edit)
+            #     formLayout.addRow(QLabel(""))
 
 
             # if not i == len(events_name) - 1:
@@ -172,23 +172,24 @@ class AddTrialUi(object):
         #                     self.trial_params_widgets[event_name].append(spin_box)
         #                     self.formLayout.addRow(label, spin_box)
         # else:
+        dict=["delay"]
         if event_name == 'Tone':
-              dict =['tone duration', 'tone frequency']
-        if event_name == 'Reward':
-              dict = ['reward duration']
-        elif is_input_event:
-            dict = ["Duration","Frequency","Amplitude"]
-        else:
-            dict = ["Duration"]
-            # simple event case
+              dict =dict+['tone duration', 'tone frequency']
+        elif event_name == 'Reward':
+              dict = dict+['reward duration']
+        else :
+              dict = dict+["Duration","Frequency","Amplitude"]
+        # else:
+        #     dict = dict+["Duration"]
+        #     # simple event case
         #events= (self.vm.get_events_by_trial_name(self.parent.chosen_trial_type_name))
         #events=''.join(events)
         #events=events.split(",")
 
-        for  param in dict:
-
+        for param in dict:
             label = QLabel(param)
             line_edit = QLineEdit()
+            line_edit.setText("0")
             self.trial_params_labels.append(label)
             self.trial_params_widgets[event_name].append(line_edit)
             self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').addRow(label, line_edit)
@@ -235,19 +236,21 @@ class AddTrialUi(object):
 
     def accept(self):
         new_trial = self.parent.chosen_trial_type_name
-        #print(new_trial)
         event_and_params ={}
         params=[]
         for i in range(self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').rowCount()):
             field = self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').itemAt(i, QFormLayout.ItemRole.FieldRole)
             if not isinstance(field.widget(), QLineEdit):
-                event = field.widget().text().split(":")[0]
+                event = field.widget().text()
                 params = []
             else:
                 params.append(field.widget().text())
 
-            event_and_params[event] = params
-        #print(event_and_params)
+            if event != "" and event is not None:
+               event_and_params[event] = params
+        print(event_and_params)
+
+
 
         # update new trial parameters
         # for event, event_params in new_trial.items():

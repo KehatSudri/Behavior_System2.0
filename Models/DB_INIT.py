@@ -205,7 +205,7 @@ class DB:
         return trials_types
     def get_ports(self,trial_name):
         with self.conn.cursor() as cur:
-            temp=f"SELECT port,input_output FROM hardwareevents,events_to_trials WHERE hardwareevents.event_name = events_to_trials.event_name AND events_to_trials.trial_name = '{trial_name}' "
+            temp=f"SELECT port,input_output,hardwareevents.event_name FROM hardwareevents,events_to_trials WHERE hardwareevents.event_name = events_to_trials.event_name AND events_to_trials.trial_name = '{trial_name}' "
             cur.execute(temp)
             ports = cur.fetchall()
         return ports
