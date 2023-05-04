@@ -25,11 +25,9 @@ def prepare_session_information(ports,dependencies,trial_name,index,trials_in_se
     else:
         print(output_ports)
         output_ports_string = ",".join(output_ports)
-    if dependencies != "":
+    if dependencies:
         dependencies_string = ','.join(['('+','.join(pair)+')' for pair in dependencies])
-    # current_dir = os.path.dirname(os.path.abspath(__file__))
-    # filename = "session_config.txt"
-    # file_path = os.path.join(current_dir, filename)
+
     configs_path = str(Path(__file__).parent.parent / 'config_files' / 'session_config.txt')
 
     with open(configs_path, "a") as file:
