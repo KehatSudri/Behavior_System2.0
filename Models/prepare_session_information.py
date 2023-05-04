@@ -1,4 +1,7 @@
 import os
+from pathlib import Path
+
+
 def prepare_session_information(ports,dependencies,trial_name,index,trials_in_session):
     # print(ports)
     input_ports = []
@@ -24,10 +27,12 @@ def prepare_session_information(ports,dependencies,trial_name,index,trials_in_se
         output_ports_string = ",".join(output_ports)
     if dependencies != "":
         dependencies_string = ','.join(['('+','.join(pair)+')' for pair in dependencies])
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    filename = "session_info.txt"
-    file_path = os.path.join(current_dir, filename)
-    with open(file_path, "a") as file:
+    # current_dir = os.path.dirname(os.path.abspath(__file__))
+    # filename = "session_config.txt"
+    # file_path = os.path.join(current_dir, filename)
+    configs_path = str(Path(__file__).parent.parent / 'config_files' / 'session_config.txt')
+
+    with open(configs_path, "a") as file:
         file.write("Trial name : " + trial_name + "\n")
         file.write("Dependencies\n" + dependencies_string + "\n")
         file.write("Input Ports\n"+input_ports_string+"\n")
