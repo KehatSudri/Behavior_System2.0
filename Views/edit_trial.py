@@ -30,7 +30,7 @@ class EditTrialUi(object):
         self.main_verticalLayout.setObjectName("main_verticalLayout")
         # set header
         self.edit_trial_label = QtWidgets.QLabel(dialog)
-        self.edit_trial_label.setStyleSheet("font: 22pt \"Gabriola\";")
+        self.edit_trial_label.setStyleSheet("font: 22pt \"Arial\";")
         self.edit_trial_label.setObjectName("edit_trial_label")
         self.main_verticalLayout.addWidget(self.edit_trial_label)
         # add a scroll area to edit params of chosen trial

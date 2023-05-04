@@ -73,16 +73,16 @@ class RunningGraphsUi(object):
         self.main_verticalLayout.setObjectName("main_verticalLayout")
         # Set counters: total and success rate
         # self.total_counter_label = QtWidgets.QLabel(dialog)
-        # self.total_counter_label.setStyleSheet("font: 12pt \"Gabriola\";")
+        # self.total_counter_label.setStyleSheet("font: 12pt \"Arial\";")
         # self.total_counter_label.setObjectName("label")
         # self.main_verticalLayout.addWidget(self.total_counter_label)
         # self.success_rate_label = QtWidgets.QLabel(dialog)
-        # self.success_rate_label.setStyleSheet("font: 12pt \"Gabriola\";")
+        # self.success_rate_label.setStyleSheet("font: 12pt \"Arial\";")
         # self.success_rate_label.setObjectName("label_2")
         # self.main_verticalLayout.addWidget(self.success_rate_label)
         # set table for counters
         label = QLabel("Counters:")
-        label.setStyleSheet("font: 12pt \"Gabriola\";")
+        label.setStyleSheet("font: 12pt \"Arial\";")
         self.main_verticalLayout.addWidget(label)  # add a label for the counters
         self.counters_tableWidget = QtWidgets.QTableWidget(dialog)
         self.counters_tableWidget.setObjectName("counters_tableWidget")
@@ -291,7 +291,7 @@ class RunningGraphsUi(object):
         for graph_name, values in graphs.items():
             # add a label for the graph
             label = QLabel(graph_name + ":")
-            label.setStyleSheet("font: 12pt \"Gabriola\";")
+            label.setStyleSheet("font: 12pt \"Arial\";")
             self.graphs_labels.append(label)
             # self.trial_params_labels.append(label)
             self.formLayout.addRow(label)

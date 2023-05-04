@@ -28,7 +28,7 @@
      <item row="0" column="0" colspan="3">
       <widget class="QLabel" name="header_label">
        <property name="styleSheet">
-        <string notr="true">font: 22pt &quot;Gabriola&quot;;</string>
+        <string notr="true">font: 22pt &quot;Arial&quot;;</string>
        </property>
        <property name="text">
         <string>Using ready template</string>
@@ -41,7 +41,7 @@
      <item row="1" column="0">
       <widget class="QRadioButton" name="all_radio_btn">
        <property name="styleSheet">
-        <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+        <string notr="true">font: 12pt &quot;Arial&quot;;</string>
        </property>
        <property name="text">
         <string>All</string>
@@ -93,7 +93,7 @@
      <item row="4" column="0">
       <widget class="QLabel" name="choose_template_label">
        <property name="styleSheet">
-        <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+        <string notr="true">font: 12pt &quot;Arial&quot;;</string>
        </property>
        <property name="text">
         <string>Choose template:</string>
@@ -103,7 +103,7 @@
      <item row="1" column="1">
       <widget class="QRadioButton" name="filter_by_id_radio_btn">
        <property name="styleSheet">
-        <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+        <string notr="true">font: 12pt &quot;Arial&quot;;</string>
        </property>
        <property name="text">
         <string>Filter by subject id</string>

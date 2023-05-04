@@ -43,13 +43,13 @@ class ChooseTemplateUi(object):
         self.central_gridLayout.setObjectName("central_gridLayout")
         # set a header for the window
         self.header_label = QtWidgets.QLabel(dialog)
-        # self.header_label.setStyleSheet("font: 22pt \"Gabriola\";")
+        # self.header_label.setStyleSheet("font: 22pt \"Arial\";")
         self.header_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.header_label.setObjectName("header_label")
         self.central_gridLayout.addWidget(self.header_label, 0, 0, 1, 3)
         # set radio buttons to choose if display all templates or filter
         self.filter_by_subject_id_radioButton = QtWidgets.QRadioButton(dialog)
-        # self.filter_by_subject_id_radioButton.setStyleSheet("font: 12pt \"Gabriola\";")
+        # self.filter_by_subject_id_radioButton.setStyleSheet("font: 12pt \"Arial\";")
         self.filter_by_subject_id_radioButton.setObjectName("filter_by_subject_id_radioButton")
         self.central_gridLayout.addWidget(self.filter_by_subject_id_radioButton, 1, 1, 1, 1)
         self.subject_id_comboBox = QtWidgets.QComboBox(dialog)
@@ -60,7 +60,7 @@ class ChooseTemplateUi(object):
         self.subject_id_comboBox.activated.connect(self.subject_id_click)
         self.central_gridLayout.addWidget(self.subject_id_comboBox, 1, 2, 1, 1)
         self.all_radioButton = QtWidgets.QRadioButton(dialog)
-        # self.all_radioButton.setStyleSheet("font: 12pt \"Gabriola\";")
+        # self.all_radioButton.setStyleSheet("font: 12pt \"Arial\";")
         self.all_radioButton.setObjectName("all_radioButton")
         self.central_gridLayout.addWidget(self.all_radioButton, 1, 0, 1, 1)
         # set a comboBox to hold all the subject ids available in db
@@ -71,7 +71,7 @@ class ChooseTemplateUi(object):
         self.central_gridLayout.addWidget(self.templates_comboBox, 4, 1, 1, 2)
         # create a label to choose a template
         self.choose_template_label = QtWidgets.QLabel(dialog)
-        # self.choose_template_label.setStyleSheet("font: 12pt \"Gabriola\";")
+        # self.choose_template_label.setStyleSheet("font: 12pt \"Arial\";")
         self.choose_template_label.setObjectName("choose_template_label")
         self.central_gridLayout.addWidget(self.choose_template_label, 4, 0, 1, 1)
         # spacer_item = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)

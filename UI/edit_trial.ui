@@ -19,7 +19,7 @@
      <item row="0" column="0" colspan="3">
       <widget class="QLabel" name="edit_trial_label">
        <property name="styleSheet">
-        <string notr="true">font: 22pt &quot;Gabriola&quot;;</string>
+        <string notr="true">font: 22pt &quot;Arial&quot;;</string>
        </property>
        <property name="text">
         <string>Edit trial</string>

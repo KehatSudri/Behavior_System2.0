@@ -42,7 +42,7 @@
           <item>
            <widget class="QLabel" name="random_reward_percent_label">
             <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
             </property>
             <property name="text">
              <string>Random reward percent</string>
@@ -122,7 +122,7 @@
           <item row="2" column="0">
            <widget class="QLabel" name="min_iti_label_3">
             <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
             </property>
             <property name="text">
              <string>min: </string>
@@ -138,7 +138,7 @@
           <item row="4" column="0">
            <widget class="QLabel" name="max_iti_label_3">
             <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
             </property>
             <property name="text">
              <string>max: </string>
@@ -153,7 +153,7 @@
         <item row="0" column="1">
          <widget class="QLabel" name="iti_label_3">
           <property name="styleSheet">
-           <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+           <string notr="true">font: 12pt &quot;Arial&quot;;</string>
           </property>
           <property name="text">
            <string>ITI:</string>
@@ -169,7 +169,7 @@
         <item row="0" column="3">
          <widget class="QLabel" name="end_def_label_3">
           <property name="styleSheet">
-           <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+           <string notr="true">font: 12pt &quot;Arial&quot;;</string>
           </property>
           <property name="text">
            <string>End definition:</string>
@@ -184,7 +184,7 @@
           <item>
            <widget class="QLabel" name="end_by_label_3">
             <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
             </property>
             <property name="text">
              <string>time:</string>
@@ -201,7 +201,7 @@
           <item>
            <widget class="QRadioButton" name="behavior_iti_radioBtn_3">
             <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
             </property>
             <property name="text">
              <string>behavior</string>
@@ -211,7 +211,7 @@
           <item>
            <widget class="QRadioButton" name="random_iti_radioBtn_3">
             <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
             </property>
             <property name="text">
              <string>random</string>
@@ -269,7 +269,7 @@
              </sizepolicy>
             </property>
             <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
             </property>
             <property name="text">
              <string>Order:</string>
@@ -362,7 +362,7 @@
           </property>
           <property name="font">
            <font>
-            <family>Gabriola</family>
+            <family>Arial</family>
             <pointsize>12</pointsize>
             <weight>50</weight>
             <italic>false</italic>
@@ -370,7 +370,7 @@
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+           <string notr="true">font: 12pt &quot;Arial&quot;;</string>
           </property>
           <property name="text">
            <string>Session name:</string>
@@ -402,7 +402,7 @@
            </sizepolicy>
           </property>
           <property name="styleSheet">
-           <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+           <string notr="true">font: 12pt &quot;Arial&quot;;</string>
           </property>
           <property name="text">
            <string>Date:</string>
@@ -421,7 +421,7 @@
            </sizepolicy>
           </property>
           <property name="styleSheet">
-           <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+           <string notr="true">font: 12pt &quot;Arial&quot;;</string>
           </property>
           <property name="text">
            <string>13-April-2022</string>
@@ -461,7 +461,7 @@
         </property>
         <property name="font">
          <font>
-          <family>David</family>
+          <family>Arial</family>
           <pointsize>55</pointsize>
           <weight>50</weight>
           <italic>false</italic>
@@ -481,7 +481,7 @@
          <string/>
         </property>
         <property name="styleSheet">
-         <string notr="true">font: 55pt &quot;David&quot;;</string>
+         <string notr="true">font: 55pt &quot;Arial&quot;;</string>
         </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
@@ -594,7 +594,7 @@
           </property>
           <property name="font">
            <font>
-            <family>Gabriola</family>
+            <family>Arial</family>
             <pointsize>12</pointsize>
             <weight>50</weight>
             <italic>false</italic>
@@ -602,7 +602,7 @@
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+           <string notr="true">font: 12pt &quot;Arial&quot;;</string>
           </property>
           <property name="text">
            <string>Subject ID:     </string>
@@ -634,7 +634,7 @@
            </sizepolicy>
           </property>
           <property name="styleSheet">
-           <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+           <string notr="true">font: 12pt &quot;Arial&quot;;</string>
           </property>
           <property name="text">
            <string>                                      Experimentor name:</string>
@@ -682,7 +682,7 @@
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+           <string notr="true">font: 12pt &quot;Arial&quot;;</string>
           </property>
           <property name="sizeAdjustPolicy">
            <enum>QAbstractScrollArea::AdjustToContents</enum>
@@ -741,7 +741,7 @@
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+           <string notr="true">font: 12pt &quot;Arial&quot;;</string>
           </property>
           <property name="text">
            <string>Trials: </string>

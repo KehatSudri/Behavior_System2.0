@@ -70,7 +70,7 @@ class SettingsUi(object):
         #     self.event_port_tableWidget.setItem(row_position, 4, QTableWidgetItem('False'))
         # set success rate
         # self.success_rate_label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        # self.success_rate_label.setStyleSheet("font: 15pt \"Gabriola\";")
+        # self.success_rate_label.setStyleSheet("font: 15pt \"Arial\";")
         # self.success_rate_label.setObjectName("success_rate_label")
         # self.verticalLayout.addWidget(self.success_rate_label)
         # self.scrollArea.setWidget(self.scrollAreaWidgetContents)

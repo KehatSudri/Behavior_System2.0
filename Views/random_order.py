@@ -47,13 +47,13 @@ class RandomOrderUi(object):
         self.main_window_gridLayout.setObjectName("main_window_gridLayout")
         # an explanation about the window's purpose
         self.explanation_label = QtWidgets.QLabel(dialog)
-        self.explanation_label.setStyleSheet("font: 25pt \"Gabriola\";")
+        self.explanation_label.setStyleSheet("font: 25pt \"Arial\";")
         self.explanation_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.explanation_label.setObjectName("explanation_label")
         self.main_window_gridLayout.addWidget(self.explanation_label, 0, 0, 1, 2)
         # label for choosing number of trials
         self.total_num_of_trials_label = QtWidgets.QLabel(dialog)
-        self.total_num_of_trials_label.setStyleSheet("font: 12pt \"Gabriola\";")
+        self.total_num_of_trials_label.setStyleSheet("font: 12pt \"Arial\";")
         self.total_num_of_trials_label.setObjectName("total_num_of_trials_label")
         self.main_window_gridLayout.addWidget(self.total_num_of_trials_label, 1, 0, 1, 1)
         # add a spinbox button to choose number of trials
@@ -65,7 +65,7 @@ class RandomOrderUi(object):
         self.main_window_gridLayout.addWidget(self.total_num_of_trials_spinBox, 1, 1, 1, 1)
         # a table to hold all tha trials and their percentage in the session
         self.trials_tableWidget = QtWidgets.QTableWidget(dialog)
-        self.trials_tableWidget.setStyleSheet("font: 12pt \"Gabriola\";")
+        self.trials_tableWidget.setStyleSheet("font: 12pt \"Arial\";")
         self.trials_tableWidget.setObjectName("trials_tableWidget")
         self.trials_tableWidget.setColumnCount(3)
         self.trials_tableWidget.setRowCount(0)

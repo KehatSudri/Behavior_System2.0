@@ -43,7 +43,7 @@
       </property>
       <property name="font">
        <font>
-        <family>Gabriola</family>
+        <family>Arial</family>
         <pointsize>45</pointsize>
         <weight>50</weight>
         <italic>false</italic>
@@ -63,7 +63,7 @@
        <string/>
       </property>
       <property name="styleSheet">
-       <string notr="true">font: 45pt &quot;Gabriola&quot;;</string>
+       <string notr="true">font: 45pt &quot;Arial&quot;;</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
@@ -104,7 +104,7 @@
      <widget class="QScrollArea" name="scrollArea">
       <property name="font">
        <font>
-        <family>Gabriola</family>
+        <family>Arial</family>
         <pointsize>15</pointsize>
        </font>
       </property>
