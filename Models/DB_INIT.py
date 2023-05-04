@@ -368,7 +368,7 @@ class DB:
 
 
 commands = (
-    """CREATE TABLE IF NOT EXISTS public.Events (
+    """CREATE TABLE IF NOT EXISTS public.events (
         port VARCHAR(50) PRIMARY KEY,
         name VARCHAR(100) UNIQUE,
         type VARCHAR(10),
@@ -377,37 +377,37 @@ commands = (
         CONSTRAINT type_ck CHECK (type in ('input', 'output')),
         CONSTRAINT format_ck CHECK (format in ('analog', 'digital')))""",
 
-    """CREATE TABLE IF NOT EXISTS public.Events_to_trials (
-        event_name VARCHAR(100) REFERENCES Events(name),
-        trial_name VARCHAR(255) REFERENCES Trials(name),
-        is_contingent BOOLEAN DEFAULT false,
-        contingent_on VARCHAR(100) REFERENCES Events(name),
-        constraint Events_to_trials_pkey PRIMARY KEY (event_name,trial_name,is_contingent,contingent_on))""",
-
-    """CREATE TABLE IF NOT EXISTS public.Sessions(
+    """CREATE TABLE IF NOT EXISTS public.trials (
         id SERIAL PRIMARY KEY,
-        name VARCHAR(255),
+        name VARCHAR(255) UNIQUE)""",
+    
+    """CREATE TABLE IF NOT EXISTS public.sessions(
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) UNIQUE,
         subjectID VARCHAR(100),
         experimenter_name VARCHAR(100),
         iti_type VARCHAR(20) NOT NULL,
         iti_min_range integer,
         iti_max_range integer,
         trials_order VARCHAR(10) CHECK (type in ('serial', 'random')),
-        last_used DATE NOT NULL""",
+        last_used DATE NOT NULL)""",
 
-    """CREATE TABLE IF NOT EXISTS public.Session_to_trials(
+    """CREATE TABLE IF NOT EXISTS public.events_to_trials (
+        event_name VARCHAR(100) REFERENCES events(name),
+        trial_name VARCHAR(255) REFERENCES trials(name),
+        is_contingent BOOLEAN DEFAULT false,
+        contingent_on VARCHAR(100) REFERENCES Events(name),
+        constraint Events_to_trials_pkey PRIMARY KEY (event_name,trial_name,is_contingent,contingent_on))""",
+
+    """CREATE TABLE IF NOT EXISTS public.session_to_trials(
         id SERIAL PRIMARY KEY,
-        session_id integer REFERENCES Sessions,
-        trial_id integer REFERENCES Trials""",
+        session_id integer REFERENCES sessions,
+        trial_id integer REFERENCES Trials)""",
 
     """CREATE TABLE IF NOT EXISTS public.Subject_to_session(
         subject_id VARCHAR(100) NOT NULL,
-        session_id INTEGER REFERENCES Sessions,
+        session_id INTEGER REFERENCES sessions,
         counter INTEGER,
         last_used DATE NOT NULL,
-        constraint Subject_to_session_pkey PRIMARY KEY (subject_id, session_id))""",
-
-    """CREATE TABLE IF NOT EXISTS public.Trials (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL)"""
+        constraint Subject_to_session_pkey PRIMARY KEY (subject_id, session_id))"""
 )
