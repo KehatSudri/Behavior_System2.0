@@ -47,17 +47,18 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         else:
             config_path = str(Path(__file__).parent.parent / 'config_files')
             log_path = str(Path(__file__).parent.parent / 'logs')
-            database_path = str(Path(__file__).parent.parent / 'config_files' / 'database.ini')
-            settings_path = str(Path(__file__).parent.parent / 'config_files' / 'settings.txt')
+            database_path = config_path + '/database.ini'
+            settings_path = config_path + '/settings.txt'
             if not os.path.exists(config_path):
                 os.makedirs(config_path)
+            if not os.path.exists(log_path):
                 os.makedirs(log_path)
             if not os.path.exists(database_path):
                 with open(database_path, 'x') as f:
                     f.write('[postgresql]\nhost=localhost\ndatabase=Behavior_sys\nuser=postgres\npassword=doc417')
             if not os.path.exists(settings_path):
-                with open(settings_path, 'x') as g:
-                    g.write(
+                with open(settings_path, 'x') as f:
+                    f.write(
                         f'log file location={log_path}\nmax number of successive trials=100\nmax trial length=60000')
             self.settings_file = settings_path
             self.db_config_file_path = database_path
