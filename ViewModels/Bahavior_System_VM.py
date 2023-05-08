@@ -250,14 +250,14 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
         self.model.set_settings(log_file_path, db_file_path, db_section, max_successive_trials, max_length_trials,
                                 e_2_p)
 
-    def insert_hardware_event_to_DB(self, name, port, in_out, dig_an, is_rew):
-        self.model.insert_hardware_event_to_DB(name, port, in_out, dig_an, is_rew)
+    def insert_hardware_event_to_DB(self, port, name, type, format, is_reward):
+        self.model.insert_hardware_event_to_DB(port, name, type, format, is_reward)
 
     def verify_insert_hardware_event(self, name, port, in_out, dig_an, is_rew):
         return self.model.verify_insert_hardware_event(name, port, in_out, dig_an, is_rew)
 
-    def add_trial_type(self, name, events):
-        self.model.add_trial_type(name, events)
+    def add_trial(self, name):
+        self.model.add_trial(name)
 
     def events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
         self.model.events_to_trials(trial_name, event_name, is_contingent, contingent_on)

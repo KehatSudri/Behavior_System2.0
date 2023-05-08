@@ -139,8 +139,8 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         events_names = self.db.get_hardware_events_byname()
         return events_names
 
-    def insert_hardware_event_to_DB(self, name, port, in_out, dig_an, is_rew):
-        self.db.insert_hardware_event(name, port, in_out, dig_an, is_rew)
+    def insert_hardware_event_to_DB(self, port, name, type, format, is_reward):
+        self.db.insert_hardware_event(port, name, type, format, is_reward)
         # self.get_hardware_events_from_DB()
 
     # def parse_ports(self):
@@ -808,11 +808,8 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         # use the path to save all details in the specific format
         pass
 
-    def add_trial_type(self, name, events):
-        events_str = ""
-        for e in events:
-            events_str += e + ","
-        self.db.insert_trial_type(name, events_str)
+    def add_trial(self, name):
+        self.db.insert_trial_type(name)
 
     def events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
         self.db.events_to_trials(trial_name, event_name, is_contingent, contingent_on)
