@@ -36,7 +36,7 @@ class CreateEventUi(object):
         self.is_reward_comboBox = main_window.findChild(QtWidgets.QComboBox, 'is_reward_comboBox')
         self.is_reward_comboBox.setEnabled(False)
         self.output_radio_btn.toggled.connect(
-            lambda:self.input_event_conf())
+            lambda: self.input_event_conf())
         self.analog_radio_btn = main_window.findChild(QtWidgets.QRadioButton, 'analog_radio_btn')
         self.digital_radio_btn = main_window.findChild(QtWidgets.QRadioButton, 'digital_radio_btn')
         digital_description_label = main_window.findChild(QtWidgets.QLabel, 'digital_description_label')
@@ -56,38 +56,41 @@ class CreateEventUi(object):
         self.is_reward_comboBox.setEnabled(not self.input_radio_btn.isChecked())
         self.analog_radio_btn.setEnabled(not self.input_radio_btn.isChecked())
         self.digital_radio_btn.setEnabled(not self.input_radio_btn.isChecked())
-    def cretae_event(self):
-        io_btn_val = ""
-        if self.input_radio_btn.isChecked():
-            io_btn_val = self.input_radio_btn.text()
-        elif self.output_radio_btn.isChecked():
-            io_btn_val = self.output_radio_btn.text()
 
-        analog_digital_val = None
-        if self.analog_radio_btn.isChecked():
-            analog_digital_val = self.analog_radio_btn.text()
-        elif self.digital_radio_btn.isChecked():
-            analog_digital_val = self.digital_radio_btn.text()
+    def cretae_event(self):
+        type = ""
         if self.input_radio_btn.isChecked():
-            analog_digital_val = None
-        if self.event_name_lineEdit.text() == "" or self.event_port_lineEdit.text() == "" or io_btn_val == "":
+            type = self.input_radio_btn.text()
+        elif self.output_radio_btn.isChecked():
+            type = self.output_radio_btn.text()
+
+        format = None
+        if self.analog_radio_btn.isChecked():
+            format = self.analog_radio_btn.text()
+        elif self.digital_radio_btn.isChecked():
+            format = self.digital_radio_btn.text()
+        if self.input_radio_btn.isChecked():
+            format = None
+        if self.event_name_lineEdit.text() == "" or self.event_port_lineEdit.text() == "" or type == "":
             error_warning("not all data is filled")
             return
-        error_value = self.vm.verify_insert_hardware_event(self.event_name_lineEdit.text(), self.event_port_lineEdit.text(),
-                                             io_btn_val,
-                                             analog_digital_val,
-                                             str(self.is_reward_comboBox.currentText() == "Yes"))
+
+        error_value = self.vm.verify_insert_hardware_event(
+            self.event_port_lineEdit.text(),
+            self.event_name_lineEdit.text(),
+            type,
+            format,
+            str(self.is_reward_comboBox.currentText() == "Yes"))
         if error_value == -1:
             error_warning("Event name already exist")
             return
-        # this check cancelled
-        #elif not error_value == 0:
-        #    error_warning(f'There is already event with these parameters called "{error_value}"')
-        #    return
-        self.vm.insert_hardware_event_to_DB(self.event_name_lineEdit.text(), self.event_port_lineEdit.text(),
-                                            io_btn_val,
-                                            analog_digital_val,
-                                            str(self.is_reward_comboBox.currentText() == "Yes" and not self.input_radio_btn.isChecked() ) )
+
+        self.vm.insert_hardware_event_to_DB(
+            self.event_port_lineEdit.text(),
+            self.event_name_lineEdit.text(),
+            type,
+            format,
+            str(self.is_reward_comboBox.currentText() == "Yes" and not self.input_radio_btn.isChecked()))
 
         notification("Event was created")
 
