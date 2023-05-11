@@ -153,9 +153,9 @@ class CreateTrialTypeUi(object):
                 if item is not None:
                     row_items.append(item.text())
             if row_items[1] == "Contingent":
-                self.parent.vm.events_to_trials(name, row_items[0], True, row_items[2])
+                self.parent.vm.insert_new_events_to_trials(name, row_items[0], True, row_items[2])
             else:
-                self.parent.vm.events_to_trials(name, row_items[0], False, None)
+                self.parent.vm.insert_new_events_to_trials(name, row_items[0], False, None)
         msgBox.setText("The trial was created successfully.")
         msgBox.exec()
         self.trial_type_name_lineEdit.clear()
@@ -167,7 +167,7 @@ class CreateTrialTypeUi(object):
     def simple_event_handler(self):
         self.contingent_comboBox.setEnabled(False)
         self.conti_label.setEnabled(False)
-        if self.vm.is_input_event(self.events_comboBox.currentText()):
+        if not self.vm.is_input_event(self.events_comboBox.currentText()):
             self.random_comboBox.setEnabled(True)
             self.frequency_line_edit.setEnabled(True)
 
