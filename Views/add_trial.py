@@ -81,12 +81,6 @@ class AddTrialUi(object):
             # is_contingent = self.vm.is_contingent(
             #     event_name,self.parent.chosen_trial_type_name)[0]
 
-            is_input_event =False
-            if self.vm.is_input_event(event_name)[0]=="Input":
-                is_input_event= True
-
-
-
             #if not is_contingent:
                 # add a label for the event name
             bold_font = QtGui.QFont()
@@ -98,7 +92,7 @@ class AddTrialUi(object):
             formLayout.addRow(label)
 
             # add line edit accordingly for the parameters
-            self.set_trial_form_handler(event_name, is_input_event)
+            self.set_trial_form_handler(event_name, self.vm.is_input_event(event_name))
             # if not i == len(events_name) - 1:
             #     delay_label = QLabel("Delay")
             #     delay_label.setFont(bold_font)
