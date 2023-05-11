@@ -177,27 +177,18 @@ class DeleteTrialTypeUi(object):
     #                                                  QTableWidgetItem(dict_yaml_style(self.trial_types[trial_name])))
 
     def on_remove_click(self):
-        dlg = WarningDialog()
-        if dlg.exec():  # ok case
-            is_not_empty = len(self.trial_types) > 0
-            is_row_selected = self.trial_types_tableWidget.currentRow() != -1
-            if is_not_empty and is_row_selected:
-                # get the chosen block's row and remove it
-                index = self.trial_types_tableWidget.currentRow()
+        is_not_empty = len(self.trial_types) > 0
+        chosen_row = self.table.currentRow()
+        is_row_selected = chosen_row != -1
+        if is_not_empty and is_row_selected:
+            # get the chosen block's row and remove it
+            del self.trial_types[chosen_row]
+            self.table.removeRow(chosen_row)
+        elif is_not_empty:
+            error_warning("Please select a trial.")
+        else:
+            error_warning("There are no trial types in the system.")
 
-                self.selected_trial_type = list(self.trial_types.keys())[index]
-                if self.vm.delete_trial_type(self.selected_trial_type) == -1:  # update db
-                    error_warning("trial cannot be deleted: relevant for saved session templates")
-                else:
-                    self.trial_types_tableWidget.removeRow(index)
-                # set current row to be unselected
-                self.trial_types_tableWidget.setCurrentCell(-1, self.trial_types_tableWidget.currentColumn())
-            elif is_not_empty:
-                error_warning("There are no trial types in the system.")
-            else:
-                error_warning("A trial type is not selected.")
-        else:  # cancel case
-            pass
 
     def on_back_click(self):
         if not self.is_error:

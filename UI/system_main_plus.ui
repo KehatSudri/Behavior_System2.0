@@ -57,7 +57,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Delete trial type(should remove)</string>
+             <string>Delete trial</string>
             </property>
            </widget>
           </item>

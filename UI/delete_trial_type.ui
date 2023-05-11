@@ -78,7 +78,7 @@
        <number>0</number>
       </property>
       <property name="text">
-       <string>Delete trial type</string>
+       <string>Delete trial</string>
       </property>
       <property name="scaledContents">
        <bool>false</bool>
