@@ -220,7 +220,7 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
         self.model.set_trials_list(trials)
 
     def connect_to_DB(self):
-        self.model.connect_to_DB()
+        self.model.connect_to_db()
 
     def get_template_list_by_date_exp_sess_names(self):
         return self.model.get_template_list_by_date_exp_sess_names()
@@ -243,8 +243,8 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
     def get_event_list_for_sess(self):
         return self.model.get_event_list_for_sess()
 
-    def insert_trial_type(self, name, events):
-        self.insert_trial_type(name, events)
+    def insert_new_trial(self, name):
+        self.insert_new_trial(name)
 
     def set_settings(self, log_file_path, db_file_path, db_section, max_successive_trials, max_length_trials,
                      e_2_p=None):
@@ -257,8 +257,8 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
     def verify_insert_hardware_event(self, name, port, in_out, dig_an, is_rew):
         return self.model.verify_insert_hardware_event(name, port, in_out, dig_an, is_rew)
 
-    def add_trial(self, name):
-        self.model.add_trial(name)
+    def insert_new_trial(self, name):
+        self.model.insert_new_trial(name)
 
     def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
         self.model.insert_new_events_to_trials(trial_name, event_name, is_contingent, contingent_on)

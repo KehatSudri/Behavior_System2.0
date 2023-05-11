@@ -145,7 +145,7 @@ class CreateTrialTypeUi(object):
         #     msgBox.exec()
         #     return
 
-        self.parent.vm.add_trial(name)
+        self.parent.vm.insert_new_trial(name)
         for row in range(self.events_tableWidget.rowCount()):
             row_items = []
             for col in range(self.events_tableWidget.columnCount()):
