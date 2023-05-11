@@ -205,7 +205,7 @@ class DB:
 
     def get_ports(self, trial_name):
         with self.conn.cursor() as cur:
-            temp = f"SELECT port, type, name FROM events, insert_new_events_to_trials WHERE name = event_name AND " \
+            temp = f"SELECT port, type, name FROM events, events_to_trials WHERE name = event_name AND " \
                    f"trial_name = '{trial_name}'"
             cur.execute(temp)
             ports = cur.fetchall()
@@ -213,7 +213,7 @@ class DB:
 
     def get_dependencies(self, trial_name):
         with self.conn.cursor() as cur:
-            temp = f"SELECT h1.port, h2.port FROM events as h1, events as h2, insert_new_events_to_trials WHERE h1.name = " \
+            temp = f"SELECT h1.port, h2.port FROM events as h1, events as h2, events_to_trials WHERE h1.name = " \
                    f"event_name AND h2.name = contingent_on AND contingent_on IS NOT NULL AND trial_name = '{trial_name}'"
             cur.execute(temp)
             dependencies = cur.fetchall()
