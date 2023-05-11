@@ -162,6 +162,11 @@
               <verstretch>100</verstretch>
              </sizepolicy>
             </property>
+            <column>
+             <property name="text">
+              <string>Trial name</string>
+             </property>
+            </column>
            </widget>
           </item>
          </layout>

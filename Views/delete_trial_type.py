@@ -27,6 +27,7 @@ class WarningDialog(QDialog):
 
 class DeleteTrialTypeUi(object):
     def __init__(self, parent):
+        self.table = None
         self.parent = parent
         self.vm = self.parent.vm
         self.vm.sessionVM.property_changed += self.EventHandler
@@ -56,6 +57,13 @@ class DeleteTrialTypeUi(object):
 
         self.back_pushButton = main_window.findChild(QPushButton, 'back_pushButton')
         self.back_pushButton.clicked.connect(self.on_back_click)
+        self.table = main_window.findChild(QtWidgets.QTableWidget, 'trial_types_tableWidget')
+        for row, data in enumerate(self.trial_types):
+            self.table.insertRow(row)
+            self.table.setItem(row, 0, QtWidgets.QTableWidgetItem(data))
+        self.remove_pushButton=main_window.findChild(QPushButton, 'remove_pushButton')
+        self.remove_pushButton.clicked.connect(self.on_remove_click)
+
         return
         self.parent.main_window.hide()
         main_window.setObjectName("main_window")
@@ -158,15 +166,15 @@ class DeleteTrialTypeUi(object):
             bool(self.trial_types_tableWidget.selectionModel().selectedRows())
         )
 
-    def set_table(self):
-        num_trial_types = len(self.trial_types)
-        self.trial_types_tableWidget.setRowCount(num_trial_types)
-        if num_trial_types != 0:
-            for i in range(num_trial_types):
-                trial_name = [*self.trial_types.keys()][i]
-                self.trial_types_tableWidget.setItem(i, 0, QTableWidgetItem(trial_name))
-                self.trial_types_tableWidget.setItem(i, 1,
-                                                     QTableWidgetItem(dict_yaml_style(self.trial_types[trial_name])))
+    # def set_table(self):
+    #     num_trial_types = len(self.trial_types)
+    #     self.trial_types_tableWidget.setRowCount(num_trial_types)
+    #     if num_trial_types != 0:
+    #         for i in range(num_trial_types):
+    #             trial_name = [*self.trial_types.keys()][i]
+    #             self.trial_types_tableWidget.setItem(i, 0, QTableWidgetItem(trial_name))
+    #             self.trial_types_tableWidget.setItem(i, 1,
+    #                                                  QTableWidgetItem(dict_yaml_style(self.trial_types[trial_name])))
 
     def on_remove_click(self):
         dlg = WarningDialog()

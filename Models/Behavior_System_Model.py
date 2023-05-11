@@ -624,55 +624,61 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         return Trial.Trials_def_blocks(trial_list=list_trials, block_list=block_list, prcnt_per_block=percent_per_block)
 
     def get_list_trials_types_def(self):  # TODO change
-        trials = OrderedDict()
-        if self._trial_types is None:
-            self.get_trial_types_from_DB()
-        for trial in self._trial_types:
-            # trial_id = trial[0]
-            name = trial[1]
-            events = trial[2].split(",")[:-1]
-            event_dict = OrderedDict()
-            # param_list = []
-            intervals_count = 0
-            intervals_params = ["min", "max"]
-            for e in events:
-                # get event type, then get it's parameters
-                class_str = "Models.TrialEvents." + e
-                try:
-                    module_path, class_name = class_str.rsplit('.', 1)
-                    module = import_module(module_path)
-                    kclass = getattr(module, class_name)
-
-                    # param_list.extend(kclass.get_list_params())
-                    param_list = kclass.get_list_params()
-                    # check if same type exists:
-                    if e in event_dict.keys():  # this kind of event already exists
-                        # find the maximum of this kind of event
-                        max_num = 1
-                        for key in event_dict.keys():
-                            if e in key:
-                                # split string to get number
-                                tmp = key.split("#")
-                                if len(tmp) == 1:
-                                    continue
-                                # get the maximum
-                                if int(tmp[1]) > max_num:
-                                    max_num = int(tmp[1])
-                        max_num += 1
-                        e = e + "#" + str(max_num)
-                    if intervals_count > 0:
-                        if intervals_count == 1:
-                            event_dict["interval"] = intervals_params
-                        else:
-                            event_dict["interval#" + str(intervals_count)] = intervals_params
-                    event_dict[e] = param_list
-                    intervals_count += 1
-
-                except (ImportError, AttributeError):
-                    raise ImportError(class_str)
-
-            trials[name] = event_dict
-        return trials
+        trials = self.get_trial_types_from_DB()
+        trials_name_list=[]
+        for trial in trials :
+            trials_name_list.append(trial[1])
+        return trials_name_list
+    # def get_list_trials_types_def(self):
+    #     trials = OrderedDict()
+    #     if self._trial_types is None:
+    #         self.get_trial_types_from_DB()
+    #     for trial in self._trial_types:
+    #         # trial_id = trial[0]
+    #         name = trial[1]
+    #         events = trial[2].split(",")[:-1]
+    #         event_dict = OrderedDict()
+    #         # param_list = []
+    #         intervals_count = 0
+    #         intervals_params = ["min", "max"]
+    #         for e in events:
+    #             # get event type, then get it's parameters
+    #             class_str = "Models.TrialEvents." + e
+    #             try:
+    #                 module_path, class_name = class_str.rsplit('.', 1)
+    #                 module = import_module(module_path)
+    #                 kclass = getattr(module, class_name)
+    #
+    #                 # param_list.extend(kclass.get_list_params())
+    #                 param_list = kclass.get_list_params()
+    #                 # check if same type exists:
+    #                 if e in event_dict.keys():  # this kind of event already exists
+    #                     # find the maximum of this kind of event
+    #                     max_num = 1
+    #                     for key in event_dict.keys():
+    #                         if e in key:
+    #                             # split string to get number
+    #                             tmp = key.split("#")
+    #                             if len(tmp) == 1:
+    #                                 continue
+    #                             # get the maximum
+    #                             if int(tmp[1]) > max_num:
+    #                                 max_num = int(tmp[1])
+    #                     max_num += 1
+    #                     e = e + "#" + str(max_num)
+    #                 if intervals_count > 0:
+    #                     if intervals_count == 1:
+    #                         event_dict["interval"] = intervals_params
+    #                     else:
+    #                         event_dict["interval#" + str(intervals_count)] = intervals_params
+    #                 event_dict[e] = param_list
+    #                 intervals_count += 1
+    #
+    #             except (ImportError, AttributeError):
+    #                 raise ImportError(class_str)
+    #
+    #         trials[name] = event_dict
+    #     return trials
 
     # def get_trial_names(self):
     #     trials = []
