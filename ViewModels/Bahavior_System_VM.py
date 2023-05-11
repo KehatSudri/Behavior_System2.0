@@ -260,8 +260,8 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
     def add_trial(self, name):
         self.model.add_trial(name)
 
-    def events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
-        self.model.events_to_trials(trial_name, event_name, is_contingent, contingent_on)
+    def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
+        self.model.insert_new_events_to_trials(trial_name, event_name, is_contingent, contingent_on)
 
     def verify_trial_insert(self, name, events):
         return self.model.verify_trial_insert(name, events)

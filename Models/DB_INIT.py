@@ -107,12 +107,13 @@ class DB:
         except Exception:
             return -1
 
-    def events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
-        sql = """INSERT INTO events_to_trials(trial_name,event_name ,iscontigent,contingent_on) VALUES (%s,%s,%s,%s)"""
-        cur = self.conn.cursor()
-        cur.execute(sql, (trial_name, event_name, is_contingent, contingent_on,))
-        cur.close()
-        self.conn.commit()
+    def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
+        sql = """INSERT INTO events_to_trials(event_name, trial_name, is_contingent, contingent_on) VALUES (%s,%s,%s,%s)"""
+        print(f"{trial_name} {event_name} {is_contingent} {contingent_on}")
+        with self.conn.cursor() as cur:
+            cur.execute(sql, (event_name, trial_name, is_contingent, contingent_on,))
+            cur.close()
+            self.conn.commit()
 
     def insert_session_trials(self, session_id, trial_type_id, percent_in_session=None,
                               percent_in_block=None, block_number=None, event_list=None, interval_list=None):
@@ -204,7 +205,7 @@ class DB:
 
     def get_ports(self, trial_name):
         with self.conn.cursor() as cur:
-            temp = f"SELECT port, type, name FROM events, events_to_trials WHERE name = event_name AND " \
+            temp = f"SELECT port, type, name FROM events, insert_new_events_to_trials WHERE name = event_name AND " \
                    f"trial_name = '{trial_name}'"
             cur.execute(temp)
             ports = cur.fetchall()
@@ -212,7 +213,7 @@ class DB:
 
     def get_dependencies(self, trial_name):
         with self.conn.cursor() as cur:
-            temp = f"SELECT h1.port, h2.port FROM events as h1, events as h2, events_to_trials WHERE h1.name = " \
+            temp = f"SELECT h1.port, h2.port FROM events as h1, events as h2, insert_new_events_to_trials WHERE h1.name = " \
                    f"event_name AND h2.name = contingent_on AND contingent_on IS NOT NULL AND trial_name = '{trial_name}'"
             cur.execute(temp)
             dependencies = cur.fetchall()
@@ -239,7 +240,7 @@ class DB:
 
     def get_events_by_trial_name(self, trial):
         with self.conn.cursor() as cur:
-            cur.execute(f"SELECT events FROM trialTypes WHERE trial_name = '{trial}'")
+            cur.execute(f"SELECT event_name FROM events_to_trials WHERE trial_name = '{trial}'")
             events = cur.fetchone()
         return events
 
@@ -294,13 +295,13 @@ class DB:
     def update_trial_type(self, type_id, name=None, events=None):
         cur = self.conn.cursor()
         if name is not None and events is not None:
-            sql = """UPDATE trialTypes SET trial_name=%s, events=%s WHERE type_id=%s"""
+            sql = """UPDATE trials SET trial_name=%s, events=%s WHERE type_id=%s"""
             cur.execute(sql, (name, events, type_id,))
         elif name is not None:
-            sql = """UPDATE trialTypes SET trial_name=%s WHERE type_id=%s"""
+            sql = """UPDATE trials SET trial_name=%s WHERE type_id=%s"""
             cur.execute(sql, (name, type_id,))
         else:
-            sql = """UPDATE trialTypes SET events=%s WHERE type_id=%s"""
+            sql = """UPDATE trials SET events=%s WHERE type_id=%s"""
             cur.execute(sql, (events, type_id,))
         self.conn.commit()
         cur.close()
@@ -309,7 +310,7 @@ class DB:
     def delete_trial_type(self, type_id):
         try:
             with self.conn.cursor() as cur:
-                cur.execute(f'DELETE FROM trialTypes WHERE type_id={type_id}')
+                cur.execute(f'DELETE FROM trials WHERE type_id={type_id}')
                 self.conn.commit()
             return 0
         except Exception:
@@ -337,7 +338,7 @@ class DB:
 
     def is_contingent(self, event, trial):
         with self.conn.cursor() as cur:
-            cur.execute(f"SELECT iscontigent FROM events_to_trials WHERE event_name='{event}' AND trial_name='{trial}'")
+            cur.execute(f"SELECT iscontigent FROM insert_new_events_to_trials WHERE event_name='{event}' AND trial_name='{trial}'")
             isContingent = cur.fetchone()
         return isContingent
 
@@ -395,11 +396,11 @@ commands = (
         CONSTRAINT trials_order_ck CHECK (trials_order in ('Serial', 'Random')))""",
 
     """CREATE TABLE IF NOT EXISTS public.events_to_trials (
+        id SERIAL PRIMARY KEY,
         event_name VARCHAR(100) REFERENCES events(name),
         trial_name VARCHAR(255) REFERENCES trials(name),
         is_contingent BOOLEAN DEFAULT false,
-        contingent_on VARCHAR(100) REFERENCES events(name),
-        constraint Events_to_trials_pkey PRIMARY KEY (event_name,trial_name,is_contingent,contingent_on))""",
+        contingent_on VARCHAR(100) NULL)""",
 
     """CREATE TABLE IF NOT EXISTS public.session_to_trials(
         id SERIAL PRIMARY KEY,
