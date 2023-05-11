@@ -1,17 +1,13 @@
 import datetime
 import logging
 import sys
-
 import psycopg2
 from configparser import ConfigParser
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
-
 def config(filename):
     section = 'postgresql'
-    # create a parser
     parser = ConfigParser()
-    # read config file
     parser.read(filename)
 
     # get section, default to postgresql
@@ -21,8 +17,7 @@ def config(filename):
         for param in params:
             db[param[0]] = param[1]
     else:
-        raise Exception(f'Section "postgresql" not found in file'.format(section, filename))
-
+        raise Exception(f'Section "postgresql" not found in file: {format(section, filename)}')
     return db
 
 
@@ -39,14 +34,15 @@ class DB:
         self.disconnect()
         self.connect(db_config)
         self.create_tables()
+        self.insert_mock_events()
 
     def connect(self, params):
-        """ Connect to the PostgreSQL database server """
+        """ Connect to the PostgresSQL database server """
         try:
-            # connect to the PostgreSQL server
+            # connect to the PostgresSQL server
             self.conn = psycopg2.connect(**params)
         except (Exception, psycopg2.DatabaseError) as error:
-            logging.error(f'{error}')
+            logging.error(error)
             sys.exit()
 
     def disconnect(self):
@@ -59,8 +55,6 @@ class DB:
             exists = cur.fetchone()
             if exists is None:
                 cur.execute('CREATE DATABASE "Behavior_sys"')
-            else:
-                pass
 
     def create_tables(self):
         with self.conn.cursor() as cur:
@@ -68,13 +62,19 @@ class DB:
                 cur.execute(command)
             self.conn.commit()
 
+    def insert_mock_events(self):
+        sql = """INSERT INTO events(port, name, type, format, is_reward) VALUES (%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"""
+        with self.conn.cursor() as cur:
+            cur.execute(sql, ("Dev1/ao0", "serialOutputMock", "Output", "Analog", False))
+            cur.execute(sql, ("Dev1/ao1", "outputMock", "Output", "Analog", False))
+            cur.execute(sql, ("Dev1/a11", "inputMock", "Input", "Analog", False))
+            self.conn.commit()
+
     def insert_hardware_event(self, name, port, type, format, is_reward):
         sql = """INSERT INTO events(port, name, type, format, is_reward) VALUES (%s,%s,%s,%s,%s)"""
         with self.conn.cursor() as cur:
             cur.execute(sql, (name, port, type, format, is_reward))
-            #e_id = cur.fetchone()[0]
             self.conn.commit()
-        #return e_id
 
     def insert_session(self, iti_type, end_def, end_val, trials_order, iti_min_range=None, iti_max_range=None,
                        iti_behave_def=None, total_num=None, block_size=None, blocks_ord=None, sess_name=None,
@@ -97,22 +97,15 @@ class DB:
         except Exception:
             return -1
 
-    def insert_trial_type(self, name):
+    def insert_new_trial(self, name):
         sql = """INSERT INTO trials(name) VALUES (%s)"""
-        try:
-            with self.conn.cursor() as cur:
-                cur.execute(sql, name)
-                self.conn.commit()
-            return 0
-        except Exception:
-            return -1
+        with self.conn.cursor() as cur:
+            cur.execute(sql, (name, ))
 
     def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
         sql = """INSERT INTO events_to_trials(event_name, trial_name, is_contingent, contingent_on) VALUES (%s,%s,%s,%s)"""
-        print(f"{trial_name} {event_name} {is_contingent} {contingent_on}")
         with self.conn.cursor() as cur:
-            cur.execute(sql, (event_name, trial_name, is_contingent, contingent_on,))
-            cur.close()
+            cur.execute(sql, (event_name, trial_name, is_contingent, contingent_on, ))
             self.conn.commit()
 
     def insert_session_trials(self, session_id, trial_type_id, percent_in_session=None,
@@ -308,13 +301,9 @@ class DB:
 
     # TODO validate this functions
     def delete_trial_type(self, type_id):
-        try:
-            with self.conn.cursor() as cur:
-                cur.execute(f'DELETE FROM trials WHERE type_id={type_id}')
-                self.conn.commit()
-            return 0
-        except Exception:
-            return -1
+        with self.conn.cursor() as cur:
+            cur.execute(f'DELETE FROM trials WHERE type_id={type_id}')
+            self.conn.commit()
 
     # TODO validate this functions
     def delete_template(self, temp_id):
@@ -330,15 +319,13 @@ class DB:
 
     # TODO validate this functions
     def delete_subject_session(self, sub_id, sess_id):
-        cur = self.conn.cursor()
-        # delete session subjects
-        cur.execute("DELETE FROM subjectSession WHERE session_id=%s, subject_id=%s", (sess_id, sub_id))
-        self.conn.commit()
-        cur.close()
+        with self.conn.cursor() as cur:
+            cur.execute("DELETE FROM subjectSession WHERE session_id=%s, subject_id=%s", (sess_id, sub_id))
+            self.conn.commit()
 
     def is_contingent(self, event, trial):
         with self.conn.cursor() as cur:
-            cur.execute(f"SELECT iscontigent FROM insert_new_events_to_trials WHERE event_name='{event}' AND trial_name='{trial}'")
+            cur.execute(f"SELECT is_contingent FROM events_to_trials WHERE event_name='{event}' AND trial_name='{trial}'")
             isContingent = cur.fetchone()
         return isContingent
 

@@ -59,18 +59,18 @@ class CreateEventUi(object):
 
     def cretae_event(self):
         type = ""
+        format = None
         if self.input_radio_btn.isChecked():
             type = self.input_radio_btn.text()
+            format = "Analog"
         elif self.output_radio_btn.isChecked():
             type = self.output_radio_btn.text()
 
-        format = None
         if self.analog_radio_btn.isChecked():
             format = self.analog_radio_btn.text()
         elif self.digital_radio_btn.isChecked():
             format = self.digital_radio_btn.text()
-        if self.input_radio_btn.isChecked():
-            format = None
+
         if self.event_name_lineEdit.text() == "" or self.event_port_lineEdit.text() == "" or type == "":
             error_warning("not all data is filled")
             return
