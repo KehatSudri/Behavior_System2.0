@@ -241,7 +241,7 @@ class DB:
     def get_events_by_trial_name(self, trial):
         with self.conn.cursor() as cur:
             cur.execute(f"SELECT event_name FROM events_to_trials WHERE trial_name = '{trial}'")
-            events = cur.fetchone()
+            events = cur.fetchall()
         return events
 
     def get_all_events(self):
