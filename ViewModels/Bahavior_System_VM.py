@@ -188,12 +188,13 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
 
     def get_trial_names(self):
         return self.model.get_trials_names()
-    def get_ports(self,trial_mame):
+
+    def get_ports(self, trial_mame):
         return self.model.get_ports(trial_mame)
 
-
-    def get_dependencies(self,trial_mame):
+    def get_dependencies(self, trial_mame):
         return self.model.get_dependencies(trial_mame)
+
     def get_list_trials_types_def(self):
         return self.model.get_list_trials_types_def()
 
@@ -286,9 +287,9 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
             # change the property
             # self.is_running_session = self.model.is_running_session #is this necessary or it updates on its own
             self.notifyPropertyChanged("VM_" + event_args[0][0])
-    def is_contingent(self, event,trial):
-        return self.model.is_contingent(event,trial)
 
-    def is_input_event(self,event):
+    def is_contingent(self, event, trial):
+        return self.model.is_contingent(event, trial)
+
+    def is_input_event(self, event):
         return self.model.is_input_event(event)
-

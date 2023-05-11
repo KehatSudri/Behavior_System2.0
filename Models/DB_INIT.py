@@ -343,9 +343,9 @@ class DB:
 
     def is_input_event(self, name):
         with self.conn.cursor() as cur:
-            cur.execute(f"SELECT type FROM events WHERE name='{name}'")
+            cur.execute(f"SELECT type FROM events WHERE name='{name}' AND type='Input'")
             isInput = cur.fetchone()
-        return isInput
+        return isInput is not None
 
     # TODO delete
     def delete_all_rows(self):
