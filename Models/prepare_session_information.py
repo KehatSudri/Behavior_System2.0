@@ -24,19 +24,19 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
 
     with open(configs_path, "a") as file:
         file.write("Trial name : " + trial_name + "\n")
-        file.write("Dependencies\n")
+        file.write("$Dependencies\n")
         if len(dependencies_arr) > 0:
             for dep in dependencies_arr:
                 file.write(dep + "\n")
         else:
             file.write("None\n")
-        file.write("Input Ports\n")
+        file.write("$Input Ports\n")
         if len(input_ports) > 0:
             for input in input_ports:
                 file.write(input + "\n")
         else:
             file.write("None\n")
-        file.write("Output Ports\n")
+        file.write("$Output Ports\n")
         for output in output_ports:
             file.write(output + "\n")
         file.write("\n")

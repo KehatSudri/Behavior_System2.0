@@ -5,14 +5,15 @@
 #include <vector>
 
 public class SessionConf {
+	int _numOfTrials;
+	std::string confPath_;
+	std::vector<std::string> _AIPorts;
+	std::vector<std::string> _AOPorts;
+	std::vector<std::string> _DIPorts;
+	std::vector<std::string> _DOPorts;
 public:
 	SessionConf(std::string path);
-	std::string getInputPorts(int type);
-private:
-	std::string confPath_;
-	std::vector<std::string> AIPorts_;
-	std::vector<std::string> AOPorts_;
-	std::vector<std::string> DIPorts_;
-	std::vector<std::string> DOPorts_;
+	std::vector<std::string> getPorts(int type);
+	int getNumOfTrials() { return this->_numOfTrials; }
 };
 #endif // __SessionConf__
