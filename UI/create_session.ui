@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>604</width>
+    <width>649</width>
     <height>769</height>
    </rect>
   </property>
@@ -38,21 +38,7 @@
          <enum>QLayout::SetNoConstraint</enum>
         </property>
         <item row="3" column="3">
-         <layout class="QHBoxLayout" name="random_reward_percent_horizontalLayout" stretch="1,1">
-          <item>
-           <widget class="QLabel" name="random_reward_percent_label">
-            <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
-            </property>
-            <property name="text">
-             <string>Random reward percent</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="random_reward_percent_spinBox"/>
-          </item>
-         </layout>
+         <layout class="QHBoxLayout" name="random_reward_percent_horizontalLayout"/>
         </item>
         <item row="0" column="0">
          <spacer name="horizontalSpacer_14">
@@ -163,38 +149,8 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="3">
-         <widget class="QComboBox" name="end_def_comboBox_3"/>
-        </item>
-        <item row="0" column="3">
-         <widget class="QLabel" name="end_def_label_3">
-          <property name="styleSheet">
-           <string notr="true">font: 12pt &quot;Arial&quot;;</string>
-          </property>
-          <property name="text">
-           <string>End definition:</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
         <item row="2" column="3">
-         <layout class="QHBoxLayout" name="end_def_value_horizontalLayout_3">
-          <item>
-           <widget class="QLabel" name="end_by_label_3">
-            <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
-            </property>
-            <property name="text">
-             <string>time:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="time_spinBox_3"/>
-          </item>
-         </layout>
+         <layout class="QHBoxLayout" name="end_def_value_horizontalLayout_3"/>
         </item>
         <item row="1" column="1">
          <layout class="QHBoxLayout" name="iti_def_horizontalLayout_3" stretch="0,0">
@@ -204,7 +160,7 @@
              <string notr="true">font: 12pt &quot;Arial&quot;;</string>
             </property>
             <property name="text">
-             <string>behavior</string>
+             <string>serial</string>
             </property>
            </widget>
           </item>
@@ -336,7 +292,7 @@
        </layout>
       </item>
       <item row="2" column="0">
-       <layout class="QHBoxLayout" name="session_name_and_date_horizontalLayout" stretch="0,0,1,1">
+       <layout class="QHBoxLayout" name="session_name_and_date_horizontalLayout" stretch="0,0,1,0,1">
         <property name="spacing">
          <number>20</number>
         </property>
@@ -405,12 +361,25 @@
            <string notr="true">font: 12pt &quot;Arial&quot;;</string>
           </property>
           <property name="text">
-           <string>Date:</string>
+           <string>Date:        </string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
         <item>
          <widget class="QLabel" name="date_value_label">
@@ -605,7 +574,7 @@
            <string notr="true">font: 12pt &quot;Arial&quot;;</string>
           </property>
           <property name="text">
-           <string>Subject ID:     </string>
+           <string>Subject ID:       </string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -637,7 +606,7 @@
            <string notr="true">font: 12pt &quot;Arial&quot;;</string>
           </property>
           <property name="text">
-           <string>                                      Experimentor name:</string>
+           <string>             Experimentor name:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -691,7 +660,7 @@
            <set>QAbstractItemView::NoEditTriggers</set>
           </property>
           <property name="selectionMode">
-           <enum>QAbstractItemView::ExtendedSelection</enum>
+           <enum>QAbstractItemView::SingleSelection</enum>
           </property>
           <property name="selectionBehavior">
            <enum>QAbstractItemView::SelectRows</enum>
@@ -706,7 +675,10 @@
            <number>2</number>
           </property>
           <attribute name="horizontalHeaderCascadingSectionResizes">
-           <bool>true</bool>
+           <bool>false</bool>
+          </attribute>
+          <attribute name="horizontalHeaderHighlightSections">
+           <bool>false</bool>
           </attribute>
           <attribute name="horizontalHeaderStretchLastSection">
            <bool>true</bool>

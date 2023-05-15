@@ -134,27 +134,14 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="2">
-       <widget class="QPushButton" name="login_pushButton">
+      <item row="4" column="0">
+       <widget class="QPushButton" name="Back_btn">
         <property name="font">
          <font>
           <family>Arial</family>
-          <pointsize>15</pointsize>
-          <weight>50</weight>
-          <italic>false</italic>
-          <bold>false</bold>
+          <pointsize>8</pointsize>
          </font>
         </property>
-        <property name="styleSheet">
-         <string notr="true">font: 15pt &quot;Arial&quot;;</string>
-        </property>
-        <property name="text">
-         <string>Login</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QPushButton" name="Back_btn">
         <property name="cursor">
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
@@ -170,6 +157,13 @@
        <widget class="QLineEdit" name="password_textEdit">
         <property name="echoMode">
          <enum>QLineEdit::Password</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QPushButton" name="login_pushButton">
+        <property name="text">
+         <string>Login</string>
         </property>
        </widget>
       </item>

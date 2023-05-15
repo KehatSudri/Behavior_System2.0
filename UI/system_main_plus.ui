@@ -30,6 +30,9 @@
           <pointsize>15</pointsize>
          </font>
         </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
         <property name="widgetResizable">
          <bool>true</bool>
         </property>
@@ -38,8 +41,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>382</width>
-           <height>379</height>
+           <width>388</width>
+           <height>377</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
@@ -57,25 +60,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Delete trial type(should remove)</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="edit_trial_types_pushButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <family>Arial</family>
-             </font>
-            </property>
-            <property name="text">
-             <string>Edit trial type(should remove)</string>
+             <string>Delete trial</string>
             </property>
            </widget>
           </item>

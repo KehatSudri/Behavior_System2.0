@@ -100,6 +100,24 @@
       </property>
      </widget>
     </item>
+    <item row="2" column="0">
+     <layout class="QHBoxLayout" name="navigation_horizontalLayout" stretch="0,0">
+      <item>
+       <widget class="QPushButton" name="back_pushButton">
+        <property name="text">
+         <string>Back</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="create_trial_btn">
+        <property name="text">
+         <string>Create Trial</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
     <item row="1" column="0">
      <widget class="QScrollArea" name="scrollArea">
       <property name="font">
@@ -117,7 +135,7 @@
          <x>0</x>
          <y>0</y>
          <width>742</width>
-         <height>674</height>
+         <height>672</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
@@ -162,7 +180,8 @@
               </property>
               <property name="font">
                <font>
-                <family>Arial</family>
+                <pointsize>13</pointsize>
+
                </font>
               </property>
               <property name="text">
@@ -180,7 +199,8 @@
               </property>
               <property name="font">
                <font>
-                <family>Arial</family>
+                <pointsize>13</pointsize>
+
                </font>
               </property>
               <property name="text">
@@ -203,11 +223,11 @@
               <property name="font">
                <font>
                 <family>Arial</family>
-                <pointsize>12</pointsize>
+                <pointsize>13</pointsize>
                </font>
               </property>
               <property name="text">
-               <string>Event name                             </string>
+               <string>Event name       </string>
               </property>
              </widget>
             </item>
@@ -237,7 +257,7 @@
               <property name="font">
                <font>
                 <family>Arial</family>
-                <pointsize>12</pointsize>
+                <pointsize>13</pointsize>
                </font>
               </property>
               <property name="text">
@@ -290,18 +310,18 @@
               <property name="font">
                <font>
                 <family>Arial</family>
-                <pointsize>12</pointsize>
+                <pointsize>13</pointsize>
                </font>
               </property>
               <property name="text">
-               <string>Random /  Predicted</string>
+               <string>Random/Predicted         </string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QComboBox" name="ranom_pred_comboBox">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
+               <sizepolicy hsizetype="Ignored" vsizetype="Minimum">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -314,38 +334,20 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_5">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
               </property>
-              <property name="font">
-               <font>
-                <family>Arial</family>
-                <pointsize>12</pointsize>
-               </font>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
               </property>
-              <property name="text">
-               <string>  Frequency</string>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>364</width>
+                <height>20</height>
+               </size>
               </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="frequency_lineEdit">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-               </font>
-              </property>
-             </widget>
+             </spacer>
             </item>
            </layout>
           </item>
@@ -363,17 +365,33 @@
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="Add_event_pushButton">
-            <property name="font">
-             <font>
-              <family>David</family>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Add event</string>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QPushButton" name="Add_event_pushButton">
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Add event</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_2">
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Remove event</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+
           </item>
           <item>
            <widget class="QLabel" name="label">
@@ -397,7 +415,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>10</pointsize>
+              <pointsize>13</pointsize>
              </font>
             </property>
             <property name="sizeAdjustPolicy">
@@ -421,6 +439,12 @@
             <attribute name="horizontalHeaderCascadingSectionResizes">
              <bool>false</bool>
             </attribute>
+            <attribute name="horizontalHeaderHighlightSections">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="horizontalHeaderMinimumSectionSize">
+             <number>35</number>
+            </attribute>
             <attribute name="horizontalHeaderStretchLastSection">
              <bool>true</bool>
             </attribute>
@@ -439,7 +463,7 @@
              </property>
              <property name="font">
               <font>
-               <pointsize>10</pointsize>
+               <pointsize>13</pointsize>
                <kerning>false</kerning>
               </font>
              </property>
@@ -453,6 +477,7 @@
              </property>
              <property name="font">
               <font>
+               <pointsize>13</pointsize>
                <kerning>false</kerning>
               </font>
              </property>
@@ -466,7 +491,7 @@
              </property>
              <property name="font">
               <font>
-               <pointsize>10</pointsize>
+               <pointsize>13</pointsize>
                <kerning>false</kerning>
               </font>
              </property>
@@ -480,8 +505,11 @@
              </property>
              <property name="font">
               <font>
-               <pointsize>10</pointsize>
+               <pointsize>13</pointsize>
               </font>
+             </property>
+             <property name="textAlignment">
+              <set>AlignCenter</set>
              </property>
             </column>
             <column>
@@ -490,18 +518,11 @@
              </property>
              <property name="font">
               <font>
-               <pointsize>10</pointsize>
+               <pointsize>13</pointsize>
               </font>
              </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Time frequency</string>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>10</pointsize>
-              </font>
+             <property name="textAlignment">
+              <set>AlignCenter</set>
              </property>
             </column>
            </widget>
@@ -518,63 +539,9 @@
           </item>
          </layout>
         </item>
-        <item row="4" column="0">
-         <widget class="QPushButton" name="pushButton_2">
-          <property name="text">
-           <string>Remove event</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <spacer name="verticalSpacer_4">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
        </layout>
       </widget>
      </widget>
-    </item>
-    <item row="2" column="0">
-     <layout class="QHBoxLayout" name="navigation_horizontalLayout" stretch="0,0,0">
-      <item>
-       <widget class="QPushButton" name="back_pushButton">
-        <property name="text">
-         <string>Back to menu</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Preferred</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="create_trial_btn">
-        <property name="text">
-         <string>Create Trial</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </item>
    </layout>
   </widget>
