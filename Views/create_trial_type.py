@@ -117,7 +117,7 @@ class CreateTrialTypeUi(object):
             index = self.contingent_comboBox.findText(self.events_tableWidget.item(chosen_row, 0).text())
             if index >= 0:
                 self.contingent_comboBox.removeItem(index)
-            self.contingent_comboBox.addItems
+            #self.contingent_comboBox.addItems
             self.events_tableWidget.removeRow(chosen_row)
             # set current column to be unselected
             self.events_tableWidget.setCurrentCell(-1, self.events_tableWidget.currentRow())
