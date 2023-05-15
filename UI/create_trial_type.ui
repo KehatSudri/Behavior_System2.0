@@ -43,7 +43,7 @@
       </property>
       <property name="font">
        <font>
-        <family>Arial</family>
+        <family>David</family>
         <pointsize>55</pointsize>
         <weight>50</weight>
         <italic>false</italic>
@@ -63,7 +63,7 @@
        <string/>
       </property>
       <property name="styleSheet">
-       <string notr="true">font: 55pt &quot;Arial&quot;;</string>
+       <string notr="true">font: 55pt &quot;David&quot;;</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
@@ -122,7 +122,7 @@
      <widget class="QScrollArea" name="scrollArea">
       <property name="font">
        <font>
-        <family>Arial</family>
+        <family>Gabriola</family>
         <pointsize>15</pointsize>
        </font>
       </property>
@@ -181,6 +181,7 @@
               <property name="font">
                <font>
                 <pointsize>13</pointsize>
+
                </font>
               </property>
               <property name="text">
@@ -199,6 +200,7 @@
               <property name="font">
                <font>
                 <pointsize>13</pointsize>
+
                </font>
               </property>
               <property name="text">
@@ -389,9 +391,15 @@
              </widget>
             </item>
            </layout>
+
           </item>
           <item>
            <widget class="QLabel" name="label">
+            <property name="font">
+             <font>
+              <family>Arial</family>
+             </font>
+            </property>
             <property name="text">
              <string>Events:</string>
             </property>

@@ -1,17 +1,13 @@
 import datetime
 import logging
 import sys
-
 import psycopg2
 from configparser import ConfigParser
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
-
 def config(filename):
     section = 'postgresql'
-    # create a parser
     parser = ConfigParser()
-    # read config file
     parser.read(filename)
 
     # get section, default to postgresql
@@ -21,8 +17,7 @@ def config(filename):
         for param in params:
             db[param[0]] = param[1]
     else:
-        raise Exception(f'Section "postgresql" not found in file'.format(section, filename))
-
+        raise Exception(f'Section "postgresql" not found in file: {format(section, filename)}')
     return db
 
 
@@ -39,14 +34,15 @@ class DB:
         self.disconnect()
         self.connect(db_config)
         self.create_tables()
+        self.insert_mock_events()
 
     def connect(self, params):
-        """ Connect to the PostgreSQL database server """
+        """ Connect to the PostgresSQL database server """
         try:
-            # connect to the PostgreSQL server
+            # connect to the PostgresSQL server
             self.conn = psycopg2.connect(**params)
         except (Exception, psycopg2.DatabaseError) as error:
-            logging.error(f'{error}')
+            logging.error(error)
             sys.exit()
 
     def disconnect(self):
@@ -59,8 +55,6 @@ class DB:
             exists = cur.fetchone()
             if exists is None:
                 cur.execute('CREATE DATABASE "Behavior_sys"')
-            else:
-                pass
 
     def create_tables(self):
         with self.conn.cursor() as cur:
@@ -68,17 +62,19 @@ class DB:
                 cur.execute(command)
             self.conn.commit()
 
-    def insert_hardware_event(self, name, port, in_out, digital_analog, is_reward):
-        sql = """
-            INSERT INTO hardwareEvents(event_name,port,input_output ,digital_analog,is_reward) VALUES (%s,%s,%s,%s,%s)
-            ON CONFLICT (event_name) DO UPDATE SET port=%s,input_output=%s ,digital_analog=%s,is_reward=%s RETURNING event_id"""
+    def insert_mock_events(self):
+        sql = """INSERT INTO events(port, name, type, format, is_reward) VALUES (%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"""
         with self.conn.cursor() as cur:
-            cur.execute(sql,
-                        (name, port, in_out, digital_analog, is_reward, port, in_out, digital_analog, is_reward,))
-            e_id = cur.fetchone()[0]
+            cur.execute(sql, ("Dev1/ao0", "serialOutputMock", "Output", "Analog", False))
+            cur.execute(sql, ("Dev1/ao1", "outputMock", "Output", "Analog", False))
+            cur.execute(sql, ("Dev1/a11", "inputMock", "Input", "Analog", False))
             self.conn.commit()
-        return e_id
 
+    def insert_hardware_event(self, name, port, type, format, is_reward):
+        sql = """INSERT INTO events(port, name, type, format, is_reward) VALUES (%s,%s,%s,%s,%s)"""
+        with self.conn.cursor() as cur:
+            cur.execute(sql, (name, port, type, format, is_reward))
+            self.conn.commit()
 
     def insert_session(self, iti_type, end_def, end_val, trials_order, iti_min_range=None, iti_max_range=None,
                        iti_behave_def=None, total_num=None, block_size=None, blocks_ord=None, sess_name=None,
@@ -101,20 +97,16 @@ class DB:
         except Exception:
             return -1
 
-    def insert_trial_type(self, name, events=None):
-        sql = """INSERT INTO trialTypes(trial_name ,events) VALUES (%s,%s)"""
-        cur = self.conn.cursor()
-        cur.execute(sql, (name, events,))
-        # close communication with the PostgreSQL database server
-        cur.close()
-        # commit the changes
-        self.conn.commit()
-    def events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
-        sql = """INSERT INTO events_to_trials(trial_name,event_name ,iscontigent,contingent_on) VALUES (%s,%s,%s,%s)"""
-        cur = self.conn.cursor()
-        cur.execute(sql, (trial_name,event_name ,is_contingent,contingent_on,))
-        cur.close()
-        self.conn.commit()
+    def insert_new_trial(self, name):
+        sql = """INSERT INTO trials(name) VALUES (%s)"""
+        with self.conn.cursor() as cur:
+            cur.execute(sql, (name, ))
+
+    def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
+        sql = """INSERT INTO events_to_trials(event_name, trial_name, is_contingent, contingent_on) VALUES (%s,%s,%s,%s)"""
+        with self.conn.cursor() as cur:
+            cur.execute(sql, (event_name, trial_name, is_contingent, contingent_on, ))
+            self.conn.commit()
 
     def insert_session_trials(self, session_id, trial_type_id, percent_in_session=None,
                               percent_in_block=None, block_number=None, event_list=None, interval_list=None):
@@ -176,70 +168,73 @@ class DB:
 
     def get_hardware_events(self):
         with self.conn.cursor() as cur:
-            cur.execute("SELECT * FROM hardwarEevents")
+            cur.execute("SELECT * FROM events")
             events = cur.fetchall()
         return events
+
     def get_hardware_events_byname(self):
         with self.conn.cursor() as cur:
-            cur.execute("SELECT event_name FROM hardwarEevents")
+            cur.execute("SELECT name FROM events")
             names = cur.fetchall()
         return names
 
-
     def get_session_trials(self, sess_id):
         with self.conn.cursor() as cur:
-            cur.execute(f'SELECT * FROM sessionTrials WHERE session_id={sess_id}')
+            cur.execute(f'SELECT * FROM session_to_trials WHERE session_id={sess_id}')
             trials = cur.fetchall()
         return trials
 
     def get_all_session_trials(self):
         with self.conn.cursor() as cur:
-            cur.execute("SELECT * FROM sessionTrials")
+            cur.execute("SELECT * FROM session_to_trials")
             trials = cur.fetchall()
         return trials
 
     def get_trial_types(self):
         with self.conn.cursor() as cur:
-            cur.execute("SELECT * FROM trialTypes")
+            cur.execute("SELECT * FROM trials")
             trials_types = cur.fetchall()
         return trials_types
-    def get_ports(self,trial_name):
+
+    def get_ports(self, trial_name):
         with self.conn.cursor() as cur:
-            temp=f"SELECT port,input_output,hardwareevents.event_name FROM hardwareevents,events_to_trials WHERE hardwareevents.event_name = events_to_trials.event_name AND events_to_trials.trial_name = '{trial_name}' "
+            temp = f"SELECT port, type, name FROM events, events_to_trials WHERE name = event_name AND " \
+                   f"trial_name = '{trial_name}'"
             cur.execute(temp)
             ports = cur.fetchall()
         return ports
 
     def get_dependencies(self, trial_name):
         with self.conn.cursor() as cur:
-            temp = f"SELECT h1.port,h2.port FROM hardwareevents as h1,hardwareevents as h2,events_to_trials WHERE h1.event_name = events_to_trials.event_name AND h2.event_name = events_to_trials.contingent_on AND events_to_trials.contingent_on IS NOT NULL AND events_to_trials.trial_name = '{trial_name}' "
+            temp = f"SELECT h1.port, h2.port FROM events as h1, events as h2, events_to_trials WHERE h1.name = " \
+                   f"event_name AND h2.name = contingent_on AND contingent_on IS NOT NULL AND trial_name = '{trial_name}'"
             cur.execute(temp)
             dependencies = cur.fetchall()
         return dependencies
 
     def get_trial_names(self):
         with self.conn.cursor() as cur:
-            cur.execute("SELECT trial_name FROM trialTypes")
+            cur.execute("SELECT name FROM trials")
             trials_types = cur.fetchall()
         return trials_types
 
     def get_trial_types_names(self, name):
         with self.conn.cursor() as cur:
-            temp = f"SELECT trial_name FROM trialTypes WHERE trial_name = '{name}'"
+            temp = f"SELECT name FROM trials WHERE name = '{name}'"
             cur.execute(temp)
             trials_types_names = cur.fetchone()
         return trials_types_names
 
     def get_trial_name_by_events(self, events):
         with self.conn.cursor() as cur:
-            cur.execute(f"SELECT trial_name FROM trialTypes WHERE events = '{events}'")
+            cur.execute(f"SELECT name FROM trials WHERE events = '{events}'")
             trials_types_events = cur.fetchone()
         return trials_types_events
 
     def get_events_by_trial_name(self, trial):
         with self.conn.cursor() as cur:
-            cur.execute(f"SELECT events FROM trialTypes WHERE trial_name = '{trial}'")
-            events = cur.fetchone()
+            cur.execute(f"SELECT event_name FROM events_to_trials WHERE trial_name = '{trial}'")
+            events = cur.fetchall()
         return events
 
     def get_all_events(self):
@@ -256,19 +251,19 @@ class DB:
 
     def get_all_subject_sessions(self):
         with self.conn.cursor() as cur:
-            cur.execute("SELECT * FROM subjectSession")
+            cur.execute("SELECT * FROM subject_to_session")
             ans = cur.fetchall()
         return ans
 
     def get_last_sess_for_subject(self, sub_id):
         with self.conn.cursor() as cur:
-            cur.execute(f'SELECT * FROM subjectSession WHERE subject_id={sub_id} ORDER BY last_used')
+            cur.execute(f'SELECT * FROM subject_to_session WHERE subject_id={sub_id} ORDER BY last_used')
             session_id = cur.fetchone()
         return session_id
 
     def get_all_sess_for_subject(self, sub_id):  # TODO validate work
         with self.conn.cursor() as cur:
-            cur.execute(f'SELECT * FROM subjectSession WHERE subject_id={sub_id} ORDER BY last_used')
+            cur.execute(f'SELECT * FROM subject_to_session WHERE subject_id={sub_id} ORDER BY last_used')
             sessions = cur.fetchall()
         return sessions
 
@@ -293,26 +288,22 @@ class DB:
     def update_trial_type(self, type_id, name=None, events=None):
         cur = self.conn.cursor()
         if name is not None and events is not None:
-            sql = """UPDATE trialTypes SET trial_name=%s, events=%s WHERE type_id=%s"""
+            sql = """UPDATE trials SET trial_name=%s, events=%s WHERE type_id=%s"""
             cur.execute(sql, (name, events, type_id,))
         elif name is not None:
-            sql = """UPDATE trialTypes SET trial_name=%s WHERE type_id=%s"""
+            sql = """UPDATE trials SET trial_name=%s WHERE type_id=%s"""
             cur.execute(sql, (name, type_id,))
         else:
-            sql = """UPDATE trialTypes SET events=%s WHERE type_id=%s"""
+            sql = """UPDATE trials SET events=%s WHERE type_id=%s"""
             cur.execute(sql, (events, type_id,))
         self.conn.commit()
         cur.close()
 
     # TODO validate this functions
     def delete_trial_type(self, type_id):
-        try:
-            with self.conn.cursor() as cur:
-                cur.execute(f'DELETE FROM trialTypes WHERE type_id={type_id}')
-                self.conn.commit()
-            return 0
-        except Exception:
-            return -1
+        with self.conn.cursor() as cur:
+            cur.execute(f'DELETE FROM trials WHERE type_id={type_id}')
+            self.conn.commit()
 
     # TODO validate this functions
     def delete_template(self, temp_id):
@@ -328,33 +319,33 @@ class DB:
 
     # TODO validate this functions
     def delete_subject_session(self, sub_id, sess_id):
-        cur = self.conn.cursor()
-        # delete session subjects
-        cur.execute("DELETE FROM subjectSession WHERE session_id=%s, subject_id=%s", (sess_id, sub_id))
-        self.conn.commit()
-        cur.close()
-    def is_contingent(self,event,trial):
         with self.conn.cursor() as cur:
-            cur.execute(f"SELECT iscontigent FROM events_to_trials WHERE event_name='{event}' AND trial_name='{trial}'")
+            cur.execute("DELETE FROM subjectSession WHERE session_id=%s, subject_id=%s", (sess_id, sub_id))
+            self.conn.commit()
+
+    def is_contingent(self, event, trial):
+        with self.conn.cursor() as cur:
+            cur.execute(f"SELECT is_contingent FROM events_to_trials WHERE event_name='{event}' AND trial_name='{trial}'")
             isContingent = cur.fetchone()
         return isContingent
-    def is_input_event(self,event):
+
+    def is_input_event(self, name):
         with self.conn.cursor() as cur:
-            cur.execute(f"SELECT input_output FROM hardwareevents WHERE event_name='{event}'")
+            cur.execute(f"SELECT type FROM events WHERE name='{name}' AND type='Input'")
             isInput = cur.fetchone()
-        return isInput
+        return isInput is not None
 
     # TODO delete
     def delete_all_rows(self):
         # on conflict increment counter by 1, and last used is now
         sql = """
         DELETE FROM events
-        DELETE FROM sessiontrials
-        DELETE FROM subjectsession"""
+        DELETE FROM session_to_trials
+        DELETE FROM subject_to_session"""
         cur = self.conn.cursor()
         cur.execute("""DELETE FROM events""")
-        cur.execute("""DELETE FROM subjectsession""")
-        cur.execute("""DELETE FROM sessiontrials""")
+        cur.execute("""DELETE FROM subject_to_session""")
+        cur.execute("""DELETE FROM session_to_trials""")
         cur.execute("""DELETE FROM sessions""")
 
         self.conn.commit()
@@ -365,94 +356,48 @@ class DB:
 
 
 commands = (
-    """
-    CREATE TABLE IF NOT EXISTS public.hardwareEvents
-    (
-        event_id integer NOT NULL GENERATED BY DEFAULT AS IDENTITY 
-        ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-        event_name VARCHAR(250) NOT NULL UNIQUE,
-        port VARCHAR(100),
-        input_output VARCHAR(20) NOT NULL,
-        digital_analog VARCHAR(20) NOT NULL,
-        is_reward VARCHAR(20) NOT NULL,       
-        CONSTRAINT hardwareEvents_pkey PRIMARY KEY (event_id),
-        CONSTRAINT input_output_ck CHECK (input_output in ('Input', 'Output')),
-        CONSTRAINT digital_analog_ck CHECK (digital_analog in ('Digital', 'Analog')),
-        CONSTRAINT is_reward_ck CHECK (is_reward in ('True', 'False'))
-    )
-    """,
-    """
-    CREATE TABLE IF NOT EXISTS public.sessions
-    (
-        session_id integer NOT NULL GENERATED BY DEFAULT AS IDENTITY 
-        ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-        session_name VARCHAR(250),
+    """CREATE TABLE IF NOT EXISTS public.events (
+        port VARCHAR(50) PRIMARY KEY,
+        name VARCHAR(100) UNIQUE,
+        type VARCHAR(10),
+        format VARCHAR(10),
+        is_reward BOOLEAN DEFAULT false,
+        CONSTRAINT type_ck CHECK (type in ('Input', 'Output')),
+        CONSTRAINT format_ck CHECK (format in ('Analog', 'Digital')))""",
+
+    """CREATE TABLE IF NOT EXISTS public.trials (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) UNIQUE)""",
+    
+    """CREATE TABLE IF NOT EXISTS public.sessions(
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) UNIQUE,
+        subjectID VARCHAR(100),
         experimenter_name VARCHAR(100),
-        iti_type VARCHAR(20) NOT NULL,
+        iti_type VARCHAR(10),
         iti_min_range integer,
         iti_max_range integer,
-        iti_behave_definition VARCHAR(255),
-        end_definition VARCHAR(100) NOT NULL,
-        end_value integer NOT NULL,
-        trials_order VARCHAR(50),
-        total_trials integer,
-        block_size VARCHAR(100),
-        blocks_order VARCHAR(100),
-        random_reward_percent integer,
-        subjectID VARCHAR(100),
-        last_used DATE NOT NULL,               
-        CONSTRAINT sessions_pkey PRIMARY KEY (session_id)
-    )
-    """,
-    """
-    CREATE TABLE IF NOT EXISTS public.trialTypes (
-        type_id integer NOT NULL GENERATED BY DEFAULT AS IDENTITY 
-        ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-        trial_name VARCHAR(255) UNIQUE,
-        events VARCHAR(255) UNIQUE,
-        constraint trial_pkey PRIMARY KEY (type_id)
-        )
-    """,
-    """
-    CREATE TABLE IF NOT EXISTS public.sessionTrials (
-        session_trial_id integer NOT NULL GENERATED BY DEFAULT AS IDENTITY 
-        ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-        session_id integer REFERENCES sessions,
-        trial_type_id integer NOT NULL REFERENCES trialTypes,
-        percent_in_session integer,
-        percent_in_block VARCHAR(100),
-        block_number VARCHAR(100),
-        event_list VARCHAR(255),
-        interval_list VARCHAR(255),
-        constraint sessiontrial_pkey PRIMARY KEY (session_trial_id)
-    )
-    """,
-    """
-    CREATE TABLE IF NOT EXISTS public.subjectSession (
-        subject_id VARCHAR(100) NOT NULL,
-        session_id integer REFERENCES sessions,
-        counter integer,
+        trials_order VARCHAR(10),
         last_used DATE NOT NULL,
-        constraint sbjsess_pkey PRIMARY KEY (subject_id, session_id)
-    )
-    """,
-    """
-    CREATE TABLE IF NOT EXISTS public.events (
-        event_id integer NOT NULL GENERATED BY DEFAULT AS IDENTITY 
-        ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-        event_type VARCHAR(100),
-        parameters VARCHAR(255),
-        constraint eventid_pkey PRIMARY KEY (event_id), 
-        constraint type_params_unq UNIQUE (event_type, parameters)
-    )
-    """,
-"""
-    CREATE TABLE IF NOT EXISTS public.events_to_trials (
-        event_name VARCHAR(100) REFERENCES hardwareevents(event_name),
-        trial_name VARCHAR(255) REFERENCES trialtypes(trial_name),
-        iscontigent BOOLEAN not null,
-        contingent_on VARCHAR(100),
-        constraint pkey PRIMARY KEY (event_name,trial_name,iscontigent)
-    )
-    """
+        CONSTRAINT iti_type_ck CHECK (iti_type in ('Serial', 'Random')),
+        CONSTRAINT trials_order_ck CHECK (trials_order in ('Serial', 'Random')))""",
+
+    """CREATE TABLE IF NOT EXISTS public.events_to_trials (
+        id SERIAL PRIMARY KEY,
+        event_name VARCHAR(100) REFERENCES events(name),
+        trial_name VARCHAR(255) REFERENCES trials(name),
+        is_contingent BOOLEAN DEFAULT false,
+        contingent_on VARCHAR(100) NULL)""",
+
+    """CREATE TABLE IF NOT EXISTS public.session_to_trials(
+        id SERIAL PRIMARY KEY,
+        session_id integer REFERENCES sessions(id),
+        trial_id integer REFERENCES Trials)""",
+
+    """CREATE TABLE IF NOT EXISTS public.subject_to_session(
+        subject_id VARCHAR(100) NOT NULL,
+        session_id INTEGER REFERENCES sessions(id),
+        counter INTEGER,
+        last_used DATE NOT NULL,
+        constraint Subject_to_session_pkey PRIMARY KEY (subject_id, session_id))"""
 )

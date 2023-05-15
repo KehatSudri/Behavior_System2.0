@@ -89,13 +89,11 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         self._session_trials = None
         self._subject_sessions = None
         self._session_events = None
-        # # get data from DB
-        # self.connect_to_DB()
-        self.get_templates_from_DB()
+        self.get_templates_from_db()
         # for i in range(len(self.event_config)):
         #    self.db.insert_hardware_event(self.event_config[i][0], self.event_config[i][1], self.event_config[i][2],
         #                                  self.event_config[i][3], self.event_config[i][4])
-        self.get_trial_types_from_DB()
+        self.get_trial_types_from_db()
         self.get_hardware_events_from_DB()
 
     # we need this
@@ -139,35 +137,9 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         events_names = self.db.get_hardware_events_byname()
         return events_names
 
-    def insert_hardware_event_to_DB(self, name, port, in_out, dig_an, is_rew):
-        self.db.insert_hardware_event(name, port, in_out, dig_an, is_rew)
+    def insert_hardware_event_to_DB(self, port, name, type, format, is_reward):
+        self.db.insert_hardware_event(port, name, type, format, is_reward)
         # self.get_hardware_events_from_DB()
-
-    # def parse_ports(self):
-    #     self.input_ports, self.input_events_names, self.output_ports, self.output_events_names = [], [], [], []
-    #     for i in range(len(self.event_config)):
-    #         e_id, name, port, in_out, dig_an, is_rew = self.event_config[i]
-    #         if in_out == 'Input':
-    #             self.input_ports.append(port)
-    #             self.input_events_names.append(name)
-    #         else:
-    #             self.output_ports.append(port)
-    #             self.output_events_names.append(name)
-    #     pass
-
-    # @property
-    # def db_config_file_path(self):
-    #     return self._db_config_file_path
-    #
-    # @db_config_file_path.setter
-    # def db_config_file_path(self, value):
-    #     if self._db_config_file_path != value:
-    #         # if self.DB is None:
-    #         #     self.DB = DB(value)
-    #         #     self.connect_to_DB()
-    #         self._db_config_file_path = value
-    #     # self._log_file_path = "log.txt"
-    #     self.notifyPropertyChanged("db_config_file_path")
 
     @property
     def subject_sessions(self):
@@ -230,32 +202,6 @@ class BehaviorSystemModel(INotifyPropertyChanged):
             self._session_trials = value
             self.notifyPropertyChanged("session_trials")
 
-    def set_settings(self, log_file_path, db_file_path, db_section, max_successive_trials, max_length_trials,
-                     events_config):
-        # if a change occurred
-        if log_file_path != self.log_file_path or db_file_path != self.db_config_file_path or \
-                db_section != self.db_section or max_successive_trials != self.max_successive_trials or \
-                max_length_trials != self.max_trial_length:
-            file_str = "log file location=" + log_file_path + "\ndatabase configuration file location=" + \
-                       db_file_path + "\ndatabase section=" + db_section + "\nmax number of successive trials=" + \
-                       str(max_successive_trials) + "\nmax trial length=" + str(max_length_trials)
-            f = open(self.settings_file, 'w', encoding='utf-8')
-            f.write(file_str)
-            f.close()
-        if db_file_path != self.db_config_file_path or self.db_section != db_section:
-            self.DB = DB(db_file_path, db_section)
-            self.connect_to_DB()
-        self.log_file_path = log_file_path
-        self.db_config_file_path = db_file_path
-        self.db_section = db_section
-        self.max_trial_length = max_length_trials
-        self.max_successive_trials = max_successive_trials
-        # if events_config is not None:
-        #    for e in events_config:
-        #        self.DB.insert_hardware_event(e[0], e[1], e[2], e[3], e[4])
-        self.get_hardware_events_from_DB()
-        pass
-
     def create_log_file(self):
         f_log, f_data = None, None
         try:
@@ -305,7 +251,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
                       total_num, block_size, blocks_ord, rnd_rew_prcnt):
         # first get list of templates from the DB
         if self.session_templates is None:
-            self.get_templates_from_DB()
+            self.get_templates_from_db()
 
         # go over the templates
         for tmp in self.session_templates:
@@ -414,31 +360,12 @@ class BehaviorSystemModel(INotifyPropertyChanged):
                         # TODO error
                         pass
 
-    def save_new_trial_type(self, name, events):
-        if self.trial_types is None:
-            self.get_trial_types_from_DB()
-        # TODO maybe should validate events before
-        # go over each type to check not existing
-        for t_type in self.trial_types:
-            # get data of current trial type
-            t_id, t_name, t_events = t_type
-            # if it matches the new trial type, ignore insertion
-            if t_name == name and t_events == events:
-                return
-        type_id = self.DB.insert_trial_type(name, events)
-        if type_id is None:
-            # TODO error
-            pass  # didnt work
-        else:
-            # update the local list of trial types
-            self.trial_types.append((type_id, name, events))
-
     # save the template of the current created session
     def save_new_template(self):
         # make sure data is extracted from DB already
         if self.session_templates is None:
-            self.get_templates_from_DB()
-            self.get_trial_types_from_DB()
+            self.get_templates_from_db()
+            self.get_trial_types_from_db()
 
         # get parameters of current session
         sub_id, trials_def, iti, end_def, trials_order, sess_name, exp_name, rnd_rew_percent = \
@@ -497,11 +424,11 @@ class BehaviorSystemModel(INotifyPropertyChanged):
                 i += 1
         else:
             # session already exists, update the last date
-            self.DB.update_session_date(sess_id)
+            self.db.update_session_date(sess_id)
         # insert subject session
-        self.DB.insert_subject_session(sub_id, sess_id)
+        self.db.insert_subject_session(sub_id, sess_id)
         # update lists from the DB insertion
-        self.get_templates_from_DB()
+        self.get_templates_from_db()
 
     # set the current session to be as the following temp id
     def choose_template_from_list(self, temp_id):
@@ -521,38 +448,32 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         # set the current session to be the given one
         self.curr_session.super = temp
 
-    # connect to the path, info is located in the given file path
-    def connect_to_DB(self, path=None):
-        if self.db is not None:
-            # establish connection with the given info in path
-            self.DB = DB(path)
-        self.DB.connect(self._DB.db_config)
-
-    def get_templates_from_DB(self):
+    def get_templates_from_db(self):
         self.session_templates = self.db.get_session_templates()
         self.session_trials = self.db.get_all_session_trials()
         self.session_events = self.db.get_all_events()
         self.subject_sessions = self.db.get_all_subject_sessions()
 
-    def get_trial_types_from_DB(self):
+    def get_trial_types_from_db(self):
         return self.db.get_trial_types()
 
     # def get_trial_names(self):
     #     self._trial_names = self.db.get_trial_names()
-    def is_contingent(self,event,trial):
-        return self.db.is_contingent(event,trial)
+    def is_contingent(self, event, trial):
+        return self.db.is_contingent(event, trial)
 
     def is_input_event(self, event):
         return self.db.is_input_event(event)
+
     def get_trial_types(self):
         if self.trial_types is None:
-            self.get_trial_types_from_DB()
+            self.get_trial_types_from_db()
         return self.trial_types
 
     # find id of event of given type and parameters
     def find_event_id(self, event_type, parameters):
         # get events
-        all_events = self.DB.get_all_events()
+        all_events = self.db.get_all_events()
         for i in range(len(all_events)):
             if all_events[i][2] == parameters:
                 if all_events[i][1] == event_type:
@@ -593,7 +514,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     def get_trials_def_for_sess(self, sess_id, order):
         # TODO make sure working for blocks!!!!!
         # get the trials for the given session id
-        trials_for_sess = self.DB.get_session_trials(sess_id)
+        trials_for_sess = self.db.get_session_trials(sess_id)
         list_trials, list_percent, block_list, percent_per_block, block_sizes, block_ord = [], [], [], [], [], []
         block_names = None
         # go over the trials
@@ -680,6 +601,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     #         trials[name] = event_dict
     #     return trials
 
+
     # def get_trial_names(self):
     #     trials = []
     #     for trial in self._trial_types:
@@ -687,7 +609,8 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     #     return trials
     def get_trials_names(self):
         return self.db.get_trial_names()
-    def get_ports(self,trial_name):
+
+    def get_ports(self, trial_name):
         return self.db.get_ports(trial_name)
 
     def get_dependencies(self, trial_name):
@@ -702,7 +625,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
                 return temp
 
     def disconnect_from_DB(self):
-        self.DB.disconnect()
+        self.db.disconnect()
 
     def connect_to_devices(self):
         # go over devices and establish connection
@@ -814,14 +737,11 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         # use the path to save all details in the specific format
         pass
 
-    def add_trial_type(self, name, events):
-        events_str = ""
-        for e in events:
-            events_str += e + ","
-        self.db.insert_trial_type(name, events_str)
+    def insert_new_trial(self, name):
+        self.db.insert_new_trial(name)
 
-    def events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
-        self.db.events_to_trials(trial_name, event_name, is_contingent, contingent_on)
+    def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
+        self.db.insert_new_events_to_trials(trial_name, event_name, is_contingent, contingent_on)
 
     def verify_trial_insert(self, name, events):
         # before adding the trial type, check that name or list of events is not already in it
@@ -858,7 +778,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
 
     def get_template_list_by_date_exp_sess_names(self):
         if self._session_templates is None:
-            self.get_templates_from_DB()
+            self.get_templates_from_db()
 
         sess_dict = OrderedDict()
         for tmp in self.session_templates:
@@ -874,7 +794,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     def get_template_list_by_subject(self, sub_id):
         # when getting this, should last used showing is last run of experiment in general, or for specific animal?
         if self._session_templates is None:
-            self.get_templates_from_DB()
+            self.get_templates_from_db()
         # get list of session id's for the subject
         subject_list = self._DB.get_all_sess_for_subject(sub_id)
         subject_list = [tmp[1] for tmp in subject_list]
@@ -897,7 +817,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
 
     def get_data_for_template_id(self, sess_id):
         if self._session_templates is None:
-            self.get_templates_from_DB()
+            self.get_templates_from_db()
         chosen_tmp = None
         for tmp in self.session_templates:
             if tmp[0] == sess_id:
@@ -950,8 +870,8 @@ class BehaviorSystemModel(INotifyPropertyChanged):
 
     def delete_templates_by_subject_name(self, sub_name):
         if self.session_templates is None:
-            self.get_templates_from_DB()
-        relevant_sessions = self.DB.get_all_sess_for_subject(sub_name)
+            self.get_templates_from_db()
+        relevant_sessions = self.db.get_all_sess_for_subject(sub_name)
         # check for each session that it is not used for different subject
         for sess in relevant_sessions:
             found_another_subj = False
@@ -968,33 +888,31 @@ class BehaviorSystemModel(INotifyPropertyChanged):
                     break
             if found_another_subj:
                 # delete only the subject_session row
-                self.DB.delete_subject_session(sub_name, sess[0])
+                self.db.delete_subject_session(sub_name, sess[0])
                 pass
             else:
-                self.delete_template_from_DB_by_id(sess[0])
+                self.delete_template_from_db_by_id(sess[0])
 
     # TODO verify
     def delete_templates_by_experimenter_name(self, exp_name):
         if self.session_templates is None:
-            self.get_templates_from_DB()
+            self.get_templates_from_db()
         # go over each template and delete it if matches experimenter_name
         for tmp in self.session_templates:
             t_sess_id, t_sess_name, t_exp_name, t_iti_type, t_iti_min, t_iti_max, t_iti_behave, t_end_def, t_end_val, t_trials_order, t_total, t_block_sizes, t_blocks_ord, t_rnd_rew, date = tmp
             if t_exp_name == exp_name:
-                self.delete_template_from_DB_by_id(t_sess_id)
+                self.delete_template_from_db_by_id(t_sess_id)
         # update the local data
-        self.get_templates_from_DB()
+        self.get_templates_from_db()
         pass
 
     # TODO verify
-    def delete_template_from_DB_by_id(self, temp_id):
+    def delete_template_from_db_by_id(self, temp_id):
         # maybe verify authorization before?
-        self.DB.delete_template(temp_id)
+        self.db.delete_template(temp_id)
 
-    # validate this
-    def insert_trial_type(self, name, events):
-        # find trial id
-        type_id = self.DB.insert_trial_type(name, events)
+    def insert_new_trial(self, name):
+        self.db.insert_new_trial(name)
 
     # validate this
     def update_trial_type(self, name, new_name, new_events):
@@ -1002,7 +920,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         for t in self.trial_types:
             t_id, t_name, t_events = t
             if t_name == name:
-                self.DB.update_trial_type(t_id, new_name, new_events)
+                self.db.update_trial_type(t_id, new_name, new_events)
 
     def delete_trial_type(self, name):
         val = -1
@@ -1010,7 +928,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         for t in self.trial_types:
             t_id, t_name, t_events = t
             if t_name == name:
-                val = self.DB.delete_trial_type(t_id)
+                val = self.db.delete_trial_type(t_id)
         return val
 
     def get_event_list_for_sess(self):
@@ -1030,5 +948,3 @@ class BehaviorSystemModel(INotifyPropertyChanged):
             list_events.append(e)
         # return list(set(list_events))
         return list_events
-
-

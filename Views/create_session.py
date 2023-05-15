@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QTableView, QHeaderView, QTableWidgetItem, QAbstractItemView,QAbstractScrollArea
+from PyQt6.QtWidgets import QTableView, QHeaderView, QTableWidgetItem, QAbstractItemView, QAbstractScrollArea
 from PyQt6 import QtCore, QtWidgets, uic
 
 from Models.prepare_session_information import prepare_session_information
@@ -29,11 +29,9 @@ class CreateSessionUi(object):
         self.vm = parent.vm
         self.main_window = None
         self.chosen_window = None
-
         self.central_widget = None
         self.window_gridLayout = None
         self.main_gridLayout = QtWidgets.QGridLayout()
-
         self.headline_label = None
         self.choose_template_horizontalLayout = QtWidgets.QHBoxLayout()
         self.choose_template_pushButton = None
@@ -128,24 +126,25 @@ class CreateSessionUi(object):
     def setupUi(self, main_window):
         self.main_window = main_window
         uic.loadUi(get_ui_path('create_session.ui'), self.main_window)
-        choose_template_btn = self.main_window.findChild(QtWidgets.QPushButton, "choose_template_btn")
-        choose_template_btn.clicked.connect(self.on_choose_template_click)
-        self.trials_order_cb = self.main_window.findChild(QtWidgets.QComboBox, 'trials_order_cb')
-        self.trials_order_cb.addItems(["random", "blocks"])
+        self.remove_trial_pushButton = self.main_window.findChild(QtWidgets.QPushButton, "remove_trial_pushButton")
+        self.add_trial_pushButton = self.main_window.findChild(QtWidgets.QPushButton, "add_trial")
         self.session_name_te = self.main_window.findChild(QtWidgets.QTextEdit, "session_name_te")
         self.subject_id_te = self.main_window.findChild(QtWidgets.QTextEdit, "subject_id_te")
         self.exp_name_te = self.main_window.findChild(QtWidgets.QTextEdit, "exp_name_te")
+        self.trials_table = self.main_window.findChild(QtWidgets.QTableWidget, "trials_tableWidget")
+        self.date_value_label = self.main_window.findChild(QtWidgets.QLabel, "date_value_label")
+        self.trials_order_cb = self.main_window.findChild(QtWidgets.QComboBox, 'trials_order_cb')
+        choose_template_btn = self.main_window.findChild(QtWidgets.QPushButton, "choose_template_btn")
         next_btn = self.main_window.findChild(QtWidgets.QPushButton, "next_btn")
+
+        choose_template_btn.clicked.connect(self.on_choose_template_click)
+        self.trials_order_cb.addItems(["random", "blocks"])
         next_btn.clicked.connect(self.on_next_click)
-        self.add_trial_pushButton = self.main_window.findChild(QtWidgets.QPushButton, "add_trial")
         self.add_trial_pushButton.clicked.connect(self.on_add_click)
-        self.remove_trial_pushButton = self.main_window.findChild(QtWidgets.QPushButton, "remove_trial_pushButton")
         self.remove_trial_pushButton.clicked.connect(self.on_remove_click)
-        self.trials_table=self.main_window.findChild(QtWidgets.QTableWidget, "trials_tableWidget")
-        #self.trials_gridLayout=self.main_window.findChild(QtWidgets.QGridLayout, "trials_gridLayout_3")
+        # self.trials_gridLayout=self.main_window.findChild(QtWidgets.QGridLayout, "trials_gridLayout_3")
         back_btn = self.main_window.findChild(QtWidgets.QPushButton, "back_btn")
         back_btn.clicked.connect(self.on_back_click)
-        self.date_value_label=self.main_window.findChild(QtWidgets.QLabel, "date_value_label")
         self.date_value_label.setText((datetime.now()).strftime("%d/%m/%Y"))
 
         return
@@ -480,7 +479,6 @@ class CreateSessionUi(object):
         self.add_ui = AddTrialUi(self)
         self.add_ui.setupUi(self.add_window)
         self.add_window.show()
-        
 
     def deal_with_trial(self, treatment):
 
@@ -512,7 +510,7 @@ class CreateSessionUi(object):
                 # if len(self.percentages) != 0:
                 # del self.percentages[index]
                 # else:
-                #del self.percent_per_block[index]
+                # del self.percent_per_block[index]
                 # del self.trials_in_session[self.trials_tableWidget.currentRow()]
                 # self.trials_tableWidget.removeRow(self.trials_tableWidget.currentRow())
                 # if len(self.percentages)!=0:
@@ -531,7 +529,6 @@ class CreateSessionUi(object):
 
     def on_remove_click(self):
         self.deal_with_trial(1)
-
 
     def on_row_selection_changed(self):
         # set row selection on default
@@ -599,7 +596,7 @@ class CreateSessionUi(object):
                 is_end_def_empty or is_end_def_empty:
             return False
         return True
-    
+
     # we need this
     def set_vm_data(self):
         min_iti, max_iti, iti_behavior = None, None, None
@@ -625,18 +622,13 @@ class CreateSessionUi(object):
         # self.vm.set_trials_list(trials) NOT RELEVANT AT THIS PART
 
     def on_next_click(self):
-        ports=[]
-        dependencies=[]
+        ports = []
+        dependencies = []
         print(self.trials_in_session)
         for i in range(0, len(self.trials_in_session), 2):
-            ports=( self.vm.get_ports(self.trials_in_session[i]))
+            ports = (self.vm.get_ports(self.trials_in_session[i]))
             dependencies = self.vm.get_dependencies(self.trials_in_session[i])
-            prepare_session_information(ports,dependencies,self.trials_in_session[i],i,self.trials_in_session)
-
-
-
-
-
+            prepare_session_information(ports, dependencies, self.trials_in_session[i], i, self.trials_in_session)
 
         # if not self.is_valid_input():
         #     if self.max_iti_spinBox.value() < self.min_iti_spinBox.value():
@@ -699,25 +691,26 @@ class CreateSessionUi(object):
         self.vm.sessionVM.trials_order = order
 
     def set_trials_table(self):
-        params=""
-        table= self.trials_table
+        params = ""
+        table = self.trials_table
         index = table.rowCount()
         # print(self.trials_in_session)
         table.insertRow(index)
-        table.setItem(index, 0, QTableWidgetItem(self.trials_in_session[index*2]))
-        for event, parameters in self.trials_in_session[index*2+1].items():
+        table.setItem(index, 0, QTableWidgetItem(self.trials_in_session[index * 2]))
+        for event, parameters in self.trials_in_session[index * 2 + 1].items():
             if event == 'Tone':
-                params += event + ":" + " delay - " + parameters[0] + ", tone duration - " + parameters[1] + ", tone frequency - " + parameters[2] + "\n"
+                params += event + ":" + " delay - " + parameters[0] + ", tone duration - " + parameters[
+                    1] + ", tone frequency - " + parameters[2] + "\n"
             elif event == 'Reward':
-                params += event + ":" + " delay - " + parameters[0] + ", reward duration - " + parameters[1]  + "\n"
+                params += event + ":" + " delay - " + parameters[0] + ", reward duration - " + parameters[1] + "\n"
             else:
-                params += event + ":" + " delay - " + parameters[0] + ", Duration - " + parameters[1]+", Frequency - " + parameters[2]+", Amplitude - " + parameters[3]+"\n"
+                params += event + ":" + " delay - " + parameters[0] + ", Duration - " + parameters[
+                    1] + ", Frequency - " + parameters[2] + ", Amplitude - " + parameters[3] + "\n"
 
             table.setItem(index, 1, QTableWidgetItem(params))
             table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
 
-
-        #self.trials_tableWidget.setRowCount(len(self.trials_in_session))
+        # self.trials_tableWidget.setRowCount(len(self.trials_in_session))
         # edit case
         # if self.selected_trial >= 0:  # edit case
         #     self.selected_trial = -1

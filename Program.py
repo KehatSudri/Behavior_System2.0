@@ -153,7 +153,7 @@ def create_session6(model: BehaviorSystemModel):
     sess.trials_def = Trials_def_rand(trial_list=[t1, t3], percent_list=[50, 50], total=10)
 if __name__ == '__main__':
     systemM = BehaviorSystemModel()  # maybe should give path to DB connection file
-    systemM.connect_to_DB()
+    systemM.connect_to_db()
     systemM._DB.create_tables()
 
     # create_session4(systemM)
