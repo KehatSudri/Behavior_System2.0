@@ -225,7 +225,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Event name                             </string>
+               <string>Event name       </string>
               </property>
              </widget>
             </item>
@@ -312,7 +312,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Random /  Predicted</string>
+               <string>Random/Predicted         </string>
               </property>
              </widget>
             </item>
@@ -341,7 +341,7 @@
               </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>360</width>
+                <width>364</width>
                 <height>20</height>
                </size>
               </property>
