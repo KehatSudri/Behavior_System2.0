@@ -545,7 +545,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         return Trial.Trials_def_blocks(trial_list=list_trials, block_list=block_list, prcnt_per_block=percent_per_block)
 
     def get_list_trials_types_def(self):  # TODO change
-        trials = self.get_trial_types_from_DB()
+        trials = self.get_trial_types_from_db()
         trials_name_list=[]
         for trial in trials :
             trials_name_list.append(trial[1])
