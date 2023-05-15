@@ -27,13 +27,12 @@ class CreateTrialTypeUi(object):
         uic.loadUi(get_ui_path('create_trial_type.ui'), main_window)
         back_btn = main_window.findChild(QtWidgets.QPushButton, 'back_pushButton')
         back_btn.clicked.connect(self.on_back_click)
-        self.contingent_comboBox = main_window.findChild(QtWidgets.QComboBox, 'comboBox_3')
-        self.contingent_comboBox.setEnabled(False)
-        self.conti_label = main_window.findChild(QtWidgets.QLabel, 'label_2')
-        self.conti_label.setEnabled(False)
-        # self.freq_label = main_window.findChild(QtWidgets.QLabel, 'label_5')
-        self.random_label = main_window.findChild(QtWidgets.QLabel, 'label_4')
+        random_label = main_window.findChild(QtWidgets.QLabel, 'label_4')
+        accept_pushButton = main_window.findChild(QtWidgets.QPushButton, 'create_trial_btn')
+        remove_event_pushButton = main_window.findChild(QtWidgets.QPushButton, 'pushButton_2')
+        add_event_pushButton = main_window.findChild(QtWidgets.QPushButton, 'Add_event_pushButton')
 
+        self.freq_label = main_window.findChild(QtWidgets.QLabel, 'label_5')
         self.simple_radioButton = main_window.findChild(QtWidgets.QRadioButton, 'simple_radioButton')
         self.random_comboBox = main_window.findChild(QtWidgets.QComboBox, 'ranom_pred_comboBox')
         self.events_comboBox = main_window.findChild(QtWidgets.QComboBox, 'comboBox')
@@ -43,32 +42,25 @@ class CreateTrialTypeUi(object):
         self.events_tableWidget = main_window.findChild(QtWidgets.QTableWidget, 'events_tableWidget')
         self.frequency_line_edit = main_window.findChild(QtWidgets.QLineEdit, 'frequency_lineEdit')
         self.conti_radioButton = main_window.findChild(QtWidgets.QRadioButton, 'contigent_radioButton')
-        self.conti_radioButton.setEnabled(False)
-        self.conti_radioButton.toggled.connect(lambda: (self.contingent_comboBox.setEnabled(True) , self.conti_label.setEnabled(True), self.random_comboBox.setEnabled(False)
-        , self.random_label.setEnabled(False)
-) )
-        self.simple_radioButton.toggled.connect(self.simple_event_handler)
-        # self.frequency_line_edit = main_window.findChild(QtWidgets.QLineEdit, 'frequency_lineEdit')
-
-        self.events_comboBox = main_window.findChild(QtWidgets.QComboBox, 'comboBox')
-        self.random_comboBox = main_window.findChild(QtWidgets.QComboBox, 'ranom_pred_comboBox')
-
-        self.random_comboBox.addItems(["Random", "Predicted"])
-        self.random_comboBox.currentTextChanged.connect(self.random_comboBox_handler)
+        self.contingent_comboBox.setEnabled(False)
+        self.conti_label.setEnabled(False)
         self.events_comboBox.currentTextChanged.connect(self.name_comboBox_handler)
         self.events_comboBox.addItems([event[0] for event in self.events])
-        self.events_tableWidget = main_window.findChild(QtWidgets.QTableWidget, 'events_tableWidget')
+        self.simple_radioButton.toggled.connect(self.simple_event_handler)
+        self.simple_radioButton.setChecked(True)
+        self.random_comboBox.addItems(["Random", "Predicted"])
+        self.random_comboBox.currentTextChanged.connect(self.random_comboBox_handler)
+        self.random_comboBox.setEnabled(False)
+        self.conti_radioButton.setEnabled(False)
+        self.conti_radioButton.toggled.connect(lambda: (
+            self.contingent_comboBox.setEnabled(True), self.conti_label.setEnabled(True),
+            self.random_comboBox.setEnabled(False)
+            , self.frequency_line_edit.setEnabled(False), random_label.setEnabled(False)))
+        self.frequency_line_edit.setEnabled(False)
         self.events_tableWidget.setColumnWidth(0, int(self.events_tableWidget.width() / 2))
-        self.add_event_pushButton = main_window.findChild(QtWidgets.QPushButton, 'Add_event_pushButton')
-        self.add_event_pushButton.clicked.connect(self.on_add_click)
-        self.remove_event_pushButton = main_window.findChild(QtWidgets.QPushButton, 'pushButton_2')
-        self.remove_event_pushButton.clicked.connect(self.on_remove_click)
-        self.accept_pushButton = main_window.findChild(QtWidgets.QPushButton, 'create_trial_btn')
-        self.accept_pushButton.clicked.connect(self.create_trial)
-        self.trial_type_name_lineEdit = main_window.findChild(QtWidgets.QLineEdit, 'lineEdit')
-
-        # self.frequency_line_edit.setEnabled(False)
-
+        add_event_pushButton.clicked.connect(self.on_add_click)
+        remove_event_pushButton.clicked.connect(self.on_remove_click)
+        accept_pushButton.clicked.connect(self.create_trial)
         self.simple_event_handler()
         self.random_comboBox_handler()
 
@@ -90,10 +82,8 @@ class CreateTrialTypeUi(object):
             self.events_tableWidget.setItem(row_position, 3, QtWidgets.QTableWidgetItem("Output"))
         if self.random_comboBox.isEnabled():
             self.events_tableWidget.setItem(row_position, 4,
-                                        QtWidgets.QTableWidgetItem(self.random_comboBox.currentText()))
-        # self.events_tableWidget.setItem(row_position, 5,
-        #                                 QtWidgets.QTableWidgetItem(self.frequency_line_edit.text()))
-
+                                            QtWidgets.QTableWidgetItem(self.random_comboBox.currentText()))
+        self.events_tableWidget.setItem(row_position, 5, QtWidgets.QTableWidgetItem(self.frequency_line_edit.text()))
         self.events_order.append(current_event)
         self.is_contingent_order.append(self.chosen_is_contingent)
         # validate that combo not have duplicates
@@ -117,7 +107,6 @@ class CreateTrialTypeUi(object):
             index = self.contingent_comboBox.findText(self.events_tableWidget.item(chosen_row, 0).text())
             if index >= 0:
                 self.contingent_comboBox.removeItem(index)
-            #self.contingent_comboBox.addItems
             self.events_tableWidget.removeRow(chosen_row)
             # set current column to be unselected
             self.events_tableWidget.setCurrentCell(-1, self.events_tableWidget.currentRow())
@@ -179,25 +168,23 @@ class CreateTrialTypeUi(object):
         self.conti_label.setEnabled(False)
         if not self.vm.is_input_event(self.events_comboBox.currentText()):
             self.random_comboBox.setEnabled(True)
-            # self.frequency_line_edit.setEnabled(True)
+            self.frequency_line_edit.setEnabled(True)
 
     def name_comboBox_handler(self):
         if self.vm.is_input_event(self.events_comboBox.currentText()):
             self.random_comboBox.setEnabled(False)
-            # self.frequency_line_edit.setEnabled(False)
-        elif self.vm.is_input_event(self.events_comboBox.currentText())[0] == "Output":
-
+            self.frequency_line_edit.setEnabled(False)
+        else:
             self.random_comboBox.setEnabled(True)
-            # self.frequency_line_edit.setEnabled(True)
+            self.frequency_line_edit.setEnabled(True)
 
     def random_comboBox_handler(self):
-        pass
-        # if self.random_comboBox.currentText() == "Random":
-            # self.frequency_line_edit.setEnabled(False)
-            # self.freq_label.setEnabled(False)
-        # elif self.random_comboBox.currentText() == "Predicted":
-            # self.frequency_line_edit.setEnabled(True)
-            # self.freq_label.setEnabled(True)
+        if self.random_comboBox.currentText() == "Random":
+            self.frequency_line_edit.setEnabled(False)
+            self.freq_label.setEnabled(False)
+        elif self.random_comboBox.currentText() == "Predicted":
+            self.frequency_line_edit.setEnabled(True)
+            self.freq_label.setEnabled(True)
 
     def on_back_click(self):
         self.parent.main_window.show()
