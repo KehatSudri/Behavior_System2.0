@@ -26,6 +26,7 @@ private:
 	SessionControls(const SessionControls&) = delete;
 	SessionControls& operator=(const SessionControls&) = delete;
 	void run();
+	void demoRun();
 	bool isRunning_;
 	bool isPaused_;
 	std::thread t_;

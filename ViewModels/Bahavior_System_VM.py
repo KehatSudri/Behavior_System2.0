@@ -188,12 +188,13 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
 
     def get_trial_names(self):
         return self.model.get_trials_names()
-    def get_ports(self,trial_mame):
+
+    def get_ports(self, trial_mame):
         return self.model.get_ports(trial_mame)
 
-
-    def get_dependencies(self,trial_mame):
+    def get_dependencies(self, trial_mame):
         return self.model.get_dependencies(trial_mame)
+
     def get_list_trials_types_def(self):
         return self.model.get_list_trials_types_def()
 
@@ -219,7 +220,7 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
         self.model.set_trials_list(trials)
 
     def connect_to_DB(self):
-        self.model.connect_to_DB()
+        self.model.connect_to_db()
 
     def get_template_list_by_date_exp_sess_names(self):
         return self.model.get_template_list_by_date_exp_sess_names()
@@ -242,25 +243,25 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
     def get_event_list_for_sess(self):
         return self.model.get_event_list_for_sess()
 
-    def insert_trial_type(self, name, events):
-        self.insert_trial_type(name, events)
+    def insert_new_trial(self, name):
+        self.insert_new_trial(name)
 
     def set_settings(self, log_file_path, db_file_path, db_section, max_successive_trials, max_length_trials,
                      e_2_p=None):
         self.model.set_settings(log_file_path, db_file_path, db_section, max_successive_trials, max_length_trials,
                                 e_2_p)
 
-    def insert_hardware_event_to_DB(self, name, port, in_out, dig_an, is_rew):
-        self.model.insert_hardware_event_to_DB(name, port, in_out, dig_an, is_rew)
+    def insert_hardware_event_to_DB(self, port, name, type, format, is_reward):
+        self.model.insert_hardware_event_to_DB(port, name, type, format, is_reward)
 
     def verify_insert_hardware_event(self, name, port, in_out, dig_an, is_rew):
         return self.model.verify_insert_hardware_event(name, port, in_out, dig_an, is_rew)
 
-    def add_trial_type(self, name, events):
-        self.model.add_trial_type(name, events)
+    def insert_new_trial(self, name):
+        self.model.insert_new_trial(name)
 
-    def events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
-        self.model.events_to_trials(trial_name, event_name, is_contingent, contingent_on)
+    def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
+        self.model.insert_new_events_to_trials(trial_name, event_name, is_contingent, contingent_on)
 
     def verify_trial_insert(self, name, events):
         return self.model.verify_trial_insert(name, events)
@@ -286,9 +287,9 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
             # change the property
             # self.is_running_session = self.model.is_running_session #is this necessary or it updates on its own
             self.notifyPropertyChanged("VM_" + event_args[0][0])
-    def is_contingent(self, event,trial):
-        return self.model.is_contingent(event,trial)
 
-    def is_input_event(self,event):
+    def is_contingent(self, event, trial):
+        return self.model.is_contingent(event, trial)
+
+    def is_input_event(self, event):
         return self.model.is_input_event(event)
-
