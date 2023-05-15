@@ -19,7 +19,7 @@
      <item row="2" column="0" colspan="2">
       <widget class="QTableWidget" name="trials_tableWidget">
        <property name="styleSheet">
-        <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+        <string notr="true">font: 12pt &quot;Arial&quot;;</string>
        </property>
        <column>
         <property name="text">
@@ -44,7 +44,7 @@
      <item row="0" column="0" colspan="2">
       <widget class="QLabel" name="explenation_label">
        <property name="styleSheet">
-        <string notr="true">font: 20pt &quot;David&quot;;</string>
+        <string notr="true">font: 20pt &quot;Arial&quot;;</string>
        </property>
        <property name="text">
         <string>Define a random ordered session</string>
@@ -57,7 +57,7 @@
      <item row="1" column="0">
       <widget class="QLabel" name="total_num_of_trials_label">
        <property name="styleSheet">
-        <string notr="true">font: 12pt &quot;Gabriola&quot;;</string>
+        <string notr="true">font: 12pt &quot;Arial&quot;;</string>
        </property>
        <property name="text">
         <string>Total number of trials:</string>

@@ -66,14 +66,14 @@ class DeleteTrialTypeUi(object):
         self.window_gridLayout.setObjectName("window_gridLayout")
         # set a headline for the window
         self.headline_label = QtWidgets.QLabel(self.central_widget)
-        self.headline_label.setStyleSheet("font: 55pt \"Gabriola\";")
+        self.headline_label.setStyleSheet("font: 55pt \"Arial\";")
         self.headline_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.headline_label.setObjectName("headline_label")
         self.window_gridLayout.addWidget(self.headline_label, 0, 0, 1, 1)
         # set scroll area
         self.scrollArea = QtWidgets.QScrollArea(self.central_widget)
         #font = QtGui.QFont()
-        #font.setFamily("Gabriola")
+        #font.setFamily("Arial")
         #font.setPointSize(15)
         #self.scrollArea.setFont(font)
         self.scrollArea.setWidgetResizable(True)
@@ -114,7 +114,7 @@ class DeleteTrialTypeUi(object):
         self.trial_types_tableWidget.setHorizontalHeaderItem(1, item)
         # set selection by rows
         #self.trial_types_tableWidget.setSelectionBehavior(QtWidgets.QAbstractItemView.selectRows) TODO check this
-        #self.trial_types_tableWidget.setStyleSheet("font: 12pt \"Gabriola\";")
+        #self.trial_types_tableWidget.setStyleSheet("font: 12pt \"Arial\";")
         # set an adaptive width for table
         #trials_table_adaptive_width = self.trial_types_tableWidget.horizontalHeader()
         #trials_table_adaptive_width.setSectionResizeMode(QHeaderView.Stretch)

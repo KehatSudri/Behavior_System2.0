@@ -68,14 +68,14 @@ class DeleteSessionTemplate(object):
         self.window_gridLayout.setObjectName("window_gridLayout")
         # set a header for the window
         self.headline_label = QtWidgets.QLabel(self.central_widget)
-        #self.headline_label.setStyleSheet("font: 45pt \"Gabriola\";")
+        #self.headline_label.setStyleSheet("font: 45pt \"Arial\";")
         self.headline_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.headline_label.setObjectName("headline_label")
         self.window_gridLayout.addWidget(self.headline_label, 0, 0, 1, 1)
         # set a scroll area
         self.scrollArea = QtWidgets.QScrollArea(self.central_widget)
         #font = QtGui.QFont()
-        #font.setFamily("Gabriola")
+        #font.setFamily("Arial")
         #font.setPointSize(15)
         #self.scrollArea.setFont(font)
         self.scrollArea.setWidgetResizable(True)
