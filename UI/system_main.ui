@@ -34,7 +34,7 @@
            <x>0</x>
            <y>0</y>
            <width>382</width>
-           <height>379</height>
+           <height>377</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
@@ -52,7 +52,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Login as a manager</string>
+             <string>Login as manager</string>
             </property>
            </widget>
           </item>

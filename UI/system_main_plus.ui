@@ -30,6 +30,9 @@
           <pointsize>15</pointsize>
          </font>
         </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
         <property name="widgetResizable">
          <bool>true</bool>
         </property>
@@ -38,8 +41,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>375</width>
-           <height>364</height>
+           <width>388</width>
+           <height>377</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
