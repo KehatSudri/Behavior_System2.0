@@ -7,7 +7,7 @@ void writeOutput(TaskHandle taskHandle, int duration, int delay = 0) {
     while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < delay) {
         continue;
     }
-    DAQmxWriteAnalogScalarF64(taskHandle, true, 5.0, 4.0, NULL);
+    DAQmxWriteAnalogScalarF64(taskHandle, true, 5.0, 3.7, NULL);
     start_time = std::chrono::high_resolution_clock::now();
     while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < duration) {
         continue;
