@@ -49,9 +49,8 @@ void SessionControls::demoRun() {
             std::thread t(&Event::set, &eve, data[0]);
             t.detach();
         }
-        else {
+        else
             std::this_thread::sleep_for(std::chrono::milliseconds(300));
-        }
     }
 
     t1.join();
@@ -91,23 +90,17 @@ void SessionControls::run() {
             std::thread t(&Event::set, &inputEvents[0], data[0]);
             t.detach();
         }
-        else {
+        else
             std::this_thread::sleep_for(std::chrono::milliseconds(300));
-        }
     }
 
     t1.join();
-    DAQmxClearTask(inputTaskHandle);
     DAQmxClearTask(ao0InputMocker_TaskHandle);
-    for (auto task : tasks) {
-        DAQmxClearTask(task);
-    }
 }
 
 void SessionControls::startSession() {
-    if (this->isRunning_) {
+    if (this->isRunning_)
         return;
-    }
     this->isRunning_ = true;
     this->isPaused_ = false;
     this->t_ = std::thread(&SessionControls:: run, this);
@@ -122,9 +115,8 @@ void SessionControls::resumeSession() {
 }
 
 void SessionControls::finishSession() {
-    if (!this->isRunning_) {
+    if (!this->isRunning_)
         return;
-    }
     this->isPaused_ = true;
     this->isRunning_ = false;
     this->t_.join();

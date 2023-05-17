@@ -16,43 +16,43 @@ void writeOutput(TaskHandle taskHandle, int duration, int delay = 0) {
 }
 
 void Event::attachListener(Listener* listener) {
-    listeners_.push_back(listener);
+    _listeners.push_back(listener);
 }
 
 void Event::detachListener(Listener* listener) {
-    auto it = std::find(listeners_.begin(), listeners_.end(), listener);
-    if (it != listeners_.end()) {
-        listeners_.erase(it);
+    auto it = std::find(_listeners.begin(), _listeners.end(), listener);
+    if (it != _listeners.end()) {
+        _listeners.erase(it);
     }
 }
 
 void Event::notifyListeners() {
-    for (auto listener : listeners_) {
+    for (auto listener : _listeners) {
         listener->update(this);
     }
 }
 
 void Event::set(float64 value) {
-    if (!this->beenUpdated_ && value > 3.5) {       
-        this->beenUpdated_ = true;
+    if (!this->_beenUpdated && value > 3.5) {       
+        this->_beenUpdated = true;
         notifyListeners();
     }
-    else if (this->beenUpdated_ && value < 3.5) {
-        this->beenUpdated_ = false;
+    else if (this->_beenUpdated && value < 3.5) {
+        this->_beenUpdated = false;
     }
 }
 
 void SimpleOutputer::output() {
-    writeOutput(handler_, duration_, delay_);
+    writeOutput(_handler, _duration, _delay);
 }
 
 void EnvironmentOutputer::output() {
-    std::thread t(&Outputer::output, this->outputer_);
+    std::thread t(&Outputer::output, this->_outputer);
     t.detach();
 }
 
 void ContingentOutputer::update(Event* event) {
-    std::thread t(&Outputer::output, this->outputer_);
+    std::thread t(&Outputer::output, this->_outputer);
     t.detach();
 }
 
@@ -61,7 +61,7 @@ void SerialOutputer::run() {
     bool& isPaused = SessionControls::getInstance().getIsPaused();
     while (isRunning) {
         if (!isPaused) {
-            this->outputer_->output();
+            this->_outputer->output();
         }
     }
 }
