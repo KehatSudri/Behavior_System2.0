@@ -16,10 +16,10 @@ void SessionConf::initAnalogOutputTasks(){
 }
 
 void SessionConf::initInputTaskHandle(){
-	DAQmxCreateTask("", &this->_inputEvents);
+	DAQmxCreateTask("", &this->_inputTaskHandle);
 	for (auto port : this->_AIPorts) {
 		const char* ai_port = port.c_str();
-		DAQmxCreateAIVoltageChan(this->_inputEvents, ai_port, "", DAQmx_Val_Cfg_Default, -5.0, 5.0, DAQmx_Val_Volts, NULL);
+		DAQmxCreateAIVoltageChan(this->_inputTaskHandle, ai_port, "", DAQmx_Val_Cfg_Default, -5.0, 5.0, DAQmx_Val_Volts, NULL);
 	}
 }
 
@@ -31,11 +31,13 @@ void SessionConf::initInputEvents(){
 }
 
 SessionConf::SessionConf(std::string path) : _confPath(path), _numOfTrials(0) {
+	std::cout << path;
 	std::ifstream inputFile(path);
 	if (inputFile.is_open()) {
 		std::string line;
 		int category = 0;
 		while (std::getline(inputFile, line)) {
+			std::cout << line << std::endl;
 			if (line.empty()) {
 				this->_numOfTrials++;
 			}
@@ -61,6 +63,7 @@ SessionConf::SessionConf(std::string path) : _confPath(path), _numOfTrials(0) {
 		inputFile.close();
 		initInputEvents();
 		initAnalogOutputTasks();
+		initInputTaskHandle();
 	}
 	else {
 		std::cerr << "Failed to open file\n";
@@ -68,7 +71,7 @@ SessionConf::SessionConf(std::string path) : _confPath(path), _numOfTrials(0) {
 }
 
 TaskHandle SessionConf::getInputTaskHandle() {
-	return this->_inputEvents;
+	return this->_inputTaskHandle;
 }
 
 std::vector<TaskHandle> SessionConf::getAnalogOutputTasks(){
@@ -84,5 +87,5 @@ SessionConf::~SessionConf(){
 		DAQmxClearTask(task);
 	for (auto task : this->_digitalOutputTasks)
 		DAQmxClearTask(task);
-	DAQmxClearTask(this->_inputEvents);
+	DAQmxClearTask(this->_inputTaskHandle);
 }

@@ -7,12 +7,12 @@
 #include <NIDAQmx.h>
 #include "IOEvents.h"
 
-class OutputPort {
-	int arr[OUTPUT_PARAMS_SIZE];
-	std::string _portName;
-public:
-	OutputPort(std::string portName);
-}
+//class OutputPort {
+//	int arr[OUTPUT_PARAMS_SIZE];
+//	std::string _portName;
+//public:
+//	OutputPort(std::string portName);
+//}
 
 public class SessionConf {
 	int _numOfTrials;

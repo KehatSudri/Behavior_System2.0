@@ -4,8 +4,12 @@
 #include "IOEvents.h"
 #include <iostream>
 #include <thread>
+#include <sstream>
+#include <fstream>
+#include <filesystem>
 
 using namespace System;
+using namespace std;
 using namespace System::Windows::Forms;
 
 SessionControls::SessionControls() {
@@ -40,7 +44,7 @@ void SessionControls::demoRun() {
 
     SimpleOutputer* sm2 = new SimpleOutputer(*AO_TaskHandle, 30,10);
     ContingentOutputer* lis = new ContingentOutputer(sm2);
-    Event eve;
+    Event eve("temp");
     eve.attachListener(lis);
 
     while (this->isRunning_) {
@@ -60,42 +64,46 @@ void SessionControls::demoRun() {
 }
 
 void SessionControls::run() {
-    SessionConf conf("temp_path");
+    //SessionConf conf("session_config.txt");
+    //TaskHandle ao0InputMocker_TaskHandle = NULL;
+    //DAQmxCreateTask("inputMocker", &ao0InputMocker_TaskHandle);
+    //DAQmxCreateAOVoltageChan(ao0InputMocker_TaskHandle, "Dev1/ao0", "", -5.0, 5.0, DAQmx_Val_Volts, "");
+    //int mockerDelay = 100;
+    //int mockerDuration = 50;
+    //SimpleOutputer* sm1 = new SimpleOutputer(ao0InputMocker_TaskHandle, mockerDuration, mockerDelay);
+    //SerialOutputer ao0InputMocker(sm1);
+    //std::thread t1(&SerialOutputer::run, &ao0InputMocker);
 
-    TaskHandle ao0InputMocker_TaskHandle = NULL;
-    DAQmxCreateTask("inputMocker", &ao0InputMocker_TaskHandle);
-    DAQmxCreateAOVoltageChan(ao0InputMocker_TaskHandle, "Dev1/ao0", "", -5.0, 5.0, DAQmx_Val_Volts, "");
-    int mockerDelay = 100;
-    int mockerDuration = 50;
-    SimpleOutputer* sm1 = new SimpleOutputer(ao0InputMocker_TaskHandle, mockerDuration, mockerDelay);
-    SerialOutputer ao0InputMocker(sm1);
-    std::thread t1(&SerialOutputer::run, &ao0InputMocker);
+    //const int size = 5;
+    //float64 data[size];
+    //int32 read;
 
-    const int size = 5;
-    float64 data[size];
-    int32 read;
+    //TaskHandle inputTaskHandle = conf.getInputTaskHandle();
+    //std::vector<TaskHandle> tasks = conf.getAnalogOutputTasks();
+    //std::cout << tasks.size();
+    ////SimpleOutputer* sm2 = new SimpleOutputer(tasks[0], 30, 10);
+    ////ContingentOutputer* lis = new ContingentOutputer(sm2);
 
-    TaskHandle inputTaskHandle = conf.getInputTaskHandle();
-    std::vector<TaskHandle> tasks = conf.getAnalogOutputTasks();
+    ////std::vector<Event> inputEvents = conf.getInputEvents();
+    ////inputEvents[0].attachListener(lis);
 
-    SimpleOutputer* sm2 = new SimpleOutputer(tasks[0], 30, 10);
-    ContingentOutputer* lis = new ContingentOutputer(sm2);
+    //while (this->isRunning_) {
+    //    if (!this->isPaused_) {
+    //        /*DAQmxReadAnalogF64(inputTaskHandle, size, 5.0, DAQmx_Val_GroupByScanNumber, data, size, &read, NULL);
+    //        std::thread t(&Event::set, &inputEvents[0], data[0]);
+    //        t.detach();*/
+    //    }
+    //    else
+    //        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+    //}
 
-    std::vector<Event> inputEvents = conf.getInputEvents();
-    inputEvents[0].attachListener(lis);
+    //t1.join();
+    //for (auto t : tasks) {
+    //    DAQmxClearTask(t);
 
-    while (this->isRunning_) {
-        if (!this->isPaused_) {
-            DAQmxReadAnalogF64(inputTaskHandle, size, 5.0, DAQmx_Val_GroupByScanNumber, data, size, &read, NULL);
-            std::thread t(&Event::set, &inputEvents[0], data[0]);
-            t.detach();
-        }
-        else
-            std::this_thread::sleep_for(std::chrono::milliseconds(300));
-    }
-
-    t1.join();
-    DAQmxClearTask(ao0InputMocker_TaskHandle);
+    //}
+    //DAQmxClearTask(inputTaskHandle);
+    //DAQmxClearTask(ao0InputMocker_TaskHandle);
 }
 
 void SessionControls::startSession() {
@@ -103,7 +111,7 @@ void SessionControls::startSession() {
         return;
     this->isRunning_ = true;
     this->isPaused_ = false;
-    this->t_ = std::thread(&SessionControls:: run, this);
+    this->t_ = std::thread(&SessionControls:: demoRun, this);
 }
 
 void SessionControls::pauseSession() {

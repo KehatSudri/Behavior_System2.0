@@ -11,8 +11,8 @@ class Listener;
 
 class Event {
     std::vector<Listener*> _listeners;
-    bool _beenUpdated;
     std::string _port;
+    bool _beenUpdated;
 public:
     Event(std::string port) : _port(port), _beenUpdated(false) {};
     void attachListener(Listener* listener);
