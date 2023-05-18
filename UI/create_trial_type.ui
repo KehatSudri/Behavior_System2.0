@@ -135,7 +135,7 @@
          <x>0</x>
          <y>0</y>
          <width>742</width>
-         <height>672</height>
+         <height>674</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
@@ -181,7 +181,6 @@
               <property name="font">
                <font>
                 <pointsize>13</pointsize>
-
                </font>
               </property>
               <property name="text">
@@ -200,7 +199,6 @@
               <property name="font">
                <font>
                 <pointsize>13</pointsize>
-
                </font>
               </property>
               <property name="text">
@@ -370,7 +368,8 @@
              <widget class="QPushButton" name="Add_event_pushButton">
               <property name="font">
                <font>
-                <pointsize>8</pointsize>
+                <family>Arial</family>
+                <pointsize>13</pointsize>
                </font>
               </property>
               <property name="text">
@@ -382,7 +381,8 @@
              <widget class="QPushButton" name="pushButton_2">
               <property name="font">
                <font>
-                <pointsize>8</pointsize>
+                <family>Arial</family>
+                <pointsize>13</pointsize>
                </font>
               </property>
               <property name="text">
@@ -391,7 +391,6 @@
              </widget>
             </item>
            </layout>
-
           </item>
           <item>
            <widget class="QLabel" name="label">
