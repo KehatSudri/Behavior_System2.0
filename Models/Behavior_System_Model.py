@@ -923,13 +923,15 @@ class BehaviorSystemModel(INotifyPropertyChanged):
                 self.db.update_trial_type(t_id, new_name, new_events)
 
     def delete_trial_type(self, name):
-        val = -1
-        # find trial id
-        for t in self.trial_types:
-            t_id, t_name, t_events = t
-            if t_name == name:
-                val = self.db.delete_trial_type(t_id)
-        return val
+        self.db.delete_trial_type(name)
+
+        # val = -1
+        # # find trial id
+        # for t in self.trial_types:
+        #     t_id, t_name, t_events = t
+        #     if t_name == name:
+        #         val = self.db.delete_trial_type(t_id)
+        # return val
 
     def get_event_list_for_sess(self):
         list_events = []

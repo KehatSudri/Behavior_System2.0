@@ -182,6 +182,8 @@ class DeleteTrialTypeUi(object):
         is_row_selected = chosen_row != -1
         if is_not_empty and is_row_selected:
             # get the chosen block's row and remove it
+            item = self.table.item(chosen_row, 0)
+            self.vm.delete_trial_type(item.text())
             del self.trial_types[chosen_row]
             self.table.removeRow(chosen_row)
         elif is_not_empty:
