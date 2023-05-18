@@ -624,7 +624,6 @@ class CreateSessionUi(object):
     def on_next_click(self):
         ports = []
         dependencies = []
-        print(self.trials_in_session)
         for i in range(0, len(self.trials_in_session), 2):
             ports = (self.vm.get_ports(self.trials_in_session[i]))
             dependencies = self.vm.get_dependencies(self.trials_in_session[i])

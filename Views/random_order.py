@@ -29,13 +29,11 @@ class RandomOrderUi(object):
         self.set_trials_table_pointer = None
 
     def setupUi(self, dialog, event_handler):
-        print(self.parent.trials_in_session)
         uic.loadUi(get_ui_path('random_order.ui'), dialog)
         # dialog.accepted.connect(lambda: event_handler(self.choose_template_cb.currentText()))
         dialog.accepted.connect(lambda: event_handler())
         dialog.rejected.connect(lambda: print('cancel'))
         trials_tableWidget = dialog.findChild(QtWidgets.QTableWidget, "trials_tableWidget")
-        print(len(self.parent.trials_in_session))
         for i in range (int(len(self.parent.trials_in_session)/2))   :
             trials_tableWidget.insertRow(i)
             trials_tableWidget.setItem(i, 0, QTableWidgetItem(self.parent.trials_in_session[i*2]))

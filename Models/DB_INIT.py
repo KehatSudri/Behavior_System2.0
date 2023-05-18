@@ -22,8 +22,16 @@ def config(filename):
 
 
 class DB:
-    def __init__(self, filename):
-        self.conn = None
+    _instance = None
+
+    def __new__(cls, filename=None):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            if filename is not None:
+                cls._instance.initialize(filename)
+        return cls._instance
+
+    def initialize(self, filename):
         db_config = config(filename)
         self.db_name = db_config['database']
         db_config['database'] = 'postgres'
@@ -67,7 +75,7 @@ class DB:
         with self.conn.cursor() as cur:
             cur.execute(sql, ("Dev1/ao0", "serialOutputMock", "Output", "Analog", False))
             cur.execute(sql, ("Dev1/ao1", "outputMock", "Output", "Analog", False))
-            cur.execute(sql, ("Dev1/a11", "inputMock", "Input", "Analog", False))
+            cur.execute(sql, ("Dev1/ai11", "inputMock", "Input", "Analog", False))
             self.conn.commit()
 
     def insert_hardware_event(self, name, port, type, format, is_reward):
@@ -176,6 +184,13 @@ class DB:
         with self.conn.cursor() as cur:
             cur.execute("SELECT name FROM events")
             names = cur.fetchall()
+        return names
+
+    def get_event_name_by_port(self, port):
+        with self.conn.cursor() as cur:
+            sql = f"SELECT name FROM events WHERE port=%s"
+            cur.execute(sql, (port,))
+            names = cur.fetchone()
         return names
 
     def get_session_trials(self, sess_id):

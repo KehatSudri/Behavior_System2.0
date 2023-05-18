@@ -4,9 +4,6 @@
 #include "IOEvents.h"
 #include <iostream>
 #include <thread>
-#include <sstream>
-#include <fstream>
-#include <filesystem>
 
 using namespace System;
 using namespace std;
@@ -44,13 +41,13 @@ void SessionControls::demoRun() {
 
     SimpleOutputer* sm2 = new SimpleOutputer(*AO_TaskHandle, 30,10);
     ContingentOutputer* lis = new ContingentOutputer(sm2);
-    Event eve("temp");
-    eve.attachListener(lis);
+    Event* eve = new Event("temp");
+    eve->attachListener(lis);
 
     while (this->isRunning_) {
         if (!this->isPaused_) {
             DAQmxReadAnalogF64(AI_TaskHandle, size, 5.0, DAQmx_Val_GroupByScanNumber, data, size, &read, NULL);
-            std::thread t(&Event::set, &eve, data[0]);
+            std::thread t(&Event::set, eve, data[0]);
             t.detach();
         }
         else
@@ -64,46 +61,40 @@ void SessionControls::demoRun() {
 }
 
 void SessionControls::run() {
-    //SessionConf conf("session_config.txt");
-    //TaskHandle ao0InputMocker_TaskHandle = NULL;
-    //DAQmxCreateTask("inputMocker", &ao0InputMocker_TaskHandle);
-    //DAQmxCreateAOVoltageChan(ao0InputMocker_TaskHandle, "Dev1/ao0", "", -5.0, 5.0, DAQmx_Val_Volts, "");
-    //int mockerDelay = 100;
-    //int mockerDuration = 50;
-    //SimpleOutputer* sm1 = new SimpleOutputer(ao0InputMocker_TaskHandle, mockerDuration, mockerDelay);
-    //SerialOutputer ao0InputMocker(sm1);
-    //std::thread t1(&SerialOutputer::run, &ao0InputMocker);
+    // --------------------------------------------------
+    TaskHandle ao0InputMocker_TaskHandle = NULL;
+    DAQmxCreateTask("inputMocker", &ao0InputMocker_TaskHandle);
+    DAQmxCreateAOVoltageChan(ao0InputMocker_TaskHandle, "Dev1/ao0", "", -5.0, 5.0, DAQmx_Val_Volts, "");
+    int mockerDelay = 100;
+    int mockerDuration = 50;
+    SimpleOutputer* sm1 = new SimpleOutputer(ao0InputMocker_TaskHandle, mockerDuration, mockerDelay);
+    SerialOutputer ao0InputMocker(sm1);
+    std::thread t1(&SerialOutputer::run, &ao0InputMocker);
+    // --------------------------------------------------
 
-    //const int size = 5;
-    //float64 data[size];
-    //int32 read;
+    SessionConf conf("../../config_files/session_config.txt");
+    TaskHandle inputTaskHandle = conf.getInputTaskHandle();
+    std::vector<Event*> inputEvents = conf.getInputEvents();
 
-    //TaskHandle inputTaskHandle = conf.getInputTaskHandle();
-    //std::vector<TaskHandle> tasks = conf.getAnalogOutputTasks();
-    //std::cout << tasks.size();
-    ////SimpleOutputer* sm2 = new SimpleOutputer(tasks[0], 30, 10);
-    ////ContingentOutputer* lis = new ContingentOutputer(sm2);
-
-    ////std::vector<Event> inputEvents = conf.getInputEvents();
-    ////inputEvents[0].attachListener(lis);
-
-    //while (this->isRunning_) {
-    //    if (!this->isPaused_) {
-    //        /*DAQmxReadAnalogF64(inputTaskHandle, size, 5.0, DAQmx_Val_GroupByScanNumber, data, size, &read, NULL);
-    //        std::thread t(&Event::set, &inputEvents[0], data[0]);
-    //        t.detach();*/
-    //    }
-    //    else
-    //        std::this_thread::sleep_for(std::chrono::milliseconds(300));
-    //}
-
-    //t1.join();
-    //for (auto t : tasks) {
-    //    DAQmxClearTask(t);
-
-    //}
-    //DAQmxClearTask(inputTaskHandle);
-    //DAQmxClearTask(ao0InputMocker_TaskHandle);
+    int inputPortsSize = conf.getInputEvents().size();
+    const int numSamplesPerPort = 5;
+    std::vector<float64> data(inputPortsSize * numSamplesPerPort);
+    int32 read;
+    while (this->isRunning_) {
+        if (!this->isPaused_) {
+            DAQmxReadAnalogF64(inputTaskHandle, numSamplesPerPort, 5.0, DAQmx_Val_GroupByScanNumber, data.data(), inputPortsSize * numSamplesPerPort, &read, NULL);
+            for (int portIndex = 0; portIndex < inputPortsSize; ++portIndex)
+                for (int sampleIndex = 0; sampleIndex < numSamplesPerPort; ++sampleIndex) {
+                    float64 sampleValue = data[portIndex * numSamplesPerPort + sampleIndex];
+                    std::thread t(&Event::set, inputEvents[portIndex], sampleValue);
+                    t.detach();
+                }
+        }
+        else {
+            std::this_thread::sleep_for(std::chrono::milliseconds(300));
+        }
+    }
+    t1.join();
 }
 
 void SessionControls::startSession() {
@@ -111,7 +102,7 @@ void SessionControls::startSession() {
         return;
     this->isRunning_ = true;
     this->isPaused_ = false;
-    this->t_ = std::thread(&SessionControls:: demoRun, this);
+    this->t_ = std::thread(&SessionControls:: run, this);
 }
 
 void SessionControls::pauseSession() {

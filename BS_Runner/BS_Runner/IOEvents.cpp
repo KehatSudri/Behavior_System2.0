@@ -1,6 +1,8 @@
 #include "IOEvents.h"
 #include "SessionControls.h"
 #include <thread>
+#include <iostream>
+
 
 void writeOutput(TaskHandle taskHandle, int duration, int delay = 0) {
     auto start_time = std::chrono::high_resolution_clock::now();
@@ -33,12 +35,12 @@ void Event::notifyListeners() {
 }
 
 void Event::set(float64 value) {
-    if (!this->_beenUpdated && value > 3.5) {       
-        this->_beenUpdated = true;
+    if (!_beenUpdated && value > 3.5) {       
+        _beenUpdated = true;
         notifyListeners();
     }
-    else if (this->_beenUpdated && value < 3.5) {
-        this->_beenUpdated = false;
+    else if (_beenUpdated && value < 3.5) {
+        _beenUpdated = false;
     }
 }
 

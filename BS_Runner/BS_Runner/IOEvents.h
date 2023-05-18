@@ -14,10 +14,14 @@ class Event {
     std::string _port;
     bool _beenUpdated;
 public:
-    Event(std::string port) : _port(port), _beenUpdated(false) {};
+    Event(std::string port) : _port(port), _beenUpdated(false) {}
+    std::string getPort() { return this->_port; }
     void attachListener(Listener* listener);
     void detachListener(Listener* listener);
     void notifyListeners();
+    int gaga() {
+        return _listeners.size();
+    }
     void set(float64 value);
 };
 

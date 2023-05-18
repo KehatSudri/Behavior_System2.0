@@ -6,13 +6,28 @@
 
 void SessionConf::initAnalogOutputTasks(){
 	for (auto port : this->_AOPorts) {
-		std::cout << port << std::endl;
-		const char* ao_port = port.c_str();
+		std::string delimiter = ",";
+		std::string token1 = port, token2;
+		size_t pos = port.find(delimiter);
+		if (pos != std::string::npos) {
+			token1 = port.substr(0, pos);
+			token2 = port.substr(pos + delimiter.length());
+		}
+		const char* ao_port = token1.c_str();
 		TaskHandle AO_TaskHandle = NULL;
 		DAQmxCreateTask("", &AO_TaskHandle);
 		DAQmxCreateAOVoltageChan(AO_TaskHandle, ao_port, "", -5.0, 5.0, DAQmx_Val_Volts, "");
 		this->_analogOutputTasks.push_back(AO_TaskHandle);
-	}
+		SimpleOutputer* sm = new SimpleOutputer(AO_TaskHandle, 30, 10);
+		this->_simpleOutputers.push_back(sm);
+		if (!token2.empty())
+			for (auto& eve : this->getInputEvents()) {
+				if (eve->getPort() == token2) {
+					eve->attachListener(new ContingentOutputer(sm));
+					break;
+				}
+			}
+	}	
 }
 
 void SessionConf::initInputTaskHandle(){
@@ -23,35 +38,31 @@ void SessionConf::initInputTaskHandle(){
 	}
 }
 
-void SessionConf::initInputEvents(){
+void SessionConf::initInputEvents() {
 	for (auto port : this->_AIPorts) {
-		Event eve(port);
-		this->_inputEvents.push_back(eve);
+		this->_inputEvents.push_back(new Event(port));
 	}
 }
 
 SessionConf::SessionConf(std::string path) : _confPath(path), _numOfTrials(0) {
-	std::cout << path;
 	std::ifstream inputFile(path);
 	if (inputFile.is_open()) {
 		std::string line;
 		int category = 0;
 		while (std::getline(inputFile, line)) {
-			std::cout << line << std::endl;
 			if (line.empty()) {
 				this->_numOfTrials++;
 			}
 			else {
-				if (line[0] == '$')
+				if (line[0] == '$') {
 					++category;
+					continue;
+				}
 				switch (category) {
 				case 1:
-					this->_Dependencies.push_back(line);
-					break;
-				case 2:
 					this->_AIPorts.push_back(line);
 					break;
-				case 3:
+				case 2:
 					this->_AOPorts.push_back(line);
 					std::getline(inputFile, line);
 					break;
@@ -61,9 +72,9 @@ SessionConf::SessionConf(std::string path) : _confPath(path), _numOfTrials(0) {
 			}
 		}
 		inputFile.close();
+		initInputTaskHandle();
 		initInputEvents();
 		initAnalogOutputTasks();
-		initInputTaskHandle();
 	}
 	else {
 		std::cerr << "Failed to open file\n";
@@ -78,7 +89,7 @@ std::vector<TaskHandle> SessionConf::getAnalogOutputTasks(){
 	return this->_analogOutputTasks;
 }
 
-std::vector<Event> SessionConf::getInputEvents(){
+std::vector<Event*> SessionConf::getInputEvents(){
 	return this->_inputEvents;
 }
 

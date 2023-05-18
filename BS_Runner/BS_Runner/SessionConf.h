@@ -22,7 +22,7 @@ public class SessionConf {
 	std::vector<std::string> _AOPorts;
 	std::vector<std::string> _DIPorts;
 	std::vector<std::string> _DOPorts;
-	std::vector<Event> _inputEvents;
+	std::vector<Event*> _inputEvents;
 	std::vector<TaskHandle> _analogOutputTasks;
 	std::vector<TaskHandle> _digitalOutputTasks;
 	TaskHandle _inputTaskHandle;
@@ -30,11 +30,12 @@ public class SessionConf {
 	void initAnalogOutputTasks();
 	void initInputTaskHandle();
 public:
+	std::vector<SimpleOutputer*> _simpleOutputers;
 	SessionConf(std::string path);
 	int getNumOfTrials() { return this->_numOfTrials; }
 	TaskHandle getInputTaskHandle();
 	std::vector<TaskHandle> getAnalogOutputTasks();
-	std::vector<Event> getInputEvents();
+	std::vector<Event*> getInputEvents();
 	~SessionConf();
 };
 #endif // __SessionConf__
