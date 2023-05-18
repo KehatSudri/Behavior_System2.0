@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>762</width>
-    <height>831</height>
+    <width>873</width>
+    <height>889</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -134,8 +134,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>742</width>
-         <height>674</height>
+         <width>853</width>
+         <height>732</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
@@ -232,9 +232,9 @@
             <item>
              <widget class="QComboBox" name="comboBox">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
+               <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
                 <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
+                <verstretch>37</verstretch>
                </sizepolicy>
               </property>
               <property name="font">
@@ -266,9 +266,9 @@
             <item>
              <widget class="QComboBox" name="comboBox_3">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
+               <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
                 <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
+                <verstretch>37</verstretch>
                </sizepolicy>
               </property>
               <property name="maximumSize">
@@ -319,9 +319,9 @@
             <item>
              <widget class="QComboBox" name="ranom_pred_comboBox">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Ignored" vsizetype="Minimum">
+               <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
                 <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
+                <verstretch>37</verstretch>
                </sizepolicy>
               </property>
               <property name="font">
@@ -332,20 +332,18 @@
              </widget>
             </item>
             <item>
-             <spacer name="horizontalSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+             <widget class="QLabel" name="label_6">
+              <property name="text">
+               <string/>
               </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Fixed</enum>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string/>
               </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>364</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
+             </widget>
             </item>
            </layout>
           </item>
