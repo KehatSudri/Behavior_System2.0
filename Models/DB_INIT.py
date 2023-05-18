@@ -299,10 +299,16 @@ class DB:
         self.conn.commit()
         cur.close()
 
-    # TODO validate this functions
-    def delete_trial_type(self, type_id):
+    def delete_trial_type(self, name):
         with self.conn.cursor() as cur:
-            cur.execute(f'DELETE FROM trials WHERE type_id={type_id}')
+            cur.execute(f"DELETE FROM events "
+                        f"USING events_to_trials "
+                        f"WHERE events.name = events_to_trials.event_name "
+                        f"AND events_to_trials.trial_name = '{name}'")
+            cur.execute("DELETE FROM events_to_trials WHERE trial_name = %s", (name,))
+            cur.execute("DELETE FROM trials WHERE name = %s", (name,))
+
+
             self.conn.commit()
 
     # TODO validate this functions
