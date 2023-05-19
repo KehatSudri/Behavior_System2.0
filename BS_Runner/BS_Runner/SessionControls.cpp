@@ -14,8 +14,7 @@ SessionControls::SessionControls() {
     this->_isPaused = false;
 }
 
-void SessionControls::run() {
-    // --------------------------------------------------
+std::thread serialOutputMock() {
     TaskHandle ao0InputMocker_TaskHandle = NULL;
     DAQmxCreateTask("inputMocker", &ao0InputMocker_TaskHandle);
     DAQmxCreateAOVoltageChan(ao0InputMocker_TaskHandle, "Dev1/ao0", "", -5.0, 5.0, DAQmx_Val_Volts, "");
@@ -23,8 +22,22 @@ void SessionControls::run() {
     int mockerDuration = 50;
     SimpleOutputer* sm1 = new SimpleOutputer(ao0InputMocker_TaskHandle, mockerDuration, mockerDelay);
     SerialOutputer ao0InputMocker(sm1);
-    std::thread t1(&SerialOutputer::run, &ao0InputMocker);
+    std::thread t(&SerialOutputer::run, &ao0InputMocker);
+    return t;
+}
+
+void SessionControls::run() {
     // --------------------------------------------------
+    /*TaskHandle ao0InputMocker_TaskHandle = NULL;
+    DAQmxCreateTask("inputMocker", &ao0InputMocker_TaskHandle);
+    DAQmxCreateAOVoltageChan(ao0InputMocker_TaskHandle, "Dev1/ao0", "", -5.0, 5.0, DAQmx_Val_Volts, "");
+    int mockerDelay = 100;
+    int mockerDuration = 50;
+    SimpleOutputer* sm1 = new SimpleOutputer(ao0InputMocker_TaskHandle, mockerDuration, mockerDelay);
+    SerialOutputer ao0InputMocker(sm1);
+    std::thread t1(&SerialOutputer::run, &ao0InputMocker);*/
+    // --------------------------------------------------
+    std::thread t1 = serialOutputMock();
 
     SessionConf conf(CONFIGURATION_FILE_PATH);
     if (!conf.isValid()) {
