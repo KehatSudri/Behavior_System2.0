@@ -1,8 +1,9 @@
 #pragma once
 #ifndef __IOEvents__
 #define __IOEvents__
-#include <vector>
 #include <NIDAQmx.h>
+#include <vector>
+#include <map>
 #include <string>
 
 void writeOutput(TaskHandle taskHandle, int delay, int duration);
@@ -32,18 +33,16 @@ public:
 
 class Outputer {
 public:
-    Outputer(TaskHandle handler, int duration, int delay = 0 , int frequency = 0) : _handler(handler), _delay(delay), _duration(duration), _frequency(frequency) {}
+    Outputer(TaskHandle handler, std::map<std::string, int> attributes) : _attributes(attributes){}
     virtual void output() = 0;
 protected:
     TaskHandle _handler;
-    int _delay;
-    int _duration;
-    int _frequency;
+    std::map<std::string, int> _attributes;
 };
 
 class SimpleOutputer : public Outputer {
 public:
-    SimpleOutputer(TaskHandle handler, int duration, int delay = 0, int frequency = 0) : Outputer(handler, duration, delay, frequency) {}
+    SimpleOutputer(TaskHandle handler, std::map<std::string, int> attributes) : Outputer(handler, attributes) {}
     void output() override;
 };
 

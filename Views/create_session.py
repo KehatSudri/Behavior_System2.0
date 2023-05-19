@@ -757,26 +757,8 @@ class CreateSessionUi(object):
         self.exp_name_te.setHtml("experimentorMock")
 
     def on_session_define_event_handler(self):
-        print("session start")
-        self.main_window.close()
-        self.main_window = QtWidgets.QDialog()
-
-        control_session_board = ControlSessionBoardUi(self)
-        control_session_board.setupUi(self.main_window)
-
-        self.main_window.show()
-
-    # def dict_str_style(self, d):
-    #     d_casting_int = self.get_string_dict(d)
-    #
-    #     result = yaml.dump(d_casting_int, sort_keys=False, default_flow_style=False, default_style='')
-    #     return result
-    #
-    # def get_string_dict(self, d):
-    #     cast_str = lambda x: int(x) if x.isnumeric() else x
-    #     d_casting_int = {}
-    #     for outer_k, outer_v in d.items():
-    #         d_casting_int[outer_k] = {}
-    #         for param, value in outer_v.items():
-    #             d_casting_int[outer_k][param] = cast_str(value)
-    #     return d_casting_int
+        import subprocess
+        # TODO update file.exe path
+        exe_path = "path/to/your/exe/file.exe"
+        return
+        subprocess.call(exe_path)

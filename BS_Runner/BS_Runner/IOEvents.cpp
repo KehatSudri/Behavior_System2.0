@@ -1,5 +1,6 @@
 #include "IOEvents.h"
 #include "SessionControls.h"
+#include "Consts.h"
 #include <thread>
 #include <iostream>
 
@@ -45,7 +46,7 @@ void Event::set(float64 value) {
 }
 
 void SimpleOutputer::output() {
-    writeOutput(_handler, _duration, _delay);
+    writeOutput(_handler, _attributes[DURATION_PARAM], _attributes[DELAY_PARAM]);
 }
 
 void EnvironmentOutputer::output() {

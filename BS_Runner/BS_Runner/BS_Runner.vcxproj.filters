@@ -18,13 +18,13 @@
     <ClCompile Include="SessionController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SessionControls.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="IOEvents.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SessionConf.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SessionControls.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

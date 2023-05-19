@@ -4,6 +4,7 @@
 #define OUTPUT_PARAMS_SIZE 4
 #include <string>
 #include <vector>
+#include <map>
 #include <NIDAQmx.h>
 #include "IOEvents.h"
 
@@ -16,13 +17,13 @@
 
 public class SessionConf {
 	int _numOfTrials;
-	std::string _confPath;
+	bool _validFlag;
 	std::vector<std::string> _Dependencies;
 	std::vector<std::string> _AIPorts;
-	std::vector<std::string> _AOPorts;
-	std::vector<std::string> _DIPorts;
+	std::map<std::string, std::vector<int>> _AOPorts;
 	std::vector<std::string> _DOPorts;
 	std::vector<Event*> _inputEvents;
+	std::vector<SimpleOutputer*> _simpleOutputers;
 	std::vector<TaskHandle> _analogOutputTasks;
 	std::vector<TaskHandle> _digitalOutputTasks;
 	TaskHandle _inputTaskHandle;
@@ -30,9 +31,9 @@ public class SessionConf {
 	void initAnalogOutputTasks();
 	void initInputTaskHandle();
 public:
-	std::vector<SimpleOutputer*> _simpleOutputers;
 	SessionConf(std::string path);
 	int getNumOfTrials() { return this->_numOfTrials; }
+	bool isValid() { return this->_validFlag; }
 	TaskHandle getInputTaskHandle();
 	std::vector<TaskHandle> getAnalogOutputTasks();
 	std::vector<Event*> getInputEvents();

@@ -12,19 +12,15 @@ namespace BSRunner {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
-	public ref class SessionController : public System::Windows::Forms::Form
-	{
+	public ref class SessionController : public System::Windows::Forms::Form {
 	public:
-		SessionController(void)
-		{
+		SessionController(void) {
 			InitializeComponent();
 		}
 
 	protected:
-		~SessionController()
-		{
-			if (components)
-			{
+		~SessionController() {
+			if (components) {
 				delete components;
 			}
 		}
@@ -39,8 +35,7 @@ namespace BSRunner {
 		System::Windows::Forms::Panel^ panel1;
 
 #pragma region Windows Form Designer generated code
-		void InitializeComponent(void)
-		{
+		void InitializeComponent(void) {
 			this->StartBtn = (gcnew System::Windows::Forms::Button());
 			this->PauseBtn = (gcnew System::Windows::Forms::Button());
 			this->ResumeBtn = (gcnew System::Windows::Forms::Button());
@@ -151,6 +146,6 @@ namespace BSRunner {
 	}
 	private: System::Void SessionControlPanel_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
-};
+	};
 }
 #endif // __SessionController__

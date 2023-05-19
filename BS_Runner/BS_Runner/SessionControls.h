@@ -4,6 +4,15 @@
 #include <thread>
 
 public class SessionControls {
+	bool _isRunning;
+	bool _isPaused;
+	std::thread _runThread;
+	void run();
+
+	SessionControls();
+	~SessionControls() {};
+	SessionControls(const SessionControls&) = delete;
+	SessionControls& operator=(const SessionControls&) = delete;
 public:
 	static SessionControls& getInstance() {
 		static SessionControls instance;
@@ -14,21 +23,11 @@ public:
 	void resumeSession();
 	void finishSession();
 	bool& getIsPaused() {
-		return isPaused_;
+		return _isPaused;
 	}
 	bool& getIsRunning() {
-		return isRunning_;
+		return _isRunning;
 	}
 	//void giveRewardIntSession();
-private:
-	SessionControls();
-	~SessionControls() {};
-	SessionControls(const SessionControls&) = delete;
-	SessionControls& operator=(const SessionControls&) = delete;
-	void run();
-	void demoRun();
-	bool isRunning_;
-	bool isPaused_;
-	std::thread t_;
 };
 #endif // __SessionControls__
