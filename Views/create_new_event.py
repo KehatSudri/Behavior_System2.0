@@ -1,6 +1,5 @@
 from PyQt6 import QtWidgets, uic
 from PyQt6.QtWidgets import QPushButton
-
 from Views.utils import error_warning, notification, get_ui_path, get_qss_path
 
 
@@ -51,7 +50,7 @@ class CreateEventUi(object):
         back_pushButton.clicked.connect(self.on_back_click)
         add_pushButton = main_window.findChild(QPushButton, 'add_event_btn')
         add_pushButton.clicked.connect(self.cretae_event)
-
+    validPorts=[]#TODO insert all valid ports of nida
     def input_event_conf(self):
         self.is_reward_comboBox.setEnabled(not self.input_radio_btn.isChecked())
         self.analog_radio_btn.setEnabled(not self.input_radio_btn.isChecked())
@@ -84,15 +83,21 @@ class CreateEventUi(object):
         if error_value == -1:
             error_warning("Event name already exist")
             return
-
-        self.vm.insert_hardware_event_to_DB(
-            self.event_port_lineEdit.text(),
-            self.event_name_lineEdit.text(),
-            type,
-            format,
-            str(self.is_reward_comboBox.currentText() == "Yes" and not self.input_radio_btn.isChecked()))
-
-        notification("Event was created")
+        try:
+            self.vm.insert_hardware_event_to_DB(
+                self.event_port_lineEdit.text(),
+                self.event_name_lineEdit.text(),
+                type,
+                format,
+                str(self.is_reward_comboBox.currentText() == "Yes" and not self.input_radio_btn.isChecked()))
+            notification("Event was created successfully !")
+        except Exception as e:
+            msg=str(e)
+            if "port" in msg:
+                error_warning("Error: Port already exists.")
+            elif "name" in msg:
+                error_warning("Error: Event name already exists.")
+            return
 
     def on_back_click(self):
         self.main_window.close()

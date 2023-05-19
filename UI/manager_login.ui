@@ -139,7 +139,7 @@
         <property name="font">
          <font>
           <family>Arial</family>
-          <pointsize>8</pointsize>
+          <pointsize>13</pointsize>
          </font>
         </property>
         <property name="cursor">
