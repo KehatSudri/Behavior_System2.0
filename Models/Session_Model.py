@@ -242,7 +242,6 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
             self.buffer_in = np.zeros((len(self.input_ports), size))  # double definition ???
             self.stream_in.read_many_sample(self.buffer_in, size, timeout=WAIT_INFINITELY)
             # self.stream_in.read_one_sample(self.buffer_in2, timeout=WAIT_INFINITELY)
-            print(self.buffer_in)
             # self.data = np.append(self.data, self.buffer_in, axis=1)  # appends buffered data to total variable data
             # self.input_to_read = np.append(self.input_to_read, self.buffer_in, axis=1)
             #    pass
@@ -541,7 +540,6 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
 
     def is_delta_more_than_time(self, delta, time_stamp):
         time_stamp = str(time_stamp).split(":")
-        print("")
         hour, minute, second, microsec = int(time_stamp[0]), int(time_stamp[1]), int(time_stamp[2].split(".")[0]), int(
             time_stamp[2].split(".")[1])
         timer = timedelta(hours=hour, minutes=minute, seconds=second, microseconds=microsec)

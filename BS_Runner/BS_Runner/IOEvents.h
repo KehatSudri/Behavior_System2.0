@@ -1,25 +1,29 @@
 #pragma once
 #ifndef __IOEvents__
 #define __IOEvents__
-#include <vector>
 #include <NIDAQmx.h>
+#include <vector>
+#include <map>
+#include <string>
 
 void writeOutput(TaskHandle taskHandle, int delay, int duration);
 
 class Listener;
 
 class Event {
+    std::vector<Listener*> _listeners;
+    std::string _port;
+    bool _beenUpdated;
 public:
-    Event() {
-        beenUpdated_ = false;
-    }
+    Event(std::string port) : _port(port), _beenUpdated(false) {}
+    std::string getPort() { return this->_port; }
     void attachListener(Listener* listener);
     void detachListener(Listener* listener);
     void notifyListeners();
+    int gaga() {
+        return _listeners.size();
+    }
     void set(float64 value);
-private:
-    std::vector<Listener*> listeners_;
-    bool beenUpdated_;
 };
 
 class Listener {
@@ -29,44 +33,42 @@ public:
 
 class Outputer {
 public:
-    Outputer(TaskHandle handler, int duration, int delay = 0 , int frequency = 0) : handler_(handler), delay_(delay), duration_(duration), frequency_(frequency) {}
+    Outputer(TaskHandle handler, std::map<std::string, int> attributes) : _attributes(attributes){}
     virtual void output() = 0;
 protected:
-    TaskHandle handler_;
-    int delay_;
-    int duration_;
-    int frequency_;
+    TaskHandle _handler;
+    std::map<std::string, int> _attributes;
 };
 
 class SimpleOutputer : public Outputer {
 public:
-    SimpleOutputer(TaskHandle handler, int duration, int delay = 0, int frequency = 0) : Outputer(handler, duration, delay, frequency) {}
+    SimpleOutputer(TaskHandle handler, std::map<std::string, int> attributes) : Outputer(handler, attributes) {}
     void output() override;
 };
 
 class EnvironmentOutputer {
 public:
-    EnvironmentOutputer(Outputer* outputer) : outputer_(outputer) {}
+    EnvironmentOutputer(Outputer* outputer) : _outputer(outputer) {}
     void output();
 private:
-    Outputer* outputer_;
+    Outputer* _outputer;
 };
 
 class ContingentOutputer : public Listener {
 public:
-    ContingentOutputer(Outputer* outputer) : outputer_(outputer) {}
+    ContingentOutputer(Outputer* outputer) : _outputer(outputer) {}
     void update(Event* event) override;
 private:
-    Outputer* outputer_;
+    Outputer* _outputer;
 };
 
 class SerialOutputer {
 public:
-    SerialOutputer(Outputer* outputer) : outputer_(outputer) {}
+    SerialOutputer(Outputer* outputer) : _outputer(outputer) {}
     void run();
 
 private:
-    Outputer* outputer_;
+    Outputer* _outputer;
 };
 
 #endif // __IOEvents__

@@ -122,7 +122,7 @@
      <widget class="QScrollArea" name="scrollArea">
       <property name="font">
        <font>
-        <family>Gabriola</family>
+        <family>Arial</family>
         <pointsize>15</pointsize>
        </font>
       </property>

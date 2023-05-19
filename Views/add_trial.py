@@ -77,7 +77,6 @@ class AddTrialUi(object):
     def set_trial_form(self, events_name: list):
         # add row for each event and it's parameters
         for i, event_name in enumerate(events_name):
-            print(events_name)
             # print(self.parent.trial_types[0])
             # is_contingent = self.vm.is_contingent(
             #     event_name,self.parent.chosen_trial_type_name)[0]
@@ -241,7 +240,6 @@ class AddTrialUi(object):
 
             if event != "" and event is not None:
                 event_and_params[event] = params
-        print(event_and_params)
 
         # update new trial parameters
         # for event, event_params in new_trial.items():
