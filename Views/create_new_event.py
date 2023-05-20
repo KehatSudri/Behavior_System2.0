@@ -58,10 +58,9 @@ class CreateEventUi(object):
 
     def cretae_event(self):
         type = ""
-        format = None
+        format = "Analog"
         if self.input_radio_btn.isChecked():
             type = self.input_radio_btn.text()
-            format = "Analog"
         elif self.output_radio_btn.isChecked():
             type = self.output_radio_btn.text()
 
@@ -70,19 +69,19 @@ class CreateEventUi(object):
         elif self.digital_radio_btn.isChecked():
             format = self.digital_radio_btn.text()
 
-        if self.event_name_lineEdit.text() == "" or self.event_port_lineEdit.text() == "" or type == "":
+        if self.event_name_lineEdit.text() == "" or self.event_port_lineEdit.text() == "" or type == "" or ( self.output_radio_btn.isChecked() and not self.analog_radio_btn.isChecked() and not self.digital_radio_btn.isChecked()):
             error_warning("not all data is filled")
             return
 
-        error_value = self.vm.verify_insert_hardware_event(
-            self.event_port_lineEdit.text(),
-            self.event_name_lineEdit.text(),
-            type,
-            format,
-            str(self.is_reward_comboBox.currentText() == "Yes"))
-        if error_value == -1:
-            error_warning("Event name already exist")
-            return
+        # error_value = self.vm.verify_insert_hardware_event(
+        #     self.event_port_lineEdit.text(),
+        #     self.event_name_lineEdit.text(),
+        #     type,
+        #     format,
+        #     str(self.is_reward_comboBox.currentText() == "Yes"))
+        # if error_value == -1:
+        #     error_warning("Error : Event name already exist")
+        #     return
         try:
             self.vm.insert_hardware_event_to_DB(
                 self.event_port_lineEdit.text(),
@@ -98,6 +97,7 @@ class CreateEventUi(object):
             elif "name" in msg:
                 error_warning("Error: Event name already exists.")
             return
+
 
     def on_back_click(self):
         self.main_window.close()

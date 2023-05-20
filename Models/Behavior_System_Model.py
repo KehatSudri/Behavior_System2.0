@@ -138,7 +138,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         return events_names
 
     def insert_hardware_event_to_DB(self, port, name, type, format, is_reward):
-        self.db.insert_hardware_event(port, name, type, format, is_reward)
+        return self.db.insert_hardware_event(port, name, type, format, is_reward)
         # self.get_hardware_events_from_DB()
 
     @property

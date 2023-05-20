@@ -137,8 +137,13 @@ class CreateTrialTypeUi(object):
         #     msgBox.setText(f'A Trial with this events order already exist with name "{verify_ans}".')
         #     msgBox.exec()
         #     return
-
-        self.parent.vm.insert_new_trial(name)
+        try:
+            self.parent.vm.insert_new_trial(name)
+        except Exception as e:
+            msg=str(e)
+            if "name" in msg:
+                error_warning("Error: Trial name already exists.")
+            return
         for row in range(self.events_tableWidget.rowCount()):
             row_items = []
             for col in range(self.events_tableWidget.columnCount()):

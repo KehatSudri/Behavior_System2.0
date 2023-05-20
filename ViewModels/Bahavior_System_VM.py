@@ -252,7 +252,7 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
                                 e_2_p)
 
     def insert_hardware_event_to_DB(self, port, name, type, format, is_reward):
-        self.model.insert_hardware_event_to_DB(port, name, type, format, is_reward)
+        return self.model.insert_hardware_event_to_DB(port, name, type, format, is_reward)
 
     def verify_insert_hardware_event(self, name, port, in_out, dig_an, is_rew):
         return self.model.verify_insert_hardware_event(name, port, in_out, dig_an, is_rew)

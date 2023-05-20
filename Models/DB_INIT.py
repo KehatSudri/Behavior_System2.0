@@ -79,10 +79,14 @@ class DB:
             self.conn.commit()
 
     def insert_hardware_event(self, name, port, type, format, is_reward):
-        sql = """INSERT INTO events(port, name, type, format, is_reward) VALUES (%s,%s,%s,%s,%s)"""
-        with self.conn.cursor() as cur:
-            cur.execute(sql, (name, port, type, format, is_reward))
-            self.conn.commit()
+       try:
+            sql = """INSERT INTO events(port, name, type, format, is_reward) VALUES (%s,%s,%s,%s,%s)"""
+            with self.conn.cursor() as cur:
+                cur.execute(sql, (name, port, type, format, is_reward))
+                self.conn.commit()
+       except Exception as e:
+            self.conn.rollback()
+            raise e
 
     def insert_session(self, iti_type, end_def, end_val, trials_order, iti_min_range=None, iti_max_range=None,
                        iti_behave_def=None, total_num=None, block_size=None, blocks_ord=None, sess_name=None,
