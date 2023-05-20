@@ -153,8 +153,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>475</width>
-         <height>418</height>
+         <width>481</width>
+         <height>384</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
@@ -218,7 +218,7 @@
          <widget class="QPushButton" name="remove_pushButton">
           <property name="font">
            <font>
-            <pointsize>8</pointsize>
+            <pointsize>13</pointsize>
            </font>
           </property>
           <property name="text">

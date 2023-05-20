@@ -105,7 +105,6 @@ class SystemMainUi(object):
         self.chosen_window_ui = CreateTrialTypeUi(self)
         self.chosen_window_ui.setupUi(self.chosen_window)
         self.chosen_window.show()
-        self.main_window.hide()
 
     def on_create_event_click(self):
         self.chosen_window = QtWidgets.QMainWindow()

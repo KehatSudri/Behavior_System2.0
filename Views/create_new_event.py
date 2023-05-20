@@ -92,10 +92,10 @@ class CreateEventUi(object):
             notification("Event was created successfully !")
         except Exception as e:
             msg=str(e)
-            if "port" in msg:
-                error_warning("Error: Port already exists.")
-            elif "name" in msg:
+            if "name" in msg:
                 error_warning("Error: Event name already exists.")
+            elif "port" in msg:
+                error_warning("Error: Port already exists.")
             return
 
 
