@@ -120,12 +120,13 @@ class CreateTrialTypeUi(object):
         msgBox = QtWidgets.QMessageBox()
         name = self.trial_type_name_lineEdit.text()
         events = self.events_order
-        if len(events) == 0:
-            error_warning("There are no events in the current trial.")
-            return
         if len(name) == 0 or name.isspace():
             error_warning("Please enter name for this trial.")
             return
+        if len(events) == 0:
+            error_warning("There are no events in the current trial.")
+            return
+
 
         # verify_ans = self.parent.vm.verify_trial_insert(name, events)
         # if verify_ans == -1:

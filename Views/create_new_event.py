@@ -58,7 +58,6 @@ class CreateEventUi(object):
 
     def cretae_event(self):
         type = ""
-        format = "Analog"
         if self.input_radio_btn.isChecked():
             type = self.input_radio_btn.text()
         elif self.output_radio_btn.isChecked():
@@ -68,7 +67,8 @@ class CreateEventUi(object):
             format = self.analog_radio_btn.text()
         elif self.digital_radio_btn.isChecked():
             format = self.digital_radio_btn.text()
-
+        if type == "Input":
+            format = "Analog"
         if self.event_name_lineEdit.text() == "" or self.event_port_lineEdit.text() == "" or type == "" or ( self.output_radio_btn.isChecked() and not self.analog_radio_btn.isChecked() and not self.digital_radio_btn.isChecked()):
             error_warning("not all data is filled")
             return
@@ -89,7 +89,6 @@ class CreateEventUi(object):
                 type,
                 format,
                 str(self.is_reward_comboBox.currentText() == "Yes" and not self.input_radio_btn.isChecked()))
-            notification("Event was created successfully !")
         except Exception as e:
             msg=str(e)
             if "name" in msg:
@@ -97,6 +96,10 @@ class CreateEventUi(object):
             elif "port" in msg:
                 error_warning("Error: Port already exists.")
             return
+
+        notification("Event was created successfully !")
+        self.event_name_lineEdit.clear()
+        self.event_port_lineEdit.clear()
 
 
     def on_back_click(self):

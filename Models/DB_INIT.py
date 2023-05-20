@@ -110,9 +110,13 @@ class DB:
             return -1
 
     def insert_new_trial(self, name):
-        sql = """INSERT INTO trials(name) VALUES (%s)"""
-        with self.conn.cursor() as cur:
-            cur.execute(sql, (name, ))
+        try:
+            sql = """INSERT INTO trials(name) VALUES (%s)"""
+            with self.conn.cursor() as cur:
+                cur.execute(sql, (name, ))
+        except Exception as e:
+            self.conn.rollback()
+            raise e
 
     def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
         sql = """INSERT INTO events_to_trials(event_name, trial_name, is_contingent, contingent_on) VALUES (%s,%s,%s,%s)"""
