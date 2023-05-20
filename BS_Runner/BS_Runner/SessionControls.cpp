@@ -52,6 +52,10 @@ void SessionControls::run() {
     const int numSamplesPerPort = SAMPLE_PER_PORT;
     std::vector<float64> data(inputPortsSize * numSamplesPerPort);
     int32 read;
+
+    for (auto envOutputer : conf.getEnvironmentOutputer()) {
+        envOutputer->output();
+    }
     while (this->_isRunning) {
         if (!this->_isPaused) {
             DAQmxReadAnalogF64(inputTaskHandle, numSamplesPerPort, 5.0, DAQmx_Val_GroupByScanNumber, data.data(), inputPortsSize * numSamplesPerPort, &read, NULL);

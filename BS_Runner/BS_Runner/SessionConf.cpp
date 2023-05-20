@@ -28,6 +28,7 @@ void SessionConf::initAnalogOutputTasks() {
 			token1 = portName.substr(0, pos);
 			token2 = portName.substr(pos + delimiter.length());
 		}
+
 		const char* ao_port = token1.c_str();
 		TaskHandle AO_TaskHandle = NULL;
 		DAQmxCreateTask("", &AO_TaskHandle);
@@ -43,6 +44,9 @@ void SessionConf::initAnalogOutputTasks() {
 					break;
 				}
 			}
+		}
+		else {
+			this->_environmentOutputer.push_back(new EnvironmentOutputer(sm));
 		}
 	}
 }
