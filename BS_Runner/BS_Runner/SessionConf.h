@@ -9,51 +9,44 @@
 #include "IOEvents.h"
 
 class Trial {
+	std::string _trialName;
+	std::vector<std::string> _DOPorts;
+	std::vector<Event*> _inputEvents;
+	std::vector<SimpleOutputer*> _simpleOutputers;
+	std::vector<EnvironmentOutputer*> _environmentOutputer;
+	std::vector<TaskHandle> _analogOutputTasks;
+	std::vector<TaskHandle> _digitalOutputTasks;
+	TaskHandle _inputTaskHandle;
 public:
+	Trial(std::string trialName) :_trialName(trialName){}
 	std::vector<std::string> _AIPorts;
 	std::map<std::string, std::vector<int>> _AOPorts;
-	std::vector<std::string> _DOPorts;
-	std::vector<Event*> _inputEvents;
-	std::vector<SimpleOutputer*> _simpleOutputers;
-	std::vector<EnvironmentOutputer*> _environmentOutputer;
-	std::vector<TaskHandle> _analogOutputTasks;
-	std::vector<TaskHandle> _digitalOutputTasks;
-	TaskHandle _inputTaskHandle;
-	//void initInputEvents();
-	//void initAnalogOutputTasks();
-	//void initInputTaskHandle();
-};
-
-public class SessionConf {
-	//
-	int _numOfTrials;
-	bool _validFlag;
-	std::vector<std::string> _AIPorts;
-	std::map<std::string, std::vector<int>> _AOPorts;
-	std::vector<std::string> _DOPorts;
-	std::vector<Event*> _inputEvents;
-	std::vector<SimpleOutputer*> _simpleOutputers;
-	std::vector<EnvironmentOutputer*> _environmentOutputer;
-	std::vector<TaskHandle> _analogOutputTasks;
-	std::vector<TaskHandle> _digitalOutputTasks;
-	TaskHandle _inputTaskHandle;
-	// TODO move all this in trial class
-
-	std::vector<Trial> _trials; // TODO use trial class
-
-	//
 	void initInputEvents();
 	void initAnalogOutputTasks();
 	void initInputTaskHandle();
-	// TODO implement all this in trial class
+	TaskHandle getInputTaskHandle();
+	std::vector<TaskHandle> getAnalogOutputTasks();
+	std::vector<EnvironmentOutputer*> getEnvironmentOutputer() { return this->_environmentOutputer; }
+	std::vector<Event*> getInputEvents();
+	~Trial();
+};
+
+public class SessionConf {
+	int _numOfTrials = 0;
+	int _currentTrial = 0;
+	bool _validFlag;
+	bool _sessionComplete = false;
+	std::vector<Trial> _trials;
 public:
 	SessionConf(std::string path);
 	int getNumOfTrials() { return this->_numOfTrials; }
 	bool isValid() { return this->_validFlag; }
+	bool isSessionComplete() { return this->_sessionComplete; }
+	void changeCurrentTrial();
+	void finishSession();
 	TaskHandle getInputTaskHandle();
 	std::vector<TaskHandle> getAnalogOutputTasks();
-	std::vector<EnvironmentOutputer*> getEnvironmentOutputer() { this->_environmentOutputer; }
+	std::vector<EnvironmentOutputer*> getEnvironmentOutputer();
 	std::vector<Event*> getInputEvents();
-	~SessionConf();
 };
 #endif // __SessionConf__

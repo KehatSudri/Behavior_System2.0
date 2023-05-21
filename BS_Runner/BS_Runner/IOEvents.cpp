@@ -30,18 +30,18 @@ void Event::detachListener(Listener* listener) {
 }
 
 void Event::notifyListeners() {
-    for (auto listener : _listeners) {
+    for (auto listener : this->_listeners) {
         listener->update(this);
     }
 }
 
 void Event::set(float64 value) {
-    if (!_beenUpdated && value > 3.5) {       
-        _beenUpdated = true;
+    if (!this->_beenUpdated && value > 3.5) {       
+        this->_beenUpdated = true;
         notifyListeners();
     }
-    else if (_beenUpdated && value < 3.5) {
-        _beenUpdated = false;
+    else if (this->_beenUpdated && value < 3.5) {
+        this->_beenUpdated = false;
     }
 }
 
@@ -60,7 +60,7 @@ void ContingentOutputer::update(Event* event) {
 }
 
 void SerialOutputer::run() {
-    bool& isRunning = SessionControls::getInstance().getIsRunning();
+    bool& isRunning = SessionControls::getInstance().getIsSessionRunning();
     bool& isPaused = SessionControls::getInstance().getIsPaused();
     while (isRunning) {
         if (!isPaused) {

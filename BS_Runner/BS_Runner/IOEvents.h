@@ -33,7 +33,7 @@ public:
 
 class Outputer {
 public:
-    Outputer(TaskHandle handler, std::map<std::string, int> attributes) : _attributes(attributes){}
+    Outputer(TaskHandle handler, std::map<std::string, int> attributes) : _handler(handler), _attributes(attributes){}
     virtual void output() = 0;
 protected:
     TaskHandle _handler;

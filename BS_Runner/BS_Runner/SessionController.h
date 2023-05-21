@@ -32,7 +32,10 @@ namespace BSRunner {
 		System::Windows::Forms::Button^ ResumeBtn;
 		System::Windows::Forms::Button^ RewardBtn;
 		System::Windows::Forms::Button^ FinishBtn;
-		System::Windows::Forms::Panel^ panel1;
+	private: System::Windows::Forms::Button^ NextTrailBtn;
+
+	private: System::Windows::Forms::Panel^ NextTrialBtn;
+
 
 #pragma region Windows Form Designer generated code
 		void InitializeComponent(void) {
@@ -41,14 +44,15 @@ namespace BSRunner {
 			this->ResumeBtn = (gcnew System::Windows::Forms::Button());
 			this->RewardBtn = (gcnew System::Windows::Forms::Button());
 			this->FinishBtn = (gcnew System::Windows::Forms::Button());
-			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->panel1->SuspendLayout();
+			this->NextTrialBtn = (gcnew System::Windows::Forms::Panel());
+			this->NextTrailBtn = (gcnew System::Windows::Forms::Button());
+			this->NextTrialBtn->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// StartBtn
 			// 
 			this->StartBtn->Anchor = System::Windows::Forms::AnchorStyles::None;
-			this->StartBtn->Location = System::Drawing::Point(21, 14);
+			this->StartBtn->Location = System::Drawing::Point(19, 2);
 			this->StartBtn->Name = L"StartBtn";
 			this->StartBtn->Size = System::Drawing::Size(199, 35);
 			this->StartBtn->TabIndex = 0;
@@ -59,7 +63,7 @@ namespace BSRunner {
 			// PauseBtn
 			// 
 			this->PauseBtn->Anchor = System::Windows::Forms::AnchorStyles::None;
-			this->PauseBtn->Location = System::Drawing::Point(21, 66);
+			this->PauseBtn->Location = System::Drawing::Point(19, 54);
 			this->PauseBtn->Name = L"PauseBtn";
 			this->PauseBtn->Size = System::Drawing::Size(92, 35);
 			this->PauseBtn->TabIndex = 1;
@@ -70,7 +74,7 @@ namespace BSRunner {
 			// ResumeBtn
 			// 
 			this->ResumeBtn->Anchor = System::Windows::Forms::AnchorStyles::None;
-			this->ResumeBtn->Location = System::Drawing::Point(128, 66);
+			this->ResumeBtn->Location = System::Drawing::Point(126, 54);
 			this->ResumeBtn->Name = L"ResumeBtn";
 			this->ResumeBtn->Size = System::Drawing::Size(92, 35);
 			this->ResumeBtn->TabIndex = 2;
@@ -81,7 +85,7 @@ namespace BSRunner {
 			// RewardBtn
 			// 
 			this->RewardBtn->Anchor = System::Windows::Forms::AnchorStyles::None;
-			this->RewardBtn->Location = System::Drawing::Point(21, 120);
+			this->RewardBtn->Location = System::Drawing::Point(19, 108);
 			this->RewardBtn->Name = L"RewardBtn";
 			this->RewardBtn->Size = System::Drawing::Size(199, 35);
 			this->RewardBtn->TabIndex = 3;
@@ -92,7 +96,7 @@ namespace BSRunner {
 			// FinishBtn
 			// 
 			this->FinishBtn->Anchor = System::Windows::Forms::AnchorStyles::None;
-			this->FinishBtn->Location = System::Drawing::Point(21, 176);
+			this->FinishBtn->Location = System::Drawing::Point(19, 211);
 			this->FinishBtn->Name = L"FinishBtn";
 			this->FinishBtn->Size = System::Drawing::Size(199, 35);
 			this->FinishBtn->TabIndex = 4;
@@ -100,31 +104,43 @@ namespace BSRunner {
 			this->FinishBtn->UseVisualStyleBackColor = true;
 			this->FinishBtn->Click += gcnew System::EventHandler(this, &SessionController::FinishBtn_Click);
 			// 
-			// panel1
+			// NextTrialBtn
 			// 
-			this->panel1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
+			this->NextTrialBtn->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
 				| System::Windows::Forms::AnchorStyles::Left)
 				| System::Windows::Forms::AnchorStyles::Right));
-			this->panel1->Controls->Add(this->RewardBtn);
-			this->panel1->Controls->Add(this->StartBtn);
-			this->panel1->Controls->Add(this->ResumeBtn);
-			this->panel1->Controls->Add(this->FinishBtn);
-			this->panel1->Controls->Add(this->PauseBtn);
-			this->panel1->Location = System::Drawing::Point(12, 12);
-			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(235, 231);
-			this->panel1->TabIndex = 5;
+			this->NextTrialBtn->Controls->Add(this->NextTrailBtn);
+			this->NextTrialBtn->Controls->Add(this->RewardBtn);
+			this->NextTrialBtn->Controls->Add(this->StartBtn);
+			this->NextTrialBtn->Controls->Add(this->ResumeBtn);
+			this->NextTrialBtn->Controls->Add(this->FinishBtn);
+			this->NextTrialBtn->Controls->Add(this->PauseBtn);
+			this->NextTrialBtn->Location = System::Drawing::Point(12, 12);
+			this->NextTrialBtn->Name = L"NextTrialBtn";
+			this->NextTrialBtn->Size = System::Drawing::Size(235, 261);
+			this->NextTrialBtn->TabIndex = 5;
+			// 
+			// NextTrailBtn
+			// 
+			this->NextTrailBtn->Anchor = System::Windows::Forms::AnchorStyles::None;
+			this->NextTrailBtn->Location = System::Drawing::Point(19, 159);
+			this->NextTrailBtn->Name = L"NextTrailBtn";
+			this->NextTrailBtn->Size = System::Drawing::Size(199, 35);
+			this->NextTrailBtn->TabIndex = 5;
+			this->NextTrailBtn->Text = L"Next Trial";
+			this->NextTrailBtn->UseVisualStyleBackColor = true;
+			this->NextTrailBtn->Click += gcnew System::EventHandler(this, &SessionController::NextTrialBtn_click);
 			// 
 			// SessionController
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(257, 253);
-			this->Controls->Add(this->panel1);
+			this->ClientSize = System::Drawing::Size(257, 283);
+			this->Controls->Add(this->NextTrialBtn);
 			this->Name = L"SessionController";
 			this->Text = L"Control Board";
 			this->Load += gcnew System::EventHandler(this, &SessionController::SessionControlPanel_Load);
-			this->panel1->ResumeLayout(false);
+			this->NextTrialBtn->ResumeLayout(false);
 			this->ResumeLayout(false);
 
 		}
@@ -146,6 +162,9 @@ namespace BSRunner {
 	}
 	private: System::Void SessionControlPanel_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
-	};
+	private: System::Void NextTrialBtn_click(System::Object^ sender, System::EventArgs^ e) {
+		SessionControls::getInstance().nextTrial();
+	}
+};
 }
 #endif // __SessionController__
