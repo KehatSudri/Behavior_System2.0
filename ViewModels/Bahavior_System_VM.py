@@ -253,6 +253,12 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
 
     def insert_hardware_event_to_DB(self, port, name, type, format, is_reward):
         return self.model.insert_hardware_event_to_DB(port, name, type, format, is_reward)
+    def insert_session_to_DB(self,session_name,subject_id,experimenter_name,last_used):
+        return self.model.insert_session_to_DB(session_name,subject_id,experimenter_name,last_used)
+
+    def insert_session_to_trials(self, session_name, trial_name):
+        return self.model.insert_session_to_trials(session_name,trial_name)
+
 
     def verify_insert_hardware_event(self, name, port, in_out, dig_an, is_rew):
         return self.model.verify_insert_hardware_event(name, port, in_out, dig_an, is_rew)

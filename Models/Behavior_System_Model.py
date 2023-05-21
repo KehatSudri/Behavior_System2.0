@@ -124,14 +124,14 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         # self.parse_ports()
         return self.event_config
 
-    def verify_insert_hardware_event(self, name, port, in_out, dig_an, is_rew):
-        events = self.get_hardware_events_from_DB()
-        for event in events:
-            if event[1] == name:
-                return -1
-            if list(event[2:]) == [port, in_out, dig_an, is_rew]:
-                return event[1]
-        return 0
+    # def verify_insert_hardware_event(self, name, port, in_out, dig_an, is_rew):
+    #     events = self.get_hardware_events_from_DB()
+    #     for event in events:
+    #         if event[1] == name:
+    #             return -1
+    #         if list(event[2:]) == [port, in_out, dig_an, is_rew]:
+    #             return event[1]
+    #     return 0
 
     def get_all_events_by_name(self):
         events_names = self.db.get_hardware_events_byname()
@@ -452,7 +452,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         self.session_templates = self.db.get_session_templates()
         self.session_trials = self.db.get_all_session_trials()
         self.session_events = self.db.get_all_events()
-        self.subject_sessions = self.db.get_all_subject_sessions()
+        # self.subject_sessions = self.db.get_all_subject_sessions()
 
     def get_trial_types_from_db(self):
         return self.db.get_trial_types()
@@ -607,6 +607,10 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     #     for trial in self._trial_types:
     #         trials.append(trial[1])
     #     return trials
+    def insert_session_to_DB(self,session_name, subject_id, experimenter_name,last_used):
+        return self.db.insert_session(session_name, subject_id, experimenter_name,last_used)
+    def insert_session_to_trials(self, session_name, trial_name):
+        return self.db.insert_session_to_trials(session_name,trial_name)
     def get_trials_names(self):
         return self.db.get_trial_names()
 

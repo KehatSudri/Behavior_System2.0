@@ -116,8 +116,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>521</width>
-         <height>574</height>
+         <width>527</width>
+         <height>548</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
@@ -307,7 +307,7 @@
                <rect>
                 <x>10</x>
                 <y>10</y>
-                <width>101</width>
+                <width>121</width>
                 <height>41</height>
                </rect>
               </property>
@@ -374,7 +374,7 @@
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_2">
               <item>
-               <widget class="QLineEdit" name="event_port_lineEdit"/>
+               <widget class="QComboBox" name="ports_comboBox"/>
               </item>
              </layout>
             </widget>
