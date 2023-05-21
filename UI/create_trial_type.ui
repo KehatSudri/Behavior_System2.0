@@ -134,8 +134,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>853</width>
-         <height>732</height>
+         <width>847</width>
+         <height>710</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
@@ -312,7 +312,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Random/Predicted         </string>
+               <string>Random/Fixed         </string>
               </property>
              </widget>
             </item>
@@ -511,7 +511,7 @@
             </column>
             <column>
              <property name="text">
-              <string>Random \ Predicted</string>
+              <string>Random \ Fixed</string>
              </property>
              <property name="font">
               <font>

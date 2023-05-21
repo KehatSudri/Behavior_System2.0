@@ -452,7 +452,7 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         self.session_templates = self.db.get_session_templates()
         self.session_trials = self.db.get_all_session_trials()
         self.session_events = self.db.get_all_events()
-        # self.subject_sessions = self.db.get_all_subject_sessions()
+        self.subject_sessions = self.db.get_all_subject_sessions()
 
     def get_trial_types_from_db(self):
         return self.db.get_trial_types()

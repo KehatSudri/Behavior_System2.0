@@ -46,7 +46,7 @@ class CreateTrialTypeUi(object):
         self.events_comboBox.addItems([event[0] for event in self.events])
         self.simple_radioButton.toggled.connect(self.simple_event_handler)
         self.simple_radioButton.setChecked(True)
-        self.random_comboBox.addItems(["Random", "Predicted"])
+        self.random_comboBox.addItems(["Random", "Fixed"])
         self.random_comboBox.setEnabled(False)
         self.conti_radioButton.setEnabled(False)
         self.conti_radioButton.toggled.connect(lambda: (

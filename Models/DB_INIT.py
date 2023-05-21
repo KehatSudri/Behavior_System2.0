@@ -281,11 +281,11 @@ class DB:
             events = cur.fetchall()
         return events
 
-    # def get_all_subject_sessions(self):
-    #     with self.conn.cursor() as cur:
-    #         cur.execute("SELECT * FROM subject_to_session")
-    #         ans = cur.fetchall()
-    #     return ans
+    def get_all_subject_sessions(self):
+        # with self.conn.cursor() as cur:
+        #     cur.execute("SELECT * FROM subject_to_session")
+        #     ans = cur.fetchall()
+        return []
 
     def get_last_sess_for_subject(self, sub_id):
         with self.conn.cursor() as cur:
