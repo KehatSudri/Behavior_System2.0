@@ -128,6 +128,8 @@ class CreateSessionUi(object):
         back_btn = self.main_window.findChild(QtWidgets.QPushButton, "back_btn")
         back_btn.clicked.connect(self.on_back_click)
         self.date_value_label.setText((datetime.now()).strftime("%d/%m/%Y"))
+        self.behavior_iti_radioBtn = main_window.findChild(QtWidgets.QRadioButton, 'behavior_iti_radioBtn_3')
+        self.random_iti_radioBtn = main_window.findChild(QtWidgets.QRadioButton, 'random_iti_radioBtn_3')
 
     def on_choose_template_click(self):
         # TODO add on clicked event handler for component
@@ -287,6 +289,31 @@ class CreateSessionUi(object):
         # self.vm.set_trials_list(trials) NOT RELEVANT AT THIS PART
 
     def on_next_click(self):
+        session_name = self.session_name_te.toPlainText()
+        subject_id = self.subject_id_te.toPlainText()
+        experimenter_name = self.exp_name_te.toPlainText()
+        last_used = self.date_value_label.text()
+        date_object = datetime.strptime(last_used, "%d/%m/%Y")
+        formatted_date_last_used = date_object.strftime("%Y-%m-%d")
+        if len(self.trials_in_session) == 0 or ( not self.behavior_iti_radioBtn.isChecked() and not self.random_iti_radioBtn.isChecked()) \
+                or session_name=="" or subject_id=="" or experimenter_name =="":
+            error_warning("Not all data is filled")
+            return
+        try:
+            self.vm.insert_session_to_DB(
+                session_name,
+                subject_id,
+                experimenter_name,
+                formatted_date_last_used)
+        except Exception as e:
+            msg=str(e)
+            if "name" in msg:
+                error_warning("Error: Session name already exists.")
+            return
+
+        # insert to session to trials table
+        for i in range(0, len(self.trials_in_session), 2):
+            self.vm.insert_session_to_trials(session_name,self.trials_in_session[i])
         ports = []
         dependencies = []
         for i in range(0, len(self.trials_in_session), 2):
@@ -300,7 +327,7 @@ class CreateSessionUi(object):
         #         return
         #     error_warning("An error accrued, please try again.")
         #     return
-        # self.set_vm_data() TODO
+        # self.set_vm_data()
         order = self.trials_order_cb.currentText()
         # order = self.vm.sessionVM.trials_order
         # if self.trials_ord_window is None:

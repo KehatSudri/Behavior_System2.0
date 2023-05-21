@@ -120,12 +120,13 @@ class CreateTrialTypeUi(object):
         msgBox = QtWidgets.QMessageBox()
         name = self.trial_type_name_lineEdit.text()
         events = self.events_order
-        if len(events) == 0:
-            error_warning("There are no events in the current trial.")
-            return
         if len(name) == 0 or name.isspace():
             error_warning("Please enter name for this trial.")
             return
+        if len(events) == 0:
+            error_warning("There are no events in the current trial.")
+            return
+
 
         # verify_ans = self.parent.vm.verify_trial_insert(name, events)
         # if verify_ans == -1:
@@ -137,8 +138,13 @@ class CreateTrialTypeUi(object):
         #     msgBox.setText(f'A Trial with this events order already exist with name "{verify_ans}".')
         #     msgBox.exec()
         #     return
-
-        self.parent.vm.insert_new_trial(name)
+        try:
+            self.parent.vm.insert_new_trial(name)
+        except Exception as e:
+            msg=str(e)
+            if "name" in msg:
+                error_warning("Error: Trial name already exists.")
+            return
         for row in range(self.events_tableWidget.rowCount()):
             row_items = []
             for col in range(self.events_tableWidget.columnCount()):

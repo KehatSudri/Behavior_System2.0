@@ -139,7 +139,7 @@
         <property name="font">
          <font>
           <family>Arial</family>
-          <pointsize>8</pointsize>
+          <pointsize>13</pointsize>
          </font>
         </property>
         <property name="cursor">
@@ -162,6 +162,11 @@
       </item>
       <item row="4" column="2">
        <widget class="QPushButton" name="login_pushButton">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>Login</string>
         </property>
