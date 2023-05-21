@@ -123,6 +123,7 @@ void Trial::initAnalogOutputTasks() {
 		if (!token2.empty()) {
 			for (auto& eve : this->getInputEvents()) {
 				if (eve->getPort() == token2) {
+					std::cout << "contigiantt ";
 					eve->attachListener(new ContingentOutputer(sm));
 					break;
 				}

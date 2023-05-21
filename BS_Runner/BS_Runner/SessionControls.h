@@ -2,18 +2,20 @@
 #ifndef __SessionControls__
 #define __SessionControls__
 #include "SessionConf.h"
+#include <string>
 #include <thread>
 
 public class SessionControls {
 	bool _isSessionRunning = false;
 	bool _isTrialRunning = false;
 	bool _isPaused = false;
+	//char* _currentTrialName = "Trial name";
 	SessionConf* _conf;
 	std::thread _runThread;
-	void run();
+	void run(char* configFilePath);
 	bool isTrialRunning();
-	SessionControls() {};
-	~SessionControls() {};
+	SessionControls() {}
+	~SessionControls() {}
 	SessionControls(const SessionControls&) = delete;
 	SessionControls& operator=(const SessionControls&) = delete;
 public:
@@ -21,10 +23,11 @@ public:
 		static SessionControls instance;
 		return instance;
 	}
-	void startSession();
+	void startSession(char* configFilePath);
 	void pauseSession();
 	void resumeSession();
 	void finishSession();
+    //char* getCurrentTrialName();
 	void setIsPaused(bool state) { this->_isPaused = state; }
 	void setIsSessionRunning(bool state) { this->_isSessionRunning = state; }
 	void setIsTrialRuning(bool state) { this->_isTrialRunning = state; }

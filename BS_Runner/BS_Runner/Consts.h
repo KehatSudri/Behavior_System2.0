@@ -12,6 +12,5 @@
 #define AMPLITUDE_PARAM "amplitude"
 
 #define SAMPLE_PER_PORT 5
-#define CONFIGURATION_FILE_PATH "../../config_files/session_config.txt"
 #define CONFIGURATION_FILE_ERROR_MESSAGE "Failed to load session configuration file"
 #endif // __Consts__

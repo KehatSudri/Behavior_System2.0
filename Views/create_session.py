@@ -444,7 +444,8 @@ class CreateSessionUi(object):
 
     def on_session_define_event_handler(self):
         import subprocess
-        # TODO update file.exe path
-        exe_path = "path/to/your/exe/file.exe"
-        return
-        subprocess.call(exe_path)
+        from pathlib import Path
+        config_path = str(Path(__file__).parent.parent / 'config_files'/ 'session_config.txt')
+        bs_runner_path = r"BS_Runner/Debug/BS_Runner.exe"
+        command = [bs_runner_path, config_path]
+        subprocess.run(command)

@@ -9,7 +9,6 @@
 #include "IOEvents.h"
 
 class Trial {
-	std::string _trialName;
 	std::vector<std::string> _DOPorts;
 	std::vector<Event*> _inputEvents;
 	std::vector<SimpleOutputer*> _simpleOutputers;
@@ -18,6 +17,7 @@ class Trial {
 	std::vector<TaskHandle> _digitalOutputTasks;
 	TaskHandle _inputTaskHandle;
 public:
+	std::string _trialName;
 	Trial(std::string trialName) :_trialName(trialName){}
 	std::vector<std::string> _AIPorts;
 	std::map<std::string, std::vector<int>> _AOPorts;
