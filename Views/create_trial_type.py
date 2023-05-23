@@ -89,8 +89,9 @@ class CreateTrialTypeUi(object):
                 flag = 1
         if not flag:
             self.contingent_comboBox.addItems([current_event])
-        if self.contingent_comboBox.count() >= 1:
-            self.conti_radioButton.setEnabled(True)
+        if self.contingent_comboBox.count() >= 1 :
+            self.name_comboBox_handler()
+            # self.conti_radioButton.setEnabled(True)
 
     def on_remove_click(self):
         is_not_empty = len(self.events_order) > 0
@@ -142,10 +143,17 @@ class CreateTrialTypeUi(object):
                 item = self.events_tableWidget.item(row, col)
                 if item is not None:
                     row_items.append(item.text())
+                else: row_items.append(None)
+            print(row_items)
+
             if row_items[1] == "Contingent":
-                self.parent.vm.insert_new_events_to_trials(name, row_items[0], True, row_items[2],row_items[3]=="Random",row_items[4]=="True")
+                    self.parent.vm.insert_new_events_to_trials(name, row_items[0], True, row_items[2],row_items[4]=="Random",False)
             else:
-                self.parent.vm.insert_new_events_to_trials(name, row_items[0], False, None,row_items[3]=="Random",row_items[4]=="True")
+                if self.vm.is_input_event(row_items[0]):
+                    self.parent.vm.insert_new_events_to_trials(name, row_items[0], False, None,None,row_items[5]=="True")
+                else:
+                    self.parent.vm.insert_new_events_to_trials(name, row_items[0], False, None,row_items[4]=="Random",row_items[5]=="True")
+
         msgBox.setText("The trial was created successfully.")
         msgBox.exec()
         self.trial_type_name_lineEdit.clear()
@@ -163,8 +171,21 @@ class CreateTrialTypeUi(object):
     def name_comboBox_handler(self):
         if self.vm.is_input_event(self.events_comboBox.currentText()):
             self.random_comboBox.setEnabled(False)
+            self.contingent_comboBox.setEnabled(False)
+            self.conti_label.setEnabled(False)
+            self.conti_radioButton.setEnabled(False)
+            self.simple_radioButton.setChecked(True)
+            self.isEndCondition.setEnabled(True)
         else:
+            self.isEndCondition.setChecked(False)
+            self.isEndCondition.setEnabled(False)
+
             self.random_comboBox.setEnabled(True)
+            self.random_comboBox.setEnabled(True)
+            # self.contingent_comboBox.setEnabled(True)
+            # self.conti_label.setEnabled(True)
+            if self.contingent_comboBox.count() >= 1:
+                self.conti_radioButton.setEnabled(True)
 
 
 
