@@ -37,11 +37,91 @@
         <property name="sizeConstraint">
          <enum>QLayout::SetNoConstraint</enum>
         </property>
-        <item row="3" column="3">
-         <layout class="QHBoxLayout" name="random_reward_percent_horizontalLayout"/>
+        <item row="1" column="1">
+         <layout class="QHBoxLayout" name="iti_def_horizontalLayout_3" stretch="0,0">
+          <item>
+           <widget class="QRadioButton" name="behavior_iti_radioBtn_3">
+            <property name="styleSheet">
+             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
+            </property>
+            <property name="text">
+             <string>serial</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="random_iti_radioBtn_3">
+            <property name="styleSheet">
+             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
+            </property>
+            <property name="text">
+             <string>random</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
-        <item row="0" column="0">
-         <spacer name="horizontalSpacer_14">
+        <item row="0" column="2">
+         <spacer name="horizontalSpacer_15">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="2" column="1" rowspan="2">
+         <layout class="QGridLayout" name="iti_min_max_values_gridLayout_3">
+          <item row="3" column="0">
+           <widget class="QLabel" name="max_iti_label_3">
+            <property name="styleSheet">
+             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
+            </property>
+            <property name="text">
+             <string>max: </string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QSpinBox" name="max_iti_spinBox"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="min_iti_label_3">
+            <property name="styleSheet">
+             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
+            </property>
+            <property name="text">
+             <string>min: </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="min_iti_spinBox"/>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="iti_label_3">
+          <property name="styleSheet">
+           <string notr="true">font: 12pt &quot;Arial&quot;;</string>
+          </property>
+          <property name="text">
+           <string>ITI:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <layout class="QHBoxLayout" name="end_def_value_horizontalLayout_3"/>
+        </item>
+        <item row="0" column="4">
+         <spacer name="horizontalSpacer_16">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -56,8 +136,11 @@
           </property>
          </spacer>
         </item>
-        <item row="0" column="4">
-         <spacer name="horizontalSpacer_16">
+        <item row="3" column="3">
+         <layout class="QHBoxLayout" name="random_reward_percent_horizontalLayout"/>
+        </item>
+        <item row="0" column="0">
+         <spacer name="horizontalSpacer_14">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -103,91 +186,32 @@
           </item>
          </layout>
         </item>
-        <item row="2" column="1" rowspan="2">
-         <layout class="QGridLayout" name="iti_min_max_values_gridLayout_3">
-          <item row="2" column="0">
-           <widget class="QLabel" name="min_iti_label_3">
-            <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
-            </property>
-            <property name="text">
-             <string>min: </string>
+        <item row="1" column="2" rowspan="3" colspan="2">
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>338</width>
+             <height>86</height>
+            </rect>
+           </property>
+           <widget class="QTextEdit" name="textEdit">
+            <property name="geometry">
+             <rect>
+              <x>-3</x>
+              <y>-2</y>
+              <width>371</width>
+              <height>101</height>
+             </rect>
             </property>
            </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QSpinBox" name="max_iti_spinBox"/>
-          </item>
-          <item row="2" column="1">
-           <widget class="QSpinBox" name="min_iti_spinBox"/>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="max_iti_label_3">
-            <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
-            </property>
-            <property name="text">
-             <string>max: </string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0" colspan="2">
-           <widget class="QComboBox" name="behaviors_comboBox_3"/>
-          </item>
-         </layout>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="iti_label_3">
-          <property name="styleSheet">
-           <string notr="true">font: 12pt &quot;Arial&quot;;</string>
-          </property>
-          <property name="text">
-           <string>ITI:</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
+          </widget>
          </widget>
-        </item>
-        <item row="2" column="3">
-         <layout class="QHBoxLayout" name="end_def_value_horizontalLayout_3"/>
-        </item>
-        <item row="1" column="1">
-         <layout class="QHBoxLayout" name="iti_def_horizontalLayout_3" stretch="0,0">
-          <item>
-           <widget class="QRadioButton" name="behavior_iti_radioBtn_3">
-            <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
-            </property>
-            <property name="text">
-             <string>serial</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="random_iti_radioBtn_3">
-            <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
-            </property>
-            <property name="text">
-             <string>random</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="0" column="2">
-         <spacer name="horizontalSpacer_15">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </item>
