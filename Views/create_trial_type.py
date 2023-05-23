@@ -30,7 +30,7 @@ class CreateTrialTypeUi(object):
         accept_pushButton = main_window.findChild(QtWidgets.QPushButton, 'create_trial_btn')
         remove_event_pushButton = main_window.findChild(QtWidgets.QPushButton, 'pushButton_2')
         add_event_pushButton = main_window.findChild(QtWidgets.QPushButton, 'Add_event_pushButton')
-
+        self.isEndCondition = main_window.findChild(QtWidgets.QCheckBox, 'checkBox')
         self.simple_radioButton = main_window.findChild(QtWidgets.QRadioButton, 'simple_radioButton')
         self.random_comboBox = main_window.findChild(QtWidgets.QComboBox, 'ranom_pred_comboBox')
         self.events_comboBox = main_window.findChild(QtWidgets.QComboBox, 'comboBox')
@@ -78,6 +78,8 @@ class CreateTrialTypeUi(object):
         if self.random_comboBox.isEnabled():
             self.events_tableWidget.setItem(row_position, 4,
                                             QtWidgets.QTableWidgetItem(self.random_comboBox.currentText()))
+        self.events_tableWidget.setItem(row_position, 5,
+                                        QtWidgets.QTableWidgetItem(str(self.isEndCondition.isChecked())))
         self.events_order.append(current_event)
         self.is_contingent_order.append(self.chosen_is_contingent)
         # validate that combo not have duplicates
@@ -127,17 +129,6 @@ class CreateTrialTypeUi(object):
             error_warning("There are no events in the current trial.")
             return
 
-
-        # verify_ans = self.parent.vm.verify_trial_insert(name, events)
-        # if verify_ans == -1:
-        #     msgBox.setText("Trial name is already in use.")
-        #     msgBox.exec()
-        #     return
-        # elif verify_ans is not None:
-        #     verify_ans = verify_ans[0]
-        #     msgBox.setText(f'A Trial with this events order already exist with name "{verify_ans}".')
-        #     msgBox.exec()
-        #     return
         try:
             self.parent.vm.insert_new_trial(name)
         except Exception as e:
@@ -152,9 +143,9 @@ class CreateTrialTypeUi(object):
                 if item is not None:
                     row_items.append(item.text())
             if row_items[1] == "Contingent":
-                self.parent.vm.insert_new_events_to_trials(name, row_items[0], True, row_items[2])
+                self.parent.vm.insert_new_events_to_trials(name, row_items[0], True, row_items[2],row_items[3]=="Random",row_items[4]=="True")
             else:
-                self.parent.vm.insert_new_events_to_trials(name, row_items[0], False, None)
+                self.parent.vm.insert_new_events_to_trials(name, row_items[0], False, None,row_items[3]=="Random",row_items[4]=="True")
         msgBox.setText("The trial was created successfully.")
         msgBox.exec()
         self.trial_type_name_lineEdit.clear()
