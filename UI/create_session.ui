@@ -189,6 +189,33 @@
           </property>
          </spacer>
         </item>
+        <item row="2" column="2">
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>326</width>
+             <height>77</height>
+            </rect>
+           </property>
+           <widget class="QTextEdit" name="textEdit">
+            <property name="geometry">
+             <rect>
+              <x>3</x>
+              <y>-3</y>
+              <width>351</width>
+              <height>81</height>
+             </rect>
+            </property>
+           </widget>
+          </widget>
+         </widget>
+        </item>
        </layout>
       </item>
       <item row="6" column="0">
