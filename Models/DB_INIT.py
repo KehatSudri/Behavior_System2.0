@@ -129,10 +129,10 @@ class DB:
             self.conn.rollback()
             raise e
 
-    def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
-        sql = """INSERT INTO events_to_trials(event_name, trial_name, is_contingent, contingent_on) VALUES (%s,%s,%s,%s)"""
+    def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on,isRandom,isEndCondition):
+        sql = """INSERT INTO events_to_trials(event_name, trial_name, is_contingent, contingent_on,israndom,isendcondition) VALUES (%s,%s,%s,%s,%s,%s)"""
         with self.conn.cursor() as cur:
-            cur.execute(sql, (event_name, trial_name, is_contingent, contingent_on, ))
+            cur.execute(sql, (event_name, trial_name, is_contingent, contingent_on,isRandom,isEndCondition ))
             self.conn.commit()
 
     def insert_session_trials(self, session_id, trial_type_id, percent_in_session=None,
@@ -151,6 +151,13 @@ class DB:
         # commit the changes
         self.conn.commit()
         return sess_trial_id
+    def isEndConditionEvent(self,event_name,trial_name):
+        with self.conn.cursor() as cur:
+            sql = """SELECT isendcondition FROM events_to_trials WHERE event_name=%s AND trial_name=%s"""
+            cur.execute(sql, (event_name, trial_name))
+            # cur.execute(f'SELECT isendcondition FROM events_to_trials WHERE event_name={event_name} AND trial_name={trial_name}')
+            isEndConditionEvent = cur.fetchone()
+        return isEndConditionEvent
 
     def insert_event(self, event_type, parameters=None):
         sql = """INSERT INTO events(event_type, parameters) VALUES (%s,%s) ON CONFLICT DO NOTHING RETURNING event_id"""
@@ -439,7 +446,9 @@ commands = (
         event_name VARCHAR(100) REFERENCES events(name) ON DELETE CASCADE ,
         trial_name VARCHAR(255) REFERENCES trials(name) ON DELETE CASCADE,
         is_contingent BOOLEAN DEFAULT false,
-        contingent_on VARCHAR(100) NULL)""",
+        contingent_on VARCHAR(100),
+         isRandom BOOLEAN,
+        isEndCondition BOOLEAN)""",
 
     """CREATE TABLE IF NOT EXISTS public.session_to_trials(
         id SERIAL PRIMARY KEY,

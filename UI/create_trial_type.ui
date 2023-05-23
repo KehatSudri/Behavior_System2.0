@@ -225,7 +225,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Event name       </string>
+               <string>Event name:      </string>
               </property>
              </widget>
             </item>
@@ -259,7 +259,7 @@
                </font>
               </property>
               <property name="text">
-               <string>  Contingent On</string>
+               <string>  Contingent On:</string>
               </property>
              </widget>
             </item>
@@ -312,7 +312,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Random/Fixed         </string>
+               <string>Random/Fixed:         </string>
               </property>
              </widget>
             </item>
@@ -339,9 +339,9 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_5">
+             <widget class="QCheckBox" name="checkBox">
               <property name="text">
-               <string/>
+               <string>Is end condition </string>
               </property>
              </widget>
             </item>
@@ -520,6 +520,11 @@
              </property>
              <property name="textAlignment">
               <set>AlignCenter</set>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Is end conditoin</string>
              </property>
             </column>
            </widget>
