@@ -58,6 +58,15 @@ class CreateTrialTypeUi(object):
         remove_event_pushButton.clicked.connect(self.on_remove_click)
         accept_pushButton.clicked.connect(self.create_trial)
         self.simple_event_handler()
+        header = self.events_tableWidget.horizontalHeader()
+
+        # Set the size for each section
+        header.resizeSection(0, 150)  # Set the size of the first section to 100 pixels
+        header.resizeSection(1, 200)  # Set the size of the second section to 200 pixels
+        header.resizeSection(2, 150)
+        header.resizeSection(3, 150)
+        header.resizeSection(4, 150)  #
+        header.resizeSection(5, 100)  #
 
     def on_add_click(self):
         # add an event to the current trial type

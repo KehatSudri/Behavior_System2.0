@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>873</width>
+    <width>1066</width>
     <height>889</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -134,8 +140,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>847</width>
-         <height>710</height>
+         <width>1046</width>
+         <height>732</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">

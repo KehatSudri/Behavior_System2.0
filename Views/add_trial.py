@@ -89,10 +89,12 @@ class AddTrialUi(object):
             label.setFont(bold_font)
             self.trial_params_labels.append(label)
             formLayout = self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
-            formLayout.addRow(label)
+            if not self.vm.is_input_event(event_name):
+
+                formLayout.addRow(label)
 
             # add line edit accordingly for the parameters
-            self.set_trial_form_handler(event_name, self.vm.is_input_event(event_name))
+                self.set_trial_form_handler(event_name, self.vm.is_input_event(event_name))
             # if not i == len(events_name) - 1:
             #     delay_label = QLabel("Delay")
             #     delay_label.setFont(bold_font)
@@ -173,20 +175,14 @@ class AddTrialUi(object):
             dict = dict + ['reward duration']
         else:
             dict = dict + ["Duration", "Frequency", "Amplitude"]
-        # else:
-        #     dict = dict+["Duration"]
-        #     # simple event case
-        # events= (self.vm.get_events_by_trial_name(self.parent.chosen_trial_type_name))
-        # events=''.join(events)
-        # events=events.split(",")
 
-        for param in dict:
-            label = QLabel(param)
-            line_edit = QLineEdit()
-            line_edit.setText("0")
-            self.trial_params_labels.append(label)
-            self.trial_params_widgets[event_name].append(line_edit)
-            self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').addRow(label, line_edit)
+            for param in dict:
+                label = QLabel(param)
+                line_edit = QLineEdit()
+                line_edit.setText("0")
+                self.trial_params_labels.append(label)
+                self.trial_params_widgets[event_name].append(line_edit)
+                self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').addRow(label, line_edit)
 
     def trial_types_click(self, index):
         self.parent.trial_index = index
