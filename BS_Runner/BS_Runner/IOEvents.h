@@ -20,9 +20,6 @@ public:
     void attachListener(Listener* listener);
     void detachListener(Listener* listener);
     void notifyListeners();
-    int gaga() {
-        return _listeners.size();
-    }
     void set(float64 value);
 };
 

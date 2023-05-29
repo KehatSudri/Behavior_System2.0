@@ -4,13 +4,13 @@
 #define OUTPUT_PARAMS_SIZE 4
 #include <string>
 #include <vector>
-#include <map>
+#include <tuple>
 #include <NIDAQmx.h>
 #include "IOEvents.h"
 
 class Trial {
 	std::vector<std::string> _DOPorts;
-	std::vector<Event*> _inputEvents;
+	std::vector<Event*> _events;
 	std::vector<EnvironmentOutputer*> _environmentOutputer;
 	std::vector<TaskHandle> _analogOutputTasks;
 	std::vector<TaskHandle> _digitalOutputTasks;
@@ -19,7 +19,7 @@ public:
 	std::string _trialName;
 	Trial(std::string trialName) :_trialName(trialName){}
 	std::vector<std::string> _AIPorts;
-	std::map<std::string, std::vector<int>> _AOPorts;
+	std::vector<std::tuple<std::string, std::vector<int>>> _AOPorts;
 	void initInputEvents();
 	void initAnalogOutputTasks();
 	void initInputTaskHandle();

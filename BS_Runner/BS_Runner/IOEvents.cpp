@@ -26,18 +26,18 @@ void Event::detachListener(Listener* listener) {
 }
 
 void Event::notifyListeners() {
-    for (auto listener : this->_listeners) {
+    for (auto& listener : _listeners) {
         listener->update(this);
     }
 }
 
 void Event::set(float64 value) {
-    if (!this->_beenUpdated && value > 3.5) {       
-        this->_beenUpdated = true;
+    if (!_beenUpdated && value > 3.5) {       
+        _beenUpdated = true;
         notifyListeners();
     }
-    else if (this->_beenUpdated && value < 3.5) {
-        this->_beenUpdated = false;
+    else if (_beenUpdated && value < 3.5) {
+        _beenUpdated = false;
     }
 }
 
@@ -46,17 +46,17 @@ void SimpleOutputer::output() {
     while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DELAY_PARAM]) {
         continue;
     }
-    this->notifyListeners();
+    notifyListeners();
     writeOutput(_handler, _attributes[DURATION_PARAM]);
 }
 
 void EnvironmentOutputer::output() {
-    std::thread t(&Outputer::output, this->_outputer);
+    std::thread t(&Outputer::output, _outputer);
     t.detach();
 }
 
 void ContingentOutputer::update(Event* event) {
-    std::thread t(&Outputer::output, this->_outputer);
+    std::thread t(&Outputer::output, _outputer);
     t.detach();
 }
 
@@ -65,7 +65,7 @@ void SerialOutputer::run() {
     bool& isPaused = SessionControls::getInstance().getIsPaused();
     while (isRunning) {
         if (!isPaused) {
-            this->_outputer->output();
+            _outputer->output();
         }
     }
 }

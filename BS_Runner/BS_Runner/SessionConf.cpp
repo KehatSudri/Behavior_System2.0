@@ -32,14 +32,14 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 		std::string line;
 		while (std::getline(inputFile, line)) {
 			if (line.empty()) {
-				this->_trials[this->_numOfTrials].initInputTaskHandle();
-				this->_trials[this->_numOfTrials].initInputEvents();
-				this->_trials[this->_numOfTrials].initAnalogOutputTasks();
-				if (this->_trials[this->_numOfTrials]._AIPorts.empty()) {
-					this->_validFlag = false;
+				_trials[_numOfTrials].initInputTaskHandle();
+				_trials[_numOfTrials].initInputEvents();
+				_trials[_numOfTrials].initAnalogOutputTasks();
+				if (_trials[_numOfTrials]._AIPorts.empty()) {
+					_validFlag = false;
 					break;
 				}
-				++this->_numOfTrials;
+				++_numOfTrials;
 			}
 			else {
 				if (line[0] == '$') {
@@ -50,13 +50,13 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 				size_t pos;
 				switch (category) {
 				case 0:
-					this->_trials.push_back({ name });
+					_trials.push_back({ name });
 					break;
 				case 1:
 					pos = line.find(delimiter);
 					name = line.substr(0, pos);
 					token2 = line.substr(pos + delimiter.length());
-					this->_trials[this->_numOfTrials]._AIPorts.push_back(name);
+					_trials[_numOfTrials]._AIPorts.push_back(name);
 					// TODO Implement support for end condition
 					if (token2 == "True") {
 
@@ -64,7 +64,7 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 					break;
 				case 2:
 					std::getline(inputFile, line);
-					this->_trials[this->_numOfTrials]._AOPorts[name] = getParams(line);
+					_trials[_numOfTrials]._AOPorts.push_back({ name ,getParams(line) });
 					break;
 				default:
 					break;
@@ -74,45 +74,50 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 		inputFile.close();
 	}
 	else {
-		this->_validFlag = false;
+		_validFlag = false;
 	}
 }
 
-void SessionConf::changeCurrentTrial(){
+void SessionConf::changeCurrentTrial() {
 	// TODO Implement logic on next trial
 	return;
 }
 
 void SessionConf::finishSession() {
-	this->_sessionComplete = true;
+	_sessionComplete = true;
 }
 
 TaskHandle SessionConf::getInputTaskHandle() {
-	return this->_trials[this->_currentTrial].getInputTaskHandle();
+	return _trials[_currentTrial].getInputTaskHandle();
 }
 
 std::vector<TaskHandle> SessionConf::getAnalogOutputTasks() {
-	return this->_trials[this->_currentTrial].getAnalogOutputTasks();
+	return _trials[_currentTrial].getAnalogOutputTasks();
 }
 
 std::vector<EnvironmentOutputer*> SessionConf::getEnvironmentOutputer() {
-	return this->_trials[this->_currentTrial].getEnvironmentOutputer();
+	return _trials[_currentTrial].getEnvironmentOutputer();
 }
 
 std::vector<Event*> SessionConf::getInputEvents() {
-	return this->_trials[this->_currentTrial].getInputEvents();
+	return _trials[_currentTrial].getInputEvents();
 }
 
 void Trial::initInputEvents() {
-	for (auto port : this->_AIPorts) {
-		this->_inputEvents.push_back(new Event(port));
+	for (auto& port : _AIPorts) {
+		_events.push_back(new Event(port));
 	}
 }
 
+Outputer* getOutputer(TaskHandle taskHandle, std::string port, std::map<std::string, int> attr) {
+	// TODO Implement logic
+	return new SimpleOutputer(taskHandle, port, attr);
+}
+
 void Trial::initAnalogOutputTasks() {
-	for (const auto& pair : this->_AOPorts) {
-		const std::string& portName = pair.first;
-		const std::vector<int>& params = pair.second;
+	for (auto& it : _AOPorts) {
+		const std::string& portName = std::get<0>(it);
+		const std::vector<int>& params = std::get<1>(it);
 		std::string delimiter = ",";
 		std::string token1 = portName, token2;
 		size_t pos = portName.find(delimiter);
@@ -125,11 +130,11 @@ void Trial::initAnalogOutputTasks() {
 		TaskHandle AO_TaskHandle = NULL;
 		DAQmxCreateTask("", &AO_TaskHandle);
 		DAQmxCreateAOVoltageChan(AO_TaskHandle, ao_port, "", -5.0, 5.0, DAQmx_Val_Volts, "");
-		this->_analogOutputTasks.push_back(AO_TaskHandle);
-		SimpleOutputer* sm = new SimpleOutputer(AO_TaskHandle, token1, getAttributes(portName, params));
-		this->_inputEvents.push_back(sm);
+		_analogOutputTasks.push_back(AO_TaskHandle);
+		Outputer* sm = getOutputer(AO_TaskHandle, token1, getAttributes(portName, params));
+		_events.push_back(sm);
 		if (!token2.empty()) {
-			for (auto& eve : this->getInputEvents()) {
+			for (auto& eve : getInputEvents()) {
 				if (eve->getPort() == token2) {
 					eve->attachListener(new ContingentOutputer(sm));
 					break;
@@ -137,37 +142,44 @@ void Trial::initAnalogOutputTasks() {
 			}
 		}
 		else {
-			this->_environmentOutputer.push_back(new EnvironmentOutputer(sm));
+			_environmentOutputer.push_back(new EnvironmentOutputer(sm));
 		}
 	}
 }
 
 void Trial::initInputTaskHandle() {
-	DAQmxCreateTask("", &this->_inputTaskHandle);
-	for (auto port : this->_AIPorts) {
+	DAQmxCreateTask("", &_inputTaskHandle);
+	for (auto& port : _AIPorts) {
 		const char* ai_port = port.c_str();
-		DAQmxCreateAIVoltageChan(this->_inputTaskHandle, ai_port, "", DAQmx_Val_Cfg_Default, -5.0, 5.0, DAQmx_Val_Volts, NULL);
+		DAQmxCreateAIVoltageChan(_inputTaskHandle, ai_port, "", DAQmx_Val_Cfg_Default, -5.0, 5.0, DAQmx_Val_Volts, NULL);
 	}
 }
 
 TaskHandle Trial::getInputTaskHandle() {
-	return this->_inputTaskHandle;
+	return _inputTaskHandle;
 }
 
 std::vector<TaskHandle> Trial::getAnalogOutputTasks() {
-	return this->_analogOutputTasks;
+	return _analogOutputTasks;
 }
 
 std::vector<Event*> Trial::getInputEvents() {
-	return this->_inputEvents;
+	// TODO Check working
+	std::vector<Event*> inputEvents;
+	for (auto& it : _events) {
+		if (it->getPort().find("ai") != std::string::npos) {
+			inputEvents.push_back(it);
+		}
+	}
+	return inputEvents;
 }
 
 Trial::~Trial() {
-	for (auto task : this->_analogOutputTasks) {
+	for (auto& task : _analogOutputTasks) {
 		DAQmxClearTask(task);
 	}
-	for (auto task : this->_digitalOutputTasks) {
+	for (auto& task : _digitalOutputTasks) {
 		DAQmxClearTask(task);
 	}
-	DAQmxClearTask(this->_inputTaskHandle);
+	DAQmxClearTask(_inputTaskHandle);
 }
