@@ -3,7 +3,7 @@ from pathlib import Path
 from Models.DB_INIT import DB
 
 
-def prepare_session_information(ports, dependencies, trial_name, index, trials_in_session):
+def prepare_session_information(session_name,ports, dependencies, trial_name, index, trials_in_session,is_fixed_iti):
     input_ports = []
     output_ports = []
     dependencies_arr = []
@@ -21,6 +21,11 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
 
     with open(configs_path, "a") as file:
         db = DB()
+        iti_vals = db.get_iti_vals(session_name)
+        if is_fixed_iti:
+            file.write("("+str(iti_vals[0])+")" + "\n")
+        else:
+            file.write(str(iti_vals) + "\n")
         file.write("Trial name : " + trial_name + "\n")
         file.write("$Input Ports\n")
         if len(input_ports) > 0:

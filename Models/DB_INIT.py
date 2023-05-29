@@ -373,7 +373,11 @@ class DB:
         cur.execute("DELETE FROM sessions WHERE session_id=%s", (temp_id,))
         self.conn.commit()
         cur.close()
-
+    def get_iti_vals(self, session_name):
+        with self.conn.cursor() as cur:
+            cur.execute(f"SELECT min_iti , max_iti FROM sessions WHERE name='{session_name}'")
+            vals  = cur.fetchone()
+        return vals
     # TODO validate this functions
     def delete_subject_session(self, sub_id, sess_id):
         with self.conn.cursor() as cur:

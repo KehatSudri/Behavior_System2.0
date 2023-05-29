@@ -311,6 +311,7 @@ class CreateSessionUi(object):
         last_used = self.date_value_label.text()
         date_object = datetime.strptime(last_used, "%d/%m/%Y")
         formatted_date_last_used = date_object.strftime("%Y-%m-%d")
+        is_fixed_iti = self.fixed_iti_radioBtn.isChecked()
         max_iti = self.max_iti_spinBox.value()
         min_iti = self.min_iti_spinBox.value()
         if len(self.trials_in_session) == 0 or ( not self.fixed_iti_radioBtn.isChecked() and not self.random_iti_radioBtn.isChecked()) \
@@ -339,7 +340,7 @@ class CreateSessionUi(object):
         for i in range(0, len(self.trials_in_session), 2):
             ports = (self.vm.get_ports(self.trials_in_session[i]))
             dependencies = self.vm.get_dependencies(self.trials_in_session[i])
-            prepare_session_information(ports, dependencies, self.trials_in_session[i], i, self.trials_in_session)
+            prepare_session_information(session_name,ports, dependencies, self.trials_in_session[i], i, self.trials_in_session,is_fixed_iti)
 
         # if not self.is_valid_input():
         #     if self.max_iti_spinBox.value() < self.min_iti_spinBox.value():

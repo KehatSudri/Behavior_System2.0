@@ -50,9 +50,7 @@ class CreateTrialTypeUi(object):
         self.random_comboBox.setEnabled(False)
         self.conti_radioButton.setEnabled(False)
         self.conti_radioButton.toggled.connect(lambda: (
-            self.contingent_comboBox.setEnabled(True), self.conti_label.setEnabled(True),
-            self.random_comboBox.setEnabled(False)
-            , random_label.setEnabled(False)))
+            self.contingent_comboBox.setEnabled(True), self.conti_label.setEnabled(True)))
         self.events_tableWidget.setColumnWidth(0, int(self.events_tableWidget.width() / 2))
         add_event_pushButton.clicked.connect(self.on_add_click)
         remove_event_pushButton.clicked.connect(self.on_remove_click)
