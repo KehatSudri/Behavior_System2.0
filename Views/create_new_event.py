@@ -49,7 +49,8 @@ class CreateEventUi(object):
         back_pushButton.clicked.connect(self.on_back_click)
         add_pushButton = main_window.findChild(QPushButton, 'add_event_btn')
         add_pushButton.clicked.connect(self.cretae_event)
-        validPorts=['AO0','AO1','AI0', 'AI1', 'AI2', 'AI3', 'AI4', 'AI5', 'AI6', 'AI7', 'AI8', 'AI9', 'AI10', 'AI11', 'AI12', 'AI13', 'AI14', 'AI15', 'AI16']
+        validPorts = ['ao0', 'ao1', 'ai0', 'ai1', 'ai2', 'ai3', 'ai4', 'ai5', 'ai6', 'ai7', 'ai8', 'ai9', 'ai10',
+                      'ai11', 'ai12', 'ai13', 'ai14', 'ai15', 'ai16']
         for port in validPorts:
             self.ports_comboBox.addItem(port)
 
@@ -71,7 +72,8 @@ class CreateEventUi(object):
             format = self.digital_radio_btn.text()
         if type == "Input":
             format = "Analog"
-        if self.event_name_lineEdit.text() == ""  or type == "" or ( self.output_radio_btn.isChecked() and not self.analog_radio_btn.isChecked() and not self.digital_radio_btn.isChecked()):
+        if self.event_name_lineEdit.text() == "" or type == "" or (
+                self.output_radio_btn.isChecked() and not self.analog_radio_btn.isChecked() and not self.digital_radio_btn.isChecked()):
             error_warning("Not all data is filled")
             return
 
@@ -84,7 +86,7 @@ class CreateEventUi(object):
         # if error_value == -1:
         #     error_warning("Error : Event name already exist")
         #     return
-        port = "Dev/"+self.ports_comboBox.currentText().lower()
+        port = "Dev/" + self.ports_comboBox.currentText().lower()
         try:
             self.vm.insert_hardware_event_to_DB(
                 port,
@@ -93,7 +95,7 @@ class CreateEventUi(object):
                 format,
                 str(self.is_reward_comboBox.currentText() == "Yes" and not self.input_radio_btn.isChecked()))
         except Exception as e:
-            msg=str(e)
+            msg = str(e)
             if "name" in msg:
                 error_warning("Error: Event name already exists.")
             elif "port" in msg:
@@ -102,7 +104,6 @@ class CreateEventUi(object):
 
         notification("Event was created successfully !")
         self.event_name_lineEdit.clear()
-
 
     def on_back_click(self):
         self.main_window.close()
