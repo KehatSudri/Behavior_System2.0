@@ -383,13 +383,21 @@ class DB:
         with self.conn.cursor() as cur:
             cur.execute("DELETE FROM subjectSession WHERE session_id=%s, subject_id=%s", (sess_id, sub_id))
             self.conn.commit()
-
+    def get_subjects(self):
+        with self.conn.cursor() as cur:
+            cur.execute(f'SELECT subjectid FROM sessions')
+            subjects = cur.fetchall()
+        return subjects
     def is_contingent(self, event, trial):
         with self.conn.cursor() as cur:
             cur.execute(f"SELECT is_contingent FROM events_to_trials WHERE event_name='{event}' AND trial_name='{trial}'")
             isContingent = cur.fetchone()
         return isContingent
-
+    def get_sessions_by_subject(self,subject):
+        with self.conn.cursor() as cur:
+            cur.execute(f"SELECT name FROM sessions WHERE subjectid='{subject}'")
+            sessions = cur.fetchall()
+        return sessions
     def is_input_event(self, name):
         with self.conn.cursor() as cur:
             cur.execute(f"SELECT type FROM events WHERE name='{name}' AND type='Input'")
