@@ -151,7 +151,6 @@ class CreateTrialTypeUi(object):
                 if item is not None:
                     row_items.append(item.text())
                 else: row_items.append(None)
-            print(row_items)
 
             if row_items[1] == "Contingent":
                     self.parent.vm.insert_new_events_to_trials(name, row_items[0], True, row_items[2],row_items[4]=="Random",False)

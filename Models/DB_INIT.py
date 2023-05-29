@@ -98,14 +98,14 @@ class DB:
     #         raise e
     #
     def insert_session(self,name, subjectid, experimenter_name,last_used,min_iti,
-                max_iti):
+                max_iti,is_fixed_iti):
         try:
             sql = """
-                INSERT INTO sessions(name,subjectid,experimenter_name,last_used,min_iti,max_iti)
-                 VALUES (%s,%s,%s,%s,%s,%s)
+                INSERT INTO sessions(name,subjectid,experimenter_name,last_used,min_iti,max_iti,is_fixed_iti)
+                 VALUES (%s,%s,%s,%s,%s,%s,%s)
                  """
             with self.conn.cursor() as cur:
-                cur.execute(sql, (name, subjectid, experimenter_name,last_used, min_iti, max_iti))
+                cur.execute(sql, (name, subjectid, experimenter_name,last_used, min_iti, max_iti,is_fixed_iti))
                 self.conn.commit()
         except Exception as e:
             self.conn.rollback()
@@ -240,7 +240,12 @@ class DB:
             cur.execute(temp)
             ports = cur.fetchall()
         return ports
-
+    # def get_ports(self):
+    #     with self.conn.cursor() as cur:
+    #         temp = f"SELECT port FROM events "
+    #         cur.execute(temp)
+    #         ports = cur.fetchall()
+    #     return ports
     def get_dependencies(self, trial_name):
         with self.conn.cursor() as cur:
             temp = f"SELECT h1.port, h2.port FROM events as h1, events as h2, events_to_trials WHERE h1.name = " \
@@ -267,12 +272,22 @@ class DB:
             cur.execute(f"SELECT name FROM trials WHERE events = '{events}'")
             trials_types_events = cur.fetchone()
         return trials_types_events
+    def get_trial_name_by_session(self, session):
+        with self.conn.cursor() as cur:
+            cur.execute(f"SELECT trial_name FROM session_to_trials  WHERE session_name = '{session}'")
+            trials = cur.fetchall()
+        return trials
 
     def get_events_by_trial_name(self, trial):
         with self.conn.cursor() as cur:
             cur.execute(f"SELECT event_name FROM events_to_trials WHERE trial_name = '{trial}'")
             events = cur.fetchall()
         return events
+    def get_params_by_event_name(self, event):
+        with self.conn.cursor() as cur:
+            cur.execute(f"SELECT params FROM events_to_trials WHERE event_name = '{event}'")
+            params = cur.fetchall()
+        return params
 
     def get_all_events(self):
         with self.conn.cursor() as cur:
@@ -403,8 +418,17 @@ class DB:
             cur.execute(f"SELECT type FROM events WHERE name='{name}' AND type='Input'")
             isInput = cur.fetchone()
         return isInput is not None
-
-    # TODO delete
+    def insert_params(self,trial_name,event_name,params):
+        with self.conn.cursor() as cur:
+            sql=("""UPDATE events_to_trials SET params=%s WHERE event_name=%s AND trial_name=%s""")
+            cur.execute(sql, (params, event_name, trial_name,))
+            self.conn.commit()
+            cur.close()
+    def get_template(self,session_name,subject):
+        with self.conn.cursor() as cur:
+            cur.execute(f"SELECT * FROM sessions WHERE name='{session_name}' AND subjectid='{subject}'")
+            template=cur.fetchall()
+            return template
     def delete_all_rows(self):
         # on conflict increment counter by 1, and last used is now
         sql = """
@@ -445,7 +469,9 @@ commands = (
         experimenter_name VARCHAR(100),
         last_used DATE NOT NULL,
         min_iti DOUBLE PRECISION ,
-        max_iti DOUBLE PRECISION )""",
+        max_iti DOUBLE PRECISION ,
+        is_fixed_iti BOOLEAN DEFAULT false
+        )""",
 
     """CREATE TABLE IF NOT EXISTS public.events_to_trials (
         id SERIAL PRIMARY KEY,
@@ -453,8 +479,9 @@ commands = (
         trial_name VARCHAR(255) REFERENCES trials(name) ON DELETE CASCADE,
         is_contingent BOOLEAN DEFAULT false,
         contingent_on VARCHAR(100),
-         isRandom BOOLEAN,
-        isEndCondition BOOLEAN)""",
+        isRandom BOOLEAN,
+        isEndCondition BOOLEAN,
+        params VARCHAR(255))""",
 
     """CREATE TABLE IF NOT EXISTS public.session_to_trials(
         id SERIAL PRIMARY KEY,

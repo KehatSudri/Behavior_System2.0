@@ -17,11 +17,11 @@ class ChooseTemplateUi(object):
         self.subjects = set()  # TODO get from parent cache
         self.init()
     def init(self):
-        db=DB()
-        subjects=db.get_subjects()
+        self.db=DB()
+        subjects=self.db.get_subjects()
         subjectsArray = [x[0] for x in subjects]
         for subject in subjectsArray:
-            related_sessions=db.get_sessions_by_subject(subject)
+            related_sessions=self.db.get_sessions_by_subject(subject)
             self.subjects.add(subject)
             self.templates[subject]=[subject +" "+ x[0] for x in related_sessions]
 
@@ -250,6 +250,8 @@ class ChooseTemplateUi(object):
     def accept(self):
         # TODO: update all relevant fields in parent
         chosen_temp_id = self.templates_comboBox.currentText()
+
+
         if chosen_temp_id == "":
             error_warning("There are no templates in the system.")
             # TODO check what should we do in this case
