@@ -116,11 +116,11 @@ class CreateSessionUi(object):
         self.exp_name_te = self.main_window.findChild(QtWidgets.QTextEdit, "exp_name_te")
         self.trials_table = self.main_window.findChild(QtWidgets.QTableWidget, "trials_tableWidget")
         self.date_value_label = self.main_window.findChild(QtWidgets.QLabel, "date_value_label")
-        self.trials_order_cb = self.main_window.findChild(QtWidgets.QComboBox, 'trials_order_cb')
+        #self.trials#_order_cb = self.main_window.findChild(QtWidgets.QComboBox, 'trials_order_cb')
         choose_template_btn = self.main_window.findChild(QtWidgets.QPushButton, "choose_template_btn")
         next_btn = self.main_window.findChild(QtWidgets.QPushButton, "next_btn")
         choose_template_btn.clicked.connect(self.on_choose_template_click)
-        self.trials_order_cb.addItems(["random", "blocks"])
+        #self.t#rials_order_cb.addItems(["random", "blocks"])
         next_btn.clicked.connect(self.on_next_click)
         self.add_trial_pushButton.clicked.connect(self.on_add_click)
         self.remove_trial_pushButton.clicked.connect(self.on_remove_click)
@@ -128,8 +128,14 @@ class CreateSessionUi(object):
         back_btn = self.main_window.findChild(QtWidgets.QPushButton, "back_btn")
         back_btn.clicked.connect(self.on_back_click)
         self.date_value_label.setText((datetime.now()).strftime("%d/%m/%Y"))
-        self.behavior_iti_radioBtn = main_window.findChild(QtWidgets.QRadioButton, 'behavior_iti_radioBtn_3')
+        self.fixed_iti_radioBtn = main_window.findChild(QtWidgets.QRadioButton, 'behavior_iti_radioBtn_3')
         self.random_iti_radioBtn = main_window.findChild(QtWidgets.QRadioButton, 'random_iti_radioBtn_3')
+        self.min_iti_label =  self.main_window.findChild(QtWidgets.QLabel, "min_iti_label_3")
+        self.min_iti_spinBox = self.main_window.findChild(QtWidgets.QDoubleSpinBox, "min_iti_spinBox")
+        self.max_iti_label =  self.main_window.findChild(QtWidgets.QLabel, "max_iti_label_3")
+        self.max_iti_spinBox = self.main_window.findChild(QtWidgets.QDoubleSpinBox, "max_iti_spinBox")
+        self.fixed_iti_radioBtn.toggled.connect(self.toggle_spinbox)
+        self.fixed_iti_radioBtn.setChecked(True)
 
     def on_choose_template_click(self):
         # TODO add on clicked event handler for component
@@ -140,6 +146,16 @@ class CreateSessionUi(object):
         # self.second_window_ui = ChooseTemplateUi(self)
         # self.second_window_ui.setupUi(self.second_window)
         # self.second_window.show()
+
+    def toggle_spinbox(self, checked):
+        if checked:
+            self.max_iti_spinBox.hide()
+            self.min_iti_label.hide()
+            self.max_iti_label.hide()
+        else:
+            self.max_iti_spinBox.show()
+            self.min_iti_label.show()
+            self.max_iti_label.show()
 
     def on_add_click(self):
         self.add_window = QtWidgets.QDialog()
@@ -295,7 +311,9 @@ class CreateSessionUi(object):
         last_used = self.date_value_label.text()
         date_object = datetime.strptime(last_used, "%d/%m/%Y")
         formatted_date_last_used = date_object.strftime("%Y-%m-%d")
-        if len(self.trials_in_session) == 0 or ( not self.behavior_iti_radioBtn.isChecked() and not self.random_iti_radioBtn.isChecked()) \
+        max_iti = self.max_iti_spinBox.value()
+        min_iti = self.min_iti_spinBox.value()
+        if len(self.trials_in_session) == 0 or ( not self.fixed_iti_radioBtn.isChecked() and not self.random_iti_radioBtn.isChecked()) \
                 or session_name=="" or subject_id=="" or experimenter_name =="":
             error_warning("Not all data is filled")
             return
@@ -304,7 +322,9 @@ class CreateSessionUi(object):
                 session_name,
                 subject_id,
                 experimenter_name,
-                formatted_date_last_used)
+                formatted_date_last_used,
+                min_iti,
+                max_iti)
         except Exception as e:
             msg=str(e)
             if "name" in msg:
@@ -328,11 +348,11 @@ class CreateSessionUi(object):
         #     error_warning("An error accrued, please try again.")
         #     return
         # self.set_vm_data()
-        order = self.trials_order_cb.currentText()
+        # order = self.trials_order_cb.currentText()
         # order = self.vm.sessionVM.trials_order
         # if self.trials_ord_window is None:
         self.trials_ord_dialog = QtWidgets.QDialog()
-        if order == "random":
+        if True: # TODO remmber to handle
             self.trials_ord_dialog_ui = RandomOrderUi(self)
             self.trials_ord_dialog_ui.setupUi(self.trials_ord_dialog, self.on_session_define_event_handler)
         else:

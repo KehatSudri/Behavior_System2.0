@@ -97,17 +97,15 @@ class DB:
     #         self.conn.rollback()
     #         raise e
     #
-    def insert_session(self,name, subjectid, experimenter_name, last_used=None, iti_type=None, iti_min_range=None, iti_max_range=None,
-                       trials_order=None):
+    def insert_session(self,name, subjectid, experimenter_name,last_used,min_iti,
+                max_iti):
         try:
             sql = """
-                INSERT INTO sessions(name,subjectid,experimenter_name,last_used,iti_type,iti_min_range,iti_max_range,
-                trials_order)
-                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+                INSERT INTO sessions(name,subjectid,experimenter_name,last_used,min_iti,max_iti)
+                 VALUES (%s,%s,%s,%s,%s,%s)
                  """
             with self.conn.cursor() as cur:
-                cur.execute(sql, (name, subjectid, experimenter_name,last_used, iti_type, iti_min_range, iti_max_range,
-                       trials_order))
+                cur.execute(sql, (name, subjectid, experimenter_name,last_used, min_iti, max_iti))
                 self.conn.commit()
         except Exception as e:
             self.conn.rollback()
@@ -433,13 +431,9 @@ commands = (
         name VARCHAR(255) UNIQUE,
         subjectID VARCHAR(100),
         experimenter_name VARCHAR(100),
-        iti_type VARCHAR(10),
-        iti_min_range integer,
-        iti_max_range integer,
-        trials_order VARCHAR(10),
         last_used DATE NOT NULL,
-        CONSTRAINT iti_type_ck CHECK (iti_type in ('Serial', 'Random')),
-        CONSTRAINT trials_order_ck CHECK (trials_order in ('Serial', 'Random')))""",
+        min_iti DOUBLE PRECISION ,
+        max_iti DOUBLE PRECISION )""",
 
     """CREATE TABLE IF NOT EXISTS public.events_to_trials (
         id SERIAL PRIMARY KEY,

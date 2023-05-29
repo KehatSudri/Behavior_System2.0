@@ -607,8 +607,10 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     #     for trial in self._trial_types:
     #         trials.append(trial[1])
     #     return trials
-    def insert_session_to_DB(self,session_name, subject_id, experimenter_name,last_used):
-        return self.db.insert_session(session_name, subject_id, experimenter_name,last_used)
+    def insert_session_to_DB(self,session_name, subject_id, experimenter_name,last_used,min_iti,
+                max_iti):
+        return self.db.insert_session(session_name, subject_id, experimenter_name,last_used,min_iti,
+                max_iti)
     def insert_session_to_trials(self, session_name, trial_name):
         return self.db.insert_session_to_trials(session_name,trial_name)
     def get_trials_names(self):
