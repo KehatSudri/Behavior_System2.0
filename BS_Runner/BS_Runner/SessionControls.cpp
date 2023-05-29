@@ -15,7 +15,7 @@ void SessionControls::run(char * configFilePath) {
     std::map<std::string, int> attr;
     attr[DELAY_PARAM] = 100;
     attr[DURATION_PARAM] = 50;
-    SerialOutputer ao0InputMocker(new SimpleOutputer(ao0InputMocker_TaskHandle, attr));
+    SerialOutputer ao0InputMocker(new SimpleOutputer(ao0InputMocker_TaskHandle,"Dev1/ao0", attr));
     std::thread t1(&SerialOutputer::run, &ao0InputMocker);
     SessionConf conf(configFilePath);
     if (!conf.isValid()) {

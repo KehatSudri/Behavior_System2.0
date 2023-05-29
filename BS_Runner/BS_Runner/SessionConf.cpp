@@ -46,13 +46,21 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 					++category;
 					continue;
 				}
-				std::string name = line;
+				std::string name = line, delimiter = ",", token2;
+				size_t pos;
 				switch (category) {
 				case 0:
 					this->_trials.push_back({ name });
 					break;
 				case 1:
+					pos = line.find(delimiter);
+					name = line.substr(0, pos);
+					token2 = line.substr(pos + delimiter.length());
 					this->_trials[this->_numOfTrials]._AIPorts.push_back(name);
+					// TODO Implement support for end condition
+					if (token2 == "True") {
+
+					}
 					break;
 				case 2:
 					std::getline(inputFile, line);
@@ -118,12 +126,11 @@ void Trial::initAnalogOutputTasks() {
 		DAQmxCreateTask("", &AO_TaskHandle);
 		DAQmxCreateAOVoltageChan(AO_TaskHandle, ao_port, "", -5.0, 5.0, DAQmx_Val_Volts, "");
 		this->_analogOutputTasks.push_back(AO_TaskHandle);
-		SimpleOutputer* sm = new SimpleOutputer(AO_TaskHandle, getAttributes(portName, params));
-		this->_simpleOutputers.push_back(sm);
+		SimpleOutputer* sm = new SimpleOutputer(AO_TaskHandle, token1, getAttributes(portName, params));
+		this->_inputEvents.push_back(sm);
 		if (!token2.empty()) {
 			for (auto& eve : this->getInputEvents()) {
 				if (eve->getPort() == token2) {
-					std::cout << "contigiantt ";
 					eve->attachListener(new ContingentOutputer(sm));
 					break;
 				}

@@ -5,13 +5,9 @@
 #include <iostream>
 
 
-void writeOutput(TaskHandle taskHandle, int duration, int delay = 0) {
-    auto start_time = std::chrono::high_resolution_clock::now();
-    while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < delay) {
-        continue;
-    }
+void writeOutput(TaskHandle taskHandle, int duration) {
     DAQmxWriteAnalogScalarF64(taskHandle, true, 5.0, 3.7, NULL);
-    start_time = std::chrono::high_resolution_clock::now();
+    auto start_time = std::chrono::high_resolution_clock::now();
     while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < duration) {
         continue;
     }
@@ -46,7 +42,12 @@ void Event::set(float64 value) {
 }
 
 void SimpleOutputer::output() {
-    writeOutput(_handler, _attributes[DURATION_PARAM], _attributes[DELAY_PARAM]);
+    auto start_time = std::chrono::high_resolution_clock::now();
+    while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DELAY_PARAM]) {
+        continue;
+    }
+    this->notifyListeners();
+    writeOutput(_handler, _attributes[DURATION_PARAM]);
 }
 
 void EnvironmentOutputer::output() {

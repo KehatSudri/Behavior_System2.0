@@ -31,9 +31,9 @@ public:
     virtual void update(Event* event) = 0;
 };
 
-class Outputer {
+class Outputer : public Event {
 public:
-    Outputer(TaskHandle handler, std::map<std::string, int> attributes) : _handler(handler), _attributes(attributes){}
+    Outputer(TaskHandle handler, std::string port, std::map<std::string, int> attributes) :Event(port), _handler(handler), _attributes(attributes) {}
     virtual void output() = 0;
 protected:
     TaskHandle _handler;
@@ -42,7 +42,7 @@ protected:
 
 class SimpleOutputer : public Outputer {
 public:
-    SimpleOutputer(TaskHandle handler, std::map<std::string, int> attributes) : Outputer(handler, attributes) {}
+    SimpleOutputer(TaskHandle handler, std::string port, std::map<std::string, int> attributes) : Outputer(handler, port, attributes) {}
     void output() override;
 };
 

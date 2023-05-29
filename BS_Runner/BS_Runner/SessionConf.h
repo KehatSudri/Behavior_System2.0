@@ -11,7 +11,6 @@
 class Trial {
 	std::vector<std::string> _DOPorts;
 	std::vector<Event*> _inputEvents;
-	std::vector<SimpleOutputer*> _simpleOutputers;
 	std::vector<EnvironmentOutputer*> _environmentOutputer;
 	std::vector<TaskHandle> _analogOutputTasks;
 	std::vector<TaskHandle> _digitalOutputTasks;
