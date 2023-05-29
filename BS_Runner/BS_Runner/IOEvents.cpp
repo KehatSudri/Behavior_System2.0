@@ -69,3 +69,7 @@ void SerialOutputer::run() {
         }
     }
 }
+
+void SessionKiller::update(Event* event) {
+    SessionControls::getInstance().setIsSessionRunning(false);
+}

@@ -43,6 +43,11 @@ public:
     void output() override;
 };
 
+class SessionKiller : public Listener {
+public:
+    void update(Event* event) override;
+};
+
 class EnvironmentOutputer {
 public:
     EnvironmentOutputer(Outputer* outputer) : _outputer(outputer) {}

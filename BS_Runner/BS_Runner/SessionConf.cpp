@@ -59,7 +59,7 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 					_trials[_numOfTrials]._AIPorts.push_back(name);
 					// TODO Implement support for end condition
 					if (token2 == "True") {
-
+						_trials[_numOfTrials]._sessionKillers.push_back(name);
 					}
 					break;
 				case 2:
@@ -130,7 +130,9 @@ void Trial::initAnalogOutputTasks() {
 		TaskHandle AO_TaskHandle = NULL;
 		DAQmxCreateTask("", &AO_TaskHandle);
 		DAQmxCreateAOVoltageChan(AO_TaskHandle, ao_port, "", -5.0, 5.0, DAQmx_Val_Volts, "");
+		// TODO Check if code realy neads this VVV
 		_analogOutputTasks.push_back(AO_TaskHandle);
+		// ----------------------------------------
 		Outputer* sm = getOutputer(AO_TaskHandle, token1, getAttributes(portName, params));
 		_events.push_back(sm);
 		if (!token2.empty()) {
@@ -155,15 +157,27 @@ void Trial::initInputTaskHandle() {
 	}
 }
 
+void Trial::initSessionKillers() {
+	SessionKiller* killer = new SessionKiller();
+	for (auto& it : _sessionKillers) {
+		for (auto& eve : getInputEvents()) {
+			if (eve->getPort() == it) {
+				eve->attachListener(killer);
+				break;
+			}
+		}
+	}
+}
+
 TaskHandle Trial::getInputTaskHandle() {
 	return _inputTaskHandle;
 }
 
-std::vector<TaskHandle> Trial::getAnalogOutputTasks() {
+const std::vector<TaskHandle>& Trial::getAnalogOutputTasks() const {
 	return _analogOutputTasks;
 }
 
-std::vector<Event*> Trial::getInputEvents() {
+std::vector<Event*>& Trial::getInputEvents() const {
 	// TODO Check working
 	std::vector<Event*> inputEvents;
 	for (auto& it : _events) {
