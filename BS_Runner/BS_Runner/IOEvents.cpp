@@ -70,6 +70,6 @@ void SerialOutputer::run() {
     }
 }
 
-void SessionKiller::update(Event* event) {
-    SessionControls::getInstance().setIsSessionRunning(false);
+void TrialKiller::update(Event* event) {
+    SessionControls::getInstance().setIsTrialRuning(false);
 }

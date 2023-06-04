@@ -2,6 +2,7 @@
 #ifndef __IOEvents__
 #define __IOEvents__
 #include <NIDAQmx.h>
+#include <iostream>
 #include <vector>
 #include <map>
 #include <string>
@@ -43,7 +44,7 @@ public:
     void output() override;
 };
 
-class SessionKiller : public Listener {
+class TrialKiller : public Listener {
 public:
     void update(Event* event) override;
 };
