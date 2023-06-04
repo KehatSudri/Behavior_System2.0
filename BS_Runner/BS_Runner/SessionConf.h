@@ -12,7 +12,6 @@ class Trial {
 	std::vector<std::string> _DOPorts;
 	std::vector<Event*> _events;
 	std::vector<EnvironmentOutputer*> _environmentOutputer;
-	std::vector<TaskHandle> _analogOutputTasks;
 	std::vector<TaskHandle> _digitalOutputTasks;
 	TaskHandle _inputTaskHandle;
 public:
@@ -20,13 +19,14 @@ public:
 	Trial(std::string trialName) :_trialName(trialName){}
 	std::vector<std::string> _AIPorts;
 	std::vector<std::tuple<std::string, std::vector<int>>> _AOPorts;
+	std::vector<std::string> _trialKillers;
 	void initInputEvents();
 	void initAnalogOutputTasks();
 	void initInputTaskHandle();
+	void initTrialKillers();
 	TaskHandle getInputTaskHandle();
-	std::vector<TaskHandle> getAnalogOutputTasks();
-	std::vector<EnvironmentOutputer*> getEnvironmentOutputer() { return this->_environmentOutputer; }
-	std::vector<Event*> getInputEvents();
+	const std::vector<EnvironmentOutputer*>& getEnvironmentOutputer() const { return _environmentOutputer; }
+	std::vector<Event*> getInputEvents()const ;
 	~Trial();
 };
 
@@ -38,13 +38,13 @@ public class SessionConf {
 	std::vector<Trial> _trials;
 public:
 	SessionConf(std::string path);
-	int getNumOfTrials() { return this->_numOfTrials; }
-	bool isValid() { return this->_validFlag; }
-	bool isSessionComplete() { return this->_sessionComplete; }
-	void changeCurrentTrial();
+	int getNumOfTrials() { return _numOfTrials; }
+	bool isValid() { return _validFlag; }
+	bool isSessionComplete() { return _sessionComplete; }
+	void setSessionComplete(bool state) { _sessionComplete = state; }
+	int changeCurrentTrial();
 	void finishSession();
 	TaskHandle getInputTaskHandle();
-	std::vector<TaskHandle> getAnalogOutputTasks();
 	std::vector<EnvironmentOutputer*> getEnvironmentOutputer();
 	std::vector<Event*> getInputEvents();
 };

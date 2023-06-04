@@ -69,3 +69,7 @@ void SerialOutputer::run() {
         }
     }
 }
+
+void TrialKiller::update(Event* event) {
+    SessionControls::getInstance().setIsTrialRuning(false);
+}

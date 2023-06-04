@@ -16,6 +16,8 @@
 #define FREQUENCY_PARAM "frequency"
 #define AMPLITUDE_PARAM "amplitude"
 
+#define END_OF_SESSION 0
+
 #define SAMPLE_PER_PORT 5
 #define CONFIGURATION_FILE_ERROR_MESSAGE "Failed to load session configuration file"
 #endif // __Consts__

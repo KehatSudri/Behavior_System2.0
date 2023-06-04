@@ -2,6 +2,7 @@
 #ifndef __IOEvents__
 #define __IOEvents__
 #include <NIDAQmx.h>
+#include <iostream>
 #include <vector>
 #include <map>
 #include <string>
@@ -41,6 +42,11 @@ class SimpleOutputer : public Outputer {
 public:
     SimpleOutputer(TaskHandle handler, std::string port, std::map<std::string, int> attributes) : Outputer(handler, port, attributes) {}
     void output() override;
+};
+
+class TrialKiller : public Listener {
+public:
+    void update(Event* event) override;
 };
 
 class EnvironmentOutputer {

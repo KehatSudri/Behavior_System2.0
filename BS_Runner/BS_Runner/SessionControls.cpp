@@ -9,20 +9,10 @@ using namespace std;
 using namespace System::Windows::Forms;
 
 void SessionControls::run(char * configFilePath) {
-    TaskHandle ao0InputMocker_TaskHandle = NULL;
-    DAQmxCreateTask("", &ao0InputMocker_TaskHandle);
-    DAQmxCreateAOVoltageChan(ao0InputMocker_TaskHandle, "Dev1/ao0", "", -5.0, 5.0, DAQmx_Val_Volts, "");
-    std::map<std::string, int> attr;
-    attr[DELAY_PARAM] = 100;
-    attr[DURATION_PARAM] = 50;
-    SerialOutputer ao0InputMocker(new SimpleOutputer(ao0InputMocker_TaskHandle,"Dev1/ao0", attr));
-    std::thread t1(&SerialOutputer::run, &ao0InputMocker);
     SessionConf conf(configFilePath);
     if (!conf.isValid()) {
         // TODO Needs work
         MessageBox::Show(CONFIGURATION_FILE_ERROR_MESSAGE);
-        DAQmxClearTask(ao0InputMocker_TaskHandle);
-        t1.join();
         finishSession();
     }
 
@@ -40,7 +30,7 @@ void SessionControls::run(char * configFilePath) {
         }
         setIsTrialRuning(true);
         while (isTrialRunning()) {
-            if (!_isPaused) {
+            if (!this->_isPaused) {
                 DAQmxReadAnalogF64(inputTaskHandle, SAMPLE_PER_PORT, 5.0, DAQmx_Val_GroupByScanNumber, data.data(), SAMPLE_PER_PORT, &read, NULL);
                 for (int portIndex = 0; portIndex < inputPortsSize; ++portIndex) {
                     float64 sampleValue = data[portIndex * SAMPLE_PER_PORT];
@@ -52,10 +42,11 @@ void SessionControls::run(char * configFilePath) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(300));
             }
         }
-        conf.changeCurrentTrial();
+        if (conf.changeCurrentTrial() == END_OF_SESSION) {
+            conf.setSessionComplete(true);
+        }
     }
-    t1.join();
-    DAQmxClearTask(ao0InputMocker_TaskHandle);
+    this->finishSession();
 }
 
 bool SessionControls::isTrialRunning() {
@@ -68,7 +59,8 @@ void SessionControls::startSession(char* configFilePath) {
     setIsSessionRunning(true);
     setIsTrialRuning(true);
     setIsPaused(false);
-    _runThread = std::thread(&SessionControls::run, this, configFilePath);
+    this->_runThread = std::thread(&SessionControls::run, this, configFilePath);
+    this->_runThread.join();
 }
 
 void SessionControls::pauseSession() {
@@ -85,9 +77,11 @@ void SessionControls::nextTrial() {
 
 void SessionControls::finishSession() {
     if (!_isSessionRunning) return;
-    _conf->finishSession();
+    this->_conf->finishSession();
     setIsPaused(true);
     setIsSessionRunning(false);
     setIsTrialRuning(false);
-    _runThread.join();
+    if (!_conf->isSessionComplete()) {
+        this->_runThread.join();
+    }
 }
