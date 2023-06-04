@@ -67,9 +67,16 @@ class CreateTrialTypeUi(object):
         header.resizeSection(5, 100)  #
 
     def on_add_click(self):
+        current_event = self.events_comboBox.currentText()
+        for row in range(self.events_tableWidget.rowCount()):
+            item = self.events_tableWidget.item(row, 0)  # Get item at row, column 0
+            if item is not None:
+                if current_event == item.text():
+                    error_warning("The event already in this trial.")
+                    return
+
         # add an event to the current trial type
         row_position = self.events_tableWidget.rowCount()
-        current_event = self.events_comboBox.currentText()
         self.events_tableWidget.setRowCount(row_position + 1)
         self.events_tableWidget.setItem(row_position, 0, QtWidgets.QTableWidgetItem(current_event))
         if self.simple_radioButton.isChecked():

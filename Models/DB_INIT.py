@@ -42,7 +42,7 @@ class DB:
         self.disconnect()
         self.connect(db_config)
         self.create_tables()
-        self.insert_mock_events()
+        # self.insert_mock_events()
 
     def connect(self, params):
         """ Connect to the PostgresSQL database server """
@@ -87,16 +87,7 @@ class DB:
        except Exception as e:
             self.conn.rollback()
             raise e
-    # def insert_hardware_event_to_DB(self, port, name, type, format, is_reward):
-    #     try:
-    #         sql = """INSERT INTO events(port, name, type, format, is_reward) VALUES (%s,%s,%s,%s,%s)"""
-    #         with self.conn.cursor() as cur:
-    #             cur.execute(sql, (name, port, type, format, is_reward))
-    #             self.conn.commit()
-    #     except Exception as e:
-    #         self.conn.rollback()
-    #         raise e
-    #
+
     def insert_session(self,name, subjectid, experimenter_name,last_used,min_iti,
                 max_iti,is_fixed_iti):
         try:
@@ -240,12 +231,7 @@ class DB:
             cur.execute(temp)
             ports = cur.fetchall()
         return ports
-    # def get_ports(self):
-    #     with self.conn.cursor() as cur:
-    #         temp = f"SELECT port FROM events "
-    #         cur.execute(temp)
-    #         ports = cur.fetchall()
-    #     return ports
+
     def get_dependencies(self, trial_name):
         with self.conn.cursor() as cur:
             temp = f"SELECT h1.port, h2.port FROM events as h1, events as h2, events_to_trials WHERE h1.name = " \
@@ -283,9 +269,9 @@ class DB:
             cur.execute(f"SELECT event_name FROM events_to_trials WHERE trial_name = '{trial}'")
             events = cur.fetchall()
         return events
-    def get_params_by_event_name(self, event):
+    def get_params_by_event_and_trial_name(self, event,trial):
         with self.conn.cursor() as cur:
-            cur.execute(f"SELECT params FROM events_to_trials WHERE event_name = '{event}'")
+            cur.execute(f"SELECT params FROM events_to_trials WHERE event_name = '{event}' AND trial_name='{trial}' ")
             params = cur.fetchall()
         return params
 
@@ -365,17 +351,8 @@ class DB:
             for trial in a:
                     t= trial[0]
                     self.delete_trial_type(t)
-                    # cur.execute(
-                    #     "SELECT name FROM sessions JOIN session_to_trials ON sessions.name = trial_name AND trial_name = %s ",(t,))
-                    # b = cur.fetchall()
-                    # print(b)
-                    # for session in b:
-                    #    s = session[0]
-                    #    cur.execute("DELETE FROM sessions WHERE name = %s ",(s,))
             cur.execute("DELETE FROM events WHERE name =  %s ",(name,))
             cur.execute("DELETE FROM sessions WHERE NOT EXISTS (SELECT session_name FROM session_to_trials WHERE session_name = sessions.name)")
-
-            # cur.execute("DELETE FROM trials WHERE event_name = %s AND events_to_trials.event_name=trials.name", (name,))
             self.conn.commit()
 
     def delete_template(self, temp_id):

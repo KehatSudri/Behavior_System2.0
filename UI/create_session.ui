@@ -32,247 +32,6 @@
       <property name="sizeConstraint">
        <enum>QLayout::SetNoConstraint</enum>
       </property>
-      <item row="7" column="0">
-       <layout class="QGridLayout" name="gridLayout_5" rowstretch="0,0,0,0,0,0" columnstretch="2,0,0,0,0">
-        <property name="sizeConstraint">
-         <enum>QLayout::SetNoConstraint</enum>
-        </property>
-        <item row="1" column="1">
-         <layout class="QHBoxLayout" name="iti_def_horizontalLayout_3" stretch="0,0">
-          <item>
-           <widget class="QRadioButton" name="behavior_iti_radioBtn_3">
-            <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
-            </property>
-            <property name="text">
-             <string>Fixed</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="random_iti_radioBtn_3">
-            <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
-            </property>
-            <property name="text">
-             <string>Random</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="0" column="2">
-         <spacer name="horizontalSpacer_15">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="2" column="1" rowspan="2">
-         <layout class="QGridLayout" name="iti_min_max_values_gridLayout_3">
-          <item row="1" column="0">
-           <widget class="QLabel" name="min_iti_label_3">
-            <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
-            </property>
-            <property name="text">
-             <string>min: </string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="max_iti_label_3">
-            <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
-            </property>
-            <property name="text">
-             <string>max: </string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QDoubleSpinBox" name="min_iti_spinBox"/>
-          </item>
-          <item row="3" column="2">
-           <widget class="QDoubleSpinBox" name="max_iti_spinBox"/>
-          </item>
-         </layout>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="iti_label_3">
-          <property name="styleSheet">
-           <string notr="true">font: 12pt &quot;Arial&quot;;</string>
-          </property>
-          <property name="text">
-           <string>ITI: (ms)</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="3">
-         <layout class="QHBoxLayout" name="end_def_value_horizontalLayout_3"/>
-        </item>
-        <item row="0" column="4">
-         <spacer name="horizontalSpacer_16">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Maximum</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>60</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="3" column="3">
-         <layout class="QHBoxLayout" name="random_reward_percent_horizontalLayout"/>
-        </item>
-        <item row="0" column="0">
-         <spacer name="horizontalSpacer_14">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Maximum</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>60</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="4" column="1">
-         <spacer name="verticalSpacer_4">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="5" column="1" colspan="3">
-         <layout class="QGridLayout" name="navigation_gridLayout_3" columnstretch="1,1">
-          <item row="0" column="1">
-           <widget class="QPushButton" name="next_btn">
-            <property name="text">
-             <string>Next</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QPushButton" name="back_btn">
-            <property name="text">
-             <string>Back</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="1" column="2" rowspan="3" colspan="2">
-         <widget class="QScrollArea" name="scrollArea">
-          <property name="widgetResizable">
-           <bool>true</bool>
-          </property>
-          <widget class="QWidget" name="scrollAreaWidgetContents">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>332</width>
-             <height>86</height>
-            </rect>
-           </property>
-           <widget class="QTextEdit" name="textEdit">
-            <property name="geometry">
-             <rect>
-              <x>-3</x>
-              <y>-2</y>
-              <width>371</width>
-              <height>101</height>
-             </rect>
-            </property>
-           </widget>
-          </widget>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="6" column="0">
-       <layout class="QHBoxLayout" name="def_trial_horizontalLayout" stretch="1">
-        <property name="spacing">
-         <number>20</number>
-        </property>
-        <property name="sizeConstraint">
-         <enum>QLayout::SetMinimumSize</enum>
-        </property>
-        <property name="leftMargin">
-         <number>20</number>
-        </property>
-        <property name="topMargin">
-         <number>10</number>
-        </property>
-        <property name="rightMargin">
-         <number>20</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <layout class="QHBoxLayout" name="buttons_to_set_trial_horizontalLayout_2" stretch="0,0">
-          <property name="spacing">
-           <number>2</number>
-          </property>
-          <property name="sizeConstraint">
-           <enum>QLayout::SetMinimumSize</enum>
-          </property>
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QPushButton" name="add_trial">
-            <property name="text">
-             <string>Add</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>16</width>
-              <height>16</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="remove_trial_pushButton">
-            <property name="text">
-             <string>Remove</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </item>
       <item row="2" column="0">
        <layout class="QHBoxLayout" name="session_name_and_date_horizontalLayout" stretch="0,0,1,0,1">
         <property name="spacing">
@@ -716,6 +475,250 @@
            <string>Trials: </string>
           </property>
          </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="6" column="0">
+       <layout class="QHBoxLayout" name="def_trial_horizontalLayout" stretch="1">
+        <property name="spacing">
+         <number>20</number>
+        </property>
+        <property name="sizeConstraint">
+         <enum>QLayout::SetMinimumSize</enum>
+        </property>
+        <property name="leftMargin">
+         <number>20</number>
+        </property>
+        <property name="topMargin">
+         <number>10</number>
+        </property>
+        <property name="rightMargin">
+         <number>20</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <layout class="QHBoxLayout" name="buttons_to_set_trial_horizontalLayout_2" stretch="0,0,0">
+          <property name="spacing">
+           <number>2</number>
+          </property>
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMinimumSize</enum>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="add_trial">
+            <property name="text">
+             <string>Add</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>16</width>
+              <height>16</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="remove_trial_pushButton">
+            <property name="text">
+             <string>Remove</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="edit_pushButton">
+            <property name="text">
+             <string>Edit</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item row="7" column="0">
+       <layout class="QGridLayout" name="gridLayout_5" rowstretch="0,0,0,0,0,0,0,0" columnstretch="2,0,0,0,0,0,0,0">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetNoConstraint</enum>
+        </property>
+        <item row="7" column="1" colspan="6">
+         <layout class="QGridLayout" name="navigation_gridLayout_3" columnstretch="1,1">
+          <item row="0" column="1">
+           <widget class="QPushButton" name="next_btn">
+            <property name="text">
+             <string>Next</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="back_btn">
+            <property name="text">
+             <string>Back</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="6" column="1">
+         <spacer name="verticalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="0">
+         <spacer name="horizontalSpacer_14">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Maximum</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>60</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="2" column="1">
+         <layout class="QHBoxLayout" name="iti_def_horizontalLayout_3" stretch="0,0">
+          <item>
+           <widget class="QRadioButton" name="behavior_iti_radioBtn_3">
+            <property name="styleSheet">
+             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
+            </property>
+            <property name="text">
+             <string>Fixed</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="random_iti_radioBtn_3">
+            <property name="styleSheet">
+             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
+            </property>
+            <property name="text">
+             <string>Random</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="5">
+         <spacer name="horizontalSpacer_15">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="5" column="6">
+         <layout class="QHBoxLayout" name="random_reward_percent_horizontalLayout"/>
+        </item>
+        <item row="0" column="7">
+         <spacer name="horizontalSpacer_16">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Maximum</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>60</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="iti_label_3">
+          <property name="styleSheet">
+           <string notr="true">font: 12pt &quot;Arial&quot;;</string>
+          </property>
+          <property name="text">
+           <string>ITI: (ms)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="6">
+         <layout class="QHBoxLayout" name="end_def_value_horizontalLayout_3"/>
+        </item>
+        <item row="4" column="1" rowspan="2">
+         <layout class="QGridLayout" name="iti_min_max_values_gridLayout_3">
+          <item row="1" column="0">
+           <widget class="QLabel" name="min_iti_label_3">
+            <property name="styleSheet">
+             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
+            </property>
+            <property name="text">
+             <string>min: </string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="max_iti_label_3">
+            <property name="styleSheet">
+             <string notr="true">font: 12pt &quot;Arial&quot;;</string>
+            </property>
+            <property name="text">
+             <string>max: </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QDoubleSpinBox" name="min_iti_spinBox"/>
+          </item>
+          <item row="3" column="2">
+           <widget class="QDoubleSpinBox" name="max_iti_spinBox"/>
+          </item>
+         </layout>
+        </item>
+        <item row="2" column="6">
+         <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+        </item>
+        <item row="2" column="5">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Max Trial Duration</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="4">
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </item>

@@ -86,7 +86,7 @@ class CreateEventUi(object):
         # if error_value == -1:
         #     error_warning("Error : Event name already exist")
         #     return
-        port = "Dev/" + self.ports_comboBox.currentText().lower()
+        port = "Dev1/" + self.ports_comboBox.currentText().lower()
         try:
             self.vm.insert_hardware_event_to_DB(
                 port,

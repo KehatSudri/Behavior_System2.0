@@ -5,6 +5,7 @@ from PyQt6 import QtCore, QtWidgets, uic
 from Models.DB_INIT import DB
 from Models.prepare_session_information import prepare_session_information
 from Views.add_trial import AddTrialUi
+from Views.edit_session_template import EditSessionUi
 from Views.blocks_order import BlocksOrderUi
 from Views.choose_template import ChooseTemplateUi
 from Views.control_session_board import ControlSessionBoardUi
@@ -84,7 +85,7 @@ class CreateSessionUi(object):
         self.chosen_end_def = None
         self.chosen_iti_type = None
         self.trials_ord_window = None
-        self.db=DB()
+        self.db = DB()
         self.behavior_iti_widgets = None
         self.random_iti_widgets = None
         self.trials_table = None
@@ -108,18 +109,20 @@ class CreateSessionUi(object):
         uic.loadUi(get_ui_path('create_session.ui'), self.main_window)
         self.remove_trial_pushButton = self.main_window.findChild(QtWidgets.QPushButton, "remove_trial_pushButton")
         self.add_trial_pushButton = self.main_window.findChild(QtWidgets.QPushButton, "add_trial")
+        self.edit_pushButton = self.main_window.findChild(QtWidgets.QPushButton, "edit_pushButton")
         self.session_name_te = self.main_window.findChild(QtWidgets.QTextEdit, "session_name_te")
         self.subject_id_te = self.main_window.findChild(QtWidgets.QTextEdit, "subject_id_te")
         self.exp_name_te = self.main_window.findChild(QtWidgets.QTextEdit, "exp_name_te")
         self.trials_table = self.main_window.findChild(QtWidgets.QTableWidget, "trials_tableWidget")
         self.date_value_label = self.main_window.findChild(QtWidgets.QLabel, "date_value_label")
-        #self.trials#_order_cb = self.main_window.findChild(QtWidgets.QComboBox, 'trials_order_cb')
+        # self.trials#_order_cb = self.main_window.findChild(QtWidgets.QComboBox, 'trials_order_cb')
         choose_template_btn = self.main_window.findChild(QtWidgets.QPushButton, "choose_template_btn")
         next_btn = self.main_window.findChild(QtWidgets.QPushButton, "next_btn")
         choose_template_btn.clicked.connect(self.on_choose_template_click)
-        #self.t#rials_order_cb.addItems(["random", "blocks"])
+        # self.t#rials_order_cb.addItems(["random", "blocks"])
         next_btn.clicked.connect(self.on_next_click)
         self.add_trial_pushButton.clicked.connect(self.on_add_click)
+        self.edit_pushButton.clicked.connect(self.on_edit_click)
         self.remove_trial_pushButton.clicked.connect(self.on_remove_click)
         # self.trials_gridLayout=self.main_window.findChild(QtWidgets.QGridLayout, "trials_gridLayout_3")
         back_btn = self.main_window.findChild(QtWidgets.QPushButton, "back_btn")
@@ -127,13 +130,13 @@ class CreateSessionUi(object):
         self.date_value_label.setText((datetime.now()).strftime("%d/%m/%Y"))
         self.fixed_iti_radioBtn = main_window.findChild(QtWidgets.QRadioButton, 'behavior_iti_radioBtn_3')
         self.random_iti_radioBtn = main_window.findChild(QtWidgets.QRadioButton, 'random_iti_radioBtn_3')
-        self.min_iti_label =  self.main_window.findChild(QtWidgets.QLabel, "min_iti_label_3")
+        self.min_iti_label = self.main_window.findChild(QtWidgets.QLabel, "min_iti_label_3")
         self.min_iti_spinBox = self.main_window.findChild(QtWidgets.QDoubleSpinBox, "min_iti_spinBox")
-        self.max_iti_label =  self.main_window.findChild(QtWidgets.QLabel, "max_iti_label_3")
+        self.max_iti_label = self.main_window.findChild(QtWidgets.QLabel, "max_iti_label_3")
         self.max_iti_spinBox = self.main_window.findChild(QtWidgets.QDoubleSpinBox, "max_iti_spinBox")
         self.fixed_iti_radioBtn.toggled.connect(self.toggle_spinbox)
         self.fixed_iti_radioBtn.setChecked(True)
-
+        self.edit_pushButton.setEnabled(False)
 
     def on_choose_template_click(self):
         # TODO add on clicked event handler for component
@@ -159,6 +162,11 @@ class CreateSessionUi(object):
         self.add_window = QtWidgets.QDialog()
         self.add_ui = AddTrialUi(self)
         self.add_ui.setupUi(self.add_window)
+        self.add_window.show()
+    def on_edit_click(self):
+        self.add_window = QtWidgets.QDialog()
+        self.add_ui = EditSessionUi(self)
+        self.add_ui.setupUi(self.add_window,self.session_name_te.toPlainText())
         self.add_window.show()
 
     def deal_with_trial(self, treatment):
@@ -209,9 +217,8 @@ class CreateSessionUi(object):
         else:
             error_warning("There are no trials in the current session.")
 
-
-    def on_edit_click(self):
-        self.deal_with_trial(0)
+    # def on_edit_click(self):
+    #     self.deal_with_trial(0)
 
     def on_remove_click(self):
         self.deal_with_trial(1)
@@ -317,8 +324,9 @@ class CreateSessionUi(object):
         is_fixed_iti = self.fixed_iti_radioBtn.isChecked()
         max_iti = self.max_iti_spinBox.value()
         min_iti = self.min_iti_spinBox.value()
-        if self.trials_table.rowCount() == 0 or ( not self.fixed_iti_radioBtn.isChecked() and not self.random_iti_radioBtn.isChecked()) \
-                or session_name=="" or subject_id=="" or experimenter_name =="":
+        if self.trials_table.rowCount() == 0 or (
+                not self.fixed_iti_radioBtn.isChecked() and not self.random_iti_radioBtn.isChecked()) \
+                or session_name == "" or subject_id == "" or experimenter_name == "":
             error_warning("Not all data is filled")
             return
         try:
@@ -331,21 +339,21 @@ class CreateSessionUi(object):
                 max_iti,
                 is_fixed_iti)
         except Exception as e:
-            msg=str(e)
-            print(msg)
-            if "name" in msg:
+            msg = str(e)
+            if "name" in msg: #here I need to check if something was edit then to create new sesion on DB if no just continue
                 error_warning("Error: Session name already exists.")
             return
 
         # insert to session to trials table
         for i in range(0, len(self.trials_in_session), 2):
-            self.vm.insert_session_to_trials(session_name,self.trials_in_session[i])
+            self.vm.insert_session_to_trials(session_name, self.trials_in_session[i])
         ports = []
         dependencies = []
         for i in range(0, len(self.trials_in_session), 2):
             ports = (self.vm.get_ports(self.trials_in_session[i]))
             dependencies = self.vm.get_dependencies(self.trials_in_session[i])
-            prepare_session_information(session_name,ports, dependencies, self.trials_in_session[i], i, self.trials_in_session,is_fixed_iti)
+            prepare_session_information(session_name, ports, dependencies, self.trials_in_session[i], i,
+                                        self.trials_in_session, is_fixed_iti)
 
         # if not self.is_valid_input():
         #     if self.max_iti_spinBox.value() < self.min_iti_spinBox.value():
@@ -358,7 +366,7 @@ class CreateSessionUi(object):
         # order = self.vm.sessionVM.trials_order
         # if self.trials_ord_window is None:
         self.trials_ord_dialog = QtWidgets.QDialog()
-        if True: # TODO remmber to handle
+        if True:  # TODO remmber to handle
             self.trials_ord_dialog_ui = RandomOrderUi(self)
             self.trials_ord_dialog_ui.setupUi(self.trials_ord_dialog, self.on_session_define_event_handler)
         else:
@@ -413,6 +421,7 @@ class CreateSessionUi(object):
         index = table.rowCount()
         table.insertRow(index)
         table.setItem(index, 0, QTableWidgetItem(self.trials_in_session[index * 2]))
+        print(self.trials_in_session)
         for event, parameters in self.trials_in_session[index * 2 + 1].items():
             if event == 'Tone':
                 params += event + ":" + " delay - " + parameters[0] + ", tone duration - " + parameters[
@@ -424,10 +433,10 @@ class CreateSessionUi(object):
                     1] + ", Frequency - " + parameters[2] + ", Amplitude - " + parameters[3] + "\n"
 
             table.setItem(index, 1, QTableWidgetItem(params))
-            table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
-            self.db=DB()
-            trial_name=self.trials_in_session[index * 2]
-            self.db.insert_params(trial_name,event,str(','.join(parameters)))
+            self.db = DB()
+            trial_name = self.trials_in_session[index * 2]
+            self.db.insert_params(trial_name, event, str(','.join(parameters)))
+
     def on_back_click(self):
         self.parent.main_window.show()
         self.main_window.close()
@@ -446,7 +455,7 @@ class CreateSessionUi(object):
     def on_template_change_event_handler(self, template):
         subject, session_name = template.split()
         template_info = self.db.get_template(session_name, subject)
-        var1, session_name, subject, exp_name, date, min_iti, max_iti,is_fixed_iti_type = template_info[0]
+        var1, session_name, subject, exp_name, date, min_iti, max_iti, is_fixed_iti_type = template_info[0]
         self.session_name_te.setText(session_name)
         self.subject_id_te.setText(subject)
         self.exp_name_te.setText(exp_name)
@@ -457,29 +466,38 @@ class CreateSessionUi(object):
 
         trials = self.db.get_trial_name_by_session(session_name)
         trials_ = [x[0] for x in trials]
+        col1 = QTableWidgetItem("Trial name")
+        col2 = QTableWidgetItem("parameters")
+        self.trials_table.setHorizontalHeaderItem(0, col1)
+        self.trials_table.setHorizontalHeaderItem(1, col2)
         for trial in trials_:
-            events  = self.db.get_events_by_trial_name(trial)
+            table = self.trials_table
+            index = table.rowCount()
+            table.insertRow(index)
+            table.setItem(index, 0, QTableWidgetItem(trial))
+            events = self.db.get_events_by_trial_name(trial)
             events = [x[0] for x in events]
-            for event in events :
-                parameters = self.db.get_params_by_event_name(event)
+            params = ""
+            for event in events:
+                parameters = self.db.get_params_by_event_and_trial_name(event,trial)
+                print(parameters)
                 parameters = [x[0] for x in parameters]
                 parameters_ar = [item.split(',') for item in parameters]
-                params = ""
-                table = self.trials_table
-                index = table.rowCount()
-                table.insertRow(index)
-                table.setItem(index, 0, QTableWidgetItem(trial))
+
                 for parameters in parameters_ar:
                     if event == 'Tone':
                         params += event + ":" + " delay - " + parameters[0] + ", tone duration - " + parameters[
                             1] + ", tone frequency - " + parameters[2] + "\n"
                     elif event == 'Reward':
-                        params += event + ":" + " delay - " + parameters[0] + ", reward duration - " + parameters[1] + "\n"
+                        params += event + ":" + " delay - " + parameters[0] + ", reward duration - " + parameters[
+                            1] + "\n"
                     else:
                         params += event + ":" + " delay - " + parameters[0] + ", Duration - " + parameters[
                             1] + ", Frequency - " + parameters[2] + ", Amplitude - " + parameters[3] + "\n"
-                table.setItem(index, 1, QTableWidgetItem(params))
-                table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
+            table.setItem(index, 1, QTableWidgetItem(params))
+        self.edit_pushButton.setEnabled(True)
+        self.add_trial_pushButton.setEnabled(False)
+        self.remove_trial_pushButton.setEnabled(False)
         if is_fixed_iti_type:
             self.fixed_iti_radioBtn.setChecked(True)
             self.random_iti_radioBtn.setChecked(False)
@@ -487,13 +505,10 @@ class CreateSessionUi(object):
             self.fixed_iti_radioBtn.setChecked(False)
             self.random_iti_radioBtn.setChecked(True)
 
-
-
-
     def on_session_define_event_handler(self):
         import subprocess
         from pathlib import Path
-        config_path = str(Path(__file__).parent.parent / 'config_files'/ 'session_config.txt')
+        config_path = str(Path(__file__).parent.parent / 'config_files' / 'session_config.txt')
         bs_runner_path = r"BS_Runner/Debug/BS_Runner.exe"
         command = [bs_runner_path, config_path]
         subprocess.run(command)
