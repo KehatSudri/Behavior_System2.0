@@ -4,6 +4,8 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <random>
+
 
 std::map<std::string, int>  getAttributes(std::string port, const std::vector<int>& params) {
 	// TODO Switch case on port
@@ -25,11 +27,38 @@ std::vector<int> getParams(std::string line) {
 	return params;
 }
 
+void SessionConf::performITIWait() {
+	auto start_time = std::chrono::high_resolution_clock::now();
+	if (_maxITI) {
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_real_distribution<double> dis(_minITI, _maxITI);
+		while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < dis(gen)) {
+			continue;
+		}
+	}
+	else {
+		while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _minITI) {
+			continue;
+		}
+	}
+}
+
 SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 	std::ifstream inputFile(path);
 	if (inputFile.is_open()) {
 		int category = 0;
-		std::string line;
+		std::string line, delimiter = ",";
+		std::getline(inputFile, line);
+		std::string iti = line.substr(1, line.length() - 2);
+		size_t pos = iti.find(delimiter);
+		if (pos != std::string::npos) {
+			setMinITI(std::stod(iti.substr(0, pos)));
+			setMaxITI(std::stod(iti.substr(pos + delimiter.length())));
+		}
+		else {
+			setMinITI(std::stod(iti));
+		}
 		while (std::getline(inputFile, line)) {
 			if (line.empty()) {
 				_trials[_numOfTrials].initInputTaskHandle();
@@ -47,9 +76,8 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 					++category;
 					continue;
 				}
-				std::string name = line, delimiter = ",", token2;
-				size_t pos;
-				switch (category) {
+				std::string name = line, token2;
+				switch (category % 3) {
 				case 0:
 					_trials.push_back({ name });
 					break;
@@ -80,7 +108,7 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 }
 
 int SessionConf::changeCurrentTrial() {
-	// TODO Implement logic on next trial
+	performITIWait();
 	return END_OF_SESSION;
 }
 

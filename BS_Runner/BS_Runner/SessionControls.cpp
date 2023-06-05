@@ -11,9 +11,9 @@ using namespace System::Windows::Forms;
 void SessionControls::run(char * configFilePath) {
     SessionConf conf(configFilePath);
     if (!conf.isValid()) {
-        // TODO Needs work
         MessageBox::Show(CONFIGURATION_FILE_ERROR_MESSAGE);
-        finishSession();
+        this->finishSession();
+        return;
     }
 
     _conf = &conf;
@@ -77,11 +77,13 @@ void SessionControls::nextTrial() {
 
 void SessionControls::finishSession() {
     if (!_isSessionRunning) return;
-    this->_conf->finishSession();
+    if (this->_conf) {
+        this->_conf->finishSession();
+    }
     setIsPaused(true);
     setIsSessionRunning(false);
     setIsTrialRuning(false);
-    if (!_conf->isSessionComplete()) {
+    if (this->_conf && !_conf->isSessionComplete()) {
         this->_runThread.join();
     }
 }

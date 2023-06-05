@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <tuple>
+#include <thread>
 #include <NIDAQmx.h>
 #include "IOEvents.h"
 
@@ -33,9 +34,14 @@ public:
 public class SessionConf {
 	int _numOfTrials = 0;
 	int _currentTrial = 0;
+	double _minITI = 0;
+	double _maxITI = 0;
 	bool _validFlag;
 	bool _sessionComplete = false;
 	std::vector<Trial> _trials;
+	void setMinITI(double val) { _minITI = val; }
+	void setMaxITI(double val) { _maxITI = val; }
+	void performITIWait();
 public:
 	SessionConf(std::string path);
 	int getNumOfTrials() { return _numOfTrials; }

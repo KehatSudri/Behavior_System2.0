@@ -3,7 +3,6 @@
 #define __SessionControls__
 #include "SessionConf.h"
 #include <string>
-#include <thread>
 
 public class SessionControls {
 	bool _isSessionRunning = false;
