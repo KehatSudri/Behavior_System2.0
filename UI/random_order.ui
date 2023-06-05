@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>401</width>
+    <width>422</width>
     <height>355</height>
    </rect>
   </property>
@@ -21,6 +21,12 @@
        <property name="styleSheet">
         <string notr="true">font: 12pt &quot;Arial&quot;;</string>
        </property>
+       <attribute name="horizontalHeaderMinimumSectionSize">
+        <number>75</number>
+       </attribute>
+       <attribute name="verticalHeaderMinimumSectionSize">
+        <number>75</number>
+       </attribute>
        <column>
         <property name="text">
          <string>Trial name</string>
@@ -47,7 +53,7 @@
         <string notr="true">font: 20pt &quot;Arial&quot;;</string>
        </property>
        <property name="text">
-        <string>Define a random ordered session</string>
+        <string>Configurations</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>

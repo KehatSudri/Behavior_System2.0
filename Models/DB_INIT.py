@@ -231,7 +231,12 @@ class DB:
             cur.execute(temp)
             ports = cur.fetchall()
         return ports
-
+    def get_used_ports(self):
+        with self.conn.cursor() as cur:
+            temp = f"SELECT port FROM events"
+            cur.execute(temp)
+            ports = cur.fetchall()
+        return ports
     def get_dependencies(self, trial_name):
         with self.conn.cursor() as cur:
             temp = f"SELECT h1.port, h2.port FROM events as h1, events as h2, events_to_trials WHERE h1.name = " \
@@ -431,7 +436,7 @@ class DB:
 
 commands = (
     """CREATE TABLE IF NOT EXISTS public.events (
-        port VARCHAR(50) PRIMARY KEY,
+        port VARCHAR(50),
         name VARCHAR(100) UNIQUE,
         type VARCHAR(10),
         format VARCHAR(10),
