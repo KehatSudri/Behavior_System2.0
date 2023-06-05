@@ -89,14 +89,14 @@ class DB:
             raise e
 
     def insert_session(self,name, subjectid, experimenter_name,last_used,min_iti,
-                max_iti,is_fixed_iti):
+                max_iti,is_fixed_iti,max_trial_time):
         try:
             sql = """
-                INSERT INTO sessions(name,subjectid,experimenter_name,last_used,min_iti,max_iti,is_fixed_iti)
-                 VALUES (%s,%s,%s,%s,%s,%s,%s)
+                INSERT INTO sessions(name,subjectid,experimenter_name,last_used,min_iti,max_iti,is_fixed_iti,max_trial_time)
+                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
                  """
             with self.conn.cursor() as cur:
-                cur.execute(sql, (name, subjectid, experimenter_name,last_used, min_iti, max_iti,is_fixed_iti))
+                cur.execute(sql, (name, subjectid, experimenter_name,last_used, min_iti, max_iti,is_fixed_iti,max_trial_time))
                 self.conn.commit()
         except Exception as e:
             self.conn.rollback()
@@ -370,7 +370,11 @@ class DB:
             cur.execute(f"SELECT min_iti , max_iti FROM sessions WHERE name='{session_name}'")
             vals  = cur.fetchone()
         return vals
-    # TODO validate this functions
+    def get_max_trial_time(self,session_name):
+        with self.conn.cursor() as cur:
+            cur.execute(f"SELECT max_trial_time FROM sessions WHERE name='{session_name}'")
+            max_trial_time  = cur.fetchone()
+        return max_trial_time
     def delete_subject_session(self, sub_id, sess_id):
         with self.conn.cursor() as cur:
             cur.execute("DELETE FROM subjectSession WHERE session_id=%s, subject_id=%s", (sess_id, sub_id))
@@ -447,7 +451,8 @@ commands = (
         last_used DATE NOT NULL,
         min_iti DOUBLE PRECISION ,
         max_iti DOUBLE PRECISION ,
-        is_fixed_iti BOOLEAN DEFAULT false
+        is_fixed_iti BOOLEAN DEFAULT false,
+        max_trial_time DOUBLE PRECISION
         )""",
 
     """CREATE TABLE IF NOT EXISTS public.events_to_trials (

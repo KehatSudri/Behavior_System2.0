@@ -137,6 +137,8 @@ class CreateSessionUi(object):
         self.fixed_iti_radioBtn.toggled.connect(self.toggle_spinbox)
         self.fixed_iti_radioBtn.setChecked(True)
         self.edit_pushButton.setEnabled(False)
+        self.max_trial_time = self.main_window.findChild(QtWidgets.QDoubleSpinBox, "doubleSpinBox")
+
 
     def on_choose_template_click(self):
         # TODO add on clicked event handler for component
@@ -274,21 +276,21 @@ class CreateSessionUi(object):
             else:
                 w.hide()
 
-    def is_valid_input(self):
-        is_session_name_empty = len(self.session_name_lineEdit.text()) == 0  # check session name
-        is_subject_id_empty = len(self.subject_id_lineEdit.text()) == 0  # check subject id
-        is_experimenter_name_empty = len(self.experimenter_name_lineEdit.text()) == 0  # check experimenter name
-        is_iti_empty = False
-        if self.chosen_iti_type == "random":
-            is_iti_empty = self.max_iti_spinBox.value() == 0 or self.min_iti_spinBox.value() == 0  # check iti value
-            if self.max_iti_spinBox.value() < self.min_iti_spinBox.value():
-                return False
-        is_end_def_empty = self.end_def_spinBox.value() == 0  # check end definition value
-        # is_random_reward_empty = self.random_reward_percent_spinBox.value() == 0  # check random reward percent
-        if is_session_name_empty or is_subject_id_empty or is_experimenter_name_empty or is_iti_empty or \
-                is_end_def_empty or is_end_def_empty:
-            return False
-        return True
+    # def is_valid_input(self):
+    #     is_session_name_empty = len(self.session_name_lineEdit.text()) == 0  # check session name
+    #     is_subject_id_empty = len(self.subject_id_lineEdit.text()) == 0  # check subject id
+    #     is_experimenter_name_empty = len(self.experimenter_name_lineEdit.text()) == 0  # check experimenter name
+    #     is_iti_empty = False
+    #     if self.chosen_iti_type == "random":
+    #         is_iti_empty = self.max_iti_spinBox.value() == 0 or self.min_iti_spinBox.value() == 0  # check iti value
+    #         if self.max_iti_spinBox.value() < self.min_iti_spinBox.value():
+    #             return False
+    #     is_end_def_empty = self.end_def_spinBox.value() == 0  # check end definition value
+    #     # is_random_reward_empty = self.random_reward_percent_spinBox.value() == 0  # check random reward percent
+    #     if is_session_name_empty or is_subject_id_empty or is_experimenter_name_empty or is_iti_empty or \
+    #             is_end_def_empty or is_end_def_empty:
+    #         return False
+    #     return True
 
     # we need this
     def set_vm_data(self):
@@ -324,6 +326,10 @@ class CreateSessionUi(object):
         is_fixed_iti = self.fixed_iti_radioBtn.isChecked()
         max_iti = self.max_iti_spinBox.value()
         min_iti = self.min_iti_spinBox.value()
+        max_trial_time = self.max_trial_time.value()
+        if self.max_trial_time.value()==0:
+            error_warning("Please fill max Trial duration")
+            return
         if self.trials_table.rowCount() == 0 or (
                 not self.fixed_iti_radioBtn.isChecked() and not self.random_iti_radioBtn.isChecked()) \
                 or session_name == "" or subject_id == "" or experimenter_name == "":
@@ -337,9 +343,11 @@ class CreateSessionUi(object):
                 formatted_date_last_used,
                 min_iti,
                 max_iti,
-                is_fixed_iti)
+                is_fixed_iti,
+                max_trial_time)
         except Exception as e:
             msg = str(e)
+            print(msg)
             if "name" in msg: #here I need to check if something was edit then to create new sesion on DB if no just continue
                 error_warning("Error: Session name already exists.")
             return
@@ -455,7 +463,7 @@ class CreateSessionUi(object):
     def on_template_change_event_handler(self, template):
         subject, session_name = template.split()
         template_info = self.db.get_template(session_name, subject)
-        var1, session_name, subject, exp_name, date, min_iti, max_iti, is_fixed_iti_type = template_info[0]
+        var1, session_name, subject, exp_name, date, min_iti, max_iti, is_fixed_iti_type,max_trial_time = template_info[0]
         self.session_name_te.setText(session_name)
         self.subject_id_te.setText(subject)
         self.exp_name_te.setText(exp_name)
@@ -463,7 +471,7 @@ class CreateSessionUi(object):
         self.max_iti_spinBox.setValue(max_iti)
         self.trials_table.clear()
         self.trials_table.setRowCount(0)
-
+        self.max_trial_time.setValue(max_trial_time)
         trials = self.db.get_trial_name_by_session(session_name)
         trials_ = [x[0] for x in trials]
         col1 = QTableWidgetItem("Trial name")

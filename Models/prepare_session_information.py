@@ -21,6 +21,8 @@ def prepare_session_information(session_name,ports, dependencies, trial_name, in
 
     with open(configs_path, "a") as file:
         db = DB()
+        max_trial_time = db.get_max_trial_time(session_name)
+        file.write(str(max_trial_time[0])+"\n")
         iti_vals = db.get_iti_vals(session_name)
         if is_fixed_iti:
             file.write("("+str(iti_vals[0])+")" + "\n")
