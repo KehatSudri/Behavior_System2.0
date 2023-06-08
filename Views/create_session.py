@@ -355,31 +355,17 @@ class CreateSessionUi(object):
         # insert to session to trials table
         for i in range(0, len(self.trials_in_session), 2):
             self.vm.insert_session_to_trials(session_name, self.trials_in_session[i])
-        ports = []
-        dependencies = []
-        for i in range(0, len(self.trials_in_session), 2):
-            ports = (self.vm.get_ports(self.trials_in_session[i]))
-            dependencies = self.vm.get_dependencies(self.trials_in_session[i])
-            prepare_session_information(session_name, ports, dependencies, self.trials_in_session[i], i,
-                                        self.trials_in_session, is_fixed_iti)
-
-        # if not self.is_valid_input():
-        #     if self.max_iti_spinBox.value() < self.min_iti_spinBox.value():
-        #         error_warning("An error accrued, please choose a valid iti range.")
-        #         return
-        #     error_warning("An error accrued, please try again.")
-        #     return
-        # self.set_vm_data()
-        # order = self.trials_order_cb.currentText()
-        # order = self.vm.sessionVM.trials_order
-        # if self.trials_ord_window is None:
+        # ports = []
+        # dependencies = []
+        # for i in range(0, len(self.trials_in_session), 2):
+        #     ports = (self.vm.get_ports(self.trials_in_session[i]))
+        #     dependencies = self.vm.get_dependencies(self.trials_in_session[i])
+            # prepare_session_information(session_name, ports, dependencies, self.trials_in_session[i], i,
+            #                             self.trials_in_session, is_fixed_iti)
+        config_data = [session_name,self.trials_in_session, is_fixed_iti]
         self.trials_ord_dialog = QtWidgets.QDialog()
-        if True:  # TODO remmber to handle
-            self.trials_ord_dialog_ui = RandomOrderUi(self)
-            self.trials_ord_dialog_ui.setupUi(self.trials_ord_dialog, self.on_session_define_event_handler)
-        else:
-            self.trials_ord_dialog_ui = BlocksOrderUi(self)
-            self.trials_ord_dialog_ui.setupUi(self.trials_ord_dialog, self.on_session_define_event_handler)
+        self.trials_ord_dialog_ui = RandomOrderUi(self)
+        self.trials_ord_dialog_ui.setupUi(self.trials_ord_dialog, self.on_session_define_event_handler,config_data)
         self.trials_ord_dialog.show()
 
     def on_session_name_edit(self):
