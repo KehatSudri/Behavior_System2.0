@@ -71,7 +71,7 @@
         <bool>true</bool>
        </attribute>
        <attribute name="verticalHeaderMinimumSectionSize">
-        <number>75</number>
+        <number>100</number>
        </attribute>
        <column>
         <property name="text">

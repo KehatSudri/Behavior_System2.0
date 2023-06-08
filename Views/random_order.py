@@ -35,7 +35,7 @@ class RandomOrderUi(object):
         uic.loadUi(get_ui_path('random_order.ui'), dialog)
         # dialog.accepted.connect(lambda: event_handler(self.choose_template_cb.currentText()))
         dialog.accepted.connect(self.accept)
-        dialog.rejected.connect(self.func)
+        # dialog.rejected.connect()
         self.trials_tableWidget = dialog.findChild(QtWidgets.QTableWidget, "trials_tableWidget")
         self.isRandomOrder = dialog.findChild(QtWidgets.QCheckBox, 'checkBox')
         for i in range (int(len(self.parent.trials_in_session)/2))   :
@@ -190,7 +190,6 @@ class RandomOrderUi(object):
             ports = (self.vm.get_ports(trials_in_session[i]))
             dependencies = self.vm.get_dependencies(trials_in_session[i])
             prepare_session_information(session_name,ports,dependencies,trials_in_session[i],i,trials_in_session,is_fixed_iti,repeats,isRandomOrder)
-        print("accept")
         self.event_handler()
         # # check if a number was selected for total number of trials
         # if self.get_total_num_of_trials() is None:

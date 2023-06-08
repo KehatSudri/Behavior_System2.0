@@ -347,7 +347,6 @@ class CreateSessionUi(object):
                 max_trial_time)
         except Exception as e:
             msg = str(e)
-            print(msg)
             if "name" in msg: #here I need to check if something was edit then to create new sesion on DB if no just continue
                 error_warning("Error: Session name already exists.")
             return
