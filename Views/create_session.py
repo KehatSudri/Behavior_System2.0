@@ -1,15 +1,13 @@
 from datetime import datetime
-
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QTableView, QHeaderView, QTableWidgetItem, QAbstractItemView, QAbstractScrollArea
 from PyQt6 import QtCore, QtWidgets, uic
-
+from Models.DB_INIT import DB
 from Models.prepare_session_information import prepare_session_information
 from Views.add_trial import AddTrialUi
 from Views.blocks_order import BlocksOrderUi
 from Views.choose_template import ChooseTemplateUi
 from Views.control_session_board import ControlSessionBoardUi
-
 from Views.edit_trial import EditTrialUi
 from Views.utils import error_warning, dict_yaml_style, get_ui_path
 from Views.random_order import RandomOrderUi
@@ -86,13 +84,12 @@ class CreateSessionUi(object):
         self.chosen_end_def = None
         self.chosen_iti_type = None
         self.trials_ord_window = None
-        #
+        self.db=DB()
         self.behavior_iti_widgets = None
         self.random_iti_widgets = None
         self.trials_table = None
         self.trial_types = self.vm.get_list_trials_names()
         self.trials_names = self.vm.get_trial_names()
-
         self.trials_in_session = []  # holds all the trials in the current session
         self.selected_trial = -1  # holds the trial that the user tap on the table
         self.set_trials_table_pointer = self.set_trials_table
@@ -116,11 +113,11 @@ class CreateSessionUi(object):
         self.exp_name_te = self.main_window.findChild(QtWidgets.QTextEdit, "exp_name_te")
         self.trials_table = self.main_window.findChild(QtWidgets.QTableWidget, "trials_tableWidget")
         self.date_value_label = self.main_window.findChild(QtWidgets.QLabel, "date_value_label")
-        self.trials_order_cb = self.main_window.findChild(QtWidgets.QComboBox, 'trials_order_cb')
+        #self.trials#_order_cb = self.main_window.findChild(QtWidgets.QComboBox, 'trials_order_cb')
         choose_template_btn = self.main_window.findChild(QtWidgets.QPushButton, "choose_template_btn")
         next_btn = self.main_window.findChild(QtWidgets.QPushButton, "next_btn")
         choose_template_btn.clicked.connect(self.on_choose_template_click)
-        self.trials_order_cb.addItems(["random", "blocks"])
+        #self.t#rials_order_cb.addItems(["random", "blocks"])
         next_btn.clicked.connect(self.on_next_click)
         self.add_trial_pushButton.clicked.connect(self.on_add_click)
         self.remove_trial_pushButton.clicked.connect(self.on_remove_click)
@@ -128,6 +125,15 @@ class CreateSessionUi(object):
         back_btn = self.main_window.findChild(QtWidgets.QPushButton, "back_btn")
         back_btn.clicked.connect(self.on_back_click)
         self.date_value_label.setText((datetime.now()).strftime("%d/%m/%Y"))
+        self.fixed_iti_radioBtn = main_window.findChild(QtWidgets.QRadioButton, 'behavior_iti_radioBtn_3')
+        self.random_iti_radioBtn = main_window.findChild(QtWidgets.QRadioButton, 'random_iti_radioBtn_3')
+        self.min_iti_label =  self.main_window.findChild(QtWidgets.QLabel, "min_iti_label_3")
+        self.min_iti_spinBox = self.main_window.findChild(QtWidgets.QDoubleSpinBox, "min_iti_spinBox")
+        self.max_iti_label =  self.main_window.findChild(QtWidgets.QLabel, "max_iti_label_3")
+        self.max_iti_spinBox = self.main_window.findChild(QtWidgets.QDoubleSpinBox, "max_iti_spinBox")
+        self.fixed_iti_radioBtn.toggled.connect(self.toggle_spinbox)
+        self.fixed_iti_radioBtn.setChecked(True)
+
 
     def on_choose_template_click(self):
         # TODO add on clicked event handler for component
@@ -138,6 +144,16 @@ class CreateSessionUi(object):
         # self.second_window_ui = ChooseTemplateUi(self)
         # self.second_window_ui.setupUi(self.second_window)
         # self.second_window.show()
+
+    def toggle_spinbox(self, checked):
+        if checked:
+            self.max_iti_spinBox.hide()
+            self.min_iti_label.hide()
+            self.max_iti_label.hide()
+        else:
+            self.max_iti_spinBox.show()
+            self.min_iti_label.show()
+            self.max_iti_label.show()
 
     def on_add_click(self):
         self.add_window = QtWidgets.QDialog()
@@ -150,7 +166,7 @@ class CreateSessionUi(object):
         is_not_empty = len(self.trials_in_session) > 0
         is_row_selected = self.trials_table.currentRow() != -1
         # check if there are trials and a trial was selected
-        if is_not_empty and is_row_selected:
+        if is_not_empty and is_row_selected or self.trials_table.rowCount() != 0:
             if treatment == 0:  # edit case
                 self.edit_window = QtWidgets.QDialog()
                 self.edit_ui = EditTrialUi(self)
@@ -162,6 +178,10 @@ class CreateSessionUi(object):
             else:  # remove case
                 # get the chosen block's row and remove it
                 index = self.trials_table.currentRow()  # ignore 0th which represents blocks parameters
+                if not self.trials_in_session:
+                    self.trials_table.removeRow(index)
+                    self.trials_table.setCurrentCell(-1, self.trials_table.currentColumn())
+                    return
                 # print(self.trials_in_session)
                 del self.trials_in_session[index]
                 del self.trials_in_session[index]
@@ -188,6 +208,7 @@ class CreateSessionUi(object):
             error_warning("Trial is not selected.")
         else:
             error_warning("There are no trials in the current session.")
+
 
     def on_edit_click(self):
         self.deal_with_trial(0)
@@ -287,12 +308,44 @@ class CreateSessionUi(object):
         # self.vm.set_trials_list(trials) NOT RELEVANT AT THIS PART
 
     def on_next_click(self):
+        session_name = self.session_name_te.toPlainText()
+        subject_id = self.subject_id_te.toPlainText()
+        experimenter_name = self.exp_name_te.toPlainText()
+        last_used = self.date_value_label.text()
+        date_object = datetime.strptime(last_used, "%d/%m/%Y")
+        formatted_date_last_used = date_object.strftime("%Y-%m-%d")
+        is_fixed_iti = self.fixed_iti_radioBtn.isChecked()
+        max_iti = self.max_iti_spinBox.value()
+        min_iti = self.min_iti_spinBox.value()
+        if self.trials_table.rowCount() == 0 or ( not self.fixed_iti_radioBtn.isChecked() and not self.random_iti_radioBtn.isChecked()) \
+                or session_name=="" or subject_id=="" or experimenter_name =="":
+            error_warning("Not all data is filled")
+            return
+        try:
+            self.vm.insert_session_to_DB(
+                session_name,
+                subject_id,
+                experimenter_name,
+                formatted_date_last_used,
+                min_iti,
+                max_iti,
+                is_fixed_iti)
+        except Exception as e:
+            msg=str(e)
+            print(msg)
+            if "name" in msg:
+                error_warning("Error: Session name already exists.")
+            return
+
+        # insert to session to trials table
+        for i in range(0, len(self.trials_in_session), 2):
+            self.vm.insert_session_to_trials(session_name,self.trials_in_session[i])
         ports = []
         dependencies = []
         for i in range(0, len(self.trials_in_session), 2):
             ports = (self.vm.get_ports(self.trials_in_session[i]))
             dependencies = self.vm.get_dependencies(self.trials_in_session[i])
-            prepare_session_information(ports, dependencies, self.trials_in_session[i], i, self.trials_in_session)
+            prepare_session_information(session_name,ports, dependencies, self.trials_in_session[i], i, self.trials_in_session,is_fixed_iti)
 
         # if not self.is_valid_input():
         #     if self.max_iti_spinBox.value() < self.min_iti_spinBox.value():
@@ -300,12 +353,12 @@ class CreateSessionUi(object):
         #         return
         #     error_warning("An error accrued, please try again.")
         #     return
-        # self.set_vm_data() TODO
-        order = self.trials_order_cb.currentText()
+        # self.set_vm_data()
+        # order = self.trials_order_cb.currentText()
         # order = self.vm.sessionVM.trials_order
         # if self.trials_ord_window is None:
         self.trials_ord_dialog = QtWidgets.QDialog()
-        if order == "random":
+        if True: # TODO remmber to handle
             self.trials_ord_dialog_ui = RandomOrderUi(self)
             self.trials_ord_dialog_ui.setupUi(self.trials_ord_dialog, self.on_session_define_event_handler)
         else:
@@ -372,7 +425,9 @@ class CreateSessionUi(object):
 
             table.setItem(index, 1, QTableWidgetItem(params))
             table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
-
+            self.db=DB()
+            trial_name=self.trials_in_session[index * 2]
+            self.db.insert_params(trial_name,event,str(','.join(parameters)))
     def on_back_click(self):
         self.parent.main_window.show()
         self.main_window.close()
@@ -389,14 +444,56 @@ class CreateSessionUi(object):
 
     # we need this
     def on_template_change_event_handler(self, template):
-        print(template)
-        self.session_name_te.setHtml("sessionNameMock")
-        self.subject_id_te.setHtml("subjectIdMock")
-        self.exp_name_te.setHtml("experimentorMock")
+        subject, session_name = template.split()
+        template_info = self.db.get_template(session_name, subject)
+        var1, session_name, subject, exp_name, date, min_iti, max_iti,is_fixed_iti_type = template_info[0]
+        self.session_name_te.setText(session_name)
+        self.subject_id_te.setText(subject)
+        self.exp_name_te.setText(exp_name)
+        self.min_iti_spinBox.setValue(min_iti)
+        self.max_iti_spinBox.setValue(max_iti)
+        self.trials_table.clear()
+        self.trials_table.setRowCount(0)
+
+        trials = self.db.get_trial_name_by_session(session_name)
+        trials_ = [x[0] for x in trials]
+        for trial in trials_:
+            events  = self.db.get_events_by_trial_name(trial)
+            events = [x[0] for x in events]
+            for event in events :
+                parameters = self.db.get_params_by_event_name(event)
+                parameters = [x[0] for x in parameters]
+                parameters_ar = [item.split(',') for item in parameters]
+                params = ""
+                table = self.trials_table
+                index = table.rowCount()
+                table.insertRow(index)
+                table.setItem(index, 0, QTableWidgetItem(trial))
+                for parameters in parameters_ar:
+                    if event == 'Tone':
+                        params += event + ":" + " delay - " + parameters[0] + ", tone duration - " + parameters[
+                            1] + ", tone frequency - " + parameters[2] + "\n"
+                    elif event == 'Reward':
+                        params += event + ":" + " delay - " + parameters[0] + ", reward duration - " + parameters[1] + "\n"
+                    else:
+                        params += event + ":" + " delay - " + parameters[0] + ", Duration - " + parameters[
+                            1] + ", Frequency - " + parameters[2] + ", Amplitude - " + parameters[3] + "\n"
+                table.setItem(index, 1, QTableWidgetItem(params))
+                table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
+        if is_fixed_iti_type:
+            self.fixed_iti_radioBtn.setChecked(True)
+            self.random_iti_radioBtn.setChecked(False)
+        else:
+            self.fixed_iti_radioBtn.setChecked(False)
+            self.random_iti_radioBtn.setChecked(True)
+
+
+
 
     def on_session_define_event_handler(self):
         import subprocess
-        # TODO update file.exe path
-        exe_path = "path/to/your/exe/file.exe"
-        return
-        subprocess.call(exe_path)
+        from pathlib import Path
+        config_path = str(Path(__file__).parent.parent / 'config_files'/ 'session_config.txt')
+        bs_runner_path = r"BS_Runner/Debug/BS_Runner.exe"
+        command = [bs_runner_path, config_path]
+        subprocess.run(command)

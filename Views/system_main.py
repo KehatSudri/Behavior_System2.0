@@ -9,6 +9,7 @@ from Views.create_session import CreateSessionUi
 from Views.create_trial_type import CreateTrialTypeUi
 from Views.delete_session_template import DeleteSessionTemplate
 from Views.delete_trial_type import DeleteTrialTypeUi
+from Views.remove_event import removeEventUi
 from Views.edit_trial_type import EditTrialTypeUi
 from Views.manager_login import ManagerLoginUi
 from Views.settings import SettingsUi
@@ -85,6 +86,9 @@ class SystemMainUi(object):
             # self.edit_trial_type_pushButton.clicked.connect(self.on_edit_trial_type_click)
             self.delete_trial_type_pushButton = manager_window.findChild(QPushButton, 'delete_trial_types_pushButton')
             self.delete_trial_type_pushButton.clicked.connect(self.on_delete_trial_type_click)
+            self.removeEvent_pushButton = manager_window.findChild(QPushButton, 'removeEvent')
+            self.removeEvent_pushButton.clicked.connect(self.on_removeEvent_click)
+
             # self.delete_templates_pushButton = manager_window.findChild(QPushButton, 'delete_templates_pushButton')
             # self.delete_templates_pushButton.clicked.connect(self.on_delete_templates_click)
             self.setupUi(manager_window, self.vm, True)
@@ -105,7 +109,6 @@ class SystemMainUi(object):
         self.chosen_window_ui = CreateTrialTypeUi(self)
         self.chosen_window_ui.setupUi(self.chosen_window)
         self.chosen_window.show()
-        self.main_window.hide()
 
     def on_create_event_click(self):
         self.chosen_window = QtWidgets.QMainWindow()
@@ -131,7 +134,11 @@ class SystemMainUi(object):
         self.chosen_window_ui = DeleteTrialTypeUi(self)
         self.chosen_window_ui.setupUi(self.chosen_window)
         self.chosen_window.show()
-
+    def on_removeEvent_click(self):
+        self.chosen_window = QtWidgets.QMainWindow()
+        self.chosen_window_ui =removeEventUi(self)
+        self.chosen_window_ui.setupUi(self.chosen_window)
+        self.chosen_window.show()
     def on_delete_templates_click(self):
         self.chosen_window = QtWidgets.QMainWindow()
         self.chosen_window_ui = DeleteSessionTemplate(self)

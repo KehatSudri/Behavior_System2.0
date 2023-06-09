@@ -252,7 +252,15 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
                                 e_2_p)
 
     def insert_hardware_event_to_DB(self, port, name, type, format, is_reward):
-        self.model.insert_hardware_event_to_DB(port, name, type, format, is_reward)
+        return self.model.insert_hardware_event_to_DB(port, name, type, format, is_reward)
+    def insert_session_to_DB(self,session_name,subject_id,experimenter_name,last_used,min_iti,
+                max_iti,is_fixed_iti):
+        return self.model.insert_session_to_DB(session_name,subject_id,experimenter_name,last_used,min_iti,
+                max_iti,is_fixed_iti)
+
+    def insert_session_to_trials(self, session_name, trial_name):
+        return self.model.insert_session_to_trials(session_name,trial_name)
+
 
     def verify_insert_hardware_event(self, name, port, in_out, dig_an, is_rew):
         return self.model.verify_insert_hardware_event(name, port, in_out, dig_an, is_rew)
@@ -260,8 +268,8 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
     def insert_new_trial(self, name):
         self.model.insert_new_trial(name)
 
-    def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
-        self.model.insert_new_events_to_trials(trial_name, event_name, is_contingent, contingent_on)
+    def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on,isRandom,isEndCondition):
+        self.model.insert_new_events_to_trials(trial_name, event_name, is_contingent, contingent_on,isRandom,isEndCondition)
 
     def verify_trial_insert(self, name, events):
         return self.model.verify_trial_insert(name, events)

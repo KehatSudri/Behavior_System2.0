@@ -2,6 +2,7 @@
 #ifndef __IOEvents__
 #define __IOEvents__
 #include <NIDAQmx.h>
+#include <iostream>
 #include <vector>
 #include <map>
 #include <string>
@@ -20,9 +21,6 @@ public:
     void attachListener(Listener* listener);
     void detachListener(Listener* listener);
     void notifyListeners();
-    int gaga() {
-        return _listeners.size();
-    }
     void set(float64 value);
 };
 
@@ -31,9 +29,9 @@ public:
     virtual void update(Event* event) = 0;
 };
 
-class Outputer {
+class Outputer : public Event {
 public:
-    Outputer(TaskHandle handler, std::map<std::string, int> attributes) : _attributes(attributes){}
+    Outputer(TaskHandle handler, std::string port, std::map<std::string, int> attributes) :Event(port), _handler(handler), _attributes(attributes) {}
     virtual void output() = 0;
 protected:
     TaskHandle _handler;
@@ -42,8 +40,13 @@ protected:
 
 class SimpleOutputer : public Outputer {
 public:
-    SimpleOutputer(TaskHandle handler, std::map<std::string, int> attributes) : Outputer(handler, attributes) {}
+    SimpleOutputer(TaskHandle handler, std::string port, std::map<std::string, int> attributes) : Outputer(handler, port, attributes) {}
     void output() override;
+};
+
+class TrialKiller : public Listener {
+public:
+    void update(Event* event) override;
 };
 
 class EnvironmentOutputer {

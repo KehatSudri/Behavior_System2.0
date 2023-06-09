@@ -124,21 +124,21 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         # self.parse_ports()
         return self.event_config
 
-    def verify_insert_hardware_event(self, name, port, in_out, dig_an, is_rew):
-        events = self.get_hardware_events_from_DB()
-        for event in events:
-            if event[1] == name:
-                return -1
-            if list(event[2:]) == [port, in_out, dig_an, is_rew]:
-                return event[1]
-        return 0
+    # def verify_insert_hardware_event(self, name, port, in_out, dig_an, is_rew):
+    #     events = self.get_hardware_events_from_DB()
+    #     for event in events:
+    #         if event[1] == name:
+    #             return -1
+    #         if list(event[2:]) == [port, in_out, dig_an, is_rew]:
+    #             return event[1]
+    #     return 0
 
     def get_all_events_by_name(self):
         events_names = self.db.get_hardware_events_byname()
         return events_names
 
     def insert_hardware_event_to_DB(self, port, name, type, format, is_reward):
-        self.db.insert_hardware_event(port, name, type, format, is_reward)
+        return self.db.insert_hardware_event(port, name, type, format, is_reward)
         # self.get_hardware_events_from_DB()
 
     @property
@@ -607,6 +607,12 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     #     for trial in self._trial_types:
     #         trials.append(trial[1])
     #     return trials
+    def insert_session_to_DB(self,session_name, subject_id, experimenter_name,last_used,min_iti,
+                max_iti,is_fixed_iti):
+        return self.db.insert_session(session_name, subject_id, experimenter_name,last_used,min_iti,
+                max_iti,is_fixed_iti)
+    def insert_session_to_trials(self, session_name, trial_name):
+        return self.db.insert_session_to_trials(session_name,trial_name)
     def get_trials_names(self):
         return self.db.get_trial_names()
 
@@ -740,8 +746,8 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     def insert_new_trial(self, name):
         self.db.insert_new_trial(name)
 
-    def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on):
-        self.db.insert_new_events_to_trials(trial_name, event_name, is_contingent, contingent_on)
+    def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on,isRandom,isEndCondition):
+        self.db.insert_new_events_to_trials(trial_name, event_name, is_contingent, contingent_on,isRandom,isEndCondition)
 
     def verify_trial_insert(self, name, events):
         # before adding the trial type, check that name or list of events is not already in it

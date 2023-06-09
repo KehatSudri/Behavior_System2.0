@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>873</width>
+    <width>1066</width>
     <height>889</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -134,7 +140,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>853</width>
+         <width>1046</width>
          <height>732</height>
         </rect>
        </property>
@@ -225,7 +231,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Event name       </string>
+               <string>Event name:      </string>
               </property>
              </widget>
             </item>
@@ -259,7 +265,7 @@
                </font>
               </property>
               <property name="text">
-               <string>  Contingent On</string>
+               <string>  Contingent On:</string>
               </property>
              </widget>
             </item>
@@ -312,7 +318,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Random/Predicted         </string>
+               <string>Random/Fixed:         </string>
               </property>
              </widget>
             </item>
@@ -339,9 +345,9 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_5">
+             <widget class="QCheckBox" name="checkBox">
               <property name="text">
-               <string/>
+               <string>Is end condition </string>
               </property>
              </widget>
             </item>
@@ -511,7 +517,7 @@
             </column>
             <column>
              <property name="text">
-              <string>Random \ Predicted</string>
+              <string>Random \ Fixed</string>
              </property>
              <property name="font">
               <font>
@@ -520,6 +526,11 @@
              </property>
              <property name="textAlignment">
               <set>AlignCenter</set>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Is end conditoin</string>
              </property>
             </column>
            </widget>

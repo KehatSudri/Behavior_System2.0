@@ -1,7 +1,8 @@
 from PyQt6 import QtCore, QtWidgets, uic
 from collections import OrderedDict
 from Views.utils import error_warning, get_ui_path
-
+from Models.DB_INIT import DB
+import numpy as np
 
 class ChooseTemplateUi(object):
     def __init__(self, parent):
@@ -12,9 +13,17 @@ class ChooseTemplateUi(object):
         self.choose_template_cb = None
         self.subject_ids = self.parent.vm.get_list_of_subjects()[::-1]  # check this func
         self.current_all_templates = []
-        self.templates = {"subject1": ["subject1 template1"],
-                          "subject2": ["subject2 template1"]}  # TODO get from parent cache
-        self.subjects = ["subject1", "subject2"]  # TODO get from parent cache
+        self.templates = {}  # TODO get from parent cache
+        self.subjects = set()  # TODO get from parent cache
+        self.init()
+    def init(self):
+        self.db=DB()
+        subjects=self.db.get_subjects()
+        subjectsArray = [x[0] for x in subjects]
+        for subject in subjectsArray:
+            related_sessions=self.db.get_sessions_by_subject(subject)
+            self.subjects.add(subject)
+            self.templates[subject]=[subject +" "+ x[0] for x in related_sessions]
 
     def setup_ui(self, dialog, event_handler):
         self.all_templates = self.get_all_templates()
@@ -241,6 +250,8 @@ class ChooseTemplateUi(object):
     def accept(self):
         # TODO: update all relevant fields in parent
         chosen_temp_id = self.templates_comboBox.currentText()
+
+
         if chosen_temp_id == "":
             error_warning("There are no templates in the system.")
             # TODO check what should we do in this case

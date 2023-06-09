@@ -3,7 +3,7 @@ from pathlib import Path
 from Models.DB_INIT import DB
 
 
-def prepare_session_information(ports, dependencies, trial_name, index, trials_in_session):
+def prepare_session_information(session_name,ports, dependencies, trial_name, index, trials_in_session,is_fixed_iti):
     input_ports = []
     output_ports = []
     dependencies_arr = []
@@ -21,11 +21,18 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
 
     with open(configs_path, "a") as file:
         db = DB()
+        iti_vals = db.get_iti_vals(session_name)
+        if is_fixed_iti:
+            file.write("("+str(iti_vals[0])+")" + "\n")
+        else:
+            file.write(str(iti_vals) + "\n")
         file.write("Trial name : " + trial_name + "\n")
         file.write("$Input Ports\n")
         if len(input_ports) > 0:
             for port in input_ports:
-                file.write(port + "\n")
+                file.write(port +","+str(db.isEndConditionEvent(db.get_event_name_by_port(port)[0], trial_name)[0])+ "\n")
+                # file.write(str(db.isEndConditionEvent(db.get_event_name_by_port(port)[0], trial_name)[0]) + ',')
+                # file.write("\n")
         else:
             file.write("None\n")
         file.write("$Output Ports\n")
@@ -36,5 +43,10 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
         for port in [item for item in output_ports if item not in [tup[0] for tup in dependencies]]:
             file.write(port + "\n")
             parameters = trials_in_session[index + 1][db.get_event_name_by_port(port)[0]]
+            # file.write(str(db.isEndConditionEvent(db.get_event_name_by_port(port)[0], trial_name)[0])+',')
             file.write(','.join(parameters) + "\n")
+            # for port, port_type, name in ports:
+            #     file.write(str(db.isEndConditionEvent(db.get_event_name_by_port(port)[0],trial_name)[0]))
+
+
         file.write("\n")

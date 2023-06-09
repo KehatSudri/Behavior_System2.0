@@ -5,13 +5,9 @@
 #include <iostream>
 
 
-void writeOutput(TaskHandle taskHandle, int duration, int delay = 0) {
-    auto start_time = std::chrono::high_resolution_clock::now();
-    while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < delay) {
-        continue;
-    }
+void writeOutput(TaskHandle taskHandle, int duration) {
     DAQmxWriteAnalogScalarF64(taskHandle, true, 5.0, 3.7, NULL);
-    start_time = std::chrono::high_resolution_clock::now();
+    auto start_time = std::chrono::high_resolution_clock::now();
     while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < duration) {
         continue;
     }
@@ -30,7 +26,7 @@ void Event::detachListener(Listener* listener) {
 }
 
 void Event::notifyListeners() {
-    for (auto listener : _listeners) {
+    for (auto& listener : _listeners) {
         listener->update(this);
     }
 }
@@ -46,25 +42,34 @@ void Event::set(float64 value) {
 }
 
 void SimpleOutputer::output() {
-    writeOutput(_handler, _attributes[DURATION_PARAM], _attributes[DELAY_PARAM]);
+    auto start_time = std::chrono::high_resolution_clock::now();
+    while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DELAY_PARAM]) {
+        continue;
+    }
+    notifyListeners();
+    writeOutput(_handler, _attributes[DURATION_PARAM]);
 }
 
 void EnvironmentOutputer::output() {
-    std::thread t(&Outputer::output, this->_outputer);
+    std::thread t(&Outputer::output, _outputer);
     t.detach();
 }
 
 void ContingentOutputer::update(Event* event) {
-    std::thread t(&Outputer::output, this->_outputer);
+    std::thread t(&Outputer::output, _outputer);
     t.detach();
 }
 
 void SerialOutputer::run() {
-    bool& isRunning = SessionControls::getInstance().getIsRunning();
+    bool& isRunning = SessionControls::getInstance().getIsSessionRunning();
     bool& isPaused = SessionControls::getInstance().getIsPaused();
     while (isRunning) {
         if (!isPaused) {
-            this->_outputer->output();
+            _outputer->output();
         }
     }
+}
+
+void TrialKiller::update(Event* event) {
+    SessionControls::getInstance().setIsTrialRuning(false);
 }

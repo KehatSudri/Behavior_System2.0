@@ -30,7 +30,7 @@ class CreateTrialTypeUi(object):
         accept_pushButton = main_window.findChild(QtWidgets.QPushButton, 'create_trial_btn')
         remove_event_pushButton = main_window.findChild(QtWidgets.QPushButton, 'pushButton_2')
         add_event_pushButton = main_window.findChild(QtWidgets.QPushButton, 'Add_event_pushButton')
-
+        self.isEndCondition = main_window.findChild(QtWidgets.QCheckBox, 'checkBox')
         self.simple_radioButton = main_window.findChild(QtWidgets.QRadioButton, 'simple_radioButton')
         self.random_comboBox = main_window.findChild(QtWidgets.QComboBox, 'ranom_pred_comboBox')
         self.events_comboBox = main_window.findChild(QtWidgets.QComboBox, 'comboBox')
@@ -46,18 +46,25 @@ class CreateTrialTypeUi(object):
         self.events_comboBox.addItems([event[0] for event in self.events])
         self.simple_radioButton.toggled.connect(self.simple_event_handler)
         self.simple_radioButton.setChecked(True)
-        self.random_comboBox.addItems(["Random", "Predicted"])
+        self.random_comboBox.addItems(["Random", "Fixed"])
         self.random_comboBox.setEnabled(False)
         self.conti_radioButton.setEnabled(False)
         self.conti_radioButton.toggled.connect(lambda: (
-            self.contingent_comboBox.setEnabled(True), self.conti_label.setEnabled(True),
-            self.random_comboBox.setEnabled(False)
-            , random_label.setEnabled(False)))
+            self.contingent_comboBox.setEnabled(True), self.conti_label.setEnabled(True)))
         self.events_tableWidget.setColumnWidth(0, int(self.events_tableWidget.width() / 2))
         add_event_pushButton.clicked.connect(self.on_add_click)
         remove_event_pushButton.clicked.connect(self.on_remove_click)
         accept_pushButton.clicked.connect(self.create_trial)
         self.simple_event_handler()
+        header = self.events_tableWidget.horizontalHeader()
+
+        # Set the size for each section
+        header.resizeSection(0, 150)  # Set the size of the first section to 100 pixels
+        header.resizeSection(1, 200)  # Set the size of the second section to 200 pixels
+        header.resizeSection(2, 150)
+        header.resizeSection(3, 150)
+        header.resizeSection(4, 150)  #
+        header.resizeSection(5, 100)  #
 
     def on_add_click(self):
         # add an event to the current trial type
@@ -78,6 +85,8 @@ class CreateTrialTypeUi(object):
         if self.random_comboBox.isEnabled():
             self.events_tableWidget.setItem(row_position, 4,
                                             QtWidgets.QTableWidgetItem(self.random_comboBox.currentText()))
+        self.events_tableWidget.setItem(row_position, 5,
+                                        QtWidgets.QTableWidgetItem(str(self.isEndCondition.isChecked())))
         self.events_order.append(current_event)
         self.is_contingent_order.append(self.chosen_is_contingent)
         # validate that combo not have duplicates
@@ -87,8 +96,9 @@ class CreateTrialTypeUi(object):
                 flag = 1
         if not flag:
             self.contingent_comboBox.addItems([current_event])
-        if self.contingent_comboBox.count() >= 1:
-            self.conti_radioButton.setEnabled(True)
+        if self.contingent_comboBox.count() >= 1 :
+            self.name_comboBox_handler()
+            # self.conti_radioButton.setEnabled(True)
 
     def on_remove_click(self):
         is_not_empty = len(self.events_order) > 0
@@ -120,35 +130,36 @@ class CreateTrialTypeUi(object):
         msgBox = QtWidgets.QMessageBox()
         name = self.trial_type_name_lineEdit.text()
         events = self.events_order
-        if len(events) == 0:
-            error_warning("There are no events in the current trial.")
-            return
         if len(name) == 0 or name.isspace():
             error_warning("Please enter name for this trial.")
             return
+        if len(events) == 0:
+            error_warning("There are no events in the current trial.")
+            return
 
-        # verify_ans = self.parent.vm.verify_trial_insert(name, events)
-        # if verify_ans == -1:
-        #     msgBox.setText("Trial name is already in use.")
-        #     msgBox.exec()
-        #     return
-        # elif verify_ans is not None:
-        #     verify_ans = verify_ans[0]
-        #     msgBox.setText(f'A Trial with this events order already exist with name "{verify_ans}".')
-        #     msgBox.exec()
-        #     return
-
-        self.parent.vm.insert_new_trial(name)
+        try:
+            self.parent.vm.insert_new_trial(name)
+        except Exception as e:
+            msg=str(e)
+            if "name" in msg:
+                error_warning("Error: Trial name already exists.")
+            return
         for row in range(self.events_tableWidget.rowCount()):
             row_items = []
             for col in range(self.events_tableWidget.columnCount()):
                 item = self.events_tableWidget.item(row, col)
                 if item is not None:
                     row_items.append(item.text())
+                else: row_items.append(None)
+
             if row_items[1] == "Contingent":
-                self.parent.vm.insert_new_events_to_trials(name, row_items[0], True, row_items[2])
+                    self.parent.vm.insert_new_events_to_trials(name, row_items[0], True, row_items[2],row_items[4]=="Random",False)
             else:
-                self.parent.vm.insert_new_events_to_trials(name, row_items[0], False, None)
+                if self.vm.is_input_event(row_items[0]):
+                    self.parent.vm.insert_new_events_to_trials(name, row_items[0], False, None,None,row_items[5]=="True")
+                else:
+                    self.parent.vm.insert_new_events_to_trials(name, row_items[0], False, None,row_items[4]=="Random",row_items[5]=="True")
+
         msgBox.setText("The trial was created successfully.")
         msgBox.exec()
         self.trial_type_name_lineEdit.clear()
@@ -166,8 +177,21 @@ class CreateTrialTypeUi(object):
     def name_comboBox_handler(self):
         if self.vm.is_input_event(self.events_comboBox.currentText()):
             self.random_comboBox.setEnabled(False)
+            self.contingent_comboBox.setEnabled(False)
+            self.conti_label.setEnabled(False)
+            self.conti_radioButton.setEnabled(False)
+            self.simple_radioButton.setChecked(True)
+            self.isEndCondition.setEnabled(True)
         else:
+            self.isEndCondition.setChecked(False)
+            self.isEndCondition.setEnabled(False)
+
             self.random_comboBox.setEnabled(True)
+            self.random_comboBox.setEnabled(True)
+            # self.contingent_comboBox.setEnabled(True)
+            # self.conti_label.setEnabled(True)
+            if self.contingent_comboBox.count() >= 1:
+                self.conti_radioButton.setEnabled(True)
 
 
 
