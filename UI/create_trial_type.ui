@@ -49,7 +49,7 @@
       </property>
       <property name="font">
        <font>
-        <family>David</family>
+        <family>Arial</family>
         <pointsize>55</pointsize>
         <weight>50</weight>
         <italic>false</italic>
@@ -69,7 +69,7 @@
        <string/>
       </property>
       <property name="styleSheet">
-       <string notr="true">font: 55pt &quot;David&quot;;</string>
+       <string notr="true">font: 55pt &quot;Arial&quot;;</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
@@ -84,7 +84,7 @@
        <number>0</number>
       </property>
       <property name="text">
-       <string>Create trial</string>
+       <string>Create Trial</string>
       </property>
       <property name="scaledContents">
        <bool>false</bool>

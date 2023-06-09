@@ -1,6 +1,7 @@
 from PyQt6 import QtWidgets, uic
-from PyQt6.QtWidgets import QPushButton
+from PyQt6.QtWidgets import QPushButton, QMessageBox
 from Views.utils import error_warning, notification, get_ui_path, get_qss_path
+from Models.DB_INIT import DB
 
 
 class CreateEventUi(object):
@@ -17,10 +18,10 @@ class CreateEventUi(object):
         self.analog_description_label = None
         self.add_pushButton = None
         self.back_pushButton = None
+        self.db=DB()
 
     def setupUi(self, main_window):
         uic.loadUi(get_ui_path('create_new_event.ui'), main_window)
-
         qss = get_qss_path('create_new_event')
         with open(qss, "r") as fh:
             main_window.setStyleSheet(fh.read())
@@ -86,7 +87,24 @@ class CreateEventUi(object):
         # if error_value == -1:
         #     error_warning("Error : Event name already exist")
         #     return
-        port = "Dev/" + self.ports_comboBox.currentText().lower()
+        port = "Dev1/" + self.ports_comboBox.currentText().lower()
+
+        in_use_ports = self.db.get_used_ports()
+        string_in_use_ports = [p[0] for p in in_use_ports]
+        used_port_flag=0
+        if port in string_in_use_ports:
+            message_box = QMessageBox()
+            message_box.setIcon(QMessageBox.Icon.Warning)
+            message_box.setText("This Port already in use, make sure you want to use it.")
+            message_box.setStandardButtons(QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel)
+            clicked_button = message_box.exec()
+
+            if clicked_button == QMessageBox.StandardButton.Cancel:
+                print("Cancel button clicked.")
+                return
+
+
+
         try:
             self.vm.insert_hardware_event_to_DB(
                 port,
@@ -98,8 +116,6 @@ class CreateEventUi(object):
             msg = str(e)
             if "name" in msg:
                 error_warning("Error: Event name already exists.")
-            elif "port" in msg:
-                error_warning("Error: Port already exists.")
             return
 
         notification("Event was created successfully !")

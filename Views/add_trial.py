@@ -176,13 +176,13 @@ class AddTrialUi(object):
         else:
             dict = dict + ["Duration", "Frequency", "Amplitude"]
 
-            for param in dict:
-                label = QLabel(param)
-                line_edit = QLineEdit()
-                line_edit.setText("0")
-                self.trial_params_labels.append(label)
-                self.trial_params_widgets[event_name].append(line_edit)
-                self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').addRow(label, line_edit)
+        for param in dict:
+            label = QLabel(param)
+            line_edit = QLineEdit()
+            line_edit.setText("0")
+            self.trial_params_labels.append(label)
+            self.trial_params_widgets[event_name].append(line_edit)
+            self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').addRow(label, line_edit)
 
     def trial_types_click(self, index):
         self.parent.trial_index = index

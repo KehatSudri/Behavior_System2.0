@@ -9,7 +9,6 @@ def error_warning(massage):
     error_msg_box = QMessageBox()
     error_msg_box.setIcon(QtWidgets.QMessageBox.Icon.Information)
     error_msg_box.setText(massage)
-    # error_msg_box.setText("An error accrued, please try again.")
     error_msg_box.setWindowTitle("Error Warning")
     error_msg_box.exec()
 
@@ -18,7 +17,6 @@ def notification(massage):
     notification_msg_box = QMessageBox()
     notification_msg_box.setIcon(QtWidgets.QMessageBox.Icon.Information)
     notification_msg_box.setText(massage)
-    # error_msg_box.setText("An error accrued, please try again.")
     notification_msg_box.setWindowTitle("Notification")
     notification_msg_box.exec()
 
