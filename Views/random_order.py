@@ -44,72 +44,7 @@ class RandomOrderUi(object):
             self.trials_tableWidget.setItem(i, 1, QTableWidgetItem("1"))
 
         return
-        dialog.setObjectName("dialog")
-        dialog.resize(401, 355)
-        self.window_gridLayout = QtWidgets.QGridLayout(dialog)
-        self.window_gridLayout.setObjectName("window_gridLayout")
-        self.main_window_gridLayout.setObjectName("main_window_gridLayout")
-        # an explanation about the window's purpose
-        self.explanation_label = QtWidgets.QLabel(dialog)
-        self.explanation_label.setStyleSheet("font: 25pt \"Arial\";")
-        self.explanation_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.explanation_label.setObjectName("explanation_label")
-        self.main_window_gridLayout.addWidget(self.explanation_label, 0, 0, 1, 2)
-        # label for choosing number of trials
-        self.total_num_of_trials_label = QtWidgets.QLabel(dialog)
-        self.total_num_of_trials_label.setStyleSheet("font: 12pt \"Arial\";")
-        self.total_num_of_trials_label.setObjectName("total_num_of_trials_label")
-        self.main_window_gridLayout.addWidget(self.total_num_of_trials_label, 1, 0, 1, 1)
-        # add a spinbox button to choose number of trials
-        self.total_num_of_trials_spinBox = QtWidgets.QSpinBox(dialog)
-        self.total_num_of_trials_spinBox.setObjectName("total_num_of_trials_spinBox")
-        self.total_num_of_trials_spinBox.setMaximum(100000)
-        self.total_num_of_trials_spinBox.setValue(self.parent.total_num)
-        self.total_num_of_trials_spinBox.valueChanged.connect(self.get_total_num_of_trials)
-        self.main_window_gridLayout.addWidget(self.total_num_of_trials_spinBox, 1, 1, 1, 1)
-        # a table to hold all tha trials and their percentage in the session
-        self.trials_tableWidget = QtWidgets.QTableWidget(dialog)
-        self.trials_tableWidget.setStyleSheet("font: 12pt \"Arial\";")
-        self.trials_tableWidget.setObjectName("trials_tableWidget")
-        self.trials_tableWidget.setColumnCount(3)
-        self.trials_tableWidget.setRowCount(0)
-        self.trials_tableWidget.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
-        self.trials_tableWidget.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
-        delegate = ReadOnlyDelegate(self.trials_tableWidget)
-        # set the first two rows to be read-only
-        self.trials_tableWidget.setItemDelegateForColumn(0, delegate)
-        self.trials_tableWidget.setItemDelegateForColumn(1, delegate)
-        # set 3 columns
-        item = QtWidgets.QTableWidgetItem()
-        self.trials_tableWidget.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.trials_tableWidget.setHorizontalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.trials_tableWidget.setHorizontalHeaderItem(2, item)
-        self.main_window_gridLayout.addWidget(self.trials_tableWidget, 2, 0, 1, 2)
-        # Set an adaptive width for table
-        trials_table_adaptive_width = self.trials_tableWidget.horizontalHeader()
-        trials_table_adaptive_width.setSectionResizeMode(QHeaderView.Stretch)
-        # a vertical spacer
-        spacer_item = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.main_window_gridLayout.addItem(spacer_item, 3, 0, 1, 1)
-        # ok and back buttons
-        self.buttonBox = QtWidgets.QDialogButtonBox(dialog)
-        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
-        self.buttonBox.setObjectName("buttonBox")
-        self.main_window_gridLayout.addWidget(self.buttonBox, 4, 0, 1, 2)
-        self.main_window_gridLayout.setColumnStretch(0, 1)
-        self.main_window_gridLayout.setColumnStretch(1, 1)
-        self.main_window_gridLayout.setRowStretch(0, 1)
-        self.window_gridLayout.addLayout(self.main_window_gridLayout, 0, 0, 1, 1)
 
-        self.set_trials_table()
-
-        self.retranslateUi(dialog)
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
-        QtCore.QMetaObject.connectSlotsByName(dialog)
     def func(self):
         for row in range(self.trials_tableWidget.rowCount()):
             item = self.trials_tableWidget.item(row, 1)
