@@ -37,8 +37,8 @@ namespace BSRunner {
 		System::Windows::Forms::Button^ RewardBtn;
 		System::Windows::Forms::Button^ FinishBtn;
 		System::Windows::Forms::Button^ NextTrailBtn;
-	    System::Windows::Forms::Label^ CurrentTrialName;
-	    System::Windows::Forms::Label^ label1;
+		System::Windows::Forms::Label^ CurrentTrialName;
+		System::Windows::Forms::Label^ label1;
 		System::Windows::Forms::Panel^ NextTrialBtn;
 
 #pragma region Windows Form Designer generated code
@@ -197,6 +197,6 @@ namespace BSRunner {
 	private: System::Void NextTrialBtn_click(System::Object^ sender, System::EventArgs^ e) {
 		SessionControls::getInstance().nextTrial();
 	}
-};
+	};
 }
 #endif // __SessionController__
