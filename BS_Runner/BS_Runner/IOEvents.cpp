@@ -5,16 +5,12 @@
 #include <iostream>
 
 
-void writeOutput(TaskHandle taskHandle, int duration) {
+void writeDigitalOutput(TaskHandle taskHandle, int duration) {
 	while (SessionControls::getInstance().getIsPaused()) {
 		continue;
 	}
-	auto start_time = std::chrono::high_resolution_clock::now();
-	DAQmxWriteAnalogScalarF64(taskHandle, true, 5.0, 3.7, NULL);
-	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < duration) {
-		continue;
-	}
-	DAQmxWriteAnalogScalarF64(taskHandle, true, 5.0, 0.0, NULL);
+	uInt32 data = 4;  // Value to write
+	DAQmxWriteDigitalScalarU32(taskHandle, true, duration/1000, data, NULL);
 }
 
 void Event::attachListener(Listener* listener) {
@@ -44,13 +40,35 @@ void Event::set(float64 value) {
 	}
 }
 
-void SimpleOutputer::output() {
+void SimpleAnalogOutputer::output() {
+	while (SessionControls::getInstance().getIsPaused()) {
+		continue;
+	}
 	auto start_time = std::chrono::high_resolution_clock::now();
 	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DELAY_PARAM]) {
 		continue;
 	}
+	start_time = std::chrono::high_resolution_clock::now();
+	DAQmxWriteAnalogScalarF64(_handler, true, 5.0, 3.7, NULL);
 	notifyListeners();
-	writeOutput(_handler, _attributes[DURATION_PARAM]);
+	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DURATION_PARAM]) {
+		continue;
+	}
+	DAQmxWriteAnalogScalarF64(_handler, true, 5.0, 0.0, NULL);
+}
+
+void SimpleDigitalOutputer::output() {
+	while (SessionControls::getInstance().getIsPaused()) {
+		continue;
+	}
+	auto start_time = std::chrono::high_resolution_clock::now();
+	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DELAY_PARAM]) {
+		continue;
+	}
+	uInt32 data = 4;
+	start_time = std::chrono::high_resolution_clock::now();
+	DAQmxWriteDigitalScalarU32(_handler, true, _attributes[DURATION_PARAM] / 1000, data, NULL);
+	notifyListeners();
 }
 
 void EnvironmentOutputer::output() {
