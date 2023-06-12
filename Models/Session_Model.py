@@ -12,7 +12,6 @@ from nidaqmx.constants import AcquisitionType, TerminalConfiguration, Edge, WAIT
 from nidaqmx.stream_readers import AnalogMultiChannelReader
 
 from Models import TrialEvents
-from Models.INotifyPropertyChanged import INotifyPropertyChanged
 import numpy as np
 
 from Models.Trial_Model import Trials_def, Interval, TrialModel
@@ -143,10 +142,9 @@ class SessionTemplate:
         return self.trials_def, self.iti, self.end_def, self.trials_order, self.session_name, self.experimenter_name, self.rnd_reward_percent
 
 
-class SessionModel(SessionTemplate, INotifyPropertyChanged):
+class SessionModel(SessionTemplate):
     def __init__(self):
         SessionTemplate.__init__(self)
-        INotifyPropertyChanged.__init__(self)
         self.is_session_running = False
         self._subject_id = None
         # get params and set params of template
@@ -257,7 +255,6 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
         if self.output_ports != value:
             self._output_ports = value
             self.output_vals = [False] * len(value)
-            self.notifyPropertyChanged("output_ports")
 
     @property
     def data(self):
@@ -265,9 +262,7 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
 
     @data.setter
     def data(self, value):
-        # if self.data is None:
         self._data = value
-        self.notifyPropertyChanged("data")
 
     @property
     def input_to_read(self):
@@ -276,7 +271,6 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
     @input_to_read.setter
     def input_to_read(self, value):
         self._input_to_read = value
-        self.notifyPropertyChanged("input_to_read")
 
     @property
     def trial_types_successive_counter(self):
@@ -285,7 +279,6 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
     @trial_types_successive_counter.setter
     def trial_types_successive_counter(self, value):
         self._trial_types_successive_counter = value
-        self.notifyPropertyChanged("trial_types_successive_counter")
 
     @property
     def trial_types_total_counter(self):
@@ -293,10 +286,7 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
 
     @trial_types_total_counter.setter
     def trial_types_total_counter(self, value):
-        # if self._trial_types_total_counter == value:
-        #     return
         self._trial_types_total_counter = value
-        self.notifyPropertyChanged("trial_types_total_counter")
 
     @property
     def subject_id(self):
@@ -316,7 +306,6 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
     def session_id(self, value):
         if self._session_id != value:
             self._session_id = value
-            self.notifyPropertyChanged("session_id")
 
     @property
     def end_session(self):
@@ -327,56 +316,8 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
         if self._end_session != value:
             self._end_session = value
 
-            self.notifyPropertyChanged("end_session")
-
     def get_params(self):
         return self.subject_id, self.trials_def, self.iti, self.end_def, self.trials_order, self.session_name, self.experimenter_name, self.rnd_reward_percent
-
-    def turn_input_on(self):
-        # should do some validation and then
-        self.input_flag = True
-
-    def turn_input_off(self):
-        self.input_flag = False
-
-    # TODO validate function
-    def find_list_idx(self, lens, idx):
-        sum_of_lens = 0
-        for i in len(lens):
-            sum_of_lens += lens[i]
-            if idx < (sum_of_lens - 1):
-                return i
-
-    def calc_sub_intervs(self, iti_vals, limit):
-        return [random.randfloat(0, iti - limit) for iti in iti_vals]
-        pass
-
-    def get_trials_run_with_rnd_reward(self, trials_to_run, total_num, iti_vals):
-        iti_vals2 = [int(a * 100) for a in iti_vals]
-        trials = []
-        itis = []
-        reward_e = TrialEvents.Reward(4, 4, 4)  # TODO this should be from a list of reward, maybe randomized
-        t = TrialModel(t_id=None, name="rnd reward", events=[reward_e], inters=None)
-        # get indexes of intervals for rnd rewards
-        num_of_rnd_reward = int(self.rnd_reward_percent * total_num / 100)
-        idx_list = list(range(total_num))
-        random.shuffle(idx_list)
-        idx_list = idx_list[0:num_of_rnd_reward]
-        idx_list.sort()
-        limit = 0.01  # this should be the duration of the reward with a boundary?
-        # get interval to give the reward
-        for i in range(len(trials_to_run)):
-            trials.append(trials_to_run[i])
-            # if this idx is chosen for a rnd reward
-            if len(idx_list) != 0 and idx_list[0] == i:
-                wait_to_reward = random.randint(0, (iti_vals2[i])) / 100
-                itis.append(wait_to_reward)
-                itis.append(iti_vals[i] - wait_to_reward)
-                trials.append(t)
-                idx_list = idx_list[1:]
-            else:
-                itis.append(iti_vals[i])
-        return trials, itis
 
     def validate_ending(self, trial_num, is_trial_beggining):
         end_def_str, end_def_val = self.end_def
@@ -642,379 +583,6 @@ class SessionModel(SessionTemplate, INotifyPropertyChanged):
 
     def is_contigent(self, event):
         return False
-
-    def try_run(self, trials_to_run, total_num, log_file, max_trial_length, iti_flag_is_random):
-        write_log = threading.Thread(target=self.write_logging)
-        write_log.start()
-        write_data = threading.Thread(target=self.write_input_data)
-        write_data.start()
-        paused_time = timedelta(milliseconds=0)
-
-        success_count, trial_idx, event_idx, next_interval, iti_idx, read_input_idx = 0, 0, 0, 0, 0, 0
-        given_rnd_interval, start_iti, stopped_flag = False, False, False
-        i, rew_count, trial_index, time_from_pause = 0, 0, 0, 0
-        output_times = [timedelta(milliseconds=0)] * len(self.output_vals)  # for now reward is 0 and tone is 1
-        self.buffer_in = np.zeros((len(self.input_ports), BUFFER_SIZE))
-        self.data = np.zeros((len(self.input_ports), 1))
-        self.input_to_read = np.zeros((len(self.input_ports), 1))
-        iti_vals, rewards, idxs, short_itis = None, None, None, None
-        self.number_of_inputs_to_skip = 0
-        # get specific iti times
-        if iti_flag_is_random:
-            iti_vals = self.iti.get_iti_vec(2 * len(trials_to_run))
-            # get iti's , indexes and reward for random reward
-            rewards, idxs, short_itis = self.get_rnd_reward_itis(total_num, iti_vals)
-        # get index of input event required for trial start
-        else:
-            iti_input_index = self.input_events_name_list.index(self.iti.definition)
-        repeated_trial_count = 0
-        # create read and write tasks
-        reading_input_task = self.get_read_in_task()
-        writing_output_task = self.get_write_out_task()
-        # set all outputs to 0
-        writing_output_task.write(self.output_vals)
-        # start data acquisition
-        reading_input_task.start()
-        self.log_queue.put(str(datetime.now()) + "   - Session start\n")
-        self.timer = self.interval_start_time = datetime.now().time()
-        trial_start_time = datetime.now().time()
-
-        last_type_idx = cur_type_idx = self.get_trial_type_idx(trials_to_run[0])
-        while not self.end_session:
-            # pause is pressed
-            if self.pause:
-                pause_start = datetime.now().time()
-                # reset input and outputs
-                self.reset_run(writing_output_task, reading_input_task)
-                # add logging
-                self.log_queue.put(str(pause_start) + "   - Session pause\n")
-                # set the next trial to be next to run, immediately when resume is pressed
-                if event_idx != 0:
-                    trial_index += 1
-                    event_idx = 0
-                    next_interval = 0
-                # wait until resume or stop
-                while not self.end_session and self.pause:
-                    continue
-                key_pressed_time = datetime.now().time()
-                paused_time += self.add_times(key_pressed_time, pause_start, True)
-                # is session is stopped - stop tasks and write to log
-                if self.end_session:
-                    self.session_ending(writing_output_task, reading_input_task, "by user, ", key_pressed_time,
-                                        paused_time)
-                    stopped_flag = True
-                    break
-                # write resume time to log file and start
-                self.log_queue.put(str(key_pressed_time) + "   - Session resume\n")
-
-                reading_input_task.start()
-            # verify session ending
-            if self.validate_ending(trial_idx, event_idx == 0):
-                self.session_ending(writing_output_task, reading_input_task, "end definition satisfied, ",
-                                    datetime.now().time(), paused_time)
-                stopped_flag = True
-                break
-            # turn off all finished outputs
-            for j in range(len(self.output_vals)):
-                if output_times[j] != timedelta(0) and not self.is_delta_more_than_time(output_times[j],
-                                                                                        datetime.now().time()):
-                    self.output_vals[j] = False
-                    output_times[j] = timedelta(milliseconds=0)
-            writing_output_task.write(self.output_vals)
-            # if maximum length of trial is reached, go to next trial
-            if event_idx != 0 and not self.is_delta_more_than_time(
-                    self.add_int_delta_to_time(max_trial_length, trial_start_time), datetime.now().time()):
-                self.log_queue.put(str(datetime.now()) + "   - Trial reached maximum time. moving to next trial\n")
-
-                event_idx = len(trials_to_run[trial_idx].events) - 1
-                dur = int(trials_to_run[trial_idx].events[event_idx].getDuration())
-                read_input_idx += int((dur + 50) * self.sampling_rate / 1000)
-
-                trial_idx += 1
-                event_idx = 0
-                if iti_flag_is_random:
-                    next_interval = iti_vals[iti_idx]
-                else:
-                    next_interval = 0
-                iti_idx += 1
-                # when finishing a trial, update trial types counters
-                if self.manage_counters(cur_type_idx, last_type_idx):
-                    last_type_idx = cur_type_idx
-                if trial_idx >= len(trials_to_run):
-                    self.end_session = True
-                    break
-                cur_type_idx = self.get_trial_type_idx(trials_to_run[trial_idx])
-                given_rnd_interval = False
-            # give reward if pressed:
-            if self.is_give_reward:
-                self.is_give_reward = False
-                output_idx = self.output_events_name_list.index(self.reward_to_give)
-
-                event_to_give = None
-                for r in self.reward_list_in_sess:
-                    if r.get_type_str() == self.reward_to_give:
-                        event_to_give = r
-                        break
-                if event_to_give is not None:
-                    self.output_vals[output_idx] = True
-                    output_times[output_idx] = self.add_int_delta_to_time(int(r.getDuration()),
-                                                                          datetime.now().time())
-                    writing_output_task.write(self.output_vals)
-
-            # read the input
-            if read_input_idx < len(self.input_to_read.T):
-                # input = self.input_to_read[:, read_input_idx]
-                input = self.input_to_read[:, read_input_idx]
-                read_input_idx += 10
-                if not iti_flag_is_random and input[iti_input_index] > 3:
-                    self.input_flag = True
-
-            # run the next event for one of the following options -
-            # 1. middle of trial and interval between events passed
-            # 2. beginning of trial and random ITI is finished
-            # 3. beginning of trial and behavior input for behave cue happened
-            if ((event_idx != 0 or iti_flag_is_random) and not self.is_delta_more_than_time(
-                    self.add_int_delta_to_time(next_interval, self.interval_start_time), datetime.now().time())) or (
-                    event_idx == 0 and not iti_flag_is_random and self.input_flag):
-                self.input_flag = False
-                stop_events_flag = True
-                if event_idx == 0:
-                    self.log_queue.put(
-                        str(datetime.now().time()) + "   - Trial #" + str(trial_idx + 1) + " starting: " +
-                        trials_to_run[
-                            trial_idx].name + "\n")
-                    trials_start_time = datetime.now().time()
-                while stop_events_flag:
-                    if event_idx >= len(trials_to_run[trial_idx].events):
-                        stop_events_flag = False
-                        break
-                    event_to_run = trials_to_run[trial_idx].events[event_idx]
-                    output_event_idx = self.output_events_name_list.index(
-                        event_to_run.get_type_str())  # TODO get event index
-                    # if event is simple or contingent requirements satisfied
-                    if not self.is_contigent(event_to_run) or self.check_contigent_satisfaction(event_to_run):
-                        self.output_vals[output_event_idx] = True
-                        output_times[output_event_idx] = self.add_int_delta_to_time(int(event_to_run.getDuration()),
-                                                                                    datetime.now().time())
-
-                        writing_output_task.write(self.output_vals)
-                        self.log_queue.put(str(datetime.now().time()) +
-                                           "   - Output Event, " + event_to_run.get_type_str() + "\n")
-
-                        event_idx += 1
-                        if event_to_run.is_reward():
-                            success_count += 1
-                            self.success_rate = (success_count / (len(trials_to_run) + repeated_trial_count)) * 100
-                    # continue to all next events that are set to begin with the current
-                    if not (event_idx < len(trials_to_run[trial_idx].events) and not self.is_contigent(
-                            trials_to_run[trial_idx].events[event_idx]) and
-                            trials_to_run[trial_idx].intervals[event_idx - 1] == 0):
-                        stop_events_flag = False
-
-                # get interval start clock from the beginning of the last output
-                self.interval_start_time = datetime.now().time()
-
-                # check if ran all events for current session
-                if event_idx >= len(trials_to_run[trial_idx].events):
-                    if not iti_flag_is_random:
-                        # skip the duration of output, until checking for next trigger for trial
-                        read_input_idx += int((int(event_to_run.getDuration()) + 50) * self.sampling_rate / 1000)
-                    # check whether repeat trial request is on
-                    if not self.repeat_trial:
-                        # go to next trial
-                        trial_idx += 1
-                    else:
-                        repeated_trial_count += 1
-                        self.repeat_trial = False
-                    event_idx = 0
-                    if iti_flag_is_random:
-                        next_interval = iti_vals[iti_idx]
-                    else:
-                        next_interval = 0
-                    iti_idx += 1
-                    # when finishing a trial, update trial types counters
-                    if self.manage_counters(cur_type_idx, last_type_idx):
-                        last_type_idx = cur_type_idx
-                    if trial_idx >= len(trials_to_run):
-                        self.end_session = True
-                        break
-                    cur_type_idx = self.get_trial_type_idx(trials_to_run[trial_idx])
-                    given_rnd_interval = False
-                    trial_start_time = datetime.now().time()
-                else:
-                    interval = trials_to_run[trial_idx].intervals[event_idx - 1]
-                    next_interval = np.random.randint(int(interval[0]), int(interval[1]) + 1)
-            # TODO validate
-            if iti_flag_is_random and len(self.reward_list_in_sess) > 0 and len(
-                    idxs) > rew_count and not given_rnd_interval:
-                if iti_idx == idxs[rew_count]:
-                    if self.is_delta_more_than_time(
-                            self.add_int_delta_to_time(short_itis[rew_count], self.interval_start_time),
-                            datetime.now().time()):
-                        rnd_idx = random.randint(0, len(self.reward_list_in_sess) - 1)
-                        output_event_idx = self.output_events_name_list.index(
-                            self.reward_list_in_sess[rnd_idx].get_type_str())
-                        self.output_vals[output_event_idx] = True
-                        output_times[output_event_idx] = self.add_int_delta_to_time(int(event_to_run.getDuration()),
-                                                                                    datetime.now().time())
-                        writing_output_task.write(self.output_vals)
-
-                        given_rnd_interval = True
-                        rew_count += 1
-
-            # while self.repeat_trial:
-            #     self.repeat_trial = False
-            #     trials_to_run[i].run()
-            #     # do successive count should grow? and total?
-            # i += 1
-
-        if not stopped_flag:
-            self.session_ending(writing_output_task, reading_input_task, "finished trials, ", datetime.now().time(),
-                                paused_time)
-
-        finish_all_output = True
-        while not finish_all_output:
-            finish_all_output = True
-            for j in range(len(self.output_vals)):
-                if self.output_vals[j] != timedelta(0):
-                    finish_all_output = False
-            if not finish_all_output:
-                # turn off all finished outputs
-                for j in range(len(self.output_vals)):
-                    if output_times[j] != timedelta(0) and not self.is_delta_more_than_time(output_times[j],
-                                                                                            datetime.now().time()):
-                        self.output_vals[j] = False
-                        output_times[j] = timedelta(milliseconds=0)
-
-                writing_output_task.write(self.output_vals)
-
-        write_log.join()
-        write_data.join()
-
-    # def run_any_session(self, trials_to_run, total_num, log_file, max_trial_length, iti_flag_is_random):
-    #
-    #     self.buffer_in = np.zeros((len(self.input_ports), 5000))
-    #     self.data = np.zeros((len(self.input_ports), 1))
-    #     if iti_flag_is_random:
-    #         iti_vals = self.iti.get_iti_vec()
-    #         # get iti's , indexes and reward for random reward
-    #         rewards, idxs, short_itis = self.get_rnd_reward_itis(total_num, iti_vals)
-    #     else:
-    #         iti_input_index = 0  # Todo a function to get input index from comparing required bhvor with list of input events.
-    #     # create read channels
-    #     reading_input_task = self.get_read_in_task()
-    #
-    #     reading_input_task.start()
-    #     # run until session end
-    #     i, rew_count = 0, 0
-    #     # keep starting time
-    #     self.interval_start_time = datetime.now()
-    #     last_type_idx = None
-    #
-    #     threading.Thread(target=self.check_input).start()
-    #     while not self.end_session:
-    #         if self.pause:
-    #             time.sleep(1)
-    #             continue
-    #
-    #         cur_type_idx = self.get_trial_type_idx(trials_to_run[i])
-    #         if last_type_idx is None:
-    #             last_type_idx = cur_type_idx
-    #         # run current trial
-    #         trials_to_run[i].run()
-    #         # update counters
-    #         tmp_total = self.trial_types_total_counter
-    #         tmp_successive = self.trial_types_successive_counter
-    #         if cur_type_idx != last_type_idx:
-    #             tmp_successive = np.zeros(len(self.trial_types_successive_counter))
-    #         tmp_successive[cur_type_idx] += 1
-    #         # self.trial_types_successive_counter[cur_type_idx] += 1
-    #         self.trial_types_successive_counter = tmp_successive
-    #         tmp_total[cur_type_idx] += 1
-    #         self.trial_types_total_counter = tmp_total
-    #         if last_type_idx != cur_type_idx:
-    #             self.trial_types_successive_counter[last_type_idx] = 0
-    #             last_type_idx = cur_type_idx
-    #         print(self.trial_types_successive_counter)
-    #         if iti_flag_is_random:
-    #             # grant random reward if required here
-    #             if len(idxs) > 0 and len(idxs) > rew_count and i == idxs[rew_count]:
-    #                 time.sleep(short_itis[rew_count])
-    #                 print("rnd reward!!!!")
-    #                 time.sleep(iti_vals[i] - short_itis[rew_count])
-    #                 rew_count += 1
-    #             else:
-    #                 time.sleep(iti_vals[i])
-    #         else:
-    #             while not self.input_flags[iti_input_index]:
-    #                 continue  # TODO this will not be good
-    #         # calculate success rate
-    #         self.success_rate = 0  # TODO check what to do about this
-    #         while self.repeat_trial:
-    #             self.repeat_trial = False
-    #             trials_to_run[i].run()
-    #             # do successive count should grow? and total?
-    #         i += 1
-    #         # check ending condition is not satisfied
-    #         self.validate_ending(i)
-    #         # ran all trials for session
-    #         if i >= len(trials_to_run):
-    #             self.end_session = True
-    #             print("ran all trials - end session")
-    #
-    # def run_bhv_iti_session(self, trials_to_run, total_num, log_file, max_trial_length):
-    #     # do we start the trials immidiately or wait to cue?
-    #
-    #     # get iti's , indexes and reward for random reward - maybe, but differnet func
-    #     # rewards, idxs, short_itis = self.get_rnd_reward_itis(total_num, iti_vals)
-    #     # run until session end
-    #     i, rew_count = 0, 0
-    #     # keep starting time
-    #     self.interval_start_time = datetime.now()
-    #     last_type_idx = None
-    #
-    #     while not self.end_session:
-    #
-    #         cur_type_idx = self.get_trial_type_idx(trials_to_run[i])
-    #         if last_type_idx is None:
-    #             last_type_idx = cur_type_idx
-    #         # run current trial
-    #         trials_to_run[i].run()
-    #         # update counters
-    #         self.trial_types_successive_counter[cur_type_idx] += 1
-    #         self.trial_types_total_counter[cur_type_idx] += 1
-    #         print(self.trial_types_total_counter)  # TODO delete
-    #         if last_type_idx != cur_type_idx:
-    #             self.trial_types_successive_counter[last_type_idx] = 0
-    #             last_type_idx = cur_type_idx
-    #         print(self.trial_types_successive_counter)
-    #         # grant random reward if required here
-    #         # if len(idxs) > 0 and len(idxs) > rew_count and i == idxs[rew_count]:
-    #         #     time.sleep(short_itis[rew_count])
-    #         #     rewards[rew_count].execute()
-    #         #     print("rnd reward!!!!")
-    #         #     time.sleep(iti_vals[i] - short_itis[rew_count])
-    #         #     rew_count += 1
-    #         # else:
-    #         #     time.sleep(iti_vals[i])
-    #         # wait(lambda: self.is_input(), timeout_seconds=100, waiting_for="waiting for input")
-    #         # print("got input")
-    #         print("wait for i")
-    #         while not self.input_flag:
-    #             time.sleep(3)
-    #         # self.input_has_come.wait()
-    #         print("got input")
-    #         # calculate success rate
-    #         self.success_rate = 0  # TODO check what to do about this
-    #         i += 1
-    #         # check ending condition is not satisfied
-    #         self.validate_ending(i)
-    #         # ran all trials for session
-    #         if i >= len(trials_to_run):
-    #             self.end_session = True
-    #             print("ran all trials - end session")
-    #
-    #     pass
 
     # TODO validate function
     def run_session(self, log_file, max_successive_trials, max_trial_length):

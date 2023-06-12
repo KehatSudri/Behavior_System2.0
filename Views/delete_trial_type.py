@@ -30,7 +30,6 @@ class DeleteTrialTypeUi(object):
         self.table = None
         self.parent = parent
         self.vm = self.parent.vm
-        self.vm.sessionVM.property_changed += self.EventHandler
         self.main_window = None
         self.central_widget = None
         self.window_gridLayout = None
@@ -48,7 +47,6 @@ class DeleteTrialTypeUi(object):
         self.trial_types = self.vm.get_list_trials_types_def()
         self.selected_trial_type = None
         self.trials_names = self.vm.get_trial_names()
-        self.vm.property_changed += self.EventHandler
         self.is_error = False
 
     def setupUi(self, main_window):

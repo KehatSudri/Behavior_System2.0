@@ -4,15 +4,6 @@
 #include <thread>
 #include <iostream>
 
-
-void writeDigitalOutput(TaskHandle taskHandle, int duration) {
-	while (SessionControls::getInstance().getIsPaused()) {
-		continue;
-	}
-	uInt32 data = 4;  // Value to write
-	DAQmxWriteDigitalScalarU32(taskHandle, true, duration/1000, data, NULL);
-}
-
 void Event::attachListener(Listener* listener) {
 	_listeners.push_back(listener);
 }
@@ -34,6 +25,7 @@ void Event::set(float64 value) {
 	if (!_beenUpdated && value > 3.5) {
 		_beenUpdated = true;
 		notifyListeners();
+
 	}
 	else if (_beenUpdated && value < 3.5) {
 		_beenUpdated = false;
@@ -65,12 +57,9 @@ void SimpleDigitalOutputer::output() {
 	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DELAY_PARAM]) {
 		continue;
 	}
-	bool32      dataHigh = 1;
-	bool32      dataLow = 0;
+	bool32 dataHigh = 1, dataLow = 0;
 	start_time = std::chrono::high_resolution_clock::now();
 	DAQmxWriteDigitalScalarU32(_handler, 1, 10.0, dataHigh, nullptr);
-	//DAQmxStartTask(_handler);
-	notifyListeners();
 	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DURATION_PARAM]) {
 		continue;
 	}

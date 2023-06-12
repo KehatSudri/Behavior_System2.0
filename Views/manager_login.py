@@ -7,22 +7,17 @@ from Views.utils import error_warning, get_ui_path
 class ManagerLoginUi(object):
     def __init__(self, parent):
         self.parent = parent
+        self.password_lineEdit = None
         self.main_window = None
-        self.back_pushButton = None
-        self.login_pushButton = None
 
     def setupUi(self, main_window):
         self.main_window = main_window
         uic.loadUi(get_ui_path('manager_login.ui'), main_window)
-
-        self.back_pushButton = main_window.findChild(QPushButton, 'Back_btn')
-        self.back_pushButton.clicked.connect(self.on_back_click)
-
-        self.login_pushButton = main_window.findChild(QPushButton, 'login_pushButton')
-        self.login_pushButton.clicked.connect(self.on_login_click)
-
+        back_pushButton = main_window.findChild(QPushButton, 'Back_btn')
+        back_pushButton.clicked.connect(self.on_back_click)
+        login_pushButton = main_window.findChild(QPushButton, 'login_pushButton')
+        login_pushButton.clicked.connect(self.on_login_click)
         self.password_lineEdit = main_window.findChild(QLineEdit, 'password_textEdit')
-
 
     def on_back_click(self):
         self.setupUi(self.main_window)
@@ -38,4 +33,3 @@ class ManagerLoginUi(object):
             self.main_window.close()
         else:
             error_warning("Wrong password")
-
