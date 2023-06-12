@@ -66,7 +66,7 @@ void SessionControls::startSession(char* configFilePath) {
 	setIsTrialRuning(true);
 	setIsPaused(false);
 	this->_runThread = std::thread(&SessionControls::run, this, configFilePath);
-	this->_runThread.join();
+	// this->_runThread.join();
 }
 
 void SessionControls::pauseSession() {
