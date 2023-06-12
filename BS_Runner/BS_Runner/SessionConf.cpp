@@ -66,9 +66,11 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 			++type;
 		}
 		while (std::getline(inputFile, line)) {
-			if (line[0] == '$') {
+			if (line[0] == '$' || line.empty()) {
 				++category;
-				continue;
+				if (line[0] == '$') {
+					continue;
+				}
 			}
 			std::string name = line, token2;
 			switch (category) {

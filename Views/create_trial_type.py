@@ -68,6 +68,9 @@ class CreateTrialTypeUi(object):
 
     def on_add_click(self):
         current_event = self.events_comboBox.currentText()
+        if current_event=="":
+            error_warning("There are no events, please create one first.")
+            return
         for row in range(self.events_tableWidget.rowCount()):
             item = self.events_tableWidget.item(row, 0)  # Get item at row, column 0
             if item is not None:
@@ -167,7 +170,7 @@ class CreateTrialTypeUi(object):
                 else:
                     self.parent.vm.insert_new_events_to_trials(name, row_items[0], False, None,row_items[4]=="Random",row_items[5]=="True")
 
-        msgBox.setText("The trial was created successfully.")
+        msgBox.setText("The trial was created successfully!")
         msgBox.exec()
         self.trial_type_name_lineEdit.clear()
         self.events_order = []
