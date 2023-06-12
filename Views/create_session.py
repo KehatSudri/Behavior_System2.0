@@ -12,6 +12,7 @@ from Views.control_session_board import ControlSessionBoardUi
 from Views.edit_trial import EditTrialUi
 from Views.utils import error_warning, dict_yaml_style, get_ui_path
 from Views.random_order import RandomOrderUi
+from Views.notes import NotesUi
 
 
 class CreateSessionUi(object):
@@ -103,6 +104,7 @@ class CreateSessionUi(object):
         self.vm.sessionVM.trials_order = "random"
         self.iti_behaviors = self.vm.get_behaviors_list()
         self.end_defs = self.vm.get_end_def_list()
+        self.notes=""
 
     def setupUi(self, main_window):
         self.main_window = main_window
@@ -110,6 +112,8 @@ class CreateSessionUi(object):
         self.remove_trial_pushButton = self.main_window.findChild(QtWidgets.QPushButton, "remove_trial_pushButton")
         self.add_trial_pushButton = self.main_window.findChild(QtWidgets.QPushButton, "add_trial")
         self.edit_pushButton = self.main_window.findChild(QtWidgets.QPushButton, "edit_pushButton")
+        self.notesBtn=self.main_window.findChild(QtWidgets.QPushButton, "notes_pushButton")
+        self.notesBtn.clicked.connect(self.on_notes_click)
         self.session_name_te = self.main_window.findChild(QtWidgets.QTextEdit, "session_name_te")
         self.subject_id_te = self.main_window.findChild(QtWidgets.QTextEdit, "subject_id_te")
         self.exp_name_te = self.main_window.findChild(QtWidgets.QTextEdit, "exp_name_te")
@@ -159,7 +163,11 @@ class CreateSessionUi(object):
             self.max_iti_spinBox.show()
             self.min_iti_label.show()
             self.max_iti_label.show()
-
+    def on_notes_click(self):
+        self.chosen_window = QtWidgets.QMainWindow()
+        self.chosen_window_ui = NotesUi(self)
+        self.chosen_window_ui.setupUi(self.chosen_window)
+        self.chosen_window.show()
     def on_add_click(self):
         self.add_window = QtWidgets.QDialog()
         self.add_ui = AddTrialUi(self)
@@ -290,6 +298,7 @@ class CreateSessionUi(object):
         min_iti = self.min_iti_spinBox.value()
         max_trial_time = self.max_trial_time.value()
         sessions_names = self.db.get_sessions_names()
+        notes=self.notes
         if session_name in ([x[0] for x in sessions_names]):
             error_warning("Error: Session name already exists.")
             return
@@ -323,7 +332,8 @@ class CreateSessionUi(object):
                     min_iti,
                     max_iti,
                     is_fixed_iti,
-                    max_trial_time)
+                    max_trial_time,
+                    notes)
             except Exception as e:
                 msg = str(e)
                 if "name" in msg: #here I need to check if something was edit then to create new sesion on DB if no just continue
@@ -383,7 +393,7 @@ class CreateSessionUi(object):
         self.trials_in_session=[]
         trials_dict={}
         template_info = self.db.get_template(session_name, subject)
-        var1, session_name, subject, exp_name, date, min_iti, max_iti, is_fixed_iti_type,max_trial_time = template_info[0]
+        var1, session_name, subject, exp_name, date, min_iti, max_iti, is_fixed_iti_type,max_trial_time,notes = template_info[0]
         self.session_name_te.setText(session_name)
         self.subject_id_te.setText(subject)
         self.exp_name_te.setText(exp_name)
@@ -392,6 +402,7 @@ class CreateSessionUi(object):
         self.trials_table.clear()
         self.trials_table.setRowCount(0)
         self.max_trial_time.setValue(max_trial_time)
+        self.notes=notes
         trials = self.db.get_trial_name_by_session(session_name)
         trials_ = [x[0] for x in trials]
         col1 = QTableWidgetItem("Trial name")
