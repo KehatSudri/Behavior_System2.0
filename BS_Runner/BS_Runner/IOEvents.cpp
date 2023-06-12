@@ -65,10 +65,13 @@ void SimpleDigitalOutputer::output() {
 	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DELAY_PARAM]) {
 		continue;
 	}
-	uInt32 data = 4;
 	start_time = std::chrono::high_resolution_clock::now();
-	DAQmxWriteDigitalScalarU32(_handler, true, _attributes[DURATION_PARAM] / 1000, data, NULL);
+	DAQmxWriteDigitalScalarU32(_handler, true, _attributes[DURATION_PARAM] / 1000, 1, NULL);
 	notifyListeners();
+	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DURATION_PARAM]) {
+		continue;
+	}
+	DAQmxWriteDigitalScalarU32(_handler, true, _attributes[DURATION_PARAM] / 1000, 0, NULL);
 }
 
 void EnvironmentOutputer::output() {
