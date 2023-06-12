@@ -68,6 +68,9 @@ class CreateTrialTypeUi(object):
 
     def on_add_click(self):
         current_event = self.events_comboBox.currentText()
+        if current_event=="":
+            error_warning("There are no events , please create one first.")
+            return
         for row in range(self.events_tableWidget.rowCount()):
             item = self.events_tableWidget.item(row, 0)  # Get item at row, column 0
             if item is not None:
