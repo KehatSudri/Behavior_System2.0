@@ -608,9 +608,9 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     #         trials.append(trial[1])
     #     return trials
     def insert_session_to_DB(self,session_name, subject_id, experimenter_name,last_used,min_iti,
-                max_iti,is_fixed_iti,max_trial_time):
+                max_iti,is_fixed_iti,max_trial_time,notes):
         return self.db.insert_session(session_name, subject_id, experimenter_name,last_used,min_iti,
-                max_iti,is_fixed_iti,max_trial_time)
+                max_iti,is_fixed_iti,max_trial_time,notes)
     def insert_session_to_trials(self, session_name, trial_name):
         return self.db.insert_session_to_trials(session_name,trial_name)
     def get_trials_names(self):

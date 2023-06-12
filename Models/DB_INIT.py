@@ -89,14 +89,14 @@ class DB:
             raise e
 
     def insert_session(self,name, subjectid, experimenter_name,last_used,min_iti,
-                max_iti,is_fixed_iti,max_trial_time):
+                max_iti,is_fixed_iti,max_trial_time,notes):
         try:
             sql = """
-                INSERT INTO sessions(name,subjectid,experimenter_name,last_used,min_iti,max_iti,is_fixed_iti,max_trial_time)
-                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+                INSERT INTO sessions(name,subjectid,experimenter_name,last_used,min_iti,max_iti,is_fixed_iti,max_trial_time,notes)
+                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
                  """
             with self.conn.cursor() as cur:
-                cur.execute(sql, (name, subjectid, experimenter_name,last_used, min_iti, max_iti,is_fixed_iti,max_trial_time))
+                cur.execute(sql, (name, subjectid, experimenter_name,last_used, min_iti, max_iti,is_fixed_iti,max_trial_time,notes))
                 self.conn.commit()
         except Exception as e:
             self.conn.rollback()
@@ -461,7 +461,8 @@ commands = (
         min_iti DOUBLE PRECISION ,
         max_iti DOUBLE PRECISION ,
         is_fixed_iti BOOLEAN DEFAULT false,
-        max_trial_time DOUBLE PRECISION
+        max_trial_time DOUBLE PRECISION,
+        notes VARCHAR(2000)
         )""",
 
     """CREATE TABLE IF NOT EXISTS public.events_to_trials (
