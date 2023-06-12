@@ -720,6 +720,13 @@
           </property>
          </spacer>
         </item>
+        <item row="4" column="5">
+         <widget class="QPushButton" name="pushButton">
+          <property name="text">
+           <string>Notes</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
      </layout>
