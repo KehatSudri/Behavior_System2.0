@@ -219,71 +219,6 @@
           </layout>
          </widget>
         </item>
-        <item row="4" column="0">
-         <widget class="QGroupBox" name="groupBox_3">
-          <property name="title">
-           <string/>
-          </property>
-          <widget class="QWidget" name="layoutWidget_2">
-           <property name="geometry">
-            <rect>
-             <x>50</x>
-             <y>10</y>
-             <width>501</width>
-             <height>43</height>
-            </rect>
-           </property>
-           <layout class="QHBoxLayout" name="io_horizontalLayout_4" stretch="0,0">
-            <item>
-             <widget class="QRadioButton" name="digital_radio_btn">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Digital</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="analog_radio_btn">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Analog</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="layoutWidget">
-           <property name="geometry">
-            <rect>
-             <x>50</x>
-             <y>60</y>
-             <width>501</width>
-             <height>123</height>
-            </rect>
-           </property>
-           <layout class="QHBoxLayout" name="io_description_horizontalLayout" stretch="0,0">
-            <item>
-             <widget class="QLabel" name="digital_description_label">
-              <property name="text">
-               <string>Duration</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="analog_description_label">
-              <property name="text">
-               <string>Duration, frequency, amplitude</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </widget>
-        </item>
         <item row="5" column="0">
          <widget class="QGroupBox" name="groupBox">
           <property name="enabled">
@@ -371,6 +306,45 @@
                 <string>No</string>
                </property>
               </item>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QGroupBox" name="groupBox_3">
+          <property name="title">
+           <string/>
+          </property>
+          <widget class="QWidget" name="layoutWidget_2">
+           <property name="geometry">
+            <rect>
+             <x>50</x>
+             <y>60</y>
+             <width>501</width>
+             <height>43</height>
+            </rect>
+           </property>
+           <layout class="QHBoxLayout" name="io_horizontalLayout_4" stretch="0,0">
+            <item>
+             <widget class="QRadioButton" name="digital_radio_btn">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Digital</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="analog_radio_btn">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Analog</string>
+              </property>
              </widget>
             </item>
            </layout>
