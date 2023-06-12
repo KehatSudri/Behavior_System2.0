@@ -61,12 +61,18 @@ bool SessionControls::isTrialRunning() {
 }
 
 void SessionControls::startSession(char* configFilePath) {
+	if (!configFilePath) {
+		MessageBox::Show(CONFIGURATION_FILE_ERROR_MESSAGE);
+		return;
+	}
 	if (_isSessionRunning) return;
 	setIsSessionRunning(true);
 	setIsTrialRuning(true);
 	setIsPaused(false);
 	this->_runThread = std::thread(&SessionControls::run, this, configFilePath);
-	this->_runThread.join();
+	if (_runThread.joinable()) {
+		_runThread.join();
+	}
 }
 
 void SessionControls::pauseSession() {
@@ -94,6 +100,8 @@ void SessionControls::finishSession() {
 	setIsSessionRunning(false);
 	setIsTrialRuning(false);
 	if (_conf && !_conf->isSessionComplete()) {
-		_runThread.join();
+		if (_runThread.joinable()) {
+			_runThread.join();
+		}
 	}
 }
