@@ -3,12 +3,13 @@
 #define __SessionControls__
 #include "SessionConf.h"
 #include <string>
-#include <thread>
 
 public class SessionControls {
 	bool _isSessionRunning = false;
 	bool _isTrialRunning = false;
 	bool _isPaused = false;
+	int _timeoutIndicator;
+	std::chrono::time_point <std::chrono::steady_clock> _trialStartTime;
 	//char* _currentTrialName = "Trial name";
 	SessionConf* _conf;
 	std::thread _runThread;
@@ -27,7 +28,7 @@ public:
 	void pauseSession();
 	void resumeSession();
 	void finishSession();
-    //char* getCurrentTrialName();
+	//char* getCurrentTrialName();
 	void setIsPaused(bool state) { this->_isPaused = state; }
 	void setIsSessionRunning(bool state) { this->_isSessionRunning = state; }
 	void setIsTrialRuning(bool state) { this->_isTrialRunning = state; }
@@ -38,6 +39,6 @@ public:
 		return _isSessionRunning;
 	}
 	void nextTrial();
-	//void giveRewardIntSession();
+	void giveReward();
 };
 #endif // __SessionControls__

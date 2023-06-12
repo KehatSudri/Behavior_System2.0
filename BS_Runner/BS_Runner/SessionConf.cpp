@@ -1,17 +1,17 @@
 #include "SessionConf.h"
-#include "Consts.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <random>
+
 
 std::map<std::string, int>  getAttributes(std::string port, const std::vector<int>& params) {
-	// TODO Switch case on port
 	std::map<std::string, int> attributes;
 	auto it = params.begin();
 	attributes[DELAY_PARAM] = *it;
-	attributes[DURATION_PARAM] = *(it+1);
-	attributes[FREQUENCY_PARAM] = *(it+2);
+	attributes[DURATION_PARAM] = *(it + 1);
+	attributes[FREQUENCY_PARAM] = *(it + 2);
 	return attributes;
 }
 
@@ -21,7 +21,7 @@ std::vector<int> getParams(std::string line) {
 	std::vector<int> params;
 	while (std::getline(ss, token, ',')) {
 		params.push_back(std::stoi(token));
-    }
+	}
 	return params;
 }
 
@@ -29,9 +29,63 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 	std::ifstream inputFile(path);
 	if (inputFile.is_open()) {
 		int category = 0;
-		std::string line;
+		std::string line, delimiter = ",";
+		std::getline(inputFile, line);
+		std::stringstream ss(line);
+		std::string element;
+		size_t pos;
+		int type = 0;
+		while (std::getline(ss, element, ',')) {
+			std::string iti = line.substr(1, line.length() - 2);
+			pos = iti.find(delimiter);
+			switch (type) {
+			case 0:
+				setMaxTrialWaitTime(std::stoi(element));
+				break;
+			case 1:
+				if (pos != std::string::npos) {
+					setMinITI(std::stod(iti.substr(0, pos)));
+					setMaxITI(std::stod(iti.substr(pos + delimiter.length())));
+				}
+				else {
+					setMinITI(std::stod(iti));
+				}
+				break;
+			case 2:
+				if (element == "True") {
+					setisSessionRandom(true);
+				}
+				break;
+			default:
+			}
+			++type;
+		}
 		while (std::getline(inputFile, line)) {
-			if (line.empty()) {
+			if (line[0] == '$') {
+				++category;
+				continue;
+			}
+			std::string name = line, token2;
+			switch (category) {
+			case 0:
+				_trials.push_back({ name });
+				std::getline(inputFile, line);
+				_trials[_numOfTrials]._numOfRuns = std::stoi(line);
+				break;
+			case 1:
+				pos = line.find(delimiter);
+				name = line.substr(0, pos);
+				token2 = line.substr(pos + delimiter.length());
+				_trials[_numOfTrials]._AIPorts.push_back(name);
+				if (token2 == "True") {
+					_trials[_numOfTrials]._trialKillers.push_back(name);
+				}
+				break;
+			case 2:
+				std::getline(inputFile, line);
+				_trials[_numOfTrials]._AOPorts.push_back({ name ,getParams(line) });
+				break;
+			default:
 				_trials[_numOfTrials].initInputTaskHandle();
 				_trials[_numOfTrials].initInputEvents();
 				_trials[_numOfTrials].initAnalogOutputTasks();
@@ -41,35 +95,7 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 					break;
 				}
 				++_numOfTrials;
-			}
-			else {
-				if (line[0] == '$') {
-					++category;
-					continue;
-				}
-				std::string name = line, delimiter = ",", token2;
-				size_t pos;
-				switch (category) {
-				case 0:
-					_trials.push_back({ name });
-					break;
-				case 1:
-					pos = line.find(delimiter);
-					name = line.substr(0, pos);
-					token2 = line.substr(pos + delimiter.length());
-					_trials[_numOfTrials]._AIPorts.push_back(name);
-					// TODO Implement support for end condition
-					if (token2 == "True") {
-						_trials[_numOfTrials]._trialKillers.push_back(name);
-					}
-					break;
-				case 2:
-					std::getline(inputFile, line);
-					_trials[_numOfTrials]._AOPorts.push_back({ name ,getParams(line) });
-					break;
-				default:
-					break;
-				}
+				category = 0;
 			}
 		}
 		inputFile.close();
@@ -80,8 +106,32 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 }
 
 int SessionConf::changeCurrentTrial() {
-	// TODO Implement logic on next trial
-	return END_OF_SESSION;
+	auto start_time = std::chrono::high_resolution_clock::now();
+	int code = CONTINUE_SESSION;
+	if (!_isSessionRandom) {
+		if (--_trials[_numOfTrials]._numOfRuns == 0) {
+			if (++_currentTrial == _numOfTrials) {
+				code = END_OF_SESSION;
+			}
+		}
+	}
+	else {
+		// TODO implement random trial change
+	}
+	if (_maxITI) {
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_real_distribution<double> dis(_minITI, _maxITI);
+		while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < dis(gen)) {
+			continue;
+		}
+	}
+	else {
+		while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _minITI) {
+			continue;
+		}
+	}
+	return code;
 }
 
 void SessionConf::finishSession() {
@@ -98,6 +148,10 @@ std::vector<EnvironmentOutputer*> SessionConf::getEnvironmentOutputer() {
 
 std::vector<Event*> SessionConf::getInputEvents() {
 	return _trials[_currentTrial].getInputEvents();
+}
+
+void SessionConf::giveReward() {
+	_trials[_currentTrial].giveReward();
 }
 
 void Trial::initInputEvents() {
@@ -154,7 +208,7 @@ void Trial::initInputTaskHandle() {
 void Trial::initTrialKillers() {
 	TrialKiller* killer = new TrialKiller();
 	for (auto& it : _trialKillers) {
-		for (auto& eve : getInputEvents()) {
+		for (auto& eve : _events) {
 			if (eve->getPort() == it) {
 				eve->attachListener(killer);
 				break;
@@ -175,6 +229,11 @@ std::vector<Event*> Trial::getInputEvents() const {
 		}
 	}
 	return inputEvents;
+}
+
+void Trial::giveReward() {
+	// TODO implement "give reward"
+	return;
 }
 
 Trial::~Trial() {
