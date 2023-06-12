@@ -19,7 +19,9 @@ class CreateEventUi(object):
         self.add_pushButton = None
         self.back_pushButton = None
         self.db=DB()
-
+        self.analogPorts = ['ao0', 'ao1', 'ai0', 'ai1', 'ai2', 'ai3', 'ai4', 'ai5', 'ai6', 'ai7', 'ai8', 'ai9', 'ai10',
+                           'ai11', 'ai12', 'ai13', 'ai14', 'ai15', 'ai16']
+        self.mockPorts=['mock1','mock2','mock3']
     def setupUi(self, main_window):
         uic.loadUi(get_ui_path('create_new_event.ui'), main_window)
         qss = get_qss_path('create_new_event')
@@ -38,23 +40,28 @@ class CreateEventUi(object):
             lambda: self.input_event_conf())
         self.analog_radio_btn = main_window.findChild(QtWidgets.QRadioButton, 'analog_radio_btn')
         self.digital_radio_btn = main_window.findChild(QtWidgets.QRadioButton, 'digital_radio_btn')
-        digital_description_label = main_window.findChild(QtWidgets.QLabel, 'digital_description_label')
-        digital_description_label.setEnabled(False)
-        analog_description_label = main_window.findChild(QtWidgets.QLabel, 'analog_description_label')
-        analog_description_label.setEnabled(False)
-        self.digital_radio_btn.toggled.connect(
-            lambda: digital_description_label.setEnabled(self.digital_radio_btn.isChecked()))
-        self.analog_radio_btn.toggled.connect(
-            lambda: analog_description_label.setEnabled(self.analog_radio_btn.isChecked()))
+        self.digital_description_label = main_window.findChild(QtWidgets.QLabel, 'digital_description_label')
+        self.digital_description_label.setEnabled(False)
+        self.analog_description_label = main_window.findChild(QtWidgets.QLabel, 'analog_description_label')
+        self.analog_description_label.setEnabled(False)
+        self.digital_radio_btn.toggled.connect(self.digital_handler)
+        self.analog_radio_btn.toggled.connect(self.analog_handler)
         back_pushButton = main_window.findChild(QPushButton, 'back_btn')
         back_pushButton.clicked.connect(self.on_back_click)
         add_pushButton = main_window.findChild(QPushButton, 'add_event_btn')
         add_pushButton.clicked.connect(self.cretae_event)
-        validPorts = ['ao0', 'ao1', 'ai0', 'ai1', 'ai2', 'ai3', 'ai4', 'ai5', 'ai6', 'ai7', 'ai8', 'ai9', 'ai10',
-                      'ai11', 'ai12', 'ai13', 'ai14', 'ai15', 'ai16']
-        for port in validPorts:
-            self.ports_comboBox.addItem(port)
 
+
+    def analog_handler(self):
+        self.ports_comboBox.clear()
+        self.analog_description_label.setEnabled(self.analog_radio_btn.isChecked())
+        for port in self.analogPorts:
+            self.ports_comboBox.addItem(port)
+    def digital_handler(self):
+        self.ports_comboBox.clear()
+        self.digital_description_label.setEnabled(self.digital_radio_btn.isChecked())
+        for port in self.mockPorts:
+            self.ports_comboBox.addItem(port)
     def input_event_conf(self):
         self.is_reward_comboBox.setEnabled(not self.input_radio_btn.isChecked())
         self.analog_radio_btn.setEnabled(not self.input_radio_btn.isChecked())
