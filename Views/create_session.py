@@ -120,7 +120,7 @@ class CreateSessionUi(object):
         next_btn = self.main_window.findChild(QtWidgets.QPushButton, "next_btn")
         choose_template_btn.clicked.connect(self.on_choose_template_click)
         # self.t#rials_order_cb.addItems(["random", "blocks"])
-        next_btn.clicked.connect(self.on_next_click)
+        next_btn.clicked.connect(lambda:self.on_next_click(0))
         self.add_trial_pushButton.clicked.connect(self.on_add_click)
         self.edit_pushButton.clicked.connect(self.on_edit_click)
         self.remove_trial_pushButton.clicked.connect(self.on_remove_click)
@@ -316,7 +316,7 @@ class CreateSessionUi(object):
 
         # self.vm.set_trials_list(trials) NOT RELEVANT AT THIS PART
 
-    def on_next_click(self):
+    def on_next_click(self,flag):
         session_name = self.session_name_te.toPlainText()
         subject_id = self.subject_id_te.toPlainText()
         experimenter_name = self.exp_name_te.toPlainText()
@@ -327,44 +327,49 @@ class CreateSessionUi(object):
         max_iti = self.max_iti_spinBox.value()
         min_iti = self.min_iti_spinBox.value()
         max_trial_time = self.max_trial_time.value()
+        if session_name == "":
+            error_warning("Please enter Session name")
+            return
+        if subject_id == "":
+            error_warning("Please enter subjectID")
+            return
+        if experimenter_name == "":
+            error_warning("Please enter experimenter name")
+            return
+        if self.trials_table.rowCount() == 0:
+            error_warning("Please add Trials")
+            return
+        if not self.fixed_iti_radioBtn.isChecked() and not self.random_iti_radioBtn.isChecked():
+            error_warning("Please set ITI")
+            return
         if self.max_trial_time.value()==0:
             error_warning("Please fill max Trial duration")
             return
-        if self.trials_table.rowCount() == 0 or (
-                not self.fixed_iti_radioBtn.isChecked() and not self.random_iti_radioBtn.isChecked()) \
-                or session_name == "" or subject_id == "" or experimenter_name == "":
-            error_warning("Not all data is filled")
-            return
-        try:
-            self.vm.insert_session_to_DB(
-                session_name,
-                subject_id,
-                experimenter_name,
-                formatted_date_last_used,
-                min_iti,
-                max_iti,
-                is_fixed_iti,
-                max_trial_time)
-        except Exception as e:
-            msg = str(e)
-            if "name" in msg: #here I need to check if something was edit then to create new sesion on DB if no just continue
-                error_warning("Error: Session name already exists.")
-            return
+        if flag:#only when flag=1 I want to insert information to DB
+            try:
+                self.vm.insert_session_to_DB(
+                    session_name,
+                    subject_id,
+                    experimenter_name,
+                    formatted_date_last_used,
+                    min_iti,
+                    max_iti,
+                    is_fixed_iti,
+                    max_trial_time)
+            except Exception as e:
+                msg = str(e)
+                if "name" in msg: #here I need to check if something was edit then to create new sesion on DB if no just continue
+                    error_warning("Error: Session name already exists.")
+                return
 
         # insert to session to trials table
-        for i in range(0, len(self.trials_in_session), 2):
-            self.vm.insert_session_to_trials(session_name, self.trials_in_session[i])
-        # ports = []
-        # dependencies = []
-        # for i in range(0, len(self.trials_in_session), 2):
-        #     ports = (self.vm.get_ports(self.trials_in_session[i]))
-        #     dependencies = self.vm.get_dependencies(self.trials_in_session[i])
-            # prepare_session_information(session_name, ports, dependencies, self.trials_in_session[i], i,
-            #                             self.trials_in_session, is_fixed_iti)
+            for i in range(0, len(self.trials_in_session), 2):
+                self.vm.insert_session_to_trials(session_name, self.trials_in_session[i])
+            return
         config_data = [session_name,self.trials_in_session, is_fixed_iti]
         self.trials_ord_dialog = QtWidgets.QDialog()
         self.trials_ord_dialog_ui = RandomOrderUi(self)
-        self.trials_ord_dialog_ui.setupUi(self.trials_ord_dialog, self.on_session_define_event_handler,config_data)
+        self.trials_ord_dialog_ui.setupUi(self.trials_ord_dialog, self.on_session_define_event_handler,config_data,self.on_next_click)
         self.trials_ord_dialog.show()
 
     def on_session_name_edit(self):

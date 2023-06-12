@@ -29,7 +29,8 @@ class RandomOrderUi(object):
         self.set_trials_table_pointer = None
 
 
-    def setupUi(self, dialog, event_handler,config_data):
+    def setupUi(self, dialog, event_handler,config_data,onNextClick):
+        self.on_next_click = onNextClick
         self.event_handler=event_handler
         self.config_info=config_data
         uic.loadUi(get_ui_path('random_order.ui'), dialog)
@@ -45,12 +46,6 @@ class RandomOrderUi(object):
 
         return
 
-    def func(self):
-        for row in range(self.trials_tableWidget.rowCount()):
-            item = self.trials_tableWidget.item(row, 1)
-            if item is not None:
-                print(item.text())
-        print(self.isRandomOrder.isChecked())
     def get_total_num_of_trials(self):
         total_num_of_trials = self.total_num_of_trials_spinBox.value()
         self.parent.total_num = total_num_of_trials
@@ -108,6 +103,7 @@ class RandomOrderUi(object):
 
 
     def accept(self):
+        self.on_next_click(1)
         session_name = self.config_info[0]
         # ports = self.config_info[1]
         # dependencies = self.config_info[2]
@@ -121,6 +117,9 @@ class RandomOrderUi(object):
             item = self.trials_tableWidget.item(row, 1)
             if item is not None:
                 repeats.append(item.text())
+        if not repeats:
+            error_warning("Number of repetition should be at least 1")
+            return
         for i in range(0, len(trials_in_session), 2):
             ports = (self.vm.get_ports(trials_in_session[i]))
             dependencies = self.vm.get_dependencies(trials_in_session[i])
