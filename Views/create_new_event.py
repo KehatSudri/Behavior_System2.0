@@ -21,7 +21,7 @@ class CreateEventUi(object):
         self.db=DB()
         self.analogPorts = ['ao0', 'ao1', 'ai0', 'ai1', 'ai2', 'ai3', 'ai4', 'ai5', 'ai6', 'ai7', 'ai8', 'ai9', 'ai10',
                            'ai11', 'ai12', 'ai13', 'ai14', 'ai15', 'ai16']
-        self.mockPorts=['mock1','mock2','mock3']
+        self.digitalPorts=['p0.1','p0.2','p0.3','p0.4','p0.5','p0.6','p0.7','p0.8']
     def setupUi(self, main_window):
         uic.loadUi(get_ui_path('create_new_event.ui'), main_window)
         qss = get_qss_path('create_new_event')
@@ -60,9 +60,10 @@ class CreateEventUi(object):
     def digital_handler(self):
         self.ports_comboBox.clear()
         self.digital_description_label.setEnabled(self.digital_radio_btn.isChecked())
-        for port in self.mockPorts:
+        for port in self.digitalPorts:
             self.ports_comboBox.addItem(port)
     def input_event_conf(self):
+        self.analog_handler()
         self.is_reward_comboBox.setEnabled(not self.input_radio_btn.isChecked())
         self.analog_radio_btn.setEnabled(not self.input_radio_btn.isChecked())
         self.digital_radio_btn.setEnabled(not self.input_radio_btn.isChecked())
@@ -94,8 +95,10 @@ class CreateEventUi(object):
         # if error_value == -1:
         #     error_warning("Error : Event name already exist")
         #     return
-        port = "Dev1/" + self.ports_comboBox.currentText().lower()
-
+        port = "Dev1/" + self.ports_comboBox.currentText()
+        if self.ports_comboBox.currentText() in self.digitalPorts:
+            line = self.ports_comboBox.currentText().split(".")[1]
+            port=port+"/line"+line
         in_use_ports = self.db.get_used_ports()
         string_in_use_ports = [p[0] for p in in_use_ports]
         used_port_flag=0
@@ -125,7 +128,7 @@ class CreateEventUi(object):
                 error_warning("Error: Event name already exists.")
             return
 
-        notification("Event was created successfully !")
+        notification("Event was created successfully!")
         self.event_name_lineEdit.clear()
 
     def on_back_click(self):

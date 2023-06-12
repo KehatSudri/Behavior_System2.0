@@ -170,7 +170,7 @@ class CreateTrialTypeUi(object):
                 else:
                     self.parent.vm.insert_new_events_to_trials(name, row_items[0], False, None,row_items[4]=="Random",row_items[5]=="True")
 
-        msgBox.setText("The trial was created successfully.")
+        msgBox.setText("The trial was created successfully!")
         msgBox.exec()
         self.trial_type_name_lineEdit.clear()
         self.events_order = []
