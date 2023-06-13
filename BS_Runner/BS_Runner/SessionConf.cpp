@@ -12,6 +12,7 @@ std::map<std::string, int>  getAttributes(std::string port, const std::vector<in
 	attributes[DELAY_PARAM] = *it;
 	attributes[DURATION_PARAM] = *(it + 1);
 	attributes[FREQUENCY_PARAM] = *(it + 2);
+	attributes[AMPLITUDE_PARAM] = *(it + 3);
 	return attributes;
 }
 

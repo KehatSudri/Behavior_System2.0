@@ -1,12 +1,23 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "SessionControls.h"
-#include "Consts.h"
-#include "IOEvents.h"
-#include <iostream>
-#include <thread>
+#include <algorithm>
+#include <fstream>
+#include <iomanip>
+#include <sstream>
 
 using namespace System;
 using namespace std;
 using namespace System::Windows::Forms;
+
+void createSessionLogFile(std::string& sessionName) {
+	std::time_t now_c = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+	std::stringstream ss;
+	ss << sessionName << std::put_time(std::localtime(&now_c), "-%d-%m-%Y-%T") << ".txt";
+	std::string filename = ss.str();
+	std::replace(filename.begin(), filename.end(), ':', ';');
+	std::ofstream file(filename.c_str());
+}
 
 void SessionControls::run(char* configFilePath) {
 	SessionConf conf(configFilePath);
@@ -27,6 +38,7 @@ void SessionControls::run(char* configFilePath) {
 		int32 read;
 
 		setIsTrialRuning(true);
+		setIsPaused(false);
 		_trialStartTime = std::chrono::high_resolution_clock::now();
 		for (auto envOutputer : conf.getEnvironmentOutputer()) {
 			envOutputer->output();
@@ -61,14 +73,13 @@ bool SessionControls::isTrialRunning() {
 }
 
 void SessionControls::startSession(char* configFilePath) {
+	if (_isSessionRunning) return;
 	if (!configFilePath) {
 		MessageBox::Show(CONFIGURATION_FILE_ERROR_MESSAGE);
 		return;
 	}
-	if (_isSessionRunning) return;
+	createSessionLogFile(_sessionName);
 	setIsSessionRunning(true);
-	setIsTrialRuning(true);
-	setIsPaused(false);
 	this->_runThread = std::thread(&SessionControls::run, this, configFilePath);
 	if (_runThread.joinable()) {
 		_runThread.join();
