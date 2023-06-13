@@ -1,8 +1,7 @@
-from Models.INotifyPropertyChanged import INotifyPropertyChanged
 from Models.Session_Model import SessionModel
 
 
-class SessionViewModel(INotifyPropertyChanged):
+class SessionViewModel:
     def __init__(self):
         super(SessionViewModel, self).__init__()
         self.model = SessionModel()
@@ -126,10 +125,5 @@ class SessionViewModel(INotifyPropertyChanged):
 
     # select to notify only events that are relevant
     def SessionVMEventHandler(self, sender, *event_args):
-        # is this if necessary?
         if type(sender) != SessionModel:
             self.subject_id = sender.subject_id
-        if event_args[0][0] == "subject_id":
-            # change the property
-            self.notifyPropertyChanged("VM_" + event_args[0][0])
-        self.notifyPropertyChanged("VM_" + event_args[0][0])

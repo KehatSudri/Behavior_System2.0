@@ -7,8 +7,6 @@
 #include <map>
 #include <string>
 
-void writeOutput(TaskHandle taskHandle, int delay, int duration);
-
 class Listener;
 
 class Event {
@@ -38,9 +36,15 @@ protected:
 	std::map<std::string, int> _attributes;
 };
 
-class SimpleOutputer : public Outputer {
+class SimpleAnalogOutputer : public Outputer {
 public:
-	SimpleOutputer(TaskHandle handler, std::string port, std::map<std::string, int> attributes) : Outputer(handler, port, attributes) {}
+	SimpleAnalogOutputer(TaskHandle handler, std::string port, std::map<std::string, int> attributes) : Outputer(handler, port, attributes) {}
+	void output() override;
+};
+
+class SimpleDigitalOutputer : public Outputer {
+public:
+	SimpleDigitalOutputer(TaskHandle handler, std::string port, std::map<std::string, int> attributes) : Outputer(handler, port, attributes) {}
 	void output() override;
 };
 

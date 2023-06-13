@@ -8,7 +8,6 @@ from Views.add_trial import AddTrialUi
 from Views.edit_session_template import EditSessionUi
 from Views.blocks_order import BlocksOrderUi
 from Views.choose_template import ChooseTemplateUi
-from Views.control_session_board import ControlSessionBoardUi
 from Views.edit_trial import EditTrialUi
 from Views.utils import error_warning, dict_yaml_style, get_ui_path
 from Views.random_order import RandomOrderUi

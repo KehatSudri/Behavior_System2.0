@@ -5,7 +5,6 @@ from PyQt6 import QtCore, QtWidgets, uic
 from PyQt6.QtWidgets import QHeaderView, QTableWidgetItem
 
 from Models import Trial_Model
-from Views.control_session_board import ControlSessionBoardUi
 from Views.utils import error_warning, dict_one_line_style, get_ui_path
 
 
@@ -292,7 +291,6 @@ class BlocksOrderUi(object):
                                                                                self.parent.blocks_ord)
         # open a new session
         self.session_window = QtWidgets.QDialog()
-        self.session_ui = ControlSessionBoardUi(self)
         self.session_ui.setupUi(self.session_window)
         self.session_window.show()
 

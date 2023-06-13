@@ -24,8 +24,6 @@ class RunningGraphsUi(object):
     def __init__(self, parent):
         self.parent = parent
         self.vm = self.parent.vm
-        self.vm.sessionVM.property_changed += self.EventHandler
-        self.vm.property_changed += self.EventHandler
         self.trials_names, self.trials_params = self.parent.parent.parent.parse_trial_params(
             self.parent.parent.parent.trials_in_session)
 
@@ -33,7 +31,6 @@ class RunningGraphsUi(object):
 
         self.total_counter = np.zeros(len(self.trials_names))
         self.successive_counter = np.zeros(len(self.trials_names))
-        # self.parent.parent.parent.vm.sessionVM.property_changed += self.EventHandler
         self.counter = 0
         self.graphs_labels = []
         self.graphs_widgets = []
@@ -51,7 +48,6 @@ class RunningGraphsUi(object):
         self.counters_timer = QTimer()
         self.graphs_timer = QtCore.QTimer()
         self.end_session = False
-
 
         self.graphs = OrderedDict()
         self.init_graphs()
@@ -124,15 +120,10 @@ class RunningGraphsUi(object):
         self.graphs_timer.timeout.connect(self.update_plot_data)
         self.graphs_timer.start()
 
-        self.vm.sessionVM.property_changed += self.EventHandler
-        self.parent.parent.parent.vm.sessionVM.property_changed += self.EventHandler
-
     def init_graphs(self):
         self.events_for_sess = self.vm.get_event_list_for_sess()
         for e in self.events_for_sess:
-
             self.graphs[e] = [0 for _ in range(self.num_of_samples)]
-
 
     def init(self):
         # self.vertical_layout = None
@@ -188,7 +179,6 @@ class RunningGraphsUi(object):
             # self.counters_tableWidget.setItem(0, i,
             #                                     QTableWidgetItem(str(self.trials_params[i])))
         return counters
-
 
     def update_counters(self):
         # if self.end_session:
@@ -394,8 +384,6 @@ class RunningGraphsUi(object):
             # chang
             # change the property
             # self.is_running_session = self.model.is_running_session #is this necessary or it updates on its own
-
-
 
 # if __name__ == "__main__":
 #     import sys
