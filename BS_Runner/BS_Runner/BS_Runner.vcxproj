@@ -131,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IOEvents.cpp" />
+    <ClCompile Include="LogFileWriter.cpp" />
     <ClCompile Include="SessionConf.cpp" />
     <ClCompile Include="SessionController.cpp" />
     <ClCompile Include="SessionControls.cpp" />
@@ -138,6 +139,7 @@
   <ItemGroup>
     <ClInclude Include="Consts.h" />
     <ClInclude Include="IOEvents.h" />
+    <ClInclude Include="LogFileWriter.h" />
     <ClInclude Include="SessionConf.h" />
     <ClInclude Include="SessionController.h">
       <FileType>CppForm</FileType>

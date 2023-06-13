@@ -6,19 +6,6 @@
 #include <fstream>
 #include <iomanip>
 
-void writeToLogFile(std::string event) {
-	std::ofstream file("log_file.txt", std::ios::app);
-	// Get the current time
-	auto now = std::chrono::system_clock::now();
-	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
-
-	// Write the current time to the file
-	file << std::put_time(std::localtime(&now_c), "%F %T") << std::endl;
-
-	// Close the file
-	file.close();
-}
-
 void Event::attachListener(Listener* listener) {
 	_listeners.push_back(listener);
 }
@@ -40,6 +27,7 @@ void Event::set(float64 value) {
 	if (!_beenUpdated && value > 3.5) {
 		_beenUpdated = true;
 		notifyListeners();
+		LogFileWriter::getInstance().write(this->getPort());
 	}
 	else if (_beenUpdated && value < 3.5) {
 		_beenUpdated = false;
@@ -57,6 +45,7 @@ void SimpleAnalogOutputer::output() {
 	start_time = std::chrono::high_resolution_clock::now();
 	DAQmxWriteAnalogScalarF64(_handler, true, 5.0, _attributes[AMPLITUDE_PARAM], NULL);
 	notifyListeners();
+	LogFileWriter::getInstance().write(this->getPort());
 	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DURATION_PARAM]) {
 		continue;
 	}
@@ -75,6 +64,7 @@ void SimpleDigitalOutputer::output() {
 	start_time = std::chrono::high_resolution_clock::now();
 	DAQmxWriteDigitalScalarU32(_handler, 1, 10.0, dataHigh, nullptr);
 	notifyListeners();
+	LogFileWriter::getInstance().write(this->getPort());
 	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DURATION_PARAM]) {
 		continue;
 	}

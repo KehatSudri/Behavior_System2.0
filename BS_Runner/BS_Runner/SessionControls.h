@@ -33,7 +33,6 @@ public:
 	void setIsPaused(bool state) { this->_isPaused = state; }
 	void setIsSessionRunning(bool state) { this->_isSessionRunning = state; }
 	void setIsTrialRuning(bool state) { this->_isTrialRunning = state; }
-	void setSessionName(std::string val) { _sessionName = val; }
 	bool& getIsPaused() {
 		return _isPaused;
 	}
