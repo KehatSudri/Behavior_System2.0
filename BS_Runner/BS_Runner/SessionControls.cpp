@@ -17,6 +17,7 @@ void SessionControls::run(char* configFilePath) {
 		this->finishSession();
 		return;
 	}
+
 	_conf = &conf;
 	_timeoutIndicator = _conf->getMaxTrialWaitTime();
 	do {
@@ -69,7 +70,7 @@ void SessionControls::startSession(char* configFilePath) {
 	if (_runThread.joinable()) {
 		_runThread.join();
 	}
-	//LogFileWriter::getInstance().createLogFile();
+	LogFileWriter::getInstance().createLogFile();
 	setIsSessionRunning(true);
 	this->_runThread = std::thread(&SessionControls::run, this, configFilePath);
 }
