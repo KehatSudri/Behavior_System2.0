@@ -11,7 +11,6 @@ import nidaqmx
 from nidaqmx.constants import AcquisitionType, TerminalConfiguration, Edge, WAIT_INFINITELY, LineGrouping
 from nidaqmx.stream_readers import AnalogMultiChannelReader
 
-from Models import TrialEvents
 import numpy as np
 
 from Models.Trial_Model import Trials_def, Interval, TrialModel
@@ -584,7 +583,6 @@ class SessionModel(SessionTemplate):
     def is_contigent(self, event):
         return False
 
-    # TODO validate function
     def run_session(self, log_file, max_successive_trials, max_trial_length):
         self.end_session = False
         # max_successive_trials = 30 #this should come from system

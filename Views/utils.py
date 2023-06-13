@@ -1,13 +1,10 @@
 from pathlib import Path
-
-from PyQt6 import QtWidgets
-from PyQt6.QtWidgets import QMessageBox, QLabel, QComboBox
-import yaml
+from PyQt6.QtWidgets import QMessageBox
 
 
 def error_warning(massage):
     error_msg_box = QMessageBox()
-    error_msg_box.setIcon(QtWidgets.QMessageBox.Icon.Information)
+    error_msg_box.setIcon(QMessageBox.Icon.Information)
     error_msg_box.setText(massage)
     error_msg_box.setWindowTitle("Error Warning")
     error_msg_box.exec()
@@ -15,15 +12,10 @@ def error_warning(massage):
 
 def notification(massage):
     notification_msg_box = QMessageBox()
-    notification_msg_box.setIcon(QtWidgets.QMessageBox.Icon.Information)
+    notification_msg_box.setIcon(QMessageBox.Icon.Information)
     notification_msg_box.setText(massage)
     notification_msg_box.setWindowTitle("Notification")
     notification_msg_box.exec()
-
-
-def dict_yaml_style(d):
-    result = yaml.dump(dict(d), sort_keys=False, default_flow_style=False, default_style='')
-    return result
 
 
 def dict_one_line_style(d):

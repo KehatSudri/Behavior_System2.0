@@ -21,14 +21,6 @@ class BehaviorSystemViewModel:
     def is_running_session(self, value):
         self.model.is_running_session = value
 
-    # @property
-    # def data(self):
-    #     return self.model.data
-    #
-    # @data.setter
-    # def data(self, value):
-    #     self.model.data = value
-
     @property
     def curr_session(self):
         return self.model.curr_session

@@ -39,10 +39,6 @@ class CreateEventUi(object):
             lambda: self.input_event_conf())
         self.analog_radio_btn = main_window.findChild(QtWidgets.QRadioButton, 'analog_radio_btn')
         self.digital_radio_btn = main_window.findChild(QtWidgets.QRadioButton, 'digital_radio_btn')
-        # self.digital_description_label = main_window.findChild(QtWidgets.QLabel, 'digital_description_label')
-        # self.digital_description_label.setEnabled(False)
-        # self.analog_description_label = main_window.findChild(QtWidgets.QLabel, 'analog_description_label')
-        # self.analog_description_label.setEnabled(False)
         self.digital_radio_btn.toggled.connect(self.digital_handler)
         self.analog_radio_btn.toggled.connect(self.analog_handler)
         back_pushButton = main_window.findChild(QPushButton, 'back_btn')
@@ -65,12 +61,10 @@ class CreateEventUi(object):
                 self.ports_comboBox.addItem(port)
     def analog_handler(self):
         self.ports_comboBox.clear()
-        # self.analog_description_label.setEnabled(self.analog_radio_btn.isChecked())
         for port in self.analogPorts:
             self.ports_comboBox.addItem(port)
     def digital_handler(self):
         self.ports_comboBox.clear()
-        # self.digital_description_label.setEnabled(self.digital_radio_btn.isChecked())
         for port in self.digitalPorts:
             self.ports_comboBox.addItem(port)
     def input_event_conf(self):
@@ -97,15 +91,7 @@ class CreateEventUi(object):
             error_warning("Not all data is filled")
             return
 
-        # error_value = self.vm.verify_insert_hardware_event(
-        #     self.event_port_lineEdit.text(),
-        #     self.event_name_lineEdit.text(),
-        #     type,
-        #     format,
-        #     str(self.is_reward_comboBox.currentText() == "Yes"))
-        # if error_value == -1:
-        #     error_warning("Error : Event name already exist")
-        #     return
+
         port = "Dev1/" + self.ports_comboBox.currentText()
         if self.ports_comboBox.currentText() in self.digitalPorts:
             line = self.ports_comboBox.currentText().split(".")[1]
@@ -123,7 +109,6 @@ class CreateEventUi(object):
             if clicked_button == QMessageBox.StandardButton.Cancel:
                 print("Cancel button clicked.")
                 return
-
 
 
         try:
