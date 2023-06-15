@@ -26,7 +26,6 @@ void SessionControls::run(char* configFilePath) {
 		this->finishSession();
 		return;
 	}
-
 	_conf = &conf;
 	_timeoutIndicator = _conf->getMaxTrialWaitTime();
 	do {
@@ -60,7 +59,7 @@ void SessionControls::run(char* configFilePath) {
 			conf.setSessionComplete(true);
 		}
 	} while (!conf.isSessionComplete());
-	this->finishSession();
+	finishSession();
 }
 
 bool SessionControls::isTrialRunning() {
@@ -78,12 +77,12 @@ void SessionControls::startSession(char* configFilePath) {
 		MessageBox::Show(CONFIGURATION_FILE_ERROR_MESSAGE);
 		return;
 	}
-	createSessionLogFile(_sessionName);
-	setIsSessionRunning(true);
-	this->_runThread = std::thread(&SessionControls::run, this, configFilePath);
 	if (_runThread.joinable()) {
 		_runThread.join();
 	}
+	createSessionLogFile(_sessionName);
+	setIsSessionRunning(true);
+	this->_runThread = std::thread(&SessionControls::run, this, configFilePath);
 }
 
 void SessionControls::pauseSession() {
@@ -110,9 +109,7 @@ void SessionControls::finishSession() {
 	setIsPaused(true);
 	setIsSessionRunning(false);
 	setIsTrialRuning(false);
-	if (_conf && !_conf->isSessionComplete()) {
-		if (_runThread.joinable()) {
-			_runThread.join();
-		}
+	if (std::this_thread::get_id() != _runThread.get_id()) {
+		_runThread.join();
 	}
 }

@@ -188,7 +188,7 @@ namespace BSRunner {
 		SessionControls::getInstance().resumeSession();
 	}
 	private: System::Void RewardBtn_Click(System::Object^ sender, System::EventArgs^ e) {
-		MessageBox::Show("Reward was given");
+		SessionControls::getInstance().giveReward();
 	}
 	private: System::Void FinishBtn_Click(System::Object^ sender, System::EventArgs^ e) {
 		SessionControls::getInstance().finishSession();
