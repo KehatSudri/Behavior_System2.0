@@ -230,10 +230,11 @@ int Trial::initAnalogOutputTasks() {
 
 void Trial::initInputTaskHandle() {
 	DAQmxCreateTask("", &_inputTaskHandle);
+	std::string combine_ports = "";
 	for (auto& port : _AIPorts) {
-		const char* ai_port = port.c_str();
-		DAQmxCreateAIVoltageChan(_inputTaskHandle, ai_port, "", DAQmx_Val_Cfg_Default, -5.0, 5.0, DAQmx_Val_Volts, NULL);
+		combine_ports += port;
 	}
+	DAQmxCreateAIVoltageChan(_inputTaskHandle, combine_ports.c_str(), "", DAQmx_Val_Cfg_Default, -5.0, 5.0, DAQmx_Val_Volts, NULL);
 }
 
 void Trial::initTrialKillers() {
