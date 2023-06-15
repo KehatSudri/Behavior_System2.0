@@ -41,7 +41,7 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>388</width>
+           <width>382</width>
            <height>377</height>
           </rect>
          </property>
@@ -92,24 +92,6 @@
             </property>
             <property name="text">
              <string>Remove event</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="delete_templates_pushButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <family>Arial</family>
-             </font>
-            </property>
-            <property name="text">
-             <string>Delete session templates(should remove)</string>
             </property>
            </widget>
           </item>

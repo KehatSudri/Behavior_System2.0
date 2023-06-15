@@ -11,7 +11,6 @@ import nidaqmx
 from nidaqmx.constants import AcquisitionType, TerminalConfiguration, Edge, WAIT_INFINITELY, LineGrouping
 from nidaqmx.stream_readers import AnalogMultiChannelReader
 
-from Models import TrialEvents
 import numpy as np
 
 from Models.Trial_Model import Trials_def, Interval, TrialModel

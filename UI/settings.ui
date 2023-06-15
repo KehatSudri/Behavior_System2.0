@@ -29,7 +29,7 @@
          <x>0</x>
          <y>0</y>
          <width>400</width>
-         <height>237</height>
+         <height>255</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -135,52 +135,10 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="max_identical_consecutive_trials_horizontalLayout" stretch="1,1">
-          <item>
-           <widget class="QLabel" name="max_identical_consecutive_trials_label">
-            <property name="styleSheet">
-             <string notr="true">font: 15pt &quot;Arial&quot;;</string>
-            </property>
-            <property name="text">
-             <string>Max identical consecutive trials:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="max_identical_consecutive_trials_spinBox">
-            <property name="maximumSize">
-             <size>
-              <width>180</width>
-              <height>16777215</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <layout class="QHBoxLayout" name="max_identical_consecutive_trials_horizontalLayout" stretch=""/>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="max_trial_duration_horizontalLayout" stretch="1,1">
-          <item>
-           <widget class="QLabel" name="max_time_duration_label">
-            <property name="styleSheet">
-             <string notr="true">font: 15pt &quot;Arial&quot;;</string>
-            </property>
-            <property name="text">
-             <string>Max trial duration:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="max_time_duration_spinBox">
-            <property name="maximumSize">
-             <size>
-              <width>180</width>
-              <height>16777215</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <layout class="QHBoxLayout" name="max_trial_duration_horizontalLayout" stretch=""/>
         </item>
        </layout>
       </widget>
