@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>422</width>
-    <height>355</height>
+    <width>448</width>
+    <height>436</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -80,7 +80,12 @@
        </column>
        <column>
         <property name="text">
-         <string>number of repetitions</string>
+         <string>Repetitions</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Max time</string>
         </property>
        </column>
       </widget>
