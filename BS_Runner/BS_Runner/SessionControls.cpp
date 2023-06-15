@@ -4,7 +4,6 @@
 #include "Consts.h"
 
 using namespace System;
-using namespace std;
 using namespace System::Windows::Forms;
 
 void SessionControls::run(char* configFilePath) {
@@ -29,9 +28,7 @@ void SessionControls::run(char* configFilePath) {
 		setIsPaused(false);
 		LogFileWriter::getInstance().write(TRIAL_START, getCurrentRunningTrial());
 		_trialStartTime = std::chrono::high_resolution_clock::now();
-		for (auto envOutputer : conf.getEnvironmentOutputer()) {
-			envOutputer->output();
-		}
+		for (auto envOutputer : conf.getEnvironmentOutputer()) { envOutputer->output(); }
 		do {
 			if (!this->_isPaused) {
 				DAQmxReadAnalogF64(inputTaskHandle, SAMPLE_PER_PORT, 5.0, DAQmx_Val_GroupByScanNumber, data.data(), SAMPLE_PER_PORT, &read, NULL);
@@ -41,13 +38,9 @@ void SessionControls::run(char* configFilePath) {
 					t.detach();
 				}
 			}
-			else {
-				std::this_thread::sleep_for(std::chrono::milliseconds(300));
-			}
+			else { std::this_thread::sleep_for(std::chrono::milliseconds(300)); }
 		} while (isTrialRunning());
-		if (conf.changeCurrentTrial() == END_OF_SESSION) {
-			conf.setSessionComplete(true);
-		}
+		if (conf.changeCurrentTrial() == END_OF_SESSION) { conf.setSessionComplete(true); }
 	} while (!conf.isSessionComplete());
 	finishSession();
 }
@@ -66,9 +59,7 @@ void SessionControls::startSession(const char* configFilePath) {
 		MessageBox::Show(CONFIGURATION_FILE_ERROR_MESSAGE);
 		return;
 	}
-	if (_runThread.joinable()) {
-		_runThread.join();
-	}
+	if (_runThread.joinable()) { _runThread.join(); }
 	LogFileWriter::getInstance().createLogFile();
 	setIsSessionRunning(true);
 	this->_runThread = std::thread(&SessionControls::run, this, configFilePath);
@@ -92,20 +83,14 @@ void SessionControls::giveReward() {
 
 void SessionControls::finishSession() {
 	if (!_isSessionRunning) return;
-	if (_conf) {
-		_conf->finishSession();
-	}
+	if (_conf) { _conf->finishSession(); }
 	setIsPaused(true);
 	setIsSessionRunning(false);
 	setIsTrialRuning(false);
-	if (std::this_thread::get_id() != _runThread.get_id()) {
-		_runThread.join();
-	}
+	if (std::this_thread::get_id() != _runThread.get_id()) { _runThread.join(); }
 }
 
-std::string SessionControls::getCurrentRunningTrial(){
-	if (_conf) {
-		return _conf->getCurrentRunningTrial();
-	}
+std::string SessionControls::getCurrentRunningTrial() {
+	if (_conf) { return _conf->getCurrentRunningTrial(); }
 	return std::string();
 }

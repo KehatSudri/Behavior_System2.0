@@ -22,7 +22,7 @@ public:
 	int initAnalogOutputTasks();
 	void initInputTaskHandle();
 	void initTrialKillers();
-	TaskHandle getInputTaskHandle();
+	TaskHandle getInputTaskHandle() { return _inputTaskHandle; }
 	const std::vector<EnvironmentOutputer*>& getEnvironmentOutputer() const { return _environmentOutputer; }
 	std::vector<Event*> getInputEvents() const;
 	void giveReward();
@@ -53,7 +53,7 @@ public:
 	void setSessionComplete(bool state) { _sessionComplete = state; }
 	std::string getCurrentRunningTrial();
 	int changeCurrentTrial();
-	void finishSession();
+	void finishSession() { _sessionComplete = true; }
 	TaskHandle getInputTaskHandle();
 	std::vector<EnvironmentOutputer*> getEnvironmentOutputer();
 	std::vector<Event*> getInputEvents();
