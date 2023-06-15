@@ -121,7 +121,7 @@ int SessionConf::changeCurrentTrial() {
 	auto start_time = std::chrono::high_resolution_clock::now();
 	int code = CONTINUE_SESSION;
 	if (!_isSessionRandom) {
-		if (--_trials[_numOfTrials]._numOfRuns == 0) {
+		if (--_trials[_currentTrial]._numOfRuns == 0) {
 			if (++_currentTrial == _numOfTrials) {
 				code = END_OF_SESSION;
 			}

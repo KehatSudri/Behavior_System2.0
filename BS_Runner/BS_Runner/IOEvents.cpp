@@ -40,7 +40,6 @@ void Event::set(float64 value) {
 	if (!_beenUpdated && value > 3.5) {
 		_beenUpdated = true;
 		notifyListeners();
-
 	}
 	else if (_beenUpdated && value < 3.5) {
 		_beenUpdated = false;
@@ -75,6 +74,7 @@ void SimpleDigitalOutputer::output() {
 	bool32 dataHigh = 1, dataLow = 0;
 	start_time = std::chrono::high_resolution_clock::now();
 	DAQmxWriteDigitalScalarU32(_handler, 1, 10.0, dataHigh, nullptr);
+	notifyListeners();
 	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DURATION_PARAM]) {
 		continue;
 	}

@@ -24,6 +24,7 @@ public:
 	std::vector<std::tuple<std::string, std::vector<int>>> _AOPorts;
 	std::vector<std::string> _trialKillers;
 	void initInputEvents();
+	void finishRun() { this->_numOfRuns--; }
 	int initAnalogOutputTasks();
 	void initInputTaskHandle();
 	void initTrialKillers();
