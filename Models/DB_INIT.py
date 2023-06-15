@@ -350,6 +350,11 @@ class DB:
         with self.conn.cursor() as cur:
             cur.execute("DELETE FROM trials WHERE name = %s", (name,))
             self.conn.commit()
+    def is_random_event_in_a_given_trial(self,trial,event):
+        with self.conn.cursor() as cur:
+            cur.execute(f"SELECT israndom FROM events_to_trials WHERE event_name='{event}' AND trial_name='{trial}'")
+            isRandom = cur.fetchone()
+        return isRandom
 
     def remove_event(self, name):
         with self.conn.cursor() as cur:
