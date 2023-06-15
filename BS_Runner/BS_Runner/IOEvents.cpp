@@ -3,18 +3,20 @@
 #include "Consts.h"
 #include <thread>
 #include <iostream>
+#include <fstream>
+#include <iomanip>
 
+void writeToLogFile(std::string event) {
+	std::ofstream file("log_file.txt", std::ios::app);
+	// Get the current time
+	auto now = std::chrono::system_clock::now();
+	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
 
-void writeOutput(TaskHandle taskHandle, int duration) {
-	while (SessionControls::getInstance().getIsPaused()) {
-		continue;
-	}
-	auto start_time = std::chrono::high_resolution_clock::now();
-	DAQmxWriteAnalogScalarF64(taskHandle, true, 5.0, 3.7, NULL);
-	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < duration) {
-		continue;
-	}
-	DAQmxWriteAnalogScalarF64(taskHandle, true, 5.0, 0.0, NULL);
+	// Write the current time to the file
+	file << std::put_time(std::localtime(&now_c), "%F %T") << std::endl;
+
+	// Close the file
+	file.close();
 }
 
 void Event::attachListener(Listener* listener) {
@@ -38,19 +40,45 @@ void Event::set(float64 value) {
 	if (!_beenUpdated && value > 3.5) {
 		_beenUpdated = true;
 		notifyListeners();
+
 	}
 	else if (_beenUpdated && value < 3.5) {
 		_beenUpdated = false;
 	}
 }
 
-void SimpleOutputer::output() {
+void SimpleAnalogOutputer::output() {
+	while (SessionControls::getInstance().getIsPaused()) {
+		continue;
+	}
 	auto start_time = std::chrono::high_resolution_clock::now();
 	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DELAY_PARAM]) {
 		continue;
 	}
+	start_time = std::chrono::high_resolution_clock::now();
+	DAQmxWriteAnalogScalarF64(_handler, true, 5.0, _attributes[AMPLITUDE_PARAM], NULL);
 	notifyListeners();
-	writeOutput(_handler, _attributes[DURATION_PARAM]);
+	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DURATION_PARAM]) {
+		continue;
+	}
+	DAQmxWriteAnalogScalarF64(_handler, true, 5.0, 0.0, NULL);
+}
+
+void SimpleDigitalOutputer::output() {
+	while (SessionControls::getInstance().getIsPaused()) {
+		continue;
+	}
+	auto start_time = std::chrono::high_resolution_clock::now();
+	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DELAY_PARAM]) {
+		continue;
+	}
+	bool32 dataHigh = 1, dataLow = 0;
+	start_time = std::chrono::high_resolution_clock::now();
+	DAQmxWriteDigitalScalarU32(_handler, 1, 10.0, dataHigh, nullptr);
+	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DURATION_PARAM]) {
+		continue;
+	}
+	DAQmxWriteDigitalScalarU32(_handler, 1, 10.0, dataLow, nullptr);
 }
 
 void EnvironmentOutputer::output() {

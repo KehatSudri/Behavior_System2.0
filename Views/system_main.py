@@ -57,7 +57,6 @@ class SystemMainUi(object):
 
         else:
             self.main_window = main_window
-            self.vm.property_changed += self.EventHandler
             uic.loadUi(get_ui_path('system_main.ui'), self.main_window)
             manager_login_push_button = self.main_window.findChild(QPushButton, 'manager_login_pushButton')
             manager_login_push_button.clicked.connect(self.on_manager_login_click)
@@ -88,7 +87,6 @@ class SystemMainUi(object):
             self.delete_trial_type_pushButton.clicked.connect(self.on_delete_trial_type_click)
             self.removeEvent_pushButton = manager_window.findChild(QPushButton, 'removeEvent')
             self.removeEvent_pushButton.clicked.connect(self.on_removeEvent_click)
-
             # self.delete_templates_pushButton = manager_window.findChild(QPushButton, 'delete_templates_pushButton')
             # self.delete_templates_pushButton.clicked.connect(self.on_delete_templates_click)
             self.setupUi(manager_window, self.vm, True)

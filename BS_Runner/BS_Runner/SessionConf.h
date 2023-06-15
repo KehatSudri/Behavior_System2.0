@@ -11,7 +11,6 @@
 #include "IOEvents.h"
 
 class Trial {
-	int _numOfRuns = 0;
 	std::vector<std::string> _DOPorts;
 	std::vector<Event*> _events;
 	std::vector<EnvironmentOutputer*> _environmentOutputer;
@@ -25,7 +24,7 @@ public:
 	std::vector<std::tuple<std::string, std::vector<int>>> _AOPorts;
 	std::vector<std::string> _trialKillers;
 	void initInputEvents();
-	void initAnalogOutputTasks();
+	int initAnalogOutputTasks();
 	void initInputTaskHandle();
 	void initTrialKillers();
 	TaskHandle getInputTaskHandle();

@@ -62,8 +62,6 @@ class EditTrialTypeUi(object):
         self.accept_pushButton = None
         self.new_name = ""
         self.order = OrderedDict()
-
-        self.vm.property_changed += self.EventHandler
         self.is_error = False
 
     def setupUi(self, main_window):

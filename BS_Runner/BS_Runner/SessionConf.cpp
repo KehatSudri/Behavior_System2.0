@@ -12,6 +12,7 @@ std::map<std::string, int>  getAttributes(std::string port, const std::vector<in
 	attributes[DELAY_PARAM] = *it;
 	attributes[DURATION_PARAM] = *(it + 1);
 	attributes[FREQUENCY_PARAM] = *(it + 2);
+	attributes[AMPLITUDE_PARAM] = *(it + 3);
 	return attributes;
 }
 
@@ -38,6 +39,10 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 		while (std::getline(ss, element, ',')) {
 			std::string iti = line.substr(1, line.length() - 2);
 			pos = iti.find(delimiter);
+			if (type == 1) {
+				iti = element.substr(1, element.length() - 2);
+				pos = iti.find(delimiter);
+			}
 			switch (type) {
 			case 0:
 				setMaxTrialWaitTime(std::stoi(element));
@@ -57,13 +62,16 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 				}
 				break;
 			default:
+				break;
 			}
 			++type;
 		}
 		while (std::getline(inputFile, line)) {
-			if (line[0] == '$') {
+			if (line[0] == '$' || line.empty()) {
 				++category;
-				continue;
+				if (line[0] == '$') {
+					continue;
+				}
 			}
 			std::string name = line, token2;
 			switch (category) {
@@ -88,7 +96,11 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 			default:
 				_trials[_numOfTrials].initInputTaskHandle();
 				_trials[_numOfTrials].initInputEvents();
-				_trials[_numOfTrials].initAnalogOutputTasks();
+				int error = _trials[_numOfTrials].initAnalogOutputTasks();
+				if (error < 0) {
+					_validFlag = false;
+					break;
+				}
 				_trials[_numOfTrials].initTrialKillers();
 				if (_trials[_numOfTrials]._AIPorts.empty()) {
 					_validFlag = false;
@@ -160,12 +172,27 @@ void Trial::initInputEvents() {
 	}
 }
 
-Outputer* getOutputer(TaskHandle taskHandle, std::string port, std::map<std::string, int> attr) {
-	// TODO Implement logic
-	return new SimpleOutputer(taskHandle, port, attr);
+Outputer* getOutputer(std::string port, std::map<std::string, int> attr) {
+	size_t isAnalog = port.find("ao");
+	size_t isDigital = port.find("port0");
+	if (isAnalog != std::string::npos) {
+		TaskHandle AO_TaskHandle = NULL;
+		DAQmxCreateTask("", &AO_TaskHandle);
+		DAQmxCreateAOVoltageChan(AO_TaskHandle, port.c_str(), "", -5.0, 5.0, DAQmx_Val_Volts, "");
+		return new SimpleAnalogOutputer(AO_TaskHandle, port, attr);
+	}
+	else if (isDigital != std::string::npos) {
+		TaskHandle DO_TaskHandle = NULL;
+		DAQmxCreateTask("", &DO_TaskHandle);
+		DAQmxCreateDOChan(DO_TaskHandle, port.c_str(), "", DAQmx_Val_ChanPerLine);
+		return new SimpleDigitalOutputer(DO_TaskHandle, port, attr);
+	}
+	else {
+		return NULL;
+	}
 }
 
-void Trial::initAnalogOutputTasks() {
+int Trial::initAnalogOutputTasks() {
 	for (auto& it : _AOPorts) {
 		const std::string& portName = std::get<0>(it);
 		const std::vector<int>& params = std::get<1>(it);
@@ -181,7 +208,10 @@ void Trial::initAnalogOutputTasks() {
 		TaskHandle AO_TaskHandle = NULL;
 		DAQmxCreateTask("", &AO_TaskHandle);
 		DAQmxCreateAOVoltageChan(AO_TaskHandle, ao_port, "", -5.0, 5.0, DAQmx_Val_Volts, "");
-		Outputer* sm = getOutputer(AO_TaskHandle, token1, getAttributes(portName, params));
+		Outputer* sm = getOutputer(token1, getAttributes(portName, params));
+		if (sm == NULL) {
+			return -1;
+		}
 		_events.push_back(sm);
 		if (!token2.empty()) {
 			for (auto& eve : _events) {
@@ -195,6 +225,7 @@ void Trial::initAnalogOutputTasks() {
 			_environmentOutputer.push_back(new EnvironmentOutputer(sm));
 		}
 	}
+	return 1;
 }
 
 void Trial::initInputTaskHandle() {

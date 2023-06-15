@@ -11,7 +11,6 @@ import logging
 
 import Models.Trial_Model as Trial
 from Models.DB_INIT import DB
-from Models.INotifyPropertyChanged import INotifyPropertyChanged
 from Models.Session_Model import BehaviourInterval, SessionTemplate
 from Models.Trial_Model import TrialModel, RandInterval
 
@@ -36,7 +35,7 @@ def create_str_from_dict(params_dict):
     return params_str
 
 
-class BehaviorSystemModel(INotifyPropertyChanged):
+class BehaviorSystemModel:
     def __init__(self, settings_file=None):
         super(BehaviorSystemModel, self).__init__()
         # settings
@@ -149,7 +148,6 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     def subject_sessions(self, value):
         if self._subject_sessions != value:
             self._subject_sessions = value
-            self.notifyPropertyChanged("subject session update")
 
     @property
     def session_events(self):
@@ -159,7 +157,6 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     def session_events(self, value):
         if self._session_events != value:
             self._session_events = value
-            self.notifyPropertyChanged("session events changed")
 
     @property
     def curr_session(self):
@@ -179,8 +176,6 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     def trial_types(self, value):
         if self._trial_types != value:
             self._trial_types = value
-            # probably not needed
-            self.notifyPropertyChanged("trial_types")
 
     @property
     def session_templates(self):
@@ -190,7 +185,6 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     def session_templates(self, value):
         if self._session_templates != value:
             self._session_templates = value
-            self.notifyPropertyChanged("session_templates")
 
     @property
     def session_trials(self):
@@ -200,20 +194,6 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     def session_trials(self, value):
         if self._session_trials != value:
             self._session_trials = value
-            self.notifyPropertyChanged("session_trials")
-
-    def create_log_file(self):
-        f_log, f_data = None, None
-        try:
-            f_log = open(self.log_file_path + "-log.txt", 'w', encoding='utf-8')
-            f_data = open(self.log_file_path + "-input_data.csv", 'w', encoding='utf-8', newline='')
-        except FileNotFoundError:
-            self.notifyPropertyChanged("path not valid")
-            # TODO raise error that this path doesn't exist
-
-        self.log_file = f_log
-        self.curr_session.log_file = f_log
-        self.curr_session.data_log_file = f_data
 
     # find the trial type id by a name
     def find_trial_id_by_name(self, name: str):
@@ -608,9 +588,9 @@ class BehaviorSystemModel(INotifyPropertyChanged):
     #         trials.append(trial[1])
     #     return trials
     def insert_session_to_DB(self,session_name, subject_id, experimenter_name,last_used,min_iti,
-                max_iti,is_fixed_iti,max_trial_time):
+                max_iti,is_fixed_iti,max_trial_time,notes):
         return self.db.insert_session(session_name, subject_id, experimenter_name,last_used,min_iti,
-                max_iti,is_fixed_iti,max_trial_time)
+                max_iti,is_fixed_iti,max_trial_time,notes)
     def insert_session_to_trials(self, session_name, trial_name):
         return self.db.insert_session_to_trials(session_name,trial_name)
     def get_trials_names(self):
@@ -650,11 +630,9 @@ class BehaviorSystemModel(INotifyPropertyChanged):
 
     def pause_sess(self):
         self.curr_session.pause = True
-        self.notifyPropertyChanged("pause")
 
     def resume_sess(self):
         self.curr_session.pause = False
-        self.notifyPropertyChanged("pause")
 
     def repeat_trial(self):
         self.curr_session.repeat_same_trial()
@@ -690,8 +668,6 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         self.curr_session.end_session = False
         self.log_file_path = self.log_file_path + "/" + datetime.now().strftime(
             "%m_%d_%Y, %H_%M_%S") + "," + self.curr_session.experimenter_name + "," + self.curr_session.subject_id
-        while self.log_file is None:
-            self.create_log_file()
         self.curr_session.input_ports = self.input_ports
         self.curr_session.output_ports = self.output_ports
         self.curr_session.output_events_name_list = self.output_events_names
@@ -729,12 +705,10 @@ class BehaviorSystemModel(INotifyPropertyChanged):
         self.log_file.close()
         self.curr_session.data_log_file.close()
         self.is_running_session = False
-        self.notifyPropertyChanged("is_running_session")
 
     def end_Session(self):
         self._curr_session.end_session = True
         self.is_running_session = False
-        self.notifyPropertyChanged("end_session")
         # manually stop session
         # stop sending TTl signal to all connected systems
         pass

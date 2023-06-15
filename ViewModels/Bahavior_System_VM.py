@@ -2,12 +2,11 @@ import random
 import time
 
 from Models.Behavior_System_Model import BehaviorSystemModel
-from Models.INotifyPropertyChanged import INotifyPropertyChanged
 from ViewModels.Session_VM import SessionViewModel
 
 
 # changed in Model currently changes properties in VM. make sure this change go through into view
-class BehaviorSystemViewModel(INotifyPropertyChanged):
+class BehaviorSystemViewModel:
     def __init__(self):
         super(BehaviorSystemViewModel, self).__init__()
         self.model = BehaviorSystemModel()
@@ -254,9 +253,9 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
     def insert_hardware_event_to_DB(self, port, name, type, format, is_reward):
         return self.model.insert_hardware_event_to_DB(port, name, type, format, is_reward)
     def insert_session_to_DB(self,session_name,subject_id,experimenter_name,last_used,min_iti,
-                max_iti,is_fixed_iti,max_trial_time):
+                max_iti,is_fixed_iti,max_trial_time,notes):
         return self.model.insert_session_to_DB(session_name,subject_id,experimenter_name,last_used,min_iti,
-                max_iti,is_fixed_iti,max_trial_time)
+                max_iti,is_fixed_iti,max_trial_time,notes)
 
     def insert_session_to_trials(self, session_name, trial_name):
         return self.model.insert_session_to_trials(session_name,trial_name)
@@ -291,10 +290,6 @@ class BehaviorSystemViewModel(INotifyPropertyChanged):
     def SystemVMEventHandler(self, sender, *event_args):
         if type(sender) != BehaviorSystemModel:
             self.is_running_session = sender.is_running_session
-        if event_args[0][0] == "is_running_session":
-            # change the property
-            # self.is_running_session = self.model.is_running_session #is this necessary or it updates on its own
-            self.notifyPropertyChanged("VM_" + event_args[0][0])
 
     def is_contingent(self, event, trial):
         return self.model.is_contingent(event, trial)

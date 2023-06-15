@@ -8,10 +8,10 @@ from Views.add_trial import AddTrialUi
 from Views.edit_session_template import EditSessionUi
 from Views.blocks_order import BlocksOrderUi
 from Views.choose_template import ChooseTemplateUi
-from Views.control_session_board import ControlSessionBoardUi
 from Views.edit_trial import EditTrialUi
 from Views.utils import error_warning, dict_yaml_style, get_ui_path
 from Views.random_order import RandomOrderUi
+from Views.notes import NotesUi
 
 
 class CreateSessionUi(object):
@@ -103,6 +103,7 @@ class CreateSessionUi(object):
         self.vm.sessionVM.trials_order = "random"
         self.iti_behaviors = self.vm.get_behaviors_list()
         self.end_defs = self.vm.get_end_def_list()
+        self.notes=""
 
     def setupUi(self, main_window):
         self.main_window = main_window
@@ -110,6 +111,8 @@ class CreateSessionUi(object):
         self.remove_trial_pushButton = self.main_window.findChild(QtWidgets.QPushButton, "remove_trial_pushButton")
         self.add_trial_pushButton = self.main_window.findChild(QtWidgets.QPushButton, "add_trial")
         self.edit_pushButton = self.main_window.findChild(QtWidgets.QPushButton, "edit_pushButton")
+        self.notesBtn=self.main_window.findChild(QtWidgets.QPushButton, "notes_pushButton")
+        self.notesBtn.clicked.connect(self.on_notes_click)
         self.session_name_te = self.main_window.findChild(QtWidgets.QTextEdit, "session_name_te")
         self.subject_id_te = self.main_window.findChild(QtWidgets.QTextEdit, "subject_id_te")
         self.exp_name_te = self.main_window.findChild(QtWidgets.QTextEdit, "exp_name_te")
@@ -159,7 +162,11 @@ class CreateSessionUi(object):
             self.max_iti_spinBox.show()
             self.min_iti_label.show()
             self.max_iti_label.show()
-
+    def on_notes_click(self):
+        self.chosen_window = QtWidgets.QMainWindow()
+        self.chosen_window_ui = NotesUi(self)
+        self.chosen_window_ui.setupUi(self.chosen_window)
+        self.chosen_window.show()
     def on_add_click(self):
         self.add_window = QtWidgets.QDialog()
         self.add_ui = AddTrialUi(self)
@@ -276,47 +283,9 @@ class CreateSessionUi(object):
             else:
                 w.hide()
 
-    # def is_valid_input(self):
-    #     is_session_name_empty = len(self.session_name_lineEdit.text()) == 0  # check session name
-    #     is_subject_id_empty = len(self.subject_id_lineEdit.text()) == 0  # check subject id
-    #     is_experimenter_name_empty = len(self.experimenter_name_lineEdit.text()) == 0  # check experimenter name
-    #     is_iti_empty = False
-    #     if self.chosen_iti_type == "random":
-    #         is_iti_empty = self.max_iti_spinBox.value() == 0 or self.min_iti_spinBox.value() == 0  # check iti value
-    #         if self.max_iti_spinBox.value() < self.min_iti_spinBox.value():
-    #             return False
-    #     is_end_def_empty = self.end_def_spinBox.value() == 0  # check end definition value
-    #     # is_random_reward_empty = self.random_reward_percent_spinBox.value() == 0  # check random reward percent
-    #     if is_session_name_empty or is_subject_id_empty or is_experimenter_name_empty or is_iti_empty or \
-    #             is_end_def_empty or is_end_def_empty:
-    #         return False
-    #     return True
-
-    # we need this
-    def set_vm_data(self):
-        min_iti, max_iti, iti_behavior = None, None, None
-        # get trials order
-        # order = self.vm.sessionVM.trials_order
-        iti_type = self.trials_order_cb.currentText()
-        if iti_type == "random":
-            # get value  accordingly - min,max for random, description for behavior
-            min_iti = self.min_iti_spinBox.value()
-            max_iti = self.max_iti_spinBox.value()
-        else:
-            iti_behavior = self.chosen_behavior
-        # get end def, description and value
-        end_def_val = self.end_def_spinBox.value()
-        # end_def_description = self.chosen_end_def
-        end_def_description = self.end_def_comboBox.currentText()
-        # list of trials with parameters
-        # trials = self.trials_in_session
-        self.vm.set_iti(iti_type, min_iti, max_iti, iti_behavior)
-        self.vm.set_end_def(end_def_description, end_def_val)
-        self.vm.curr_session.rnd_reward_percent = self.random_reward_percent_spinBox.value()
-
-        # self.vm.set_trials_list(trials) NOT RELEVANT AT THIS PART
 
     def on_next_click(self,flag):
+        # print(self.trials_in_session)
         session_name = self.session_name_te.toPlainText()
         subject_id = self.subject_id_te.toPlainText()
         experimenter_name = self.exp_name_te.toPlainText()
@@ -327,6 +296,11 @@ class CreateSessionUi(object):
         max_iti = self.max_iti_spinBox.value()
         min_iti = self.min_iti_spinBox.value()
         max_trial_time = self.max_trial_time.value()
+        sessions_names = self.db.get_sessions_names()
+        notes=self.notes
+        if session_name in ([x[0] for x in sessions_names]):
+            error_warning("Error: Session name already exists.")
+            return
         if session_name == "":
             error_warning("Please enter Session name")
             return
@@ -345,6 +319,8 @@ class CreateSessionUi(object):
         if self.max_trial_time.value()==0:
             error_warning("Please fill max Trial duration")
             return
+
+
         if flag:#only when flag=1 I want to insert information to DB
             try:
                 self.vm.insert_session_to_DB(
@@ -355,7 +331,8 @@ class CreateSessionUi(object):
                     min_iti,
                     max_iti,
                     is_fixed_iti,
-                    max_trial_time)
+                    max_trial_time,
+                    notes)
             except Exception as e:
                 msg = str(e)
                 if "name" in msg: #here I need to check if something was edit then to create new sesion on DB if no just continue
@@ -372,46 +349,6 @@ class CreateSessionUi(object):
         self.trials_ord_dialog_ui.setupUi(self.trials_ord_dialog, self.on_session_define_event_handler,config_data,self.on_next_click)
         self.trials_ord_dialog.show()
 
-    def on_session_name_edit(self):
-        session_name = self.session_name_lineEdit.text()
-        self.vm.sessionVM.session_name = session_name
-
-    def on_subject_id_edit(self):
-        subject_id = self.subject_id_lineEdit.text()
-        self.vm.sessionVM.subject_id = subject_id
-
-    def on_experimenter_name_edit(self):
-        experimenter_name = self.experimenter_name_lineEdit.text()
-        self.vm.sessionVM.experimenter_name = experimenter_name
-
-    def get_min_iti(self):
-        min_iti = self.min_iti_spinBox.value()
-
-    def get_max_iti(self):
-        max_iti = self.max_iti_spinBox.value()
-
-    def get_end_def(self):
-        end_def = self.end_def_spinBox.value()
-
-    def iti_behavior_click(self, index):
-        self.chosen_behavior = self.iti_behaviors[index]
-
-    # def end_by_click(self, index):
-    #     # TODO: need to check ending behaviors and theirs definition
-    #     if index == 0:
-    #         self.end_by_label.setText("A")
-    #     elif index == 1:
-    #         self.end_by_label.setText("B")
-    #     else:
-    #         self.end_by_label.setText("C")
-    #     self.chosen_end_def = self.vm.get_end_def_list()[index]
-
-    def order_click(self, index):
-        if index == 0:
-            order = "random"
-        else:
-            order = "blocks"
-        self.vm.sessionVM.trials_order = order
 
     def set_trials_table(self):
         params = ""
@@ -419,7 +356,7 @@ class CreateSessionUi(object):
         index = table.rowCount()
         table.insertRow(index)
         table.setItem(index, 0, QTableWidgetItem(self.trials_in_session[index * 2]))
-        print(self.trials_in_session)
+        # print(self.trials_in_session)
         for event, parameters in self.trials_in_session[index * 2 + 1].items():
             if event == 'Tone':
                 params += event + ":" + " delay - " + parameters[0] + ", tone duration - " + parameters[
@@ -452,8 +389,10 @@ class CreateSessionUi(object):
     # we need this
     def on_template_change_event_handler(self, template):
         subject, session_name = template.split()
+        self.trials_in_session=[]
+        trials_dict={}
         template_info = self.db.get_template(session_name, subject)
-        var1, session_name, subject, exp_name, date, min_iti, max_iti, is_fixed_iti_type,max_trial_time = template_info[0]
+        var1, session_name, subject, exp_name, date, min_iti, max_iti, is_fixed_iti_type,max_trial_time,notes = template_info[0]
         self.session_name_te.setText(session_name)
         self.subject_id_te.setText(subject)
         self.exp_name_te.setText(exp_name)
@@ -462,6 +401,7 @@ class CreateSessionUi(object):
         self.trials_table.clear()
         self.trials_table.setRowCount(0)
         self.max_trial_time.setValue(max_trial_time)
+        self.notes=notes
         trials = self.db.get_trial_name_by_session(session_name)
         trials_ = [x[0] for x in trials]
         col1 = QTableWidgetItem("Trial name")
@@ -478,10 +418,9 @@ class CreateSessionUi(object):
             params = ""
             for event in events:
                 parameters = self.db.get_params_by_event_and_trial_name(event,trial)
-                print(parameters)
                 parameters = [x[0] for x in parameters]
                 parameters_ar = [item.split(',') for item in parameters]
-
+                trials_dict[event]=parameters[0].split(',')
                 for parameters in parameters_ar:
                     if event == 'Tone':
                         params += event + ":" + " delay - " + parameters[0] + ", tone duration - " + parameters[
@@ -493,6 +432,8 @@ class CreateSessionUi(object):
                         params += event + ":" + " delay - " + parameters[0] + ", Duration - " + parameters[
                             1] + ", Frequency - " + parameters[2] + ", Amplitude - " + parameters[3] + "\n"
             table.setItem(index, 1, QTableWidgetItem(params))
+            self.trials_in_session.append(trial)
+            self.trials_in_session.append(trials_dict)
         self.edit_pushButton.setEnabled(True)
         self.add_trial_pushButton.setEnabled(False)
         self.remove_trial_pushButton.setEnabled(False)
@@ -502,7 +443,9 @@ class CreateSessionUi(object):
         else:
             self.fixed_iti_radioBtn.setChecked(False)
             self.random_iti_radioBtn.setChecked(True)
-
+        # self.trials_in_session.append(session_name)
+        # self.trials_in_session.append(trials_dict)
+        print(self.trials_in_session)
     def on_session_define_event_handler(self):
         import subprocess
         from pathlib import Path

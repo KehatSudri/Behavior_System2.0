@@ -17,6 +17,7 @@ namespace BSRunner {
 	public:
 		SessionController(int argc, char* argv[]) {
 			_configFilePath = argv[1];
+			SessionControls::getInstance().setSessionName(argv[2]);
 			InitializeComponent();
 		}
 

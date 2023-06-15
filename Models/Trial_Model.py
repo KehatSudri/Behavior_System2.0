@@ -1,11 +1,7 @@
 import random
 import time
 from abc import ABC, abstractmethod
-
 import numpy as np
-
-from Models.INotifyPropertyChanged import INotifyPropertyChanged
-from Models import TrialEvents
 
 MAX_NUM_TRIALS_IN_SESS = 200
 max_successive_trials = 30  # TODO this should be changable from system somehow
@@ -15,7 +11,6 @@ class Interval(ABC):
     @abstractmethod
     def get_iti_type(self):
         pass
-
 
 
 class RandInterval(Interval):
@@ -29,14 +24,16 @@ class RandInterval(Interval):
         if vec_len is None:
             vec_len = MAX_NUM_TRIALS_IN_SESS
         if self.min_interval is not None and self.max_interval is not None:
-            #self.iti_vec = np.random.randint(self.min_interval, self.max_interval + 1, MAX_NUM_TRIALS_IN_SESS)
+            # self.iti_vec = np.random.randint(self.min_interval, self.max_interval + 1, MAX_NUM_TRIALS_IN_SESS)
             self.iti_vec = np.random.randint(self.min_interval, self.max_interval + 1, vec_len)
             self.iti_vec = [int(val) for val in self.iti_vec]
-            #self.iti_vec = [val / 100 for val in self.iti_vec]
+            # self.iti_vec = [val / 100 for val in self.iti_vec]
         return self.iti_vec
 
     def get_iti_type(self):
         return "random"
+
+
 def get_name_by_id(types, trial_id):
     for trial in types:
         if trial[0] == trial_id:
@@ -44,7 +41,7 @@ def get_name_by_id(types, trial_id):
     return None
 
 
-class TrialModel(INotifyPropertyChanged):
+class TrialModel:
     def __init__(self, t_id=None, name=None, events: list = None, inters: list = None):
         super(TrialModel, self).__init__()
         self._trial_id = t_id
@@ -63,7 +60,6 @@ class TrialModel(INotifyPropertyChanged):
             return
         self._trial_id = value
 
-
     @property
     def name(self):
         return self._name
@@ -73,7 +69,6 @@ class TrialModel(INotifyPropertyChanged):
         if self._name == value:
             return
         self._name = value
-
 
     @property
     def events(self):
@@ -85,7 +80,6 @@ class TrialModel(INotifyPropertyChanged):
             return
         self._events = value
 
-
     @property
     def intervals(self):
         return self._intervals
@@ -95,7 +89,6 @@ class TrialModel(INotifyPropertyChanged):
         if self._intervals == value:
             return
         self._intervals = value
-
 
     def get_intervals(self):
         if self.intervals is not None:
@@ -153,24 +146,27 @@ def get_counters(percent_list, total):
 
 def find_idx_to_fit(trial_list, trial_idx, trial_ord_list, max_successive_trials=30):
     flag_not_found = True
-    while flag_not_found: #TODO maybe change to while 1
+    while flag_not_found:  # TODO maybe change to while 1
         rnd_idx = random.randint(0, len(trial_ord_list) - 1)
         count = 0
         # validate MAX_NUM before and after
         i = rnd_idx - 1
-        while i>=0 and trial_ord_list[i].name == trial_list[trial_idx].name:
+        while i >= 0 and trial_ord_list[i].name == trial_list[trial_idx].name:
             count += 1
             i -= 1
         i = rnd_idx
-        while i<len(trial_ord_list) and trial_ord_list[i] == trial_list[trial_idx]:
+        while i < len(trial_ord_list) and trial_ord_list[i] == trial_list[trial_idx]:
             count += 1
             i += 1
-        if count<max_successive_trials:
+        if count < max_successive_trials:
             return rnd_idx
+
 
 def create_trial_def_rand(trial_list: list, percent_list: list = None, total=None):
     trial_def = None
     return trial_def
+
+
 class Trials_def_rand(Trials_def):
     def __init__(self, trial_list: list, percent_list: list = None, total=None):
         super().__init__(trial_list)
@@ -215,7 +211,7 @@ class Trials_def_rand(Trials_def):
                 # if arrived maximum of trials in a row
                 if trials_in_row_counter >= max_successive_trials:
                     if len(valid_idxs) == 1:
-                        #TODO validate that this can't get into infinite loop
+                        # TODO validate that this can't get into infinite loop
                         to_fit = find_idx_to_fit(self.trial_list, idx, trials, max_successive_trials)
                         trials.insert(to_fit, self.trial_list[idx])
                         counters[idx] -= 1
@@ -263,13 +259,11 @@ class Trials_def_blocks(Trials_def):
     def get_total_num(self):
         sum = 0
         for block in self.blocks_order:
-            #find index of blcok in block list
+            # find index of blcok in block list
             for i in range(len(self.block_list)):
                 if self.block_list[i] == block:
                     sum += self.block_sizes[i]
         return sum
-
-
 
     def get_trials_order(self, max_successive_trials=30):
         # create a list of lists. each list is a block, and inside are the trials for it
@@ -292,8 +286,9 @@ class Trials_def_blocks(Trials_def):
             # get a list of indexes for trials
             valid_idxs = np.arange(0, len(self.trial_list))
             # get number for each trial type
-            #counters = get_counters(self.percent_per_block[block_idx], self.block_sizes[block_idx])
-            counters = get_counters([self.percent_per_block[i][block_idx] for i in range(len(self.percent_per_block))], self.block_sizes[block_idx])
+            # counters = get_counters(self.percent_per_block[block_idx], self.block_sizes[block_idx])
+            counters = get_counters([self.percent_per_block[i][block_idx] for i in range(len(self.percent_per_block))],
+                                    self.block_sizes[block_idx])
             # counters = [int(element * self.block_sizes[block_idx]/100) for element in self.percent_per_block[block_idx]]
 
             # run over the required quantities and delete indexes of non-relevant trials
@@ -311,14 +306,15 @@ class Trials_def_blocks(Trials_def):
                 # first trial is chosen
                 if last_trial_idx is None:
                     last_trial_idx = chosen_idx
-                #not first, but same as last
+                # not first, but same as last
                 elif chosen_idx == last_trial_idx:
                     # if arrived maximum of trials in a row
                     if trials_in_row_counter >= max_successive_trials:
                         if len(valid_idxs) == 1:
                             # TODO validate that this can't get into infinite loop
-                            #TODO validate that not a problem in seperated blocks
-                            to_fit = find_idx_to_fit(self.trial_list, chosen_idx, trials_for_block, max_successive_trials)
+                            # TODO validate that not a problem in seperated blocks
+                            to_fit = find_idx_to_fit(self.trial_list, chosen_idx, trials_for_block,
+                                                     max_successive_trials)
                             trials_for_block.insert(to_fit, self.trial_list[chosen_idx])
                             counters[chosen_idx] -= 1
                             if counters[chosen_idx] == 0:
@@ -345,22 +341,3 @@ class Trials_def_blocks(Trials_def):
             # append the list for block to the overall list
             trials.extend(trials_for_block)
         return trials
-
-
-# TODO change this
-# def create_trials_def(trial_list: list[TrialModel], order: str, percent_list: list = None, total=None,
-#                       block_list: list[list] = None, num_per_block: list[list] = None,
-#                       block_sizes=None, blocks_ord: list = None):
-#    pass
-#     trials_list, num_in_sess, num_in_block = [], [], []
-#     for trial in trials:
-#         t = TrialModel()
-#         t.trial_id = trial[1]
-#         t.name = get_name_by_id(types, t.trial_id)
-#         num_in_sess.append(trial[2])
-#         num_in_block.append(trial[3])
-#         t.reward = TrialEvents.Reward(trial[4], trial[5], trial[6])
-#         t.tone = TrialEvents.Tone(trial[7], trial[8], trial[9], trial[10], trial[11])
-#         t.parameters = trial[12]  # TODO parse differently
-#         trials_list.append(t)
-#     return Trials_def(trials_list, num_in_sess, num_mode, order, num_in_block)
