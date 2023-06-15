@@ -690,7 +690,11 @@
            </widget>
           </item>
           <item row="1" column="2">
-           <widget class="QDoubleSpinBox" name="min_iti_spinBox"/>
+           <widget class="QDoubleSpinBox" name="min_iti_spinBox">
+            <property name="maximum">
+             <double>99999999.000000000000000</double>
+            </property>
+           </widget>
           </item>
           <item row="3" column="2">
            <widget class="QDoubleSpinBox" name="max_iti_spinBox"/>
@@ -698,12 +702,16 @@
          </layout>
         </item>
         <item row="2" column="6">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+         <widget class="QDoubleSpinBox" name="doubleSpinBox">
+          <property name="maximum">
+           <double>9999999999999.000000000000000</double>
+          </property>
+         </widget>
         </item>
         <item row="2" column="5">
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>Max Session Duration</string>
+           <string>Max Session Duration (sec)</string>
           </property>
          </widget>
         </item>

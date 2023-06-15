@@ -1,4 +1,6 @@
 import threading
+from pathlib import Path
+from Models.DB_INIT import DB
 
 from PyQt6 import QtCore, QtWidgets, uic
 from PyQt6.QtWidgets import QHeaderView, QTableWidgetItem, QAbstractItemView
@@ -96,6 +98,12 @@ class RandomOrderUi(object):
         if not repeats:
             error_warning("Number of repetition should be at least 1")
             return
+        configs_path = str(Path(__file__).parent.parent / 'config_files' / 'session_config.txt')
+
+        with open(configs_path, "a") as file:
+            db = DB()
+            max_session_time = db.get_max_trial_time(session_name)
+            file.write(str(max_session_time[0]) + "\n")
         for i in range(0, len(trials_in_session), 2):
             ports = (self.vm.get_ports(trials_in_session[i]))
             dependencies = self.vm.get_dependencies(trials_in_session[i])

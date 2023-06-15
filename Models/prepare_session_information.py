@@ -22,8 +22,8 @@ def prepare_session_information(session_name, ports, dependencies, trial_name, i
 
     with open(configs_path, "a") as file:
         db = DB()
-        max_session_time = db.get_max_trial_time(session_name)
-        file.write(str(max_session_time[0]) + ",")
+        # max_session_time = db.get_max_trial_time(session_name)
+        # file.write(str(max_session_time[0]) + ",")
         iti_vals = db.get_iti_vals(session_name)
         if is_fixed_iti:
             file.write("(" + str(iti_vals[0]) + "),")
@@ -50,13 +50,16 @@ def prepare_session_information(session_name, ports, dependencies, trial_name, i
             isRandom = db.is_random_event_in_a_given_trial(trial_name,db.get_event_name_by_port(port)[0])[0]
             file.write(port + "\n")
             parameters = trials_in_session[index + 1][db.get_event_name_by_port(port)[0]]
-            # file.write(str(db.isEndConditionEvent(db.get_event_name_by_port(port)[0], trial_name)[0])+',')
+            isReward = db.isReward(db.get_event_name_by_port(port)[0])
+            print(isReward)
+            if isReward[0]:
+                file.write("1,")
+            else:
+                file.write("0,")
             if isRandom:
                 file.write("1,")
             else:
                 file.write("0,")
             file.write(','.join(parameters) + "\n")
-            # for port, port_type, name in ports:
-            #     file.write(str(db.isEndConditionEvent(db.get_event_name_by_port(port)[0],trial_name)[0]))
 
         file.write("\n")

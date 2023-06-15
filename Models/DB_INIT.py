@@ -424,6 +424,12 @@ class DB:
             cur.execute(f"SELECT * FROM sessions WHERE name='{session_name}' AND subjectid='{subject}'")
             template=cur.fetchall()
             return template
+    def isReward(self,event):
+        with self.conn.cursor() as cur:
+            cur.execute(f"SELECT is_reward FROM events WHERE name = '{event}'")
+            isreward = cur.fetchone()
+        return isreward
+
     def delete_all_rows(self):
         # on conflict increment counter by 1, and last used is now
         sql = """

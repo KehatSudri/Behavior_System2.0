@@ -21,6 +21,9 @@
        <property name="text">
         <string>Random Order</string>
        </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
       </widget>
      </item>
      <item row="0" column="0" colspan="2">
@@ -85,7 +88,7 @@
        </column>
        <column>
         <property name="text">
-         <string>Max time</string>
+         <string>Max time (sec)</string>
         </property>
        </column>
       </widget>
