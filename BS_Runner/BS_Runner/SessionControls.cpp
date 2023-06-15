@@ -54,10 +54,8 @@ void SessionControls::run(char* configFilePath) {
 }
 
 bool SessionControls::isTrialRunning() {
-	// TODO check impact
 	if (_isTrialRunning && std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - _trialStartTime).count() >= _timeoutIndicator) {
 		_isTrialRunning = false;
-		// TODO maybe add indicator of timeout
 	}
 	return _isTrialRunning;
 }
@@ -71,7 +69,7 @@ void SessionControls::startSession(char* configFilePath) {
 	if (_runThread.joinable()) {
 		_runThread.join();
 	}
-	LogFileWriter::getInstance().createLogFile();
+	//LogFileWriter::getInstance().createLogFile();
 	setIsSessionRunning(true);
 	this->_runThread = std::thread(&SessionControls::run, this, configFilePath);
 }
