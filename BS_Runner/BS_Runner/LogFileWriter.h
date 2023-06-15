@@ -10,8 +10,8 @@
 #include <thread>
 
 public class LogFileWriter {
-	std::string _sessionName = "";
-	std::string _logFileName = "";
+	std::string _sessionName;
+	std::string _logFileName;
 	LogFileWriter() {}
 	~LogFileWriter() {}
 	LogFileWriter(const LogFileWriter&) = delete;
@@ -23,7 +23,7 @@ public:
 	}
 	void setSessionName(std::string sessionName) { _sessionName = sessionName; }
 	void createLogFile();
-	void write(std::string port);
+	void write(int indicator, const std::string& port = "");
 };
 
 #endif // __LogFileWriter__

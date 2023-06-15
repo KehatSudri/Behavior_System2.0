@@ -1,10 +1,6 @@
 #include "IOEvents.h"
 #include "SessionControls.h"
 #include "Consts.h"
-#include <thread>
-#include <iostream>
-#include <fstream>
-#include <iomanip>
 
 void Event::attachListener(Listener* listener) {
 	_listeners.push_back(listener);
@@ -27,7 +23,7 @@ void Event::set(float64 value) {
 	if (!_beenUpdated && value > 3.5) {
 		_beenUpdated = true;
 		notifyListeners();
-		LogFileWriter::getInstance().write(this->getPort());
+		LogFileWriter::getInstance().write(INPUT_INDICATOR, this->getPort());
 	}
 	else if (_beenUpdated && value < 3.5) {
 		_beenUpdated = false;
@@ -45,7 +41,7 @@ void SimpleAnalogOutputer::output() {
 	start_time = std::chrono::high_resolution_clock::now();
 	DAQmxWriteAnalogScalarF64(_handler, true, 5.0, _attributes[AMPLITUDE_PARAM], NULL);
 	notifyListeners();
-	LogFileWriter::getInstance().write(this->getPort());
+	LogFileWriter::getInstance().write(OUTPUT_INDICATOR, this->getPort());
 	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DURATION_PARAM]) {
 		continue;
 	}
@@ -64,7 +60,7 @@ void SimpleDigitalOutputer::output() {
 	start_time = std::chrono::high_resolution_clock::now();
 	DAQmxWriteDigitalScalarU32(_handler, 1, 10.0, dataHigh, nullptr);
 	notifyListeners();
-	LogFileWriter::getInstance().write(this->getPort());
+	LogFileWriter::getInstance().write(OUTPUT_INDICATOR, this->getPort());
 	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DURATION_PARAM]) {
 		continue;
 	}
@@ -93,4 +89,5 @@ void SerialOutputer::run() {
 
 void TrialKiller::update(Event* event) {
 	SessionControls::getInstance().setIsTrialRuning(false);
+	LogFileWriter::getInstance().write(TRIAL_END_CONDITION_INDICATOR);
 }

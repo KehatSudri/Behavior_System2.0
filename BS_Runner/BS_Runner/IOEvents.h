@@ -6,7 +6,6 @@
 #include <vector>
 #include <map>
 #include "LogFileWriter.h"
-#include <string>
 
 class Listener;
 
