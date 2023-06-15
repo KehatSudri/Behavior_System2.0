@@ -63,17 +63,10 @@ class EditTrialUi(object):
 
     def update(self):
         self.set_trials_table_pointer = self.parent.set_trials_table_pointer
-        # create the form
         self.create_form()
-        # creating a dialog button for ok and cancel
         self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-        # connect the OK button to function
         self.buttonBox.accepted.connect(self.accept)
-        # adding action when form is rejected
-        # self.buttonBox.rejected.connect(reject)
-        # creating a vertical layout
         main_layout = QVBoxLayout()
-        # adding button box to the layout
         main_layout.addWidget(self.buttonBox)
 
     def create_form(self):
@@ -104,21 +97,10 @@ class EditTrialUi(object):
                 self.set_trial_form_handler(is_contingent, event_name)
             else:
                 is_contingent = False
-                # for event_name in events_name:
-                #     # add a label for the event name
-                #     event_name_font = QtGui.QFont()
-                #     event_name_font.setBold(True)
-                #     label = QLabel(event_name + ":")
-                #     label.setFont(event_name_font)
-                #     self.trial_params_labels.append(label)
-                #     self.formLayout.addRow(label)
-                #     # add line edit accordingly for the parameters
                 self.set_trial_form_handler(is_contingent, event_name)
 
     def set_trial_form_handler(self, is_contingent: bool, event_name: str):
         if is_contingent:  # contingent event case
-            # key: parameter_label, val: is_text
-            # event_name = "Contingent Event"
             event_dict = {"Conditioned event": True, "Interval from input": False, "Wanted event": True,
                           "Wanted event time range": {"Min": False, "Max": False}, "Not wanted event": True,
                           "Not wanted event time range": {"Min": False, "Max": False}}
@@ -128,23 +110,12 @@ class EditTrialUi(object):
                 if type(value) == bool:  # check if not range case
                     if value:  # check if ComboBox case
                         combo_box = QComboBox()
-                        # combo_box.addItems() TODO need to be connected to db
-                        # set current text value of param on line edit button
-                        # combo_box.setIndex(str(
-                        #     self.parent.trials_in_session[self.parent.selected_trial][self.parent.chosen_trial_type_name][
-                        #         event_name][
-                        #         param])) TODO need to be added to trials in session
                         self.trial_params_widgets[event_name].append(combo_box)
                         self.formLayout.addRow(label, combo_box)
                     else:
                         # SpinBox case
                         spin_box = QtWidgets.QSpinBox()
                         spin_box.setMaximum(100000)
-                        # set current text value of param on line edit button
-                        # spin_box.setValue(str(
-                        #     self.parent.trials_in_session[self.parent.selected_trial][self.parent.chosen_trial_type_name][
-                        #         event_name][
-                        #         param])) TODO need to be added to trials in session
                         self.trial_params_widgets[event_name].append(spin_box)
                         self.formLayout.addRow(label, spin_box)
                 else:  # range case
@@ -153,12 +124,7 @@ class EditTrialUi(object):
                         if val:  # check if ComboBox case
                             label = QLabel(key)
                             combo_box = QComboBox()
-                            # combo_box.addItems() TODO need to get list of events
                             self.trial_params_labels.append(label)
-                            # combo_box.setIndex(str(
-                            #     self.parent.trials_in_session[self.parent.selected_trial][self.parent.chosen_trial_type_name][
-                            #         event_name][
-                            #         param])) TODO need to be added to trials in session
                             self.trial_params_widgets[event_name].append(combo_box)
                             self.formLayout.addRow(label, combo_box)
                         else:
@@ -167,10 +133,6 @@ class EditTrialUi(object):
                             spin_box = QtWidgets.QSpinBox()
                             spin_box.setMaximum(100000)
                             self.trial_params_labels.append(label)
-                            # spin_box.setValue(str(
-                            #     self.parent.trials_in_session[self.parent.selected_trial][self.parent.chosen_trial_type_name][
-                            #         event_name][
-                            #         param])) TODO need to be added to trials in session
                             self.trial_params_widgets[event_name].append(spin_box)
                             self.formLayout.addRow(label, spin_box)
         else:  # simple event case
@@ -204,11 +166,8 @@ class EditTrialUi(object):
                 return
             edited_trial[event] = params_values
         # add new trial
-
         trial_index, trial_name = self.parent.selected_trial, self.parent.chosen_trial_type_name
-        # TODO trial_index, trial_name = self.parent.selected_trial, self.parent.trial_type_name
         self.parent.trials_in_session[trial_index][trial_name] = edited_trial
-        # TODO check this part
         get_string_dict(self.parent.trials_in_session[trial_index])
 
         # update trials table on the window
@@ -216,12 +175,3 @@ class EditTrialUi(object):
         self.parent.edit_window.close()
 
 
-# if __name__ == "__main__":
-#     import sys
-#
-#     app = QtWidgets.QApplication(sys.argv)
-#     dialog = QtWidgets.QDialog()
-#     ui = EditTrialUi()
-#     ui.setupUi(dialog)
-#     dialog.show()
-#     sys.exit(app.exec_())

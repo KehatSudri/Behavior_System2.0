@@ -44,9 +44,14 @@ def prepare_session_information(session_name, ports, dependencies, trial_name, i
             parameters = trials_in_session[index + 1][db.get_event_name_by_port(dep.split(",")[0])[0]]
             file.write(','.join(parameters) + "\n")
         for port in [item for item in output_ports if item not in [tup[0] for tup in dependencies]]:
+            isRandom = db.is_random_event_in_a_given_trial(trial_name,db.get_event_name_by_port(port)[0])[0]
             file.write(port + "\n")
             parameters = trials_in_session[index + 1][db.get_event_name_by_port(port)[0]]
             # file.write(str(db.isEndConditionEvent(db.get_event_name_by_port(port)[0], trial_name)[0])+',')
+            if isRandom:
+                file.write("1,")
+            else:
+                file.write("0,")
             file.write(','.join(parameters) + "\n")
             # for port, port_type, name in ports:
             #     file.write(str(db.isEndConditionEvent(db.get_event_name_by_port(port)[0],trial_name)[0]))

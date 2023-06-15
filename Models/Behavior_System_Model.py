@@ -673,31 +673,16 @@ class BehaviorSystemModel:
         self.curr_session.output_events_name_list = self.output_events_names
         self.curr_session.input_events_name_list = self.input_events_names
 
-        # get list of rewards in session
         self.curr_session.reward_list_in_sess = self.get_reward_list_for_session()
 
-        # create and start running the different threads
-        # save template
+
         save_tmp = threading.Thread(target=self.save_new_template())
         save_tmp.start()
-        # run trials
         run_trials = threading.Thread(target=self.curr_session.run_session,  # run the trials
                                       args=(self.log_file, self.max_successive_trials, self.max_trial_length))
         run_trials.start()
 
-        #     # start sending TTL to all connected systems
-        #     self._curr_session.run_session()
-        #     # start the running session object
-        #     # maybe create threads - one for keeping track of time,
-        #     #   other to collect data from devices
-        #     #   other to send data to devices
-        #     #   other send data to log file
-        #     # if end requirement fulfilled
-        #     # stop TTL to devices
-        #     # save end timer
-        #     #    sess.is_end = True
-        #     # thread sleep for a few milliseconds:?
-        #     pass
+
 
         save_tmp.join()  # make sure that template was saved before finishing
         run_trials.join()  # wait for all trials to be finished

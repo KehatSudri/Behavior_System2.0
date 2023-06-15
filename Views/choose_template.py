@@ -13,8 +13,8 @@ class ChooseTemplateUi(object):
         self.choose_template_cb = None
         self.subject_ids = self.parent.vm.get_list_of_subjects()[::-1]  # check this func
         self.current_all_templates = []
-        self.templates = {}  # TODO get from parent cache
-        self.subjects = set()  # TODO get from parent cache
+        self.templates = {}
+        self.subjects = set()
         self.init()
     def init(self):
         self.db=DB()
@@ -150,8 +150,6 @@ class ChooseTemplateUi(object):
                     t[trial.name][intv_str] = {'min': str(intv[0]), 'max': str(intv[1])}
 
             trials.append(t)
-            # self.parent.trials_in_session = trials
-            # TODO trials to parent
         for i in range(len(trials)):
             self.parent.trials_in_session.append(trials[i])
             self.parent.set_trials_table_pointer()

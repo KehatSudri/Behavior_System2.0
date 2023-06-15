@@ -6,10 +6,9 @@ from Models.DB_INIT import DB
 from Models.prepare_session_information import prepare_session_information
 from Views.add_trial import AddTrialUi
 from Views.edit_session_template import EditSessionUi
-from Views.blocks_order import BlocksOrderUi
 from Views.choose_template import ChooseTemplateUi
 from Views.edit_trial import EditTrialUi
-from Views.utils import error_warning, dict_yaml_style, get_ui_path
+from Views.utils import error_warning, get_ui_path
 from Views.random_order import RandomOrderUi
 from Views.notes import NotesUi
 

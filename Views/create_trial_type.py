@@ -63,8 +63,8 @@ class CreateTrialTypeUi(object):
         header.resizeSection(1, 200)  # Set the size of the second section to 200 pixels
         header.resizeSection(2, 150)
         header.resizeSection(3, 150)
-        header.resizeSection(4, 150)  #
-        header.resizeSection(5, 100)  #
+        header.resizeSection(4, 150)
+        header.resizeSection(5, 100)
 
     def on_add_click(self):
         current_event = self.events_comboBox.currentText()
@@ -99,7 +99,6 @@ class CreateTrialTypeUi(object):
                                         QtWidgets.QTableWidgetItem(str(self.isEndCondition.isChecked())))
         self.events_order.append(current_event)
         self.is_contingent_order.append(self.chosen_is_contingent)
-        # validate that combo not have duplicates
         flag = 0
         for i in range(self.contingent_comboBox.count()):
             if self.contingent_comboBox.itemText(i) == current_event:
@@ -108,7 +107,6 @@ class CreateTrialTypeUi(object):
             self.contingent_comboBox.addItems([current_event])
         if self.contingent_comboBox.count() >= 1 :
             self.name_comboBox_handler()
-            # self.conti_radioButton.setEnabled(True)
 
     def on_remove_click(self):
         is_not_empty = len(self.events_order) > 0
@@ -198,8 +196,6 @@ class CreateTrialTypeUi(object):
 
             self.random_comboBox.setEnabled(True)
             self.random_comboBox.setEnabled(True)
-            # self.contingent_comboBox.setEnabled(True)
-            # self.conti_label.setEnabled(True)
             if self.contingent_comboBox.count() >= 1:
                 self.conti_radioButton.setEnabled(True)
 
