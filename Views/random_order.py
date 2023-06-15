@@ -51,10 +51,8 @@ class RandomOrderUi(object):
             header_item = QTableWidgetItem("Percent")
             self.trials_tableWidget.setHorizontalHeaderItem(column_index, header_item)
         else:
-            print("Checkbox unchecked")
             self.trials_tableWidget.removeColumn(self.trials_tableWidget.columnCount() - 1)
-        # self.trials_tableWidget.add_column("New Column Name")
-        # print("rrrrrr")
+
     def get_total_num_of_trials(self):
         total_num_of_trials = self.total_num_of_trials_spinBox.value()
         self.parent.total_num = total_num_of_trials
