@@ -78,11 +78,11 @@ class EditSessionUi(object):
     def set_trial_form_handler(self, event_name: str, is_input_event):
         dict = ["delay"]
         if event_name == 'Tone':
-            dict = dict + ['tone duration', 'tone frequency']
+            dict = dict + ['duration', 'frequency','tone amplitude']
         elif event_name == 'Reward':
-            dict = dict + ['reward duration']
+            dict = dict + ['duration']
         else:
-            dict = dict + ["Duration", "Frequency", "Amplitude"]
+            dict = dict + ["duration"]
 
         for param in dict:
             label = QLabel(param)
@@ -105,29 +105,6 @@ class EditSessionUi(object):
     def clear_form(self):
         if len(self.trial_params_labels) != 0:
             self.delete_params()
-
-    def are_valid_values(self, new_trial):
-        index = 0
-        for event, event_params in new_trial.items():
-            if self.vm.is_contingent(event, new_trial):
-                # if self.are_contingents[index]:
-                for parameter, value in event.items():  # event's
-                    if type(value) != bool:  # check if range case
-                        for key, val in value.items():
-                            if not val:  # SpinBox case
-                                params_values = {param: self.trial_params_widgets[event][i].text() for i, param in
-                                                 enumerate(event_params)}
-                                for params_key in params_values:
-                                    if not params_values[params_key]:
-                                        return False
-            else:
-                params_values = {param: self.trial_params_widgets[event][i].text() for i, param in
-                                 enumerate(event_params)}
-                for params_key in params_values:
-                    if not params_values[params_key]:
-                        return False
-            index += 1
-        return True
 
     def accept(self):
         new_trial = self.parent.chosen_trial_type_name

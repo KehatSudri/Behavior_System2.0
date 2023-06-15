@@ -170,11 +170,11 @@ class AddTrialUi(object):
         # else:
         dict = ["delay"]
         if event_name == 'Tone':
-            dict = dict + ['tone duration', 'tone frequency']
+            dict = dict + ['duration', 'frequency','tone amplitude']
         elif event_name == 'Reward':
-            dict = dict + ['reward duration']
+            dict = dict + ['duration']
         else:
-            dict = dict + ["Duration", "Frequency", "Amplitude"]
+            dict = dict + ["duration"]
 
         for param in dict:
             label = QLabel(param)

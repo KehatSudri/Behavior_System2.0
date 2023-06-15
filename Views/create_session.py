@@ -358,13 +358,13 @@ class CreateSessionUi(object):
         # print(self.trials_in_session)
         for event, parameters in self.trials_in_session[index * 2 + 1].items():
             if event == 'Tone':
-                params += event + ":" + " delay - " + parameters[0] + ", tone duration - " + parameters[
-                    1] + ", tone frequency - " + parameters[2] + "\n"
+                params += event + ":" + " delay - " + parameters[0] + ", duration - " + parameters[
+                    1] + ", frequency - " + parameters[2] + ", tone amplitude - " + parameters[3]+ "\n"
             elif event == 'Reward':
-                params += event + ":" + " delay - " + parameters[0] + ", reward duration - " + parameters[1] + "\n"
+                params += event + ":" + " delay - " + parameters[0] + ", duration - " + parameters[1] + "\n"
             else:
-                params += event + ":" + " delay - " + parameters[0] + ", Duration - " + parameters[
-                    1] + ", Frequency - " + parameters[2] + ", Amplitude - " + parameters[3] + "\n"
+                params += event + ":" + " delay - " + parameters[0] + ", duration - " + parameters[
+                    1] + "\n"
 
             table.setItem(index, 1, QTableWidgetItem(params))
             self.db = DB()
@@ -422,14 +422,14 @@ class CreateSessionUi(object):
                 trials_dict[event]=parameters[0].split(',')
                 for parameters in parameters_ar:
                     if event == 'Tone':
-                        params += event + ":" + " delay - " + parameters[0] + ", tone duration - " + parameters[
-                            1] + ", tone frequency - " + parameters[2] + "\n"
+                        params += event + ":" + " delay - " + parameters[0] + ", duration - " + parameters[
+                            1] + ", frequency - " + parameters[2] + ", tone amplitude - " + parameters[3] + "\n"
                     elif event == 'Reward':
-                        params += event + ":" + " delay - " + parameters[0] + ", reward duration - " + parameters[
+                        params += event + ":" + " delay - " + parameters[0] + ", duration - " + parameters[
                             1] + "\n"
                     else:
-                        params += event + ":" + " delay - " + parameters[0] + ", Duration - " + parameters[
-                            1] + ", Frequency - " + parameters[2] + ", Amplitude - " + parameters[3] + "\n"
+                        params += event + ":" + " delay - " + parameters[0] + ", duration - " + parameters[
+                            1] +  "\n"
             table.setItem(index, 1, QTableWidgetItem(params))
             self.trials_in_session.append(trial)
             self.trials_in_session.append(trials_dict)
