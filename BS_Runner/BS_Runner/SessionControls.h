@@ -2,7 +2,6 @@
 #ifndef __SessionControls__
 #define __SessionControls__
 #include "SessionConf.h"
-#include <string>
 
 public class SessionControls {
 	bool _isSessionRunning = false;
@@ -11,6 +10,7 @@ public class SessionControls {
 	int _timeoutIndicator;
 	std::chrono::time_point <std::chrono::steady_clock> _trialStartTime;
 	//char* _currentTrialName = "Trial name";
+	std::unique_ptr<SessionConf> _conf;
 	SessionConf* _conf;
 	std::thread _runThread;
 	void run(char* configFilePath);
@@ -25,21 +25,18 @@ public:
 		static SessionControls instance;
 		return instance;
 	}
-	void startSession(char* configFilePath);
+
+	void startSession(const char* configFilePath);
 	void pauseSession();
 	void resumeSession();
 	void finishSession();
 	//char* getCurrentTrialName();
-	void setIsPaused(bool state) { this->_isPaused = state; }
-	void setIsSessionRunning(bool state) { this->_isSessionRunning = state; }
-	void setIsTrialRuning(bool state) { this->_isTrialRunning = state; }
-	void setSessionName(std::string val) { _sessionName = val; }
-	bool& getIsPaused() {
-		return _isPaused;
-	}
-	bool& getIsSessionRunning() {
-		return _isSessionRunning;
-	}
+	void setIsPaused(bool state) { _isPaused = state; }
+	std::string getCurrentRunningTrial();
+	void setIsSessionRunning(bool state) { _isSessionRunning = state; }
+	void setIsTrialRuning(bool state) { _isTrialRunning = state; }
+	bool& getIsPaused() { return _isPaused; }
+	bool& getIsSessionRunning() { return _isSessionRunning; }
 	void nextTrial();
 	void giveReward();
 };

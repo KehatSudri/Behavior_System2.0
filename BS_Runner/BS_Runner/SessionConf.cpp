@@ -1,10 +1,7 @@
 #include "SessionConf.h"
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <string>
+#include "Consts.h"
 #include <random>
-
+#include <numeric>
 
 std::map<std::string, int>  getAttributes(std::string port, const std::vector<int>& params) {
 	std::map<std::string, int> attributes;
@@ -20,10 +17,23 @@ std::vector<int> getParams(std::string line) {
 	std::stringstream ss(line);
 	std::string token;
 	std::vector<int> params;
-	while (std::getline(ss, token, ',')) {
-		params.push_back(std::stoi(token));
-	}
+	while (std::getline(ss, token, ',')) { params.push_back(std::stoi(token)); }
 	return params;
+}
+
+int pickRandomTrial(const std::vector<int>& probabilities) {
+	int sum = std::accumulate(probabilities.begin(), probabilities.end(), 0);
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> distr(1, sum);
+	int random_number = distr(gen);
+	int current_sum = 0;
+	for (size_t i = 0; i < probabilities.size(); ++i) {
+		current_sum += probabilities[i];
+		if (random_number <= current_sum) { return i; }
+	}
+	// Just a fallback, in case something goes wrong.
+	return -1;
 }
 
 SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
@@ -57,7 +67,7 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 				}
 				break;
 			case 2:
-				if (element == "True") {
+				if (element == TRUE) {
 					setisSessionRandom(true);
 				}
 				break;
@@ -67,27 +77,23 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 			++type;
 		}
 		while (std::getline(inputFile, line)) {
-			if (line[0] == '$' || line.empty()) {
+			if (line[0] == NEW_LINE_CATEGORY || line.empty()) {
 				++category;
-				if (line[0] == '$') {
-					continue;
-				}
+				if (line[0] == NEW_LINE_CATEGORY) { continue; }
 			}
 			std::string name = line, token2;
 			switch (category) {
 			case 0:
 				_trials.push_back({ name });
 				std::getline(inputFile, line);
-				_trials[_numOfTrials]._numOfRuns = std::stoi(line);
+				_trials[_numOfTrials]._remainingRuns = std::stoi(line);
 				break;
 			case 1:
 				pos = line.find(delimiter);
 				name = line.substr(0, pos);
 				token2 = line.substr(pos + delimiter.length());
 				_trials[_numOfTrials]._AIPorts.push_back(name);
-				if (token2 == "True") {
-					_trials[_numOfTrials]._trialKillers.push_back(name);
-				}
+				if (token2 == TRUE) { _trials[_numOfTrials]._trialKillers.push_back(name); }
 				break;
 			case 2:
 				std::getline(inputFile, line);
@@ -96,8 +102,7 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 			default:
 				_trials[_numOfTrials].initInputTaskHandle();
 				_trials[_numOfTrials].initInputEvents();
-				int error = _trials[_numOfTrials].initAnalogOutputTasks();
-				if (error < 0) {
+				if (_trials[_numOfTrials].initAnalogOutputTasks() == ERROR) {
 					_validFlag = false;
 					break;
 				}
@@ -117,37 +122,52 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 	}
 }
 
+std::string SessionConf::getCurrentRunningTrial() {
+	if (_numOfTrials) { return _trials[_currentTrial]._trialName; }
+	return std::string();
+}
+
+bool allZeros(const std::vector<int>& vec) {
+	for (int value : vec) { if (value != 0) { return false; } }
+	return true;
+}
+
 int SessionConf::changeCurrentTrial() {
 	auto start_time = std::chrono::high_resolution_clock::now();
 	int code = CONTINUE_SESSION;
+	--_trials[_currentTrial]._remainingRuns;
 	if (!_isSessionRandom) {
-		if (--_trials[_currentTrial]._numOfRuns == 0) {
+		if (_trials[_currentTrial]._remainingRuns == 0) {
 			if (++_currentTrial == _numOfTrials) {
 				code = END_OF_SESSION;
 			}
 		}
 	}
 	else {
-		// TODO implement random trial change
+		if (_trials[_currentTrial]._remainingRuns == 0) { _trialProbabilities[_currentTrial] = 0; }
+		if (allZeros(_trialProbabilities)) { code = END_OF_SESSION; }
+		else {
+			int getNextTrial = pickRandomTrial(_trialProbabilities);
+			while (getNextTrial < 0) {
+				getNextTrial = pickRandomTrial(_trialProbabilities);
+			}
+			_currentTrial = getNextTrial;
+		}
+	}
+	if (code == END_OF_SESSION) {
+		return code;
 	}
 	if (_maxITI) {
 		std::random_device rd;
 		std::mt19937 gen(rd());
 		std::uniform_real_distribution<double> dis(_minITI, _maxITI);
-		while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < dis(gen)) {
-			continue;
-		}
+		int random_iti = dis(gen);
+		while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < random_iti) { continue; }
 	}
 	else {
-		while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _minITI) {
-			continue;
-		}
+		while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _minITI) { continue; }
 	}
 	return code;
-}
-
-void SessionConf::finishSession() {
-	this->_sessionComplete = true;
 }
 
 TaskHandle SessionConf::getInputTaskHandle() {
@@ -167,18 +187,16 @@ void SessionConf::giveReward() {
 }
 
 void Trial::initInputEvents() {
-	for (auto& port : _AIPorts) {
-		_events.push_back(new Event(port));
-	}
+	for (auto& port : _AIPorts) { _events.push_back(new Event(port)); }
 }
 
 Outputer* getOutputer(std::string port, std::map<std::string, int> attr) {
-	size_t isAnalog = port.find("ao");
-	size_t isDigital = port.find("port0");
+	size_t isAnalog = port.find(ANALOG_OUTPUT);
+	size_t isDigital = port.find(DIGITAL_OUTPUT);
 	if (isAnalog != std::string::npos) {
 		TaskHandle AO_TaskHandle = NULL;
 		DAQmxCreateTask("", &AO_TaskHandle);
-		DAQmxCreateAOVoltageChan(AO_TaskHandle, port.c_str(), "", -5.0, 5.0, DAQmx_Val_Volts, "");
+		DAQmxCreateAOVoltageChan(AO_TaskHandle, port.c_str(), "", MIN_WATTAGE, MAX_WATTAGE, DAQmx_Val_Volts, "");
 		return new SimpleAnalogOutputer(AO_TaskHandle, port, attr);
 	}
 	else if (isDigital != std::string::npos) {
@@ -187,9 +205,7 @@ Outputer* getOutputer(std::string port, std::map<std::string, int> attr) {
 		DAQmxCreateDOChan(DO_TaskHandle, port.c_str(), "", DAQmx_Val_ChanPerLine);
 		return new SimpleDigitalOutputer(DO_TaskHandle, port, attr);
 	}
-	else {
-		return NULL;
-	}
+	else { return NULL; }
 }
 
 int Trial::initAnalogOutputTasks() {
@@ -204,14 +220,9 @@ int Trial::initAnalogOutputTasks() {
 			token2 = portName.substr(pos + delimiter.length());
 		}
 
-		const char* ao_port = token1.c_str();
-		TaskHandle AO_TaskHandle = NULL;
-		DAQmxCreateTask("", &AO_TaskHandle);
-		DAQmxCreateAOVoltageChan(AO_TaskHandle, ao_port, "", -5.0, 5.0, DAQmx_Val_Volts, "");
 		Outputer* sm = getOutputer(token1, getAttributes(portName, params));
-		if (sm == NULL) {
-			return -1;
-		}
+		if (sm == NULL) { return ERROR; }
+
 		_events.push_back(sm);
 		if (!token2.empty()) {
 			for (auto& eve : _events) {
@@ -221,19 +232,18 @@ int Trial::initAnalogOutputTasks() {
 				}
 			}
 		}
-		else {
-			_environmentOutputer.push_back(new EnvironmentOutputer(sm));
-		}
+		else { _environmentOutputer.push_back(new EnvironmentOutputer(sm)); }
 	}
 	return 1;
 }
 
 void Trial::initInputTaskHandle() {
 	DAQmxCreateTask("", &_inputTaskHandle);
+	std::string combine_ports = "";
 	for (auto& port : _AIPorts) {
-		const char* ai_port = port.c_str();
-		DAQmxCreateAIVoltageChan(_inputTaskHandle, ai_port, "", DAQmx_Val_Cfg_Default, -5.0, 5.0, DAQmx_Val_Volts, NULL);
+		combine_ports = combine_ports + ", " + port;
 	}
+	DAQmxCreateAIVoltageChan(_inputTaskHandle, combine_ports.c_str(), "", DAQmx_Val_Cfg_Default, -5.0, 5.0, DAQmx_Val_Volts, NULL);
 }
 
 void Trial::initTrialKillers() {
@@ -248,14 +258,10 @@ void Trial::initTrialKillers() {
 	}
 }
 
-TaskHandle Trial::getInputTaskHandle() {
-	return _inputTaskHandle;
-}
-
 std::vector<Event*> Trial::getInputEvents() const {
 	std::vector<Event*> inputEvents;
 	for (auto it : _events) {
-		if (it->getPort().find("ai") != std::string::npos) {
+		if (it->getPort().find(ANALOG_INPUT) != std::string::npos) {
 			inputEvents.push_back(it);
 		}
 	}
@@ -268,8 +274,5 @@ void Trial::giveReward() {
 }
 
 Trial::~Trial() {
-	for (auto& task : _digitalOutputTasks) {
-		DAQmxClearTask(task);
-	}
 	DAQmxClearTask(_inputTaskHandle);
 }

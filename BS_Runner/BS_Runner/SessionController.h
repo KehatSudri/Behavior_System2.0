@@ -2,6 +2,7 @@
 #ifndef __SessionController__
 #define __SessionController__
 #include "SessionControls.h"
+#include "LogFileWriter.h"
 #include <msclr/marshal_cppstd.h>
 
 namespace BSRunner {
@@ -17,7 +18,7 @@ namespace BSRunner {
 	public:
 		SessionController(int argc, char* argv[]) {
 			_configFilePath = argv[1];
-			SessionControls::getInstance().setSessionName(argv[2]);
+			LogFileWriter::getInstance().setSessionName(argv[2]);
 			InitializeComponent();
 		}
 
