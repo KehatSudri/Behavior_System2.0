@@ -1,14 +1,14 @@
 from collections import defaultdict, OrderedDict
-
+from Models.DB_INIT import DB
 from PyQt6 import QtCore, QtWidgets, QtGui, uic
 from PyQt6.QtWidgets import QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit, QComboBox, QFormLayout
-
 from Views.utils import error_warning, get_string_dict, get_ui_path
 from Models.DB_INIT import DB
 
 
 class EditSessionUi(object):
     def __init__(self, parent):
+        self.db=DB()
         self.index = 0
         self.parent = parent
         self.vm = parent.vm
@@ -49,7 +49,7 @@ class EditSessionUi(object):
         # init the lists tha holds the widgets for each row
         self.trial_params_labels = []
         self.trial_params_widgets = defaultdict(list)
-        self.are_contingents.clear()  # TODO delete when self.vm.is_contingent(event_name) implemented
+        self.are_contingents.clear()
 
         for i in range(self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').rowCount() - 1, -1, -1):
             # Get the widget in the current row
@@ -58,7 +58,7 @@ class EditSessionUi(object):
                 # Remove the current row from the layout
                 self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').removeRow(i)
 
-    def set_trial_form(self, events_name: list):
+    def set_trial_form(self, events_name: list,chosenTrial):
         # add row for each event and it's parameters
         for i, event_name in enumerate(events_name):
             bold_font = QtGui.QFont()
@@ -72,17 +72,20 @@ class EditSessionUi(object):
                 formLayout.addRow(label)
 
             # add line edit accordingly for the parameters
-                self.set_trial_form_handler(event_name, self.vm.is_input_event(event_name))
+                self.set_trial_form_handler(event_name, chosenTrial)
 
 
-    def set_trial_form_handler(self, event_name: str, is_input_event):
-        dict = ["delay"]
-        if event_name == 'Tone':
-            dict = dict + ['tone duration', 'tone frequency']
-        elif event_name == 'Reward':
-            dict = dict + ['reward duration']
+    def set_trial_form_handler(self, event_name: str, chosenTrial):
+        if self.db.is_random_event_in_a_given_trial(chosenTrial, event_name)[0]:
+            dict = ["min delay", "max delay"]
         else:
-            dict = dict + ["Duration", "Frequency", "Amplitude"]
+            dict = ["delay"]
+        if event_name == 'Tone':
+            dict = dict + ['duration', 'frequency','tone amplitude']
+        elif event_name == 'Reward':
+            dict = dict + ['duration']
+        else:
+            dict = dict + ["duration"]
 
         for param in dict:
             label = QLabel(param)
@@ -100,34 +103,11 @@ class EditSessionUi(object):
         events_name = self.vm.get_events_by_trial_name(chosen)
         events_name = [item[0] for item in events_name]
         self.clear_form()
-        self.set_trial_form(events_name)
+        self.set_trial_form(events_name,chosen)
 
     def clear_form(self):
         if len(self.trial_params_labels) != 0:
             self.delete_params()
-
-    def are_valid_values(self, new_trial):
-        index = 0
-        for event, event_params in new_trial.items():
-            if self.vm.is_contingent(event, new_trial):
-                # if self.are_contingents[index]:
-                for parameter, value in event.items():  # event's
-                    if type(value) != bool:  # check if range case
-                        for key, val in value.items():
-                            if not val:  # SpinBox case
-                                params_values = {param: self.trial_params_widgets[event][i].text() for i, param in
-                                                 enumerate(event_params)}
-                                for params_key in params_values:
-                                    if not params_values[params_key]:
-                                        return False
-            else:
-                params_values = {param: self.trial_params_widgets[event][i].text() for i, param in
-                                 enumerate(event_params)}
-                for params_key in params_values:
-                    if not params_values[params_key]:
-                        return False
-            index += 1
-        return True
 
     def accept(self):
         new_trial = self.parent.chosen_trial_type_name

@@ -35,26 +35,24 @@ class RandomOrderUi(object):
         self.event_handler=event_handler
         self.config_info=config_data
         uic.loadUi(get_ui_path('random_order.ui'), dialog)
-        # dialog.accepted.connect(lambda: event_handler(self.choose_template_cb.currentText()))
         dialog.accepted.connect(self.accept)
-        # dialog.rejected.connect()
         self.trials_tableWidget = dialog.findChild(QtWidgets.QTableWidget, "trials_tableWidget")
         self.isRandomOrder = dialog.findChild(QtWidgets.QCheckBox, 'checkBox')
         self.isRandomOrder.stateChanged.connect(self.checkbox_state_changed)
+        self.isRandomOrder.setChecked(True)
         for i in range (int(len(self.parent.trials_in_session)/2))   :
             self.trials_tableWidget.insertRow(i)
             self.trials_tableWidget.setItem(i, 0, QTableWidgetItem(self.parent.trials_in_session[i*2]))
             self.trials_tableWidget.setItem(i, 1, QTableWidgetItem("1"))
         return
     def checkbox_state_changed(self):
-        if self.isRandomOrder.isChecked():
+        if not self.isRandomOrder.isChecked():
+            self.trials_tableWidget.removeColumn(self.trials_tableWidget.columnCount() - 1)
+        else:
             self.trials_tableWidget.setColumnCount(self.trials_tableWidget.columnCount() + 1)
             column_index = self.trials_tableWidget.columnCount() - 1
             header_item = QTableWidgetItem("Percent")
             self.trials_tableWidget.setHorizontalHeaderItem(column_index, header_item)
-        else:
-            self.trials_tableWidget.removeColumn(self.trials_tableWidget.columnCount() - 1)
-
     def get_total_num_of_trials(self):
         total_num_of_trials = self.total_num_of_trials_spinBox.value()
         self.parent.total_num = total_num_of_trials
