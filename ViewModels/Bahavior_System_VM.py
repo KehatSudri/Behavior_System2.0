@@ -149,33 +149,6 @@ class BehaviorSystemViewModel:
     def get_reward_list_for_session(self):
         return self.model.get_reward_list_for_session()
 
-    def get_reward_name_list_for_session(self):
-        return self.model.get_reward_name_list_for_session()
-
-    def start_Session(self):
-        self.model.start_Session()
-        if self.curr_session is not None:
-            # notify all connected system with TTL signal
-            # create timer for session etc.
-            pass
-
-    def end_Session(self):
-        self.model.end_Session()
-        # send TTl signal to all connected systems
-        pass
-
-    def pause_sess(self):
-        self.model.pause_sess()
-
-    def resume_sess(self):
-        self.model.resume_sess()
-
-    def repeat_trial(self):
-        self.model.repeat_trial()
-
-    def log_data(self):
-        # use the path to save all details in the specific format
-        pass
 
     def get_trial_names(self):
         return self.model.get_trials_names()

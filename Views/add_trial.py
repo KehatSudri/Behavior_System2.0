@@ -1,13 +1,13 @@
 from collections import defaultdict, OrderedDict
-
 from PyQt6 import QtCore, QtWidgets, QtGui, uic
 from PyQt6.QtWidgets import QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit, QComboBox, QFormLayout
-
+from Models.DB_INIT import DB
 from Views.utils import error_warning, get_string_dict, get_ui_path  # , set_conditioned_event
 
 
 class AddTrialUi(object):
     def __init__(self, parent):
+        self.db = DB()
         self.index = 0
         self.parent = parent
         self.vm = parent.vm
@@ -74,14 +74,9 @@ class AddTrialUi(object):
                 # Remove the current row from the layout
                 self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').removeRow(i)
 
-    def set_trial_form(self, events_name: list):
+    def set_trial_form(self, events_name: list,chosenTrial):
         # add row for each event and it's parameters
         for i, event_name in enumerate(events_name):
-            # print(self.parent.trial_types[0])
-            # is_contingent = self.vm.is_contingent(
-            #     event_name,self.parent.chosen_trial_type_name)[0]
-
-            # if not is_contingent:
             # add a label for the event name
             bold_font = QtGui.QFont()
             bold_font.setBold(True)
@@ -90,85 +85,16 @@ class AddTrialUi(object):
             self.trial_params_labels.append(label)
             formLayout = self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
             if not self.vm.is_input_event(event_name):
-
                 formLayout.addRow(label)
-
             # add line edit accordingly for the parameters
-                self.set_trial_form_handler(event_name, self.vm.is_input_event(event_name))
-            # if not i == len(events_name) - 1:
-            #     delay_label = QLabel("Delay")
-            #     delay_label.setFont(bold_font)
-            #     line_edit = QLineEdit()
-            #     formLayout = self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
-            #     formLayout.addRow(QLabel(""))
-            #     line_edit.setText("0")
-            #     formLayout.addRow(delay_label, line_edit)
-            #     formLayout.addRow(QLabel(""))
+                self.set_trial_form_handler(event_name, chosenTrial)
 
-            # if not i == len(events_name) - 1:
-            #     print("dddd")
-            #     delay_label = QLabel("Delay")
-            #     delay_label.setFont(bold_font)
-            #     self.trial_params_labels.append(delay_label)
-            #     formLayout.addRow(label)
-            #     line_edit = QLineEdit()
-            #     # formLayout.addRow(QLabel(""))
-            #     formLayout.addRow(delay_label,line_edit)
-            #     # formLayout.addRow(QLabel(""))
 
-    def set_trial_form_handler(self, event_name: str, is_input_event):
-        # if is_contingent:
-        #     # contingent event case
-        #     # key: parameter_label, val: is_text
-        #     event_dict = {"Conditioned event": True, "Interval from input": False, "Wanted event": True,
-        #                   "Wanted event time range": {"Min": False, "Max": False}, "Not wanted event": True,
-        #                   "Not wanted event time range": {"Min": False, "Max": False}}
-        #
-        #     events = ["None", "A", "B", "C"]
-        #
-        #     for parameter, value in event_dict.items():  # event's
-        #
-        #         if type(value) == bool:  # check if not range case
-        #             # params
-        #             if value:  # check if ComboBox case
-        #                 label = QLabel(parameter)
-        #                 combo_box = QComboBox()
-        #                 combo_box.addItems(events)  # TODO need to get list of events
-        #                 combo_box.setCurrentIndex(0)
-        #                 self.trial_params_labels.append(label)
-        #                 self.trial_params_widgets[event_name].append(combo_box)
-        #                 self.formLayout.addRow(label, combo_box)
-        #             else:
-        #                 # SpinBox case
-        #                 label = QLabel(parameter)
-        #                 spin_box = QtWidgets.QSpinBox()
-        #                 spin_box.setMaximum(100000)
-        #                 self.trial_params_labels.append(label)
-        #                 self.trial_params_widgets[event_name].append(spin_box)
-        #                 self.formLayout.addRow(label, spin_box)
-        #         else:  # range case
-        #             label = QLabel(parameter)
-        #             self.trial_params_labels.append(label)
-        #             self.formLayout.addRow(label)
-        #             for key, val in value.items():
-        #                 if val:  # check if ComboBox case
-        #                     label = QLabel(key)
-        #                     combo_box = QComboBox()
-        #                     combo_box.addItems(events)  # TODO need to get list of events
-        #                     combo_box.setCurrentIndex(0)
-        #                     self.trial_params_labels.append(label)
-        #                     self.trial_params_widgets[event_name].append(combo_box)
-        #                     self.formLayout.addRow(label, combo_box)
-        #                 else:
-        #                     # SpinBox case
-        #                     label = QLabel(key)
-        #                     spin_box = QtWidgets.QSpinBox()
-        #                     spin_box.setMaximum(100000)
-        #                     self.trial_params_labels.append(label)
-        #                     self.trial_params_widgets[event_name].append(spin_box)
-        #                     self.formLayout.addRow(label, spin_box)
-        # else:
-        dict = ["delay"]
+    def set_trial_form_handler(self, event_name: str, chosenTrial):
+        if self.db.is_random_event_in_a_given_trial(chosenTrial,event_name)[0]:
+            dict=["min delay","max delay"]
+        else:
+            dict = ["delay"]
         if event_name == 'Tone':
             dict = dict + ['duration', 'frequency','tone amplitude']
         elif event_name == 'Reward':
@@ -192,7 +118,7 @@ class AddTrialUi(object):
         events_name = self.vm.get_events_by_trial_name(chosen)
         events_name = [item[0] for item in events_name]
         self.clear_form()
-        self.set_trial_form(events_name)
+        self.set_trial_form(events_name,chosen)
 
     def clear_form(self):
         if len(self.trial_params_labels) != 0:
