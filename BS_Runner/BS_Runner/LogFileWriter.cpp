@@ -25,22 +25,28 @@ void LogFileWriter::write(int indicator, std::string port) {
 	std::ostringstream message;
 	switch (indicator) {
 	case OUTPUT_INDICATOR:
-		message << " Sent output on: ";
+		message << " Sent output at: ";
 		break;
 	case INPUT_INDICATOR:
-		message << " Got input on: ";
+		message << " Got input at: ";
 		break;
 	case TRIAL_END_CONDITION_INDICATOR:
-		message << "Reached end condition on: ";
+		message << "Reached end condition at: ";
 		break;
 	case TRIAL_TIMEOUT_INDICATOR:
-		message << "Trial Timeout on: ";
+		message << "Trial Timeout at: ";
 		break;
 	case TRIAL_START:
-		message << " trial started on: ";
+		message << " trial started at: ";
+		break;
+	case SESSION_TIMEOUT_INDICATOR:
+		message << "Session Timeout at: ";
+		break;
+	case SESSION_END:
+		message << "Session Finished at: ";
 		break;
 	default:
-		message << " Undefined indicator on: ";
+		message << " Undefined indicator at: ";
 		break;
 	}
 

@@ -79,7 +79,7 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 					if (flag == 2) {
 						_trials[_numOfTrials].initInputTaskHandle();
 						_trials[_numOfTrials].initInputEvents();
-						if (_trials[_numOfTrials].initAnalogOutputTasks() == ERROR) {
+						if (_trials[_numOfTrials].initAnalogOutputTasks() == INIT_ERROR) {
 							_validFlag = false;
 							break;
 						}
@@ -210,6 +210,9 @@ void Trial::initInputEvents() {
 }
 
 Outputer* getOutputer(std::string port, std::map<std::string, int> attr) {
+	if (port == "Tone") {
+		return new SimpleToneOutputer(port, attr);
+	}
 	size_t isAnalog = port.find(ANALOG_OUTPUT);
 	size_t isDigital = port.find(DIGITAL_OUTPUT);
 	if (isAnalog != std::string::npos) {
@@ -240,7 +243,7 @@ int Trial::initAnalogOutputTasks() {
 		}
 
 		Outputer* sm = getOutputer(token1, getAttributes(portName, params));
-		if (sm == NULL) { return ERROR; }
+		if (sm == NULL) { return INIT_ERROR; }
 
 		_events.push_back(sm);
 		if (!token2.empty()) {

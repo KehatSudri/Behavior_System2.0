@@ -13,6 +13,7 @@ void SessionControls::run(char* configFilePath) {
 	}
 
 	_conf = &conf;
+	_sessionTimeoutIndicator = _conf->getMaxSessionWaitTime();
 	do {
 		TaskHandle inputTaskHandle = conf.getInputTaskHandle();
 		std::vector<Event*> inputEvents = conf.getInputEvents();
@@ -38,7 +39,7 @@ void SessionControls::run(char* configFilePath) {
 			else { std::this_thread::sleep_for(std::chrono::milliseconds(300)); }
 		} while (isTrialRunning());
 		if (conf.changeCurrentTrial() == END_OF_SESSION) { conf.setSessionComplete(true); }
-	} while (!conf.isSessionComplete());
+	} while (isSessionRunning());
 	finishSession();
 }
 
@@ -48,6 +49,19 @@ bool SessionControls::isTrialRunning() {
 		LogFileWriter::getInstance().write(TRIAL_TIMEOUT_INDICATOR, "");
 	}
 	return _isTrialRunning;
+}
+
+bool SessionControls::isSessionRunning() {
+	bool isSessionTimeout = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - _sessionStartTime).count() >= _sessionTimeoutIndicator;
+	if (isSessionTimeout){
+		LogFileWriter::getInstance().write(SESSION_TIMEOUT_INDICATOR, "");
+		return false;
+	}
+	if (_conf->isSessionComplete()) {
+		LogFileWriter::getInstance().write(SESSION_END, "");
+		return false;
+	}
+	return true;
 }
 
 void SessionControls::startSession(char* configFilePath) {
@@ -63,10 +77,12 @@ void SessionControls::startSession(char* configFilePath) {
 }
 
 void SessionControls::pauseSession() {
+	if (this->_isPaused) { return; }
 	setIsPaused(true);
 }
 
 void SessionControls::resumeSession() {
+	if (!this->_isPaused) { return; }
 	setIsPaused(false);
 }
 

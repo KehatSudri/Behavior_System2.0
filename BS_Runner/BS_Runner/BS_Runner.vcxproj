@@ -100,7 +100,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>NIDAQmx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>NIDAQmx.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Program Files %28x86%29\National Instruments\NI-DAQ\DAQmx ANSI C Dev\lib\msvc;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

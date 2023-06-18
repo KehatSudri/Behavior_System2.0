@@ -11,8 +11,6 @@
 #define MOCK3 'Dev1/do0'
 #define MOCK4 'Dev1/do1'
 
-const char* TONE = "Dev1/port0/line9";
-
 #define ANALOG_OUTPUT "ao"
 #define ANALOG_INPUT "ai"
 #define DIGITAL_OUTPUT "port0"
@@ -21,7 +19,9 @@ const char* TONE = "Dev1/port0/line9";
 #define INPUT_INDICATOR 2
 #define TRIAL_END_CONDITION_INDICATOR 3
 #define TRIAL_TIMEOUT_INDICATOR 4
-#define TRIAL_START 5
+#define SESSION_TIMEOUT_INDICATOR 5
+#define TRIAL_START 6
+#define SESSION_END 7
 
 #define DELAY_PARAM "delay"
 #define MIN_DELAY_PARAM "min_delay"
@@ -37,7 +37,7 @@ const char* TONE = "Dev1/port0/line9";
 
 #define END_OF_SESSION 0
 #define CONTINUE_SESSION 1
-#define ERROR -1
+#define INIT_ERROR -1
 
 #define MAX_WATTAGE 5.0
 #define MIN_WATTAGE -5.0
