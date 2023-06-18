@@ -22,7 +22,7 @@ void SessionControls::run(char* configFilePath) {
 		setIsTrialRuning(true);
 		setIsPaused(false);
 
-		_timeoutIndicator = _conf->getMaxTrialWaitTime();
+		_trialTimeoutIndicator = _conf->getMaxTrialWaitTime();
 		LogFileWriter::getInstance().write(TRIAL_START, getCurrentRunningTrial());
 		_trialStartTime = std::chrono::high_resolution_clock::now();
 		for (auto envOutputer : conf.getEnvironmentOutputer()) { envOutputer->output(); }
@@ -43,7 +43,7 @@ void SessionControls::run(char* configFilePath) {
 }
 
 bool SessionControls::isTrialRunning() {
-	if (_isTrialRunning && std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - _trialStartTime).count() >= _timeoutIndicator) {
+	if (_isTrialRunning && std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - _trialStartTime).count() >= _trialTimeoutIndicator) {
 		_isTrialRunning = false;
 		LogFileWriter::getInstance().write(TRIAL_TIMEOUT_INDICATOR, "");
 	}

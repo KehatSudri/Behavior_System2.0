@@ -177,7 +177,6 @@ int SessionConf::changeCurrentTrial() {
 		std::mt19937 gen(rd());
 		std::uniform_real_distribution<double> dis(_minITI, _maxITI);
 		double random_iti = dis(gen);
-		std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count();
 		while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < random_iti) { continue; }
 	}
 	else {
@@ -211,9 +210,6 @@ void Trial::initInputEvents() {
 }
 
 Outputer* getOutputer(std::string port, std::map<std::string, int> attr) {
-	if (port == TONE) {
-		return new SimpleToneOutputer(port, attr);
-	}
 	size_t isAnalog = port.find(ANALOG_OUTPUT);
 	size_t isDigital = port.find(DIGITAL_OUTPUT);
 	if (isAnalog != std::string::npos) {

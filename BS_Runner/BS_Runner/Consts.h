@@ -11,7 +11,7 @@
 #define MOCK3 'Dev1/do0'
 #define MOCK4 'Dev1/do1'
 
-const char * TONE = "Dev1/port0/line9"
+const char* TONE = "Dev1/port0/line9";
 
 #define ANALOG_OUTPUT "ao"
 #define ANALOG_INPUT "ai"
@@ -47,6 +47,7 @@ const char * TONE = "Dev1/port0/line9"
 #define SAMPLE_PER_PORT 5
 #define CONFIGURATION_FILE_ERROR_MESSAGE "Failed to load session configuration file"
 
-const int SAMPLE_RATE = 44100;
-const double TWO_PI = 6.283185307179586476925286766559;
+#define SAMPLE_RATE 44100
+#define TWO_PI 6.2831853071795
+
 #endif // __Consts__
