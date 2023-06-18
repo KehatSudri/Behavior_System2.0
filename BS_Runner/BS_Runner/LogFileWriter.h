@@ -23,7 +23,7 @@ public:
 	}
 	void setSessionName(std::string sessionName) { _sessionName = sessionName; }
 	void createLogFile();
-	void write(int indicator, const std::string& port = "");
+	void write(int indicator, std::string port);
 };
 
 #endif // __LogFileWriter__

@@ -89,5 +89,5 @@ void SerialOutputer::run() {
 
 void TrialKiller::update(Event* event) {
 	SessionControls::getInstance().setIsTrialRuning(false);
-	LogFileWriter::getInstance().write(TRIAL_END_CONDITION_INDICATOR);
+	LogFileWriter::getInstance().write(TRIAL_END_CONDITION_INDICATOR, "");
 }

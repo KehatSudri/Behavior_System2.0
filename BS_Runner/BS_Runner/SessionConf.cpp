@@ -67,7 +67,7 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 				}
 				break;
 			case 2:
-				if (element == TRUE) {
+				if (element == "True") {
 					setisSessionRandom(true);
 				}
 				break;
@@ -93,7 +93,7 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 				name = line.substr(0, pos);
 				token2 = line.substr(pos + delimiter.length());
 				_trials[_numOfTrials]._AIPorts.push_back(name);
-				if (token2 == TRUE) { _trials[_numOfTrials]._trialKillers.push_back(name); }
+				if (token2 == "True") { _trials[_numOfTrials]._trialKillers.push_back(name); }
 				break;
 			case 2:
 				std::getline(inputFile, line);
@@ -161,7 +161,7 @@ int SessionConf::changeCurrentTrial() {
 		std::random_device rd;
 		std::mt19937 gen(rd());
 		std::uniform_real_distribution<double> dis(_minITI, _maxITI);
-		int random_iti = dis(gen);
+		double random_iti = dis(gen);
 		while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < random_iti) { continue; }
 	}
 	else {

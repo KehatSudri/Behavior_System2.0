@@ -36,8 +36,6 @@
 #define MAX_WATTAGE 5.0
 #define MIN_WATTAGE -5.0
 
-#define TRUE "True"
-
 #define NEW_LINE_CATEGORY '$'
 
 #define SAMPLE_PER_PORT 5

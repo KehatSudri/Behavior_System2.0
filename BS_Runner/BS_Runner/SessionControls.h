@@ -10,7 +10,6 @@ public class SessionControls {
 	int _timeoutIndicator;
 	std::chrono::time_point <std::chrono::steady_clock> _trialStartTime;
 	//char* _currentTrialName = "Trial name";
-	std::unique_ptr<SessionConf> _conf;
 	SessionConf* _conf;
 	std::thread _runThread;
 	void run(char* configFilePath);

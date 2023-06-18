@@ -1,5 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
-
 #include "SessionControls.h"
 #include "Consts.h"
 
@@ -48,7 +46,7 @@ void SessionControls::run(char* configFilePath) {
 bool SessionControls::isTrialRunning() {
 	if (_isTrialRunning && std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - _trialStartTime).count() >= _timeoutIndicator) {
 		_isTrialRunning = false;
-		LogFileWriter::getInstance().write(TRIAL_TIMEOUT_INDICATOR);
+		LogFileWriter::getInstance().write(TRIAL_TIMEOUT_INDICATOR, "");
 	}
 	return _isTrialRunning;
 }
