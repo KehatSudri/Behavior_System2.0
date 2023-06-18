@@ -107,6 +107,8 @@ class CreateTrialTypeUi(object):
             self.contingent_comboBox.addItems([current_event])
         if self.contingent_comboBox.count() >= 1 :
             self.name_comboBox_handler()
+        self.isEndCondition.setChecked(False)
+
 
     def on_remove_click(self):
         is_not_empty = len(self.events_order) > 0

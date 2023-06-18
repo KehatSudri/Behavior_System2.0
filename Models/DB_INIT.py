@@ -42,7 +42,7 @@ class DB:
         self.disconnect()
         self.connect(db_config)
         self.create_tables()
-        # self.insert_mock_events()
+        self.insert_mock_events()
 
     def connect(self, params):
         """ Connect to the PostgresSQL database server """
@@ -73,9 +73,7 @@ class DB:
     def insert_mock_events(self):
         sql = """INSERT INTO events(port, name, type, format, is_reward) VALUES (%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"""
         with self.conn.cursor() as cur:
-            cur.execute(sql, ("Dev1/ao0", "serialOutputMock", "Output", "Analog", False))
-            cur.execute(sql, ("Dev1/ao1", "outputMock", "Output", "Analog", False))
-            cur.execute(sql, ("Dev1/ai11", "inputMock", "Input", "Analog", False))
+            cur.execute(sql, ("Tone", "Tone", "Output", "Analog", False))
             self.conn.commit()
 
     def insert_hardware_event(self, name, port, type, format, is_reward):
