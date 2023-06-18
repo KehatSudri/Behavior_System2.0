@@ -16,11 +16,12 @@ class CreateEventUi(object):
         self.is_reward_comboBox = None
         self.add_pushButton = None
         self.back_pushButton = None
-        self.db=DB()
+        self.db = DB()
         self.analogPorts = ['ao0', 'ao1']
-        self.analogInputPorts =['ai0', 'ai1', 'ai2', 'ai3', 'ai4', 'ai5', 'ai6', 'ai7', 'ai8', 'ai9', 'ai10',
-                           'ai11', 'ai12', 'ai13', 'ai14', 'ai15', 'ai16']
-        self.digitalPorts=['p0.1','p0.2','p0.3','p0.4','p0.5','p0.6','p0.7','p0.8']
+        self.analogInputPorts = ['ai0', 'ai1', 'ai2', 'ai3', 'ai4', 'ai5', 'ai6', 'ai7', 'ai8', 'ai9', 'ai10',
+                                 'ai11', 'ai12', 'ai13', 'ai14', 'ai15', 'ai16']
+        self.digitalPorts = ['p0.1', 'p0.2', 'p0.3', 'p0.4', 'p0.5', 'p0.6', 'p0.7', 'p0.8', 'p0.9']
+
     def setupUi(self, main_window):
         uic.loadUi(get_ui_path('create_new_event.ui'), main_window)
         qss = get_qss_path('create_new_event')
@@ -49,7 +50,6 @@ class CreateEventUi(object):
         self.analog_radio_btn.setChecked(True)
         self.analogInput_handler()
 
-
     def analogInput_handler(self):
         self.ports_comboBox.clear()
         if self.input_radio_btn.isChecked():
@@ -59,14 +59,17 @@ class CreateEventUi(object):
         else:
             for port in self.analogPorts:
                 self.ports_comboBox.addItem(port)
+
     def analog_handler(self):
         self.ports_comboBox.clear()
         for port in self.analogPorts:
             self.ports_comboBox.addItem(port)
+
     def digital_handler(self):
         self.ports_comboBox.clear()
         for port in self.digitalPorts:
             self.ports_comboBox.addItem(port)
+
     def input_event_conf(self):
         self.analogInput_handler()
         self.is_reward_comboBox.setEnabled(not self.input_radio_btn.isChecked())
@@ -91,14 +94,13 @@ class CreateEventUi(object):
             error_warning("Not all data is filled")
             return
 
-
         port = "Dev1/" + self.ports_comboBox.currentText()
         if self.ports_comboBox.currentText() in self.digitalPorts:
             line = self.ports_comboBox.currentText().split(".")[1]
-            port=port+"/line"+line
+            port = port + "/line" + line
         in_use_ports = self.db.get_used_ports()
         string_in_use_ports = [p[0] for p in in_use_ports]
-        used_port_flag=0
+        used_port_flag = 0
         if port in string_in_use_ports:
             message_box = QMessageBox()
             message_box.setIcon(QMessageBox.Icon.Warning)
@@ -109,7 +111,6 @@ class CreateEventUi(object):
             if clicked_button == QMessageBox.StandardButton.Cancel:
                 print("Cancel button clicked.")
                 return
-
 
         try:
             self.vm.insert_hardware_event_to_DB(

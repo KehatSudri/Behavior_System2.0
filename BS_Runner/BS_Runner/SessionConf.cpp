@@ -206,6 +206,9 @@ void Trial::initInputEvents() {
 }
 
 Outputer* getOutputer(std::string port, std::map<std::string, int> attr) {
+	if (port == TONE) {
+		return new SimpleToneOutputer(port, attr);
+	}
 	size_t isAnalog = port.find(ANALOG_OUTPUT);
 	size_t isDigital = port.find(DIGITAL_OUTPUT);
 	if (isAnalog != std::string::npos) {

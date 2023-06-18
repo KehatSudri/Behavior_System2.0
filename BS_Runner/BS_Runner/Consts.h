@@ -11,6 +11,8 @@
 #define MOCK3 'Dev1/do0'
 #define MOCK4 'Dev1/do1'
 
+const char * TONE = "Dev1/port0/line9"
+
 #define ANALOG_OUTPUT "ao"
 #define ANALOG_INPUT "ai"
 #define DIGITAL_OUTPUT "port0"
