@@ -39,12 +39,12 @@ void Event::notifyListeners() {
 }
 
 void Event::set(float64 value) {
-	if (!_beenUpdated && value > 3.5) {
+	if (!_beenUpdated && value > 2) {
 		_beenUpdated = true;
 		notifyListeners();
 		LogFileWriter::getInstance().write(INPUT_INDICATOR, this->getPort());
 	}
-	else if (_beenUpdated && value < 3.5) {
+	else if (_beenUpdated && value < 2) {
 		_beenUpdated = false;
 	}
 }
@@ -111,7 +111,7 @@ void TrialKiller::update(Event* event) {
 	LogFileWriter::getInstance().write(TRIAL_END_CONDITION_INDICATOR, "");
 }
 
-SimpleToneOutputer::SimpleToneOutputer(std::string port, std::map<std::string, int> attributes): Outputer(NULL, port, attributes){
+SimpleToneOutputer::SimpleToneOutputer(std::string port, std::map<std::string, int> attributes) : Outputer(NULL, port, attributes) {
 	int numSamples = static_cast<int>(SAMPLE_RATE * attributes[DURATION_PARAM]);
 	WAVHeader header;
 	header.chunkSize = 36 + numSamples * sizeof(short);

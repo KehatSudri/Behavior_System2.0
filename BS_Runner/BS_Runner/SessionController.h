@@ -39,8 +39,6 @@ namespace BSRunner {
 		System::Windows::Forms::Button^ RewardBtn;
 		System::Windows::Forms::Button^ FinishBtn;
 		System::Windows::Forms::Button^ NextTrailBtn;
-
-
 		System::Windows::Forms::Panel^ NextTrialBtn;
 
 #pragma region Windows Form Designer generated code
@@ -58,7 +56,7 @@ namespace BSRunner {
 			// StartBtn
 			// 
 			this->StartBtn->Anchor = System::Windows::Forms::AnchorStyles::None;
-			this->StartBtn->Location = System::Drawing::Point(19, 13);
+			this->StartBtn->Location = System::Drawing::Point(21, 14);
 			this->StartBtn->Name = L"StartBtn";
 			this->StartBtn->Size = System::Drawing::Size(199, 35);
 			this->StartBtn->TabIndex = 0;
@@ -69,7 +67,7 @@ namespace BSRunner {
 			// PauseBtn
 			// 
 			this->PauseBtn->Anchor = System::Windows::Forms::AnchorStyles::None;
-			this->PauseBtn->Location = System::Drawing::Point(19, 65);
+			this->PauseBtn->Location = System::Drawing::Point(21, 66);
 			this->PauseBtn->Name = L"PauseBtn";
 			this->PauseBtn->Size = System::Drawing::Size(92, 35);
 			this->PauseBtn->TabIndex = 1;
@@ -80,7 +78,7 @@ namespace BSRunner {
 			// ResumeBtn
 			// 
 			this->ResumeBtn->Anchor = System::Windows::Forms::AnchorStyles::None;
-			this->ResumeBtn->Location = System::Drawing::Point(126, 65);
+			this->ResumeBtn->Location = System::Drawing::Point(128, 66);
 			this->ResumeBtn->Name = L"ResumeBtn";
 			this->ResumeBtn->Size = System::Drawing::Size(92, 35);
 			this->ResumeBtn->TabIndex = 2;
@@ -91,7 +89,7 @@ namespace BSRunner {
 			// RewardBtn
 			// 
 			this->RewardBtn->Anchor = System::Windows::Forms::AnchorStyles::None;
-			this->RewardBtn->Location = System::Drawing::Point(19, 119);
+			this->RewardBtn->Location = System::Drawing::Point(21, 120);
 			this->RewardBtn->Name = L"RewardBtn";
 			this->RewardBtn->Size = System::Drawing::Size(199, 35);
 			this->RewardBtn->TabIndex = 3;
@@ -102,7 +100,7 @@ namespace BSRunner {
 			// FinishBtn
 			// 
 			this->FinishBtn->Anchor = System::Windows::Forms::AnchorStyles::None;
-			this->FinishBtn->Location = System::Drawing::Point(19, 230);
+			this->FinishBtn->Location = System::Drawing::Point(21, 231);
 			this->FinishBtn->Name = L"FinishBtn";
 			this->FinishBtn->Size = System::Drawing::Size(199, 35);
 			this->FinishBtn->TabIndex = 4;
@@ -123,13 +121,13 @@ namespace BSRunner {
 			this->NextTrialBtn->Controls->Add(this->PauseBtn);
 			this->NextTrialBtn->Location = System::Drawing::Point(12, 12);
 			this->NextTrialBtn->Name = L"NextTrialBtn";
-			this->NextTrialBtn->Size = System::Drawing::Size(235, 283);
+			this->NextTrialBtn->Size = System::Drawing::Size(239, 284);
 			this->NextTrialBtn->TabIndex = 5;
 			// 
 			// NextTrailBtn
 			// 
 			this->NextTrailBtn->Anchor = System::Windows::Forms::AnchorStyles::None;
-			this->NextTrailBtn->Location = System::Drawing::Point(19, 178);
+			this->NextTrailBtn->Location = System::Drawing::Point(21, 179);
 			this->NextTrailBtn->Name = L"NextTrailBtn";
 			this->NextTrailBtn->Size = System::Drawing::Size(199, 35);
 			this->NextTrailBtn->TabIndex = 5;
@@ -141,7 +139,7 @@ namespace BSRunner {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(257, 307);
+			this->ClientSize = System::Drawing::Size(261, 308);
 			this->Controls->Add(this->NextTrialBtn);
 			this->Name = L"SessionController";
 			this->Text = L"Control Board";
@@ -150,6 +148,7 @@ namespace BSRunner {
 			this->ResumeLayout(false);
 
 		}
+
 #pragma endregion
 	private: System::Void PauseBtn_Click(System::Object^ sender, System::EventArgs^ e) {
 		SessionControls::getInstance().pauseSession();
@@ -170,6 +169,9 @@ namespace BSRunner {
 	}
 	private: System::Void NextTrialBtn_click(System::Object^ sender, System::EventArgs^ e) {
 		SessionControls::getInstance().nextTrial();
+	}
+	private: System::Void label1_Click(System::Object^ sender, System::EventArgs^ e) {
+
 	}
 	};
 }
