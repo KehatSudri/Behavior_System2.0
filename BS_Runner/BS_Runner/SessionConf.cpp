@@ -60,11 +60,11 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 		std::getline(ss, element, ',');
 		pos = element.find(";");
 		if (pos != std::string::npos) {
-			setMinITI(std::stod(element.substr(0, pos)));
-			setMaxITI(std::stod(element.substr(pos + delimiter.length())));
+			setMinITI(std::stoi(element.substr(0, pos)));
+			setMaxITI(std::stoi(element.substr(pos + delimiter.length())));
 		}
 		else {
-			setMinITI(std::stod(element));
+			setMinITI(std::stoi(element) / 1000);
 		}
 		std::getline(ss, element, ',');
 		if (element == "True") {
@@ -177,6 +177,7 @@ int SessionConf::changeCurrentTrial() {
 		std::mt19937 gen(rd());
 		std::uniform_real_distribution<double> dis(_minITI, _maxITI);
 		double random_iti = dis(gen);
+		std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count();
 		while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < random_iti) { continue; }
 	}
 	else {
@@ -187,6 +188,10 @@ int SessionConf::changeCurrentTrial() {
 
 TaskHandle SessionConf::getInputTaskHandle() {
 	return _trials[_currentTrial].getInputTaskHandle();
+}
+
+double SessionConf::getMaxTrialWaitTime() {
+	return _trials[_currentTrial].getMaxTrialWaitTime();
 }
 
 std::vector<EnvironmentOutputer*> SessionConf::getEnvironmentOutputer() {

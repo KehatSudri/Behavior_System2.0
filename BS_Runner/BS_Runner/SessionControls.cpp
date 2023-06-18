@@ -13,17 +13,16 @@ void SessionControls::run(char* configFilePath) {
 	}
 
 	_conf = &conf;
-	_timeoutIndicator = _conf->getMaxSessionWaitTime();
 	do {
 		TaskHandle inputTaskHandle = conf.getInputTaskHandle();
 		std::vector<Event*> inputEvents = conf.getInputEvents();
-
 		int inputPortsSize = conf.getInputEvents().size();
 		std::vector<float64> data(inputPortsSize * SAMPLE_PER_PORT);
 		int32 read;
-
 		setIsTrialRuning(true);
 		setIsPaused(false);
+
+		_timeoutIndicator = _conf->getMaxTrialWaitTime();
 		LogFileWriter::getInstance().write(TRIAL_START, getCurrentRunningTrial());
 		_trialStartTime = std::chrono::high_resolution_clock::now();
 		for (auto envOutputer : conf.getEnvironmentOutputer()) { envOutputer->output(); }

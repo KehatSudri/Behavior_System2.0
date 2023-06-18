@@ -7,7 +7,7 @@ public class SessionControls {
 	bool _isSessionRunning = false;
 	bool _isTrialRunning = false;
 	bool _isPaused = false;
-	int _timeoutIndicator;
+	double _timeoutIndicator;
 	std::chrono::time_point <std::chrono::steady_clock> _trialStartTime;
 	//char* _currentTrialName = "Trial name";
 	SessionConf* _conf;

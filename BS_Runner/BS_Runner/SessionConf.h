@@ -52,6 +52,7 @@ public:
 	int getNumOfTrials() { return _numOfTrials; }
 	bool isValid() { return _validFlag; }
 	bool isSessionComplete() { return _sessionComplete; }
+	double getMaxTrialWaitTime();
 	int getMaxSessionWaitTime() { return _maxSessionWaitTime; }
 	void setSessionComplete(bool state) { _sessionComplete = state; }
 	std::string getCurrentRunningTrial();
