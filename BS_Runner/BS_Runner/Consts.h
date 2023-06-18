@@ -44,4 +44,7 @@
 
 #define SAMPLE_PER_PORT 5
 #define CONFIGURATION_FILE_ERROR_MESSAGE "Failed to load session configuration file"
+
+const int SAMPLE_RATE = 44100;
+const double TWO_PI = 6.283185307179586476925286766559;
 #endif // __Consts__

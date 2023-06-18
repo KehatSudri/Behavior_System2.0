@@ -48,6 +48,13 @@ public:
 	void output() override;
 };
 
+class SimpleToneOutputer : public Outputer {
+	std::string _wav;
+public:
+	SimpleToneOutputer(std::string port, std::map<std::string, int> attributes);
+	void output() override;
+};
+
 class TrialKiller : public Listener {
 public:
 	void update(Event* event) override;
