@@ -177,10 +177,10 @@ int SessionConf::changeCurrentTrial() {
 		std::mt19937 gen(rd());
 		std::uniform_real_distribution<double> dis(_minITI, _maxITI);
 		double random_iti = dis(gen);
-		while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < random_iti) { continue; }
+		while (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - start_time).count() < random_iti) { continue; }
 	}
 	else {
-		while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _minITI) { continue; }
+		while (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _minITI) { continue; }
 	}
 	return code;
 }
@@ -244,7 +244,9 @@ int Trial::initAnalogOutputTasks() {
 
 		Outputer* sm = getOutputer(token1, getAttributes(portName, params));
 		if (sm == NULL) { return INIT_ERROR; }
-
+		if (params[0]) {
+			_rewardOutputers.push_back(sm);
+		}
 		_events.push_back(sm);
 		if (!token2.empty()) {
 			for (auto& eve : _events) {
@@ -291,8 +293,9 @@ std::vector<Event*> Trial::getInputEvents() const {
 }
 
 void Trial::giveReward() {
-	// TODO implement "give reward"
-	return;
+	if (_rewardOutputers.size()) {
+		_rewardOutputers[0]->output();
+	}
 }
 
 Trial::~Trial() {

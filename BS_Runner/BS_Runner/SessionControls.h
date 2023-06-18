@@ -12,7 +12,7 @@ public class SessionControls {
 	std::chrono::duration<double> _elapsedTime;
 	std::chrono::time_point <std::chrono::steady_clock> _trialStartTime;
 	std::chrono::time_point <std::chrono::steady_clock> _sessionStartTime;
-	//char* _currentTrialName = "Trial name";
+	char* _currentTrialName = "Trial name";
 	SessionConf* _conf;
 	std::thread _runThread;
 	void run(char* configFilePath);
@@ -32,7 +32,7 @@ public:
 	void pauseSession();
 	void resumeSession();
 	void finishSession();
-	//char* getCurrentTrialName();
+	char* getCurrentTrialName() { return _currentTrialName; };
 	void setIsPaused(bool state) { _isPaused = state; }
 	std::string getCurrentRunningTrial();
 	void setIsSessionRunning(bool state) { _isSessionRunning = state; }
