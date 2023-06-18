@@ -13,7 +13,7 @@ void SessionControls::run(char* configFilePath) {
 	}
 
 	_conf = &conf;
-	_timeoutIndicator = _conf->getMaxTrialWaitTime();
+	_timeoutIndicator = _conf->getMaxSessionWaitTime();
 	do {
 		TaskHandle inputTaskHandle = conf.getInputTaskHandle();
 		std::vector<Event*> inputEvents = conf.getInputEvents();
@@ -51,7 +51,7 @@ bool SessionControls::isTrialRunning() {
 	return _isTrialRunning;
 }
 
-void SessionControls::startSession(const char* configFilePath) {
+void SessionControls::startSession(char* configFilePath) {
 	if (_isSessionRunning) return;
 	if (!configFilePath) {
 		MessageBox::Show(CONFIGURATION_FILE_ERROR_MESSAGE);

@@ -6,10 +6,21 @@
 std::map<std::string, int>  getAttributes(std::string port, const std::vector<int>& params) {
 	std::map<std::string, int> attributes;
 	auto it = params.begin();
-	attributes[DELAY_PARAM] = *it;
-	attributes[DURATION_PARAM] = *(it + 1);
-	attributes[FREQUENCY_PARAM] = *(it + 2);
-	attributes[AMPLITUDE_PARAM] = *(it + 3);
+	attributes[IS_REWARD_PARAM] = *(it++);
+	attributes[IS_RANDOM_PARAM] = *(it++);
+	if (attributes[IS_RANDOM_PARAM] == 1) {
+		attributes[MIN_DELAY_PARAM] = *(it++);
+		attributes[MAX_DELAY_PARAM] = *(it++);
+		attributes[DURATION_PARAM] = *(it++);
+	}
+	else {
+		attributes[DELAY_PARAM] = *(it++);
+		attributes[DURATION_PARAM] = *(it++);
+	}
+	if (it != params.end()) {
+		attributes[FREQUENCY_PARAM] = *(it++);
+		attributes[AMPLITUDE_PARAM] = *(it++);
+	}
 	return attributes;
 }
 
@@ -39,54 +50,70 @@ int pickRandomTrial(const std::vector<int>& probabilities) {
 SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 	std::ifstream inputFile(path);
 	if (inputFile.is_open()) {
-		int category = 0;
 		std::string line, delimiter = ",";
+		std::getline(inputFile, line);
+		setMaxSessionWaitTime(std::stoi(line));
 		std::getline(inputFile, line);
 		std::stringstream ss(line);
 		std::string element;
 		size_t pos;
-		int type = 0;
-		while (std::getline(ss, element, ',')) {
-			std::string iti = line.substr(1, line.length() - 2);
-			pos = iti.find(delimiter);
-			if (type == 1) {
-				iti = element.substr(1, element.length() - 2);
-				pos = iti.find(delimiter);
-			}
-			switch (type) {
-			case 0:
-				setMaxTrialWaitTime(std::stoi(element));
-				break;
-			case 1:
-				if (pos != std::string::npos) {
-					setMinITI(std::stod(iti.substr(0, pos)));
-					setMaxITI(std::stod(iti.substr(pos + delimiter.length())));
-				}
-				else {
-					setMinITI(std::stod(iti));
-				}
-				break;
-			case 2:
-				if (element == "True") {
-					setisSessionRandom(true);
-				}
-				break;
-			default:
-				break;
-			}
-			++type;
+		std::getline(ss, element, ',');
+		pos = element.find(";");
+		if (pos != std::string::npos) {
+			setMinITI(std::stod(element.substr(0, pos)));
+			setMaxITI(std::stod(element.substr(pos + delimiter.length())));
 		}
-		while (std::getline(inputFile, line)) {
-			if (line[0] == NEW_LINE_CATEGORY || line.empty()) {
+		else {
+			setMinITI(std::stod(element));
+		}
+		std::getline(ss, element, ',');
+		if (element == "True") {
+			setisSessionRandom(true);
+		}
+
+		int category = 0;
+		int flag = 2;
+		while (flag) {
+			std::getline(inputFile, line); {
+				if (line.empty()) {
+					if (flag == 2) {
+						_trials[_numOfTrials].initInputTaskHandle();
+						_trials[_numOfTrials].initInputEvents();
+						if (_trials[_numOfTrials].initAnalogOutputTasks() == ERROR) {
+							_validFlag = false;
+							break;
+						}
+						_trials[_numOfTrials].initTrialKillers();
+						if (_trials[_numOfTrials]._AIPorts.empty()) {
+							_validFlag = false;
+							break;
+						}
+						++_numOfTrials;
+						category = 0;
+					}
+					--flag;
+					continue;
+				}
+			}
+			if (line[0] == NEW_LINE_CATEGORY) {
 				++category;
-				if (line[0] == NEW_LINE_CATEGORY) { continue; }
+				continue;
 			}
 			std::string name = line, token2;
+			if (category == 0) {
+				std::getline(inputFile, line);
+			}
+			std::stringstream ss(line);
 			switch (category) {
 			case 0:
+				flag = 2;
 				_trials.push_back({ name });
-				std::getline(inputFile, line);
-				_trials[_numOfTrials]._remainingRuns = std::stoi(line);
+				std::getline(ss, element, ',');
+				_trials[_numOfTrials]._remainingRuns = std::stoi(element);
+				std::getline(ss, element, ',');
+				_trials[_numOfTrials].setMaxTrialWaitTime(std::stoi(element));
+				std::getline(ss, element, ',');
+				_trialProbabilities.push_back(stoi(element));
 				break;
 			case 1:
 				pos = line.find(delimiter);
@@ -100,19 +127,7 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 				_trials[_numOfTrials]._AOPorts.push_back({ name ,getParams(line) });
 				break;
 			default:
-				_trials[_numOfTrials].initInputTaskHandle();
-				_trials[_numOfTrials].initInputEvents();
-				if (_trials[_numOfTrials].initAnalogOutputTasks() == ERROR) {
-					_validFlag = false;
-					break;
-				}
-				_trials[_numOfTrials].initTrialKillers();
-				if (_trials[_numOfTrials]._AIPorts.empty()) {
-					_validFlag = false;
-					break;
-				}
-				++_numOfTrials;
-				category = 0;
+				break;
 			}
 		}
 		inputFile.close();

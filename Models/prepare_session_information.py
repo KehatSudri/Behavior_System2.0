@@ -26,9 +26,9 @@ def prepare_session_information(session_name, ports, dependencies, trial_name, i
         # file.write(str(max_session_time[0]) + ",")
         iti_vals = db.get_iti_vals(session_name)
         if is_fixed_iti:
-            file.write("(" + str(iti_vals[0]) + "),")
+            file.write(str(iti_vals[0]) + ",")
         else:
-            file.write(str(iti_vals) + ",")
+            file.write(str(iti_vals[0]) + ";"+str(iti_vals[1]) + ",")
         file.write(str(isRandomOrder) + "\n")
         if(isRandomOrder):
             file.write("Trial_name:" + trial_name + "\n" + repeats[int(index / 2)] + "," + MaxTime[int(index / 2)]+ "," + Percent[int(index / 2)]+ "\n")

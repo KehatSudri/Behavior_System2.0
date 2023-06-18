@@ -39,7 +39,7 @@ void SimpleAnalogOutputer::output() {
 		continue;
 	}
 	start_time = std::chrono::high_resolution_clock::now();
-	DAQmxWriteAnalogScalarF64(_handler, true, 5.0, _attributes[AMPLITUDE_PARAM], NULL);
+	DAQmxWriteAnalogScalarF64(_handler, true, 5.0, 3.7, NULL);
 	notifyListeners();
 	LogFileWriter::getInstance().write(OUTPUT_INDICATOR, this->getPort());
 	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DURATION_PARAM]) {

@@ -24,8 +24,7 @@ public:
 		static SessionControls instance;
 		return instance;
 	}
-
-	void startSession(const char* configFilePath);
+	void startSession(char* configFilePath);
 	void pauseSession();
 	void resumeSession();
 	void finishSession();

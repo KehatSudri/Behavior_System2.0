@@ -1,9 +1,10 @@
+import subprocess
+import threading
+
 from datetime import datetime
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QTableView, QHeaderView, QTableWidgetItem, QAbstractItemView, QAbstractScrollArea
+from pathlib import Path
 from PyQt6 import QtCore, QtWidgets, uic
 from Models.DB_INIT import DB
-from Models.prepare_session_information import prepare_session_information
 from Views.add_trial import AddTrialUi
 from Views.edit_session_template import EditSessionUi
 from Views.choose_template import ChooseTemplateUi
@@ -11,6 +12,10 @@ from Views.edit_trial import EditTrialUi
 from Views.utils import error_warning, get_ui_path
 from Views.random_order import RandomOrderUi
 from Views.notes import NotesUi
+
+
+def run_subprocess(command):
+    subprocess.run(command)
 
 
 class CreateSessionUi(object):
@@ -354,30 +359,31 @@ class CreateSessionUi(object):
         table = self.trials_table
         index = table.rowCount()
         table.insertRow(index)
-        table.setItem(index, 0, QTableWidgetItem(self.trials_in_session[index * 2]))
+        table.setItem(index, 0, QtWidgets.QTableWidgetItem(self.trials_in_session[index * 2]))
         for event, parameters in self.trials_in_session[index * 2 + 1].items():
-            if self.db.is_random_event_in_a_given_trial(self.trials_in_session[index * 2],event)[0]:
+            if self.db.is_random_event_in_a_given_trial(self.trials_in_session[index * 2], event)[0]:
                 if event == 'Tone':
                     params += event + ":" + " min delay - " + parameters[0] + ", max delay - " + parameters[
                         1] + ", duration - " + parameters[
-                        2] + ", frequency - " + parameters[3] + ", tone amplitude - " + parameters[4]+ "\n"
+                                  2] + ", frequency - " + parameters[3] + ", tone amplitude - " + parameters[4] + "\n"
                 elif event == 'Reward':
-                    params += event + ":" + " min delay - " + parameters[0] + ", max delay - " + parameters[1] + ", duration - " + parameters[2] + "\n"
+                    params += event + ":" + " min delay - " + parameters[0] + ", max delay - " + parameters[
+                        1] + ", duration - " + parameters[2] + "\n"
                 else:
                     params += event + ":" + " min delay - " + parameters[0] + ", max delay - " + parameters[
                         1] + ", duration - " + parameters[
-                        2] + "\n"
+                                  2] + "\n"
             else:
                 if event == 'Tone':
                     params += event + ":" + " delay - " + parameters[0] + ", duration - " + parameters[
-                        1] + ", frequency - " + parameters[2] + ", tone amplitude - " + parameters[3]+ "\n"
+                        1] + ", frequency - " + parameters[2] + ", tone amplitude - " + parameters[3] + "\n"
                 elif event == 'Reward':
                     params += event + ":" + " delay - " + parameters[0] + ", duration - " + parameters[1] + "\n"
                 else:
                     params += event + ":" + " delay - " + parameters[0] + ", duration - " + parameters[
                         1] + "\n"
 
-            table.setItem(index, 1, QTableWidgetItem(params))
+            table.setItem(index, 1, QtWidgets.QTableWidgetItem(params))
             self.db = DB()
             trial_name = self.trials_in_session[index * 2]
             self.db.insert_params(trial_name, event, str(','.join(parameters)))
@@ -403,7 +409,7 @@ class CreateSessionUi(object):
         trials_dict = {}
         template_info = self.db.get_template(session_name, subject)
         var1, session_name, subject, exp_name, date, min_iti, max_iti, is_fixed_iti_type, max_trial_time, notes = \
-        template_info[0]
+            template_info[0]
         self.session_name_te.setText(session_name)
         self.subject_id_te.setText(subject)
         self.exp_name_te.setText(exp_name)
@@ -415,15 +421,15 @@ class CreateSessionUi(object):
         self.notes = notes
         trials = self.db.get_trial_name_by_session(session_name)
         trials_ = [x[0] for x in trials]
-        col1 = QTableWidgetItem("Trial name")
-        col2 = QTableWidgetItem("parameters")
+        col1 = QtWidgets.QTableWidgetItem("Trial name")
+        col2 = QtWidgets.QTableWidgetItem("parameters")
         self.trials_table.setHorizontalHeaderItem(0, col1)
         self.trials_table.setHorizontalHeaderItem(1, col2)
         for trial in trials_:
             table = self.trials_table
             index = table.rowCount()
             table.insertRow(index)
-            table.setItem(index, 0, QTableWidgetItem(trial))
+            table.setItem(index, 0, QtWidgets.QTableWidgetItem(trial))
             events = self.db.get_events_by_trial_name(trial)
             events = [x[0] for x in events]
             params = ""
@@ -455,7 +461,7 @@ class CreateSessionUi(object):
                         else:
                             params += event + ":" + " delay - " + parameters[0] + ", duration - " + parameters[
                                 1] + "\n"
-            table.setItem(index, 1, QTableWidgetItem(params))
+            table.setItem(index, 1, QtWidgets.QTableWidgetItem(params))
             self.trials_in_session.append(trial)
             self.trials_in_session.append(trials_dict)
         self.edit_pushButton.setEnabled(True)
@@ -472,9 +478,8 @@ class CreateSessionUi(object):
         print(self.trials_in_session)
 
     def on_session_define_event_handler(self):
-        import subprocess
-        from pathlib import Path
         config_path = str(Path(__file__).parent.parent / 'config_files' / 'session_config.txt')
         bs_runner_path = r"BS_Runner/Debug/BS_Runner.exe"
         command = [bs_runner_path, config_path, self.session_name_te.toPlainText()]
-        subprocess.run(command)
+        subprocess_thread = threading.Thread(target=run_subprocess, args=(command,))
+        subprocess_thread.start()

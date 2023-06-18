@@ -22,6 +22,10 @@
 #define TRIAL_START 5
 
 #define DELAY_PARAM "delay"
+#define MIN_DELAY_PARAM "min_delay"
+#define MAX_DELAY_PARAM "max_delay"
+#define IS_RANDOM_PARAM "is_random"
+#define IS_REWARD_PARAM "is_reward"
 #define DURATION_PARAM "duration"
 #define FREQUENCY_PARAM "frequency"
 #define AMPLITUDE_PARAM "amplitude"
