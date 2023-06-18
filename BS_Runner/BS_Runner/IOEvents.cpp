@@ -1,6 +1,23 @@
+#include <windows.h>
 #include "IOEvents.h"
 #include "SessionControls.h"
 #include "Consts.h"
+
+struct WAVHeader {
+	char chunkId[4] = { 'R', 'I', 'F', 'F' };
+	int chunkSize = 0;
+	char format[4] = { 'W', 'A', 'V', 'E' };
+	char subchunk1Id[4] = { 'f', 'm', 't', ' ' };
+	int subchunk1Size = 16;
+	short audioFormat = 1;
+	short numChannels = 1;
+	int sampleRate = SAMPLE_RATE;
+	int byteRate = SAMPLE_RATE * sizeof(short);
+	short blockAlign = sizeof(short);
+	short bitsPerSample = 8 * sizeof(short);
+	char subchunk2Id[4] = { 'd', 'a', 't', 'a' };
+	int subchunk2Size = 0;
+};
 
 void Event::attachListener(Listener* listener) {
 	_listeners.push_back(listener);
@@ -90,4 +107,41 @@ void SerialOutputer::run() {
 void TrialKiller::update(Event* event) {
 	SessionControls::getInstance().setIsTrialRuning(false);
 	LogFileWriter::getInstance().write(TRIAL_END_CONDITION_INDICATOR, "");
+}
+
+SimpleToneOutputer::SimpleToneOutputer(std::string port, std::map<std::string, int> attributes): Outputer(NULL, port, attributes){
+	int numSamples = static_cast<int>(SAMPLE_RATE * attributes[DURATION_PARAM]);
+	WAVHeader header;
+	header.chunkSize = 36 + numSamples * sizeof(short);
+	header.subchunk2Size = numSamples * sizeof(short);
+	std::time_t now_c = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+	std::stringstream ss;
+	ss << std::put_time(std::localtime(&now_c), "%T") << ".wav";
+	std::string filename = ss.str();
+	std::replace(filename.begin(), filename.end(), ':', ';');
+	_wav = filename;
+	std::ofstream file(filename.c_str(), std::ios::binary);
+	file.write(reinterpret_cast<const char*>(&header), sizeof(header));
+	for (int i = 0; i < numSamples; i++) {
+		double t = static_cast<double>(i) / SAMPLE_RATE;
+		double value = sin(TWO_PI * attributes[FREQUENCY_PARAM] * t);
+		short sample = static_cast<short>(value * 32767);
+		file.write(reinterpret_cast<const char*>(&sample), sizeof(sample));
+	}
+	file.close();
+}
+
+void SimpleToneOutputer::output() {
+	while (SessionControls::getInstance().getIsPaused()) {
+		continue;
+	}
+	auto start_time = std::chrono::high_resolution_clock::now();
+	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DELAY_PARAM]) {
+		continue;
+	}
+	notifyListeners();
+	LogFileWriter::getInstance().write(OUTPUT_INDICATOR, this->getPort());
+	std::wstring filePathWide(_wav.begin(), _wav.end());
+	LPCWSTR filePath = filePathWide.c_str();
+	PlaySound(filePath, NULL, SND_FILENAME);
 }
