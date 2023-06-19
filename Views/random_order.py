@@ -44,6 +44,8 @@ class RandomOrderUi(object):
             self.trials_tableWidget.insertRow(i)
             self.trials_tableWidget.setItem(i, 0, QTableWidgetItem(self.parent.trials_in_session[i*2]))
             self.trials_tableWidget.setItem(i, 1, QTableWidgetItem("1"))
+            self.trials_tableWidget.setItem(i, 2, QTableWidgetItem("0"))
+            self.trials_tableWidget.setItem(i, 3, QTableWidgetItem("0"))
         return
     def checkbox_state_changed(self):
         if not self.isRandomOrder.isChecked():
@@ -53,6 +55,8 @@ class RandomOrderUi(object):
             column_index = self.trials_tableWidget.columnCount() - 1
             header_item = QTableWidgetItem("Percent")
             self.trials_tableWidget.setHorizontalHeaderItem(column_index, header_item)
+            for i in range(int(len(self.parent.trials_in_session) / 2)):
+                self.trials_tableWidget.setItem(i, 3, QTableWidgetItem("0"))
     def get_total_num_of_trials(self):
         total_num_of_trials = self.total_num_of_trials_spinBox.value()
         self.parent.total_num = total_num_of_trials
@@ -73,6 +77,14 @@ class RandomOrderUi(object):
 
 
     def accept(self):
+        for row in range(self.trials_tableWidget.rowCount()):
+            if not self.trials_tableWidget.item(row, 1).text().isdigit() and self.trials_tableWidget.item(row, 2).text().isdigit():
+                error_warning("Please enter only numbers")
+                return
+            if self.isRandomOrder.isChecked():
+                if not self.trials_tableWidget.item(row, 3).text().isdigit():
+                    error_warning("Please enter only numbers")
+                    return
         self.on_next_click(1)
         session_name = self.config_info[0]
         trials_in_session = self.config_info[1]
