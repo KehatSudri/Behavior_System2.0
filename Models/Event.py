@@ -14,5 +14,5 @@ class Event(object):
 
     def __call__(self, *args, **keywargs):
         for eventhandler in self.__eventhandlers:
-            #eventhandler(*args, **keywargs)
+            # eventhandler(*args, **keywargs)
             eventhandler(*args)

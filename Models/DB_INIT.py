@@ -5,6 +5,7 @@ import psycopg2
 from configparser import ConfigParser
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
+
 def config(filename):
     section = 'postgresql'
     parser = ConfigParser()
@@ -77,28 +78,30 @@ class DB:
             self.conn.commit()
 
     def insert_hardware_event(self, name, port, type, format, is_reward):
-       try:
+        try:
             sql = """INSERT INTO events(port, name, type, format, is_reward) VALUES (%s,%s,%s,%s,%s)"""
             with self.conn.cursor() as cur:
                 cur.execute(sql, (name, port, type, format, is_reward))
                 self.conn.commit()
-       except Exception as e:
+        except Exception as e:
             self.conn.rollback()
             raise e
 
-    def insert_session(self,name, subjectid, experimenter_name,last_used,min_iti,
-                max_iti,is_fixed_iti,max_trial_time,notes):
+    def insert_session(self, name, subjectid, experimenter_name, last_used, min_iti,
+                       max_iti, is_fixed_iti, max_trial_time, notes):
         try:
             sql = """
                 INSERT INTO sessions(name,subjectid,experimenter_name,last_used,min_iti,max_iti,is_fixed_iti,max_trial_time,notes)
                  VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
                  """
             with self.conn.cursor() as cur:
-                cur.execute(sql, (name, subjectid, experimenter_name,last_used, min_iti, max_iti,is_fixed_iti,max_trial_time,notes))
+                cur.execute(sql, (
+                name, subjectid, experimenter_name, last_used, min_iti, max_iti, is_fixed_iti, max_trial_time, notes))
                 self.conn.commit()
         except Exception as e:
             self.conn.rollback()
             raise e
+
     def insert_session_to_trials(self, session_name, trial_name):
         sql = """
                         INSERT INTO session_to_trials(session_name, trial_name)
@@ -107,19 +110,21 @@ class DB:
         with self.conn.cursor() as cur:
             cur.execute(sql, (session_name, trial_name))
             self.conn.commit()
+
     def insert_new_trial(self, name):
         try:
             sql = """INSERT INTO trials(name) VALUES (%s)"""
             with self.conn.cursor() as cur:
-                cur.execute(sql, (name, ))
+                cur.execute(sql, (name,))
         except Exception as e:
             self.conn.rollback()
             raise e
 
-    def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on,isRandom,isEndCondition):
+    def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on, isRandom,
+                                    isEndCondition):
         sql = """INSERT INTO events_to_trials(event_name, trial_name, is_contingent, contingent_on,israndom,isendcondition) VALUES (%s,%s,%s,%s,%s,%s)"""
         with self.conn.cursor() as cur:
-            cur.execute(sql, (event_name, trial_name, is_contingent, contingent_on,isRandom,isEndCondition ))
+            cur.execute(sql, (event_name, trial_name, is_contingent, contingent_on, isRandom, isEndCondition))
             self.conn.commit()
 
     def insert_session_trials(self, session_id, trial_type_id, percent_in_session=None,
@@ -138,7 +143,8 @@ class DB:
         # commit the changes
         self.conn.commit()
         return sess_trial_id
-    def isEndConditionEvent(self,event_name,trial_name):
+
+    def isEndConditionEvent(self, event_name, trial_name):
         with self.conn.cursor() as cur:
             sql = """SELECT isendcondition FROM events_to_trials WHERE event_name=%s AND trial_name=%s"""
             cur.execute(sql, (event_name, trial_name))
@@ -203,12 +209,14 @@ class DB:
             cur.execute(sql, (port,))
             names = cur.fetchone()
         return names
+
     def get_event_name_by_port_and_trial(self, port, trial):
         with self.conn.cursor() as cur:
             sql = f"SELECT name FROM events , events_to_trials WHERE port=%s AND events_to_trials.trial_name = %s "
-            cur.execute(sql, (port,trial,))
+            cur.execute(sql, (port, trial,))
             name = cur.fetchone()
         return name
+
     def get_session_trials(self, sess_id):
         with self.conn.cursor() as cur:
             cur.execute(f'SELECT * FROM session_to_trials WHERE session_id={sess_id}')
@@ -226,11 +234,13 @@ class DB:
             cur.execute("SELECT * FROM trials")
             trials_types = cur.fetchall()
         return trials_types
+
     def get_sessions_names(self):
         with self.conn.cursor() as cur:
             cur.execute("SELECT name FROM sessions")
             sessions_names = cur.fetchall()
         return sessions_names
+
     def get_ports(self, trial_name):
         with self.conn.cursor() as cur:
             temp = f"SELECT port, type, name FROM events, events_to_trials WHERE name = event_name AND " \
@@ -238,12 +248,14 @@ class DB:
             cur.execute(temp)
             ports = cur.fetchall()
         return ports
+
     def get_used_ports(self):
         with self.conn.cursor() as cur:
             temp = f"SELECT port FROM events"
             cur.execute(temp)
             ports = cur.fetchall()
         return ports
+
     def get_dependencies(self, trial_name):
         with self.conn.cursor() as cur:
             temp = f"SELECT h1.port, h2.port FROM events as h1, events as h2, events_to_trials WHERE h1.name = " \
@@ -270,6 +282,7 @@ class DB:
             cur.execute(f"SELECT name FROM trials WHERE events = '{events}'")
             trials_types_events = cur.fetchone()
         return trials_types_events
+
     def get_trial_name_by_session(self, session):
         with self.conn.cursor() as cur:
             cur.execute(f"SELECT trial_name FROM session_to_trials  WHERE session_name = '{session}'")
@@ -281,7 +294,8 @@ class DB:
             cur.execute(f"SELECT event_name FROM events_to_trials WHERE trial_name = '{trial}'")
             events = cur.fetchall()
         return events
-    def get_params_by_event_and_trial_name(self, event,trial):
+
+    def get_params_by_event_and_trial_name(self, event, trial):
         with self.conn.cursor() as cur:
             cur.execute(f"SELECT params FROM events_to_trials WHERE event_name = '{event}' AND trial_name='{trial}' ")
             params = cur.fetchall()
@@ -353,7 +367,8 @@ class DB:
         with self.conn.cursor() as cur:
             cur.execute("DELETE FROM trials WHERE name = %s", (name,))
             self.conn.commit()
-    def is_random_event_in_a_given_trial(self,trial,event):
+
+    def is_random_event_in_a_given_trial(self, trial, event):
         with self.conn.cursor() as cur:
             cur.execute(f"SELECT israndom FROM events_to_trials WHERE event_name='{event}' AND trial_name='{trial}'")
             isRandom = cur.fetchone()
@@ -364,12 +379,13 @@ class DB:
             cur.execute(
                 "SELECT name FROM trials JOIN events_to_trials ON trials.name = trial_name AND event_name = %s ",
                 (name,))
-            a= cur.fetchall()
+            a = cur.fetchall()
             for trial in a:
-                    t= trial[0]
-                    self.delete_trial_type(t)
-            cur.execute("DELETE FROM events WHERE name =  %s ",(name,))
-            cur.execute("DELETE FROM sessions WHERE NOT EXISTS (SELECT session_name FROM session_to_trials WHERE session_name = sessions.name)")
+                t = trial[0]
+                self.delete_trial_type(t)
+            cur.execute("DELETE FROM events WHERE name =  %s ", (name,))
+            cur.execute(
+                "DELETE FROM sessions WHERE NOT EXISTS (SELECT session_name FROM session_to_trials WHERE session_name = sessions.name)")
             self.conn.commit()
 
     def delete_template(self, temp_id):
@@ -382,52 +398,63 @@ class DB:
         cur.execute("DELETE FROM sessions WHERE session_id=%s", (temp_id,))
         self.conn.commit()
         cur.close()
+
     def get_iti_vals(self, session_name):
         with self.conn.cursor() as cur:
             cur.execute(f"SELECT min_iti , max_iti FROM sessions WHERE name='{session_name}'")
-            vals  = cur.fetchone()
+            vals = cur.fetchone()
         return vals
-    def get_max_trial_time(self,session_name):
+
+    def get_max_trial_time(self, session_name):
         with self.conn.cursor() as cur:
             cur.execute(f"SELECT max_trial_time FROM sessions WHERE name='{session_name}'")
-            max_trial_time  = cur.fetchone()
+            max_trial_time = cur.fetchone()
         return max_trial_time
+
     def delete_subject_session(self, sub_id, sess_id):
         with self.conn.cursor() as cur:
             cur.execute("DELETE FROM subjectSession WHERE session_id=%s, subject_id=%s", (sess_id, sub_id))
             self.conn.commit()
+
     def get_subjects(self):
         with self.conn.cursor() as cur:
             cur.execute(f'SELECT subjectid FROM sessions')
             subjects = cur.fetchall()
         return subjects
+
     def is_contingent(self, event, trial):
         with self.conn.cursor() as cur:
-            cur.execute(f"SELECT is_contingent FROM events_to_trials WHERE event_name='{event}' AND trial_name='{trial}'")
+            cur.execute(
+                f"SELECT is_contingent FROM events_to_trials WHERE event_name='{event}' AND trial_name='{trial}'")
             isContingent = cur.fetchone()
         return isContingent
-    def get_sessions_by_subject(self,subject):
+
+    def get_sessions_by_subject(self, subject):
         with self.conn.cursor() as cur:
             cur.execute(f"SELECT name FROM sessions WHERE subjectid='{subject}'")
             sessions = cur.fetchall()
         return sessions
+
     def is_input_event(self, name):
         with self.conn.cursor() as cur:
             cur.execute(f"SELECT type FROM events WHERE name='{name}' AND type='Input'")
             isInput = cur.fetchone()
         return isInput is not None
-    def insert_params(self,trial_name,event_name,params):
+
+    def insert_params(self, trial_name, event_name, params):
         with self.conn.cursor() as cur:
-            sql=("""UPDATE events_to_trials SET params=%s WHERE event_name=%s AND trial_name=%s""")
+            sql = ("""UPDATE events_to_trials SET params=%s WHERE event_name=%s AND trial_name=%s""")
             cur.execute(sql, (params, event_name, trial_name,))
             self.conn.commit()
             cur.close()
-    def get_template(self,session_name,subject):
+
+    def get_template(self, session_name, subject):
         with self.conn.cursor() as cur:
             cur.execute(f"SELECT * FROM sessions WHERE name='{session_name}' AND subjectid='{subject}'")
-            template=cur.fetchall()
+            template = cur.fetchall()
             return template
-    def isReward(self,event):
+
+    def isReward(self, event):
         with self.conn.cursor() as cur:
             cur.execute(f"SELECT is_reward FROM events WHERE name = '{event}'")
             isreward = cur.fetchone()
@@ -465,7 +492,7 @@ commands = (
     """CREATE TABLE IF NOT EXISTS public.trials (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) UNIQUE ) """,
-    
+
     """CREATE TABLE IF NOT EXISTS public.sessions(
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) UNIQUE,
@@ -493,6 +520,5 @@ commands = (
         id SERIAL PRIMARY KEY,
         session_name VARCHAR(100) REFERENCES sessions(name),
         trial_name VARCHAR(255) REFERENCES trials(name) ON DELETE CASCADE)""",
-
 
 )

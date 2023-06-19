@@ -1,17 +1,9 @@
-import threading
 from pathlib import Path
 from Models.DB_INIT import DB
-
-from PyQt6 import QtCore, QtWidgets, uic
-from PyQt6.QtWidgets import QHeaderView, QTableWidgetItem, QAbstractItemView
+from PyQt6 import QtWidgets, uic
+from PyQt6.QtWidgets import QHeaderView, QTableWidgetItem
 from Models.prepare_session_information import prepare_session_information
-from Models import Trial_Model
 from Views.utils import error_warning, dict_one_line_style, get_ui_path
-
-
-class ReadOnlyDelegate(QtWidgets.QStyledItemDelegate):
-    def createEditor(self, parent, option, index):
-        return
 
 
 class RandomOrderUi(object):
@@ -29,24 +21,24 @@ class RandomOrderUi(object):
         self.num_of_rows = len(self.parent.trials_in_session)
         self.set_trials_table_pointer = None
 
-
-    def setupUi(self, dialog, event_handler,config_data,onNextClick):
+    def setupUi(self, dialog, event_handler, config_data, onNextClick):
         self.on_next_click = onNextClick
-        self.event_handler=event_handler
-        self.config_info=config_data
+        self.event_handler = event_handler
+        self.config_info = config_data
         uic.loadUi(get_ui_path('random_order.ui'), dialog)
         dialog.accepted.connect(self.accept)
         self.trials_tableWidget = dialog.findChild(QtWidgets.QTableWidget, "trials_tableWidget")
         self.isRandomOrder = dialog.findChild(QtWidgets.QCheckBox, 'checkBox')
         self.isRandomOrder.stateChanged.connect(self.checkbox_state_changed)
         self.isRandomOrder.setChecked(True)
-        for i in range (int(len(self.parent.trials_in_session)/2))   :
+        for i in range(int(len(self.parent.trials_in_session) / 2)):
             self.trials_tableWidget.insertRow(i)
-            self.trials_tableWidget.setItem(i, 0, QTableWidgetItem(self.parent.trials_in_session[i*2]))
+            self.trials_tableWidget.setItem(i, 0, QTableWidgetItem(self.parent.trials_in_session[i * 2]))
             self.trials_tableWidget.setItem(i, 1, QTableWidgetItem("1"))
             self.trials_tableWidget.setItem(i, 2, QTableWidgetItem("0"))
             self.trials_tableWidget.setItem(i, 3, QTableWidgetItem("0"))
         return
+
     def checkbox_state_changed(self):
         if not self.isRandomOrder.isChecked():
             self.trials_tableWidget.removeColumn(self.trials_tableWidget.columnCount() - 1)
@@ -57,6 +49,7 @@ class RandomOrderUi(object):
             self.trials_tableWidget.setHorizontalHeaderItem(column_index, header_item)
             for i in range(int(len(self.parent.trials_in_session) / 2)):
                 self.trials_tableWidget.setItem(i, 3, QTableWidgetItem("0"))
+
     def get_total_num_of_trials(self):
         total_num_of_trials = self.total_num_of_trials_spinBox.value()
         self.parent.total_num = total_num_of_trials
@@ -75,10 +68,10 @@ class RandomOrderUi(object):
         trials_table_adaptive_width = self.trials_tableWidget.horizontalHeader()
         trials_table_adaptive_width.setSectionResizeMode(QHeaderView.Stretch)
 
-
     def accept(self):
         for row in range(self.trials_tableWidget.rowCount()):
-            if not self.trials_tableWidget.item(row, 1).text().isdigit() or not  self.trials_tableWidget.item(row, 2).text().isdigit():
+            if not self.trials_tableWidget.item(row, 1).text().isdigit() or not self.trials_tableWidget.item(row,
+                                                                                                             2).text().isdigit():
                 error_warning("Please enter only numbers")
                 return
             if self.isRandomOrder.isChecked():
@@ -89,17 +82,15 @@ class RandomOrderUi(object):
         session_name = self.config_info[0]
         trials_in_session = self.config_info[1]
         is_fixed_iti = self.config_info[2]
-        isRandomOrder=self.isRandomOrder.isChecked()
+        isRandomOrder = self.isRandomOrder.isChecked()
         repeats = []
-        MaxTime=[]
-        Percent=[]
+        MaxTime = []
+        Percent = []
         for row in range(self.trials_tableWidget.rowCount()):
             item = self.trials_tableWidget.item(row, 1)
             item2 = self.trials_tableWidget.item(row, 2)
-
             if isRandomOrder:
                 item3 = self.trials_tableWidget.item(row, 3)
-
             if item is not None:
                 repeats.append(item.text())
                 MaxTime.append(item2.text())
@@ -117,12 +108,11 @@ class RandomOrderUi(object):
         for i in range(0, len(trials_in_session), 2):
             ports = (self.vm.get_ports(trials_in_session[i]))
             dependencies = self.vm.get_dependencies(trials_in_session[i])
-            prepare_session_information(session_name,ports,dependencies,trials_in_session[i],i,trials_in_session,is_fixed_iti,repeats,isRandomOrder,MaxTime,Percent)
+            prepare_session_information(session_name, ports, dependencies, trials_in_session[i], i, trials_in_session,
+                                        is_fixed_iti, repeats, isRandomOrder, MaxTime, Percent)
         self.event_handler()
 
-
     def reject(self):
-        print("reject")
         self.parent.trials_ord_window.close()
 
 

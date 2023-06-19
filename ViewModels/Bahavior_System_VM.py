@@ -1,11 +1,8 @@
-import random
 import time
-
 from Models.Behavior_System_Model import BehaviorSystemModel
 from ViewModels.Session_VM import SessionViewModel
 
 
-# changed in Model currently changes properties in VM. make sure this change go through into view
 class BehaviorSystemViewModel:
     def __init__(self):
         super(BehaviorSystemViewModel, self).__init__()
@@ -149,7 +146,6 @@ class BehaviorSystemViewModel:
     def get_reward_list_for_session(self):
         return self.model.get_reward_list_for_session()
 
-
     def get_trial_names(self):
         return self.model.get_trials_names()
 
@@ -217,14 +213,14 @@ class BehaviorSystemViewModel:
 
     def insert_hardware_event_to_DB(self, port, name, type, format, is_reward):
         return self.model.insert_hardware_event_to_DB(port, name, type, format, is_reward)
-    def insert_session_to_DB(self,session_name,subject_id,experimenter_name,last_used,min_iti,
-                max_iti,is_fixed_iti,max_trial_time,notes):
-        return self.model.insert_session_to_DB(session_name,subject_id,experimenter_name,last_used,min_iti,
-                max_iti,is_fixed_iti,max_trial_time,notes)
+
+    def insert_session_to_DB(self, session_name, subject_id, experimenter_name, last_used, min_iti,
+                             max_iti, is_fixed_iti, max_trial_time, notes):
+        return self.model.insert_session_to_DB(session_name, subject_id, experimenter_name, last_used, min_iti,
+                                               max_iti, is_fixed_iti, max_trial_time, notes)
 
     def insert_session_to_trials(self, session_name, trial_name):
-        return self.model.insert_session_to_trials(session_name,trial_name)
-
+        return self.model.insert_session_to_trials(session_name, trial_name)
 
     def verify_insert_hardware_event(self, name, port, in_out, dig_an, is_rew):
         return self.model.verify_insert_hardware_event(name, port, in_out, dig_an, is_rew)
@@ -232,8 +228,10 @@ class BehaviorSystemViewModel:
     def insert_new_trial(self, name):
         self.model.insert_new_trial(name)
 
-    def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on,isRandom,isEndCondition):
-        self.model.insert_new_events_to_trials(trial_name, event_name, is_contingent, contingent_on,isRandom,isEndCondition)
+    def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on, isRandom,
+                                    isEndCondition):
+        self.model.insert_new_events_to_trials(trial_name, event_name, is_contingent, contingent_on, isRandom,
+                                               isEndCondition)
 
     def verify_trial_insert(self, name, events):
         return self.model.verify_trial_insert(name, events)

@@ -152,9 +152,6 @@ class CreateSessionUi(object):
         choose_template = ChooseTemplateUi(self)
         choose_template.setup_ui(self.chosen_window, self.on_template_change_event_handler)
         self.chosen_window.show()
-        # self.second_window_ui = ChooseTemplateUi(self)
-        # self.second_window_ui.setupUi(self.second_window)
-        # self.second_window.show()
 
     def toggle_spinbox(self, checked):
         if checked:
@@ -195,45 +192,20 @@ class CreateSessionUi(object):
                 self.edit_ui = EditTrialUi(self)
                 self.edit_ui.setupUi(self.edit_window)
                 self.edit_window.show()
-                # self.second_window_ui = EditTrialUi(self)
-                # self.second_window_ui.setupUi(self.second_window)
-                # self.second_window.show()
             else:  # remove case
-                # get the chosen block's row and remove it
                 index = self.trials_table.currentRow()  # ignore 0th which represents blocks parameters
                 if not self.trials_in_session:
                     self.trials_table.removeRow(index)
                     self.trials_table.setCurrentCell(-1, self.trials_table.currentColumn())
                     return
-                # print(self.trials_in_session)
                 del self.trials_in_session[index]
                 del self.trials_in_session[index]
-                # print(self.trials_in_session)
                 self.trials_table.removeRow(index)
-                # set current row to be unselected
                 self.trials_table.setCurrentCell(-1, self.trials_table.currentColumn())
-
-                # chosen_row = self.trials_tableWidget.currentRow()
-                # self.trials_tableWidget.removeRow(chosen_row)
-                # if len(self.percentages) != 0:
-                # del self.percentages[index]
-                # else:
-                # del self.percent_per_block[index]
-                # del self.trials_in_session[self.trials_tableWidget.currentRow()]
-                # self.trials_tableWidget.removeRow(self.trials_tableWidget.currentRow())
-                # if len(self.percentages)!=0:
-                #     del self.percentages[self.trials_tableWidget.currentRow()]
-                # else:
-                #     del self.prcnt_per_block[self.trials_tableWidget.currentRow()]
-                # for i in range(len(self.block_list)):
-                #     del self.prcnt_per_block[i][self.trials_tableWidget.currentRow()] #TODO CHACK THIS
         elif is_not_empty:
             error_warning("Trial is not selected.")
         else:
             error_warning("There are no trials in the current session.")
-
-    # def on_edit_click(self):
-    #     self.deal_with_trial(0)
 
     def on_remove_click(self):
         self.deal_with_trial(1)
@@ -290,7 +262,6 @@ class CreateSessionUi(object):
                 w.hide()
 
     def on_next_click(self, flag):
-        # print(self.trials_in_session)
         session_name = self.session_name_te.toPlainText()
         subject_id = self.subject_id_te.toPlainText()
         experimenter_name = self.exp_name_te.toPlainText()
@@ -473,9 +444,6 @@ class CreateSessionUi(object):
         else:
             self.fixed_iti_radioBtn.setChecked(False)
             self.random_iti_radioBtn.setChecked(True)
-        # self.trials_in_session.append(session_name)
-        # self.trials_in_session.append(trials_dict)
-        print(self.trials_in_session)
 
     def on_session_define_event_handler(self):
         config_path = str(Path(__file__).parent.parent / 'config_files' / 'session_config.txt')

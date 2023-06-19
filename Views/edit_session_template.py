@@ -1,8 +1,7 @@
-from collections import defaultdict, OrderedDict
-from Models.DB_INIT import DB
-from PyQt6 import QtCore, QtWidgets, QtGui, uic
-from PyQt6.QtWidgets import QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit, QComboBox, QFormLayout
-from Views.utils import error_warning, get_string_dict, get_ui_path
+from collections import defaultdict
+from PyQt6 import QtWidgets, QtGui, uic
+from PyQt6.QtWidgets import QLabel, QLineEdit, QFormLayout
+from Views.utils import get_ui_path
 from Models.DB_INIT import DB
 
 
@@ -69,8 +68,6 @@ class EditSessionUi(object):
             formLayout = self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
             if not self.vm.is_input_event(event_name):
                 formLayout.addRow(label)
-
-                # add line edit accordingly for the parameters
                 self.set_trial_form_handler(event_name, chosenTrial)
 
     def set_trial_form_handler(self, event_name: str, chosenTrial):

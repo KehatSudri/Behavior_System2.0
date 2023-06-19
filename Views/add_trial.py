@@ -1,8 +1,8 @@
-from collections import defaultdict, OrderedDict
-from PyQt6 import QtCore, QtWidgets, QtGui, uic
-from PyQt6.QtWidgets import QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit, QComboBox, QFormLayout
+from collections import defaultdict
+from PyQt6 import QtWidgets, QtGui, uic
+from PyQt6.QtWidgets import QVBoxLayout, QLabel, QLineEdit, QFormLayout
 from Models.DB_INIT import DB
-from Views.utils import error_warning, get_string_dict, get_ui_path  # , set_conditioned_event
+from Views.utils import get_ui_path
 
 
 class AddTrialUi(object):
@@ -24,9 +24,7 @@ class AddTrialUi(object):
         self.set_trials_table_pointer = None
         self.trial_params_labels = []
         self.trial_params_widgets = defaultdict(list)
-        # TODO delete when self.vm.is_contingent(event_name) implemented
         self.are_contingents = []
-        # self.contingents = OrderedDict()
         self.formLayout = parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
 
     def setupUi(self, dialog):
@@ -39,26 +37,13 @@ class AddTrialUi(object):
         self.ok_btn.accepted.connect(self.accept)
         self.ok_btn.rejected.connect(dialog.reject)
 
-        # present params of the chosen trial
-        # self.update()
-        # present first trial type as default
-        # self.trial_types_click(0)
-
     def update(self):
         self.set_trials_table_pointer = self.parent.set_trials_table_pointer
-        # creating a dialog button for ok and cancel
-        # self.ok_btn = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-        # connect the OK button to function
         self.ok_btn.accepted.connect(self.accept)
-        # adding action when form is rejected
-        # self.ok_btn.rejected.connect(reject)
-        # creating a vertical layout
         main_layout = QVBoxLayout()
-        # adding button box to the layout
         main_layout.addWidget(self.ok_btn)
 
     def delete_params(self):
-
         for i in range(len(self.trial_params_labels)):
             label = self.trial_params_labels.pop()
             self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').removeRow(label)
@@ -158,35 +143,8 @@ class AddTrialUi(object):
                 params = []
             else:
                 params.append(field.widget().text())
-
             if event != "" and event is not None:
                 event_and_params[event] = params
-
-        # update new trial parameters
-        # for event, event_params in new_trial.items():
-        #     params_values = {param: self.trial_params_widgets[event][i].text() for i, param in
-        #                      enumerate(event_params)}
-        #     new_trial[event] = params_values
-        # check if not an empty input
-
-        # if not self.are_valid_values(new_trial):
-        #     error_warning("An error accrued, please try again.")
-        #     return
-        # validate parameters values
-        # self.are_valid_values(new_trial)
-        # add new trial
-
         self.parent.trials_in_session.extend([new_trial, event_and_params])
-        # print(self.parent.trials_in_session)
-
-        # self.parent.percentages.append(0)
-        # self.parent.percent_per_block.append([0] * len(self.parent.block_list))
-        # add a percentage to each block
-        # for i in range(len(self.parent.block_list)):
-        #     self.parent.prcnt_per_block[i].append()
-        # update trials table on the window
         self.parent.set_trials_table()
-        # self.index+=1
-        # print(self.index)
-        # self.set_trials_table_pointer()
         self.parent.add_window.close()

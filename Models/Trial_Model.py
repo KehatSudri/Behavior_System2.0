@@ -20,7 +20,6 @@ class RandInterval(Interval):
         # self.iti_vec = np.random.randint(self.min_interval, self.max_interval, MAX_NUM_TRIALS_IN_SESS)
         self.iti_vec = None
 
-
     def get_iti_type(self):
         return "random"
 

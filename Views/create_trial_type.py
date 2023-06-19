@@ -26,7 +26,6 @@ class CreateTrialTypeUi(object):
         uic.loadUi(get_ui_path('create_trial_type.ui'), main_window)
         back_btn = main_window.findChild(QtWidgets.QPushButton, 'back_pushButton')
         back_btn.clicked.connect(self.on_back_click)
-        random_label = main_window.findChild(QtWidgets.QLabel, 'label_4')
         accept_pushButton = main_window.findChild(QtWidgets.QPushButton, 'create_trial_btn')
         remove_event_pushButton = main_window.findChild(QtWidgets.QPushButton, 'pushButton_2')
         add_event_pushButton = main_window.findChild(QtWidgets.QPushButton, 'Add_event_pushButton')
@@ -68,7 +67,7 @@ class CreateTrialTypeUi(object):
 
     def on_add_click(self):
         current_event = self.events_comboBox.currentText()
-        if current_event=="":
+        if current_event == "":
             error_warning("There are no events, please create one first.")
             return
         for row in range(self.events_tableWidget.rowCount()):
@@ -105,10 +104,9 @@ class CreateTrialTypeUi(object):
                 flag = 1
         if not flag:
             self.contingent_comboBox.addItems([current_event])
-        if self.contingent_comboBox.count() >= 1 :
+        if self.contingent_comboBox.count() >= 1:
             self.name_comboBox_handler()
         self.isEndCondition.setChecked(False)
-
 
     def on_remove_click(self):
         is_not_empty = len(self.events_order) > 0
@@ -150,7 +148,7 @@ class CreateTrialTypeUi(object):
         try:
             self.parent.vm.insert_new_trial(name)
         except Exception as e:
-            msg=str(e)
+            msg = str(e)
             if "name" in msg:
                 error_warning("Error: Trial name already exists.")
             return
@@ -160,15 +158,19 @@ class CreateTrialTypeUi(object):
                 item = self.events_tableWidget.item(row, col)
                 if item is not None:
                     row_items.append(item.text())
-                else: row_items.append(None)
+                else:
+                    row_items.append(None)
 
             if row_items[1] == "Contingent":
-                    self.parent.vm.insert_new_events_to_trials(name, row_items[0], True, row_items[2],row_items[4]=="Random",False)
+                self.parent.vm.insert_new_events_to_trials(name, row_items[0], True, row_items[2],
+                                                           row_items[4] == "Random", False)
             else:
                 if self.vm.is_input_event(row_items[0]):
-                    self.parent.vm.insert_new_events_to_trials(name, row_items[0], False, None,None,row_items[5]=="True")
+                    self.parent.vm.insert_new_events_to_trials(name, row_items[0], False, None, None,
+                                                               row_items[5] == "True")
                 else:
-                    self.parent.vm.insert_new_events_to_trials(name, row_items[0], False, None,row_items[4]=="Random",row_items[5]=="True")
+                    self.parent.vm.insert_new_events_to_trials(name, row_items[0], False, None,
+                                                               row_items[4] == "Random", row_items[5] == "True")
 
         msgBox.setText("The trial was created successfully!")
         msgBox.exec()
@@ -200,8 +202,6 @@ class CreateTrialTypeUi(object):
             self.random_comboBox.setEnabled(True)
             if self.contingent_comboBox.count() >= 1:
                 self.conti_radioButton.setEnabled(True)
-
-
 
     def on_back_click(self):
         self.parent.main_window.show()

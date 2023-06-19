@@ -2,7 +2,7 @@ from PyQt6 import QtCore, QtWidgets, uic
 from collections import OrderedDict
 from Views.utils import error_warning, get_ui_path
 from Models.DB_INIT import DB
-import numpy as np
+
 
 class ChooseTemplateUi(object):
     def __init__(self, parent):
@@ -16,20 +16,20 @@ class ChooseTemplateUi(object):
         self.templates = {}
         self.subjects = set()
         self.init()
+
     def init(self):
-        self.db=DB()
-        subjects=self.db.get_subjects()
+        self.db = DB()
+        subjects = self.db.get_subjects()
         subjectsArray = [x[0] for x in subjects]
         for subject in subjectsArray:
-            related_sessions=self.db.get_sessions_by_subject(subject)
+            related_sessions = self.db.get_sessions_by_subject(subject)
             self.subjects.add(subject)
-            self.templates[subject]=[subject +" "+ x[0] for x in related_sessions]
+            self.templates[subject] = [subject + " " + x[0] for x in related_sessions]
 
     def setup_ui(self, dialog, event_handler):
         self.all_templates = self.get_all_templates()
         uic.loadUi(get_ui_path('choose_template.ui'), dialog)
         dialog.accepted.connect(lambda: event_handler(self.choose_template_cb.currentText()))
-        dialog.rejected.connect(lambda: print('cancel'))
         self.choose_template_cb = dialog.findChild(QtWidgets.QComboBox, 'choose_template_cb')
         self.choose_subject_id_cb = dialog.findChild(QtWidgets.QComboBox, 'choose_subject_id_cb')
         self.choose_subject_id_cb.setEnabled(False)
@@ -70,7 +70,7 @@ class ChooseTemplateUi(object):
 
     def set_template_data_in_parent(self, temp_id):
         sess_id, sess_name, exp_name, iti_type, iti_min, iti_max, iti_behave, end_def, end_val, order, total, \
-            block_sizes, blocks_order, rew_prcnt, last_used = self.parent.vm.get_data_for_template_id(temp_id)
+        block_sizes, blocks_order, rew_prcnt, last_used = self.parent.vm.get_data_for_template_id(temp_id)
         if order != 'random':
             block_sizes = ([int(val) for val in block_sizes.replace("[", "").replace("]", "").split(",")])
         self.parent.vm.sessionVM.session_name = sess_name
@@ -180,7 +180,6 @@ class ChooseTemplateUi(object):
     def accept(self):
         # TODO: update all relevant fields in parent
         chosen_temp_id = self.templates_comboBox.currentText()
-
 
         if chosen_temp_id == "":
             error_warning("There are no templates in the system.")

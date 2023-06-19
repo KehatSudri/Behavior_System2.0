@@ -110,7 +110,6 @@ class CreateEventUi(object):
             clicked_button = message_box.exec()
 
             if clicked_button == QMessageBox.StandardButton.Cancel:
-                print("Cancel button clicked.")
                 return
 
         try:

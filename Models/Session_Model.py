@@ -156,7 +156,6 @@ class SessionModel(SessionTemplate):
         self._trial_types_successive_counter = []
         self.input_flag = False
         self.input_has_come = threading.Event()
-        self.repeat_trial = False
         self.is_give_reward = False
         self.reward_to_give = None
         self.log_queue = queue.Queue()
@@ -208,16 +207,6 @@ class SessionModel(SessionTemplate):
         self.is_session_running = False
         self.running_session.close()
         self.running_session = None
-
-        # while 1:
-        #     print(t.read(2))
-        #     time.sleep(2)
-        # with nidaqmx.Task() as task:
-        #     task.ai_channels.add_ai_voltage_chan('Dev1/ai1')
-        #     while self.is_session_running:
-        #         data = task.read(number_of_samples_per_channel=2)
-        #         print(data)
-        #         time.sleep(1)
 
     def get_read_in_task(self):
         read_input_task = nidaqmx.Task()
@@ -333,167 +322,13 @@ class SessionModel(SessionTemplate):
                 return True
         return False
 
-    def get_rnd_reward_itis(self, total_num, iti_vals):
-        # iti_vals2 = [int(a * 100) for a in iti_vals]
-        iti_vals2 = iti_vals
-        itis = []
-        reward = []
-        reward_e = TrialEvents.Reward(4, 4, 4)  # TODO this should be from a list of reward, maybe randomized
-        t = TrialModel(t_id=None, name="rnd reward", events=[reward_e], inters=None)
-        # get indexes of intervals for rnd rewards
-        num_of_rnd_reward = int(self.rnd_reward_percent * total_num / 100)
-        idx_list = list(range(1, total_num))
-        random.shuffle(idx_list)
-        idx_list = idx_list[0:num_of_rnd_reward]
-        idx_list.sort()
-        limit = 1  # this should be the duration of the reward with a boundary?
-        if num_of_rnd_reward != 0:
-            for i in range(len(idx_list)):
-                # if this idx is chosen for a rnd reward
-                wait_to_reward = random.randint(0, (iti_vals2[idx_list[i]] - limit))  # / 100
-                itis.append(wait_to_reward)
-                reward.append(reward_e)  # TODO this should be randomized from list of rewards
-        return reward, idx_list, itis
-
-    def get_trial_type_idx(self, trial):
-        for i in range(len(self.trials_def.trials)):
-            if self.trials_def.trials[i].name == trial.name:
-                return i
-
-    # def run_rnd_iti_session(self, trials_to_run, total_num, log_file, max_trial_length):
-    #     iti_vals = self.iti.get_iti_vec()
-    #     # get iti's , indexes and reward for random reward
-    #     rewards, idxs, short_itis = self.get_rnd_reward_itis(total_num, iti_vals)
-    #     # run until session end
-    #     i, rew_count = 0, 0
-    #     # keep starting time
-    #     self.interval_start_time = datetime.now()
-    #     last_type_idx = None
-    #
-    #     while not self.end_session:
-    #         if self.pause:
-    #             time.sleep(1)
-    #             continue
-    #
-    #         cur_type_idx = self.get_trial_type_idx(trials_to_run[i])
-    #         if last_type_idx is None:
-    #             last_type_idx = cur_type_idx
-    #         # run current trial
-    #         trials_to_run[i].run()
-    #         # update counters
-    #         tmp_total = self.trial_types_total_counter
-    #         tmp_successive = self.trial_types_successive_counter
-    #         if cur_type_idx != last_type_idx:
-    #             tmp_successive = np.zeros(len(self.trial_types_successive_counter))
-    #         tmp_successive[cur_type_idx] += 1
-    #         # self.trial_types_successive_counter[cur_type_idx] += 1
-    #         self.trial_types_successive_counter = tmp_successive
-    #         tmp_total[cur_type_idx] += 1
-    #         self.trial_types_total_counter = tmp_total
-    #         # self.trial_types_total_counter[cur_type_idx] += 1
-    #         print(self.trial_types_total_counter)  # TODO delete
-    #         if last_type_idx != cur_type_idx:
-    #             self.trial_types_successive_counter[last_type_idx] = 0
-    #             last_type_idx = cur_type_idx
-    #         print(self.trial_types_successive_counter)
-    #         # grant random reward if required here
-    #         if len(idxs) > 0 and len(idxs) > rew_count and i == idxs[rew_count]:
-    #             time.sleep(short_itis[rew_count])
-    #             # rewards[rew_count].execute()
-    #             print("rnd reward!!!!")
-    #             time.sleep(iti_vals[i] - short_itis[rew_count])
-    #             rew_count += 1
-    #         else:
-    #             time.sleep(iti_vals[i])
-    #         # calculate success rate
-    #         self.success_rate = 0  # TODO check what to do about this
-    #         while self.repeat_trial:
-    #             self.repeat_trial = False
-    #             trials_to_run[i].run()
-    #             # do successive count should grow? and total?
-    #         i += 1
-    #         # check ending condition is not satisfied
-    #         self.validate_ending(i)
-    #         # ran all trials for session
-    #         if i >= len(trials_to_run):
-    #             self.end_session = True
-    #             print("ran all trials - end session")
-
     def is_input(self):
         return self.input_flag
-
-    def repeat_same_trial(self):
-        self.repeat_trial = True
-
-    # def reading_task_queue_callback(self, task_idx, event_type, num_samples,
-    #                                 callback_data):  # bufsize_callback is passed to num_samples
-    #     if not self.end_session:
-    #         # It may be wiser to read slightly more than num_samples here, to make sure one does not miss any sample,
-    #         # see: https://documentation.help/NI-DAQmx-Key-Concepts/contCAcqGen.html
-    #         self.buffer_in = np.zeros((len(self.input_ports), num_samples))  # double definition ???
-    #         self.stream_in.read_one_sample(self.buffer_in, timeout=WAIT_INFINITELY)
-    #         self.input_to_read.put(self.buffer_in)  # appends buffered data to total variable data
-    #     return 0
-
-    def get_write_out_task(self):
-        write_task = nidaqmx.Task()
-        for port in self.output_ports:
-            write_task.do_channels.add_do_chan(port, line_grouping=LineGrouping.CHAN_FOR_ALL_LINES)
-            # set sampling rate per channel per second!
-            # write_task.timing.cfg_samp_clk_timing(self.sampling_rate, source="", active_edge=Edge.RISING,
-            #                                     sample_mode=AcquisitionType.CONTINUOUS)
-
-        return write_task
-
-    def check_input(self):
-        input_read_index = 0
-        while 1:
-            if input_read_index >= len(self.data[0]):
-                continue
-            for i in range(len(self.input_ports)):
-                self.input_flags[i] = self.data[i, input_read_index] > 3
-            input_read_index += 1
-
-    def check_contigent_satisfaction(self, event_to_run):
-        pass
-
-    def manage_counters(self, cur_type_idx, last_type_idx):
-        tmp_total = self.trial_types_total_counter
-        tmp_successive = self.trial_types_successive_counter
-        if cur_type_idx != last_type_idx:
-            tmp_successive = np.zeros(len(self.trial_types_successive_counter))
-        tmp_successive[cur_type_idx] += 1
-        # self.trial_types_successive_counter[cur_type_idx] += 1
-        self.trial_types_successive_counter = tmp_successive
-        tmp_total[cur_type_idx] += 1
-        self.trial_types_total_counter = tmp_total
-        if last_type_idx != cur_type_idx:
-            self.trial_types_successive_counter[last_type_idx] = 0
-            last_type_idx = cur_type_idx
-            return True
-        return False
 
     def reset_run(self, write_task, read_task):
         read_task.stop()
         self.output_vals = [False] * len(self.output_vals)
         write_task.write(self.output_vals)
-
-    def is_delta_more_than_time(self, delta, time_stamp):
-        time_stamp = str(time_stamp).split(":")
-        hour, minute, second, microsec = int(time_stamp[0]), int(time_stamp[1]), int(time_stamp[2].split(".")[0]), int(
-            time_stamp[2].split(".")[1])
-        timer = timedelta(hours=hour, minutes=minute, seconds=second, microseconds=microsec)
-        if delta - timer > timedelta(milliseconds=0):
-            return True
-        return False
-
-    def add_int_delta_to_time(self, delta, time_stamp):
-        time_stamp = str(time_stamp).split(":")
-        hour, minute, second, microsec = int(time_stamp[0]), int(time_stamp[1]), int(time_stamp[2].split(".")[0]), int(
-            time_stamp[2].split(".")[1])
-        timer = timedelta(hours=hour, minutes=minute, seconds=second, microseconds=microsec)
-
-        return timer + timedelta(milliseconds=delta)
 
     def add_times(self, time1, time2, is_substract_flag=False):
         time1 = str(time1).split(":")
@@ -509,80 +344,6 @@ class SessionModel(SessionTemplate):
         else:
             return timer1 + timer2
 
-    def session_ending(self, writing_output_task, reading_input_task, ending_reason, end_time, paused_time):
-        self.reset_run(writing_output_task, reading_input_task)
-        self.log_queue.put(str(end_time) + "   - Session ended: " + ending_reason + "\n")
-        total_dur = self.add_times(end_time, self.timer, True)
-        self.log_queue.put("\ntotal duration: " + str(total_dur) + "\n")
-        self.log_queue.put("total duration minus pausing times: " + str(
-            total_dur - paused_time) + "\n")
-        reading_input_task.close()
-        writing_output_task.close()
-        self.end_session = True
-        pass
-
-    def write_logging(self):
-        while 1:
-            try:
-                write_str = self.log_queue.get(block=True, timeout=100)
-                self.log_file.write(write_str)
-                self.log_file.flush()
-            except Exception as e:
-                # meaning timeout
-                if self.end_session:
-                    while not self.log_queue.empty():
-                        write_str = self.log_queue.get(block=True, timeout=100)
-                        self.log_file.write(write_str)
-                        self.log_file.flush()
-                    return
-
-    def write_input_data(self):
-        max_num_lines_in_file = 1000000
-        number_of_lines_per_write = 1000
-        cur_file_lines_count = 0
-        original_file_name = self.data_log_file.name.split(".")[0]
-        file_count = 1
-        global LOG_DATA_IDX
-        writer = csv.writer(self.data_log_file)
-        writer.writerow(self.input_events_name_list)
-        time.sleep(3)
-        while 1:
-            # write x lines every 2 seconds if they exist.
-            # if written almost max num, create new file
-            if cur_file_lines_count + number_of_lines_per_write > max_num_lines_in_file:
-                file_count += 1
-                file_name_new = original_file_name + str(file_count) + ".csv"
-                self.data_log_file.close()
-                self.data_log_file = open(file_name_new, 'w', encoding='utf-8', newline='')
-                writer = csv.writer(self.data_log_file)
-                writer.writerow(self.input_events_name_list)
-                cur_file_lines_count = 0
-            if LOG_DATA_IDX < len(self.data.T) + number_of_lines_per_write:
-                writer.writerows(self.data.T[LOG_DATA_IDX:LOG_DATA_IDX + number_of_lines_per_write])
-                LOG_DATA_IDX += number_of_lines_per_write
-                cur_file_lines_count += number_of_lines_per_write
-            time.sleep(2)
-            # if end session - write remaining lines
-            if self.end_session:
-                last_idx = len(self.data.T)
-                while LOG_DATA_IDX + number_of_lines_per_write < last_idx:
-                    if cur_file_lines_count + number_of_lines_per_write > max_num_lines_in_file:
-                        file_count += 1
-                        file_name_new = original_file_name + str(file_count) + ".csv"
-                        self.data_log_file.close()
-                        self.data_log_file = open(file_name_new, 'w', encoding='utf-8', newline='')
-                        writer = csv.writer(self.data_log_file)
-                        writer.writerow(self.input_events_name_list)
-                        cur_file_lines_count = 0
-                    writer.writerows(self.data.T[LOG_DATA_IDX:LOG_DATA_IDX + number_of_lines_per_write])
-                    LOG_DATA_IDX += number_of_lines_per_write
-                    cur_file_lines_count += number_of_lines_per_write
-
-                return
-
-    def is_contigent(self, event):
-        return False
-
     def run_session(self, log_file, max_successive_trials, max_trial_length):
         self.end_session = False
         # max_successive_trials = 30 #this should come from system
@@ -597,9 +358,4 @@ class SessionModel(SessionTemplate):
         iti_t = self.iti.get_iti_type()
         # self.run_any_session(trials_to_run, total_num, log_file, max_trial_length, iti_t == "random")
         self.try_run(trials_to_run, total_num, log_file, max_trial_length, iti_t == "random")
-        # if iti_t == "random":
-        #     self.run_rnd_iti_session(trials_to_run, total_num, log_file, max_trial_length)
-        # else:
-        #     self.run_bhv_iti_session(trials_to_run, total_num, log_file, max_trial_length)
-        # # wait for all log to be written to file before finishing
         self.log_queue.join()

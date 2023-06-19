@@ -1,7 +1,6 @@
-from PyQt6 import QtCore, QtGui, QtWidgets, uic
-from PyQt6.QtWidgets import QLineEdit, QPushButton
+from PyQt6 import QtWidgets, uic
 
-from Views.utils import error_warning, get_ui_path
+from Views.utils import get_ui_path
 
 
 class NotesUi(object):
@@ -14,18 +13,12 @@ class NotesUi(object):
     def setupUi(self, main_window):
         self.main_window = main_window
         uic.loadUi(get_ui_path('notes.ui'), main_window)
-        self.commentsWindow=self.main_window.findChild(QtWidgets.QTextEdit, "textEdit")
-        self.save=self.main_window.findChild(QtWidgets.QPushButton, "save_pushButton")
+        self.commentsWindow = self.main_window.findChild(QtWidgets.QTextEdit, "textEdit")
+        self.save = self.main_window.findChild(QtWidgets.QPushButton, "save_pushButton")
         self.save.clicked.connect(self.save_click)
         self.commentsWindow.setText(self.parent.notes)
+
     def save_click(self):
-        comments=self.commentsWindow.toPlainText()
-        self.parent.notes=comments
+        comments = self.commentsWindow.toPlainText()
+        self.parent.notes = comments
         self.main_window.close()
-
-
-
-
-
-
-

@@ -1,9 +1,6 @@
-from PyQt6 import QtCore, QtGui, QtWidgets, uic
-from PyQt6.QtWidgets import QHeaderView, QTableWidgetItem, QAbstractItemView, QDialog, QDialogButtonBox, QVBoxLayout, \
-    QLabel, QPushButton
-
-from ViewModels.Bahavior_System_VM import BehaviorSystemViewModel
-from Views.utils import  error_warning, get_ui_path
+from PyQt6 import QtWidgets, uic
+from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton
+from Views.utils import error_warning, get_ui_path
 
 
 class WarningDialog(QDialog):
@@ -13,7 +10,6 @@ class WarningDialog(QDialog):
         self.layout = QVBoxLayout()
         message = QLabel("Are you sure you want to remove this trial type?")
         self.layout.addWidget(message)
-        #self.layout.addWidget(self.buttonBox)
         self.setLayout(self.layout)
 
 
@@ -51,9 +47,8 @@ class DeleteTrialTypeUi(object):
         for row, data in enumerate(self.trial_types):
             self.table.insertRow(row)
             self.table.setItem(row, 0, QtWidgets.QTableWidgetItem(data))
-        self.remove_pushButton=main_window.findChild(QPushButton, 'remove_pushButton')
+        self.remove_pushButton = main_window.findChild(QPushButton, 'remove_pushButton')
         self.remove_pushButton.clicked.connect(self.on_remove_click)
-
 
     def on_remove_click(self):
         is_not_empty = len(self.trial_types) > 0
@@ -69,7 +64,6 @@ class DeleteTrialTypeUi(object):
             error_warning("Please select a trial.")
         else:
             error_warning("There are no trial types in the system.")
-
 
     def on_back_click(self):
         if not self.is_error:

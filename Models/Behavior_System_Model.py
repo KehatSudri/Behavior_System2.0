@@ -89,9 +89,6 @@ class BehaviorSystemModel:
         self._subject_sessions = None
         self._session_events = None
         self.get_templates_from_db()
-        # for i in range(len(self.event_config)):
-        #    self.db.insert_hardware_event(self.event_config[i][0], self.event_config[i][1], self.event_config[i][2],
-        #                                  self.event_config[i][3], self.event_config[i][4])
         self.get_trial_types_from_db()
         self.get_hardware_events_from_DB()
 
@@ -122,15 +119,6 @@ class BehaviorSystemModel:
         self.event_config = self.db.get_hardware_events()
         # self.parse_ports()
         return self.event_config
-
-    # def verify_insert_hardware_event(self, name, port, in_out, dig_an, is_rew):
-    #     events = self.get_hardware_events_from_DB()
-    #     for event in events:
-    #         if event[1] == name:
-    #             return -1
-    #         if list(event[2:]) == [port, in_out, dig_an, is_rew]:
-    #             return event[1]
-    #     return 0
 
     def get_all_events_by_name(self):
         events_names = self.db.get_hardware_events_byname()
@@ -237,7 +225,7 @@ class BehaviorSystemModel:
         for tmp in self.session_templates:
             # extract all data of current template
             t_sess_id, t_sess_name, t_exp_name, t_iti_type, t_iti_min, t_iti_max, t_iti_behave, t_end_def, t_end_val, \
-                t_trials_order, t_total, t_block_sizes, t_blocks_ord, t_rnd_rew, date = tmp
+            t_trials_order, t_total, t_block_sizes, t_blocks_ord, t_rnd_rew, date = tmp
             # if there is a template with the exact data, proceed to validate it's trials
             if t_exp_name == exp_name and t_sess_name == sess_name and t_iti_type == iti_type and (
                     t_end_def, t_end_val) == end_def and t_trials_order == trials_order and \
@@ -265,8 +253,6 @@ class BehaviorSystemModel:
                         intvs = None
                         if trials[i][7] is not None:
                             intvs = create_intervals_list(trials[i][7])
-                        # if the trial id, events and intervals match - proceed to next trial
-                        # if t.trial_id == trials[i][2] and intvs == t.intervals and trials[i][6] == list_events:
                         if t.trial_id == trials[i][2] and intvs == [(int(a[0]), int(a[1])) for a in t.intervals] and \
                                 trials[i][6] == list_events:
                             continue
@@ -300,7 +286,6 @@ class BehaviorSystemModel:
                                 type_events = i[2]
                                 break
                         # TODO error not existing or create new type?
-
                         pass
                 else:
                     # get trial_id by name
@@ -416,7 +401,7 @@ class BehaviorSystemModel:
             if tmp[0] == temp_id:
                 # extract all data
                 t_sess_id, t_sess_name, t_exp_name, t_iti_type, t_iti_min, t_iti_max, t_iti_behave, t_end_def, \
-                    t_end_val, t_trials_order, t_total, t_block_sizes, t_blocks_ord, t_rnd_rew, date = tmp
+                t_end_val, t_trials_order, t_total, t_block_sizes, t_blocks_ord, t_rnd_rew, date = tmp
                 # set data into curr_session fields
                 self.curr_session.session_id = t_sess_id
                 self.curr_session.session_name = t_sess_name
@@ -437,8 +422,6 @@ class BehaviorSystemModel:
     def get_trial_types_from_db(self):
         return self.db.get_trial_types()
 
-    # def get_trial_names(self):
-    #     self._trial_names = self.db.get_trial_names()
     def is_contingent(self, event, trial):
         return self.db.is_contingent(event, trial)
 
@@ -526,73 +509,19 @@ class BehaviorSystemModel:
 
     def get_list_trials_types_def(self):  # TODO change
         trials = self.get_trial_types_from_db()
-        trials_name_list=[]
-        for trial in trials :
+        trials_name_list = []
+        for trial in trials:
             trials_name_list.append(trial[1])
         return trials_name_list
-    # def get_list_trials_types_def(self):
-    #     trials = OrderedDict()
-    #     if self._trial_types is None:
-    #         self.get_trial_types_from_DB()
-    #     for trial in self._trial_types:
-    #         # trial_id = trial[0]
-    #         name = trial[1]
-    #         events = trial[2].split(",")[:-1]
-    #         event_dict = OrderedDict()
-    #         # param_list = []
-    #         intervals_count = 0
-    #         intervals_params = ["min", "max"]
-    #         for e in events:
-    #             # get event type, then get it's parameters
-    #             class_str = "Models.TrialEvents." + e
-    #             try:
-    #                 module_path, class_name = class_str.rsplit('.', 1)
-    #                 module = import_module(module_path)
-    #                 kclass = getattr(module, class_name)
-    #
-    #                 # param_list.extend(kclass.get_list_params())
-    #                 param_list = kclass.get_list_params()
-    #                 # check if same type exists:
-    #                 if e in event_dict.keys():  # this kind of event already exists
-    #                     # find the maximum of this kind of event
-    #                     max_num = 1
-    #                     for key in event_dict.keys():
-    #                         if e in key:
-    #                             # split string to get number
-    #                             tmp = key.split("#")
-    #                             if len(tmp) == 1:
-    #                                 continue
-    #                             # get the maximum
-    #                             if int(tmp[1]) > max_num:
-    #                                 max_num = int(tmp[1])
-    #                     max_num += 1
-    #                     e = e + "#" + str(max_num)
-    #                 if intervals_count > 0:
-    #                     if intervals_count == 1:
-    #                         event_dict["interval"] = intervals_params
-    #                     else:
-    #                         event_dict["interval#" + str(intervals_count)] = intervals_params
-    #                 event_dict[e] = param_list
-    #                 intervals_count += 1
-    #
-    #             except (ImportError, AttributeError):
-    #                 raise ImportError(class_str)
-    #
-    #         trials[name] = event_dict
-    #     return trials
 
+    def insert_session_to_DB(self, session_name, subject_id, experimenter_name, last_used, min_iti,
+                             max_iti, is_fixed_iti, max_trial_time, notes):
+        return self.db.insert_session(session_name, subject_id, experimenter_name, last_used, min_iti,
+                                      max_iti, is_fixed_iti, max_trial_time, notes)
 
-    # def get_trial_names(self):
-    #     trials = []
-    #     for trial in self._trial_types:
-    #         trials.append(trial[1])
-    #     return trials
-    def insert_session_to_DB(self,session_name, subject_id, experimenter_name,last_used,min_iti,
-                max_iti,is_fixed_iti,max_trial_time,notes):
-        return self.db.insert_session(session_name, subject_id, experimenter_name,last_used,min_iti,
-                max_iti,is_fixed_iti,max_trial_time,notes)
     def insert_session_to_trials(self, session_name, trial_name):
-        return self.db.insert_session_to_trials(session_name,trial_name)
+        return self.db.insert_session_to_trials(session_name, trial_name)
+
     def get_trials_names(self):
         return self.db.get_trial_names()
 
@@ -613,32 +542,11 @@ class BehaviorSystemModel:
     def disconnect_from_DB(self):
         self.db.disconnect()
 
-    def connect_to_devices(self):
-        # go over devices and establish connection
-        # raise error if connection fails
-        pass
-
-    def connect_to_systems(self):
-        # for system in self._connected_systems:
-        #     # establish connection
-        #     # raise error if fails
-        #     pass
-        pass
-
-    def check_connection(self, device):
-        pass
-
     def pause_sess(self):
         self.curr_session.pause = True
 
     def resume_sess(self):
         self.curr_session.pause = False
-
-    def repeat_trial(self):
-        self.curr_session.repeat_same_trial()
-
-    # def collect_input_data(self):
-    #     hardware_communication.collect_input_data(self.input_ports)
 
     def get_reward_list_for_session(self):
         list_reward = []
@@ -649,64 +557,21 @@ class BehaviorSystemModel:
         list_reward = list(set(list_reward))
         return list_reward
 
-    def get_reward_name_list_for_session(self):
-        list_reward = []
-        for t in self.curr_session.trials_def.trials:
-            for e in t.events:
-                if e.is_reward():
-                    list_reward.append(e.get_type_str())
-        list_reward = list(set(list_reward))
-        return list_reward
-
     def give_reward(self, name):
         self.curr_session.give_reward(name)
-
-    # start the current session
-    def start_Session(self):
-        if self._curr_session is None:
-            return
-        self.curr_session.end_session = False
-        self.log_file_path = self.log_file_path + "/" + datetime.now().strftime(
-            "%m_%d_%Y, %H_%M_%S") + "," + self.curr_session.experimenter_name + "," + self.curr_session.subject_id
-        self.curr_session.input_ports = self.input_ports
-        self.curr_session.output_ports = self.output_ports
-        self.curr_session.output_events_name_list = self.output_events_names
-        self.curr_session.input_events_name_list = self.input_events_names
-
-        self.curr_session.reward_list_in_sess = self.get_reward_list_for_session()
-
-
-        save_tmp = threading.Thread(target=self.save_new_template())
-        save_tmp.start()
-        run_trials = threading.Thread(target=self.curr_session.run_session,  # run the trials
-                                      args=(self.log_file, self.max_successive_trials, self.max_trial_length))
-        run_trials.start()
-
-
-
-        save_tmp.join()  # make sure that template was saved before finishing
-        run_trials.join()  # wait for all trials to be finished
-        # close data aquiring and log file
-        self.log_file.close()
-        self.curr_session.data_log_file.close()
-        self.is_running_session = False
 
     def end_Session(self):
         self._curr_session.end_session = True
         self.is_running_session = False
-        # manually stop session
-        # stop sending TTl signal to all connected systems
-        pass
-
-    def log_data(self):
-        # use the path to save all details in the specific format
         pass
 
     def insert_new_trial(self, name):
         self.db.insert_new_trial(name)
 
-    def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on,isRandom,isEndCondition):
-        self.db.insert_new_events_to_trials(trial_name, event_name, is_contingent, contingent_on,isRandom,isEndCondition)
+    def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on, isRandom,
+                                    isEndCondition):
+        self.db.insert_new_events_to_trials(trial_name, event_name, is_contingent, contingent_on, isRandom,
+                                            isEndCondition)
 
     def verify_trial_insert(self, name, events):
         # before adding the trial type, check that name or list of events is not already in it

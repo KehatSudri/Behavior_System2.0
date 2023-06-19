@@ -6,9 +6,6 @@ class SessionViewModel:
         super(SessionViewModel, self).__init__()
         self.model = SessionModel()
 
-    def start_session(self):
-        self.model.start()
-
     def pause_session(self):
         self.model.pause()
 
