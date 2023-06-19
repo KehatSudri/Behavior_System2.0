@@ -31,9 +31,9 @@ def prepare_session_information(session_name, ports, dependencies, trial_name, i
             file.write(str(iti_vals[0]) + ";"+str(iti_vals[1]) + ",")
         file.write(str(isRandomOrder) + "\n")
         if(isRandomOrder):
-            file.write("Trial_name:" + trial_name + "\n" + repeats[int(index / 2)] + "," + MaxTime[int(index / 2)]+ "," + Percent[int(index / 2)]+ "\n")
+            file.write("Trial name: " + trial_name + "\n" + repeats[int(index / 2)] + "," + MaxTime[int(index / 2)]+ "," + Percent[int(index / 2)]+ "\n")
         else:
-            file.write("Trial_name:" + trial_name + "\n" + repeats[int(index / 2)] + "," + MaxTime[int(index / 2)]+ "\n")
+            file.write("Trial name: " + trial_name + "\n" + repeats[int(index / 2)] + "," + MaxTime[int(index / 2)]+ "\n")
         file.write("$Input Ports\n")
         if len(input_ports) > 0:
             for port in input_ports:

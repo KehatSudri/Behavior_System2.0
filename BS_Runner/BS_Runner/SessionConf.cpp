@@ -112,8 +112,10 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 				_trials[_numOfTrials]._remainingRuns = std::stoi(element);
 				std::getline(ss, element, ',');
 				_trials[_numOfTrials].setMaxTrialWaitTime(std::stoi(element));
-				std::getline(ss, element, ',');
-				_trialProbabilities.push_back(stoi(element));
+				if (_isSessionRandom) {
+					std::getline(ss, element, ',');
+					_trialProbabilities.push_back(stoi(element));
+				}
 				break;
 			case 1:
 				pos = line.find(delimiter);
@@ -148,6 +150,7 @@ bool allZeros(const std::vector<int>& vec) {
 }
 
 int SessionConf::changeCurrentTrial() {
+	if (_sessionComplete) { return END_OF_SESSION; }
 	auto start_time = std::chrono::high_resolution_clock::now();
 	int code = CONTINUE_SESSION;
 	--_trials[_currentTrial]._remainingRuns;
@@ -210,7 +213,7 @@ void Trial::initInputEvents() {
 }
 
 Outputer* getOutputer(std::string port, std::map<std::string, int> attr) {
-	if (port == "Tone") {
+	if (port == "Dev1/port0/line9") {
 		return new SimpleToneOutputer(port, attr);
 	}
 	size_t isAnalog = port.find(ANALOG_OUTPUT);
@@ -265,9 +268,12 @@ void Trial::initInputTaskHandle() {
 	DAQmxCreateTask("", &_inputTaskHandle);
 	std::string combine_ports = "";
 	for (auto& port : _AIPorts) {
+		DAQmxCreateAIVoltageChan(_inputTaskHandle, "Dev1/ai11", "", DAQmx_Val_Cfg_Default, -5.0, 5.0, DAQmx_Val_Volts, NULL);
+		DAQmxCreateAIVoltageChan(_inputTaskHandle, "Dev1/ai14", "", DAQmx_Val_Cfg_Default, -5.0, 5.0, DAQmx_Val_Volts, NULL);
 		combine_ports = combine_ports + ", " + port;
 	}
-	DAQmxCreateAIVoltageChan(_inputTaskHandle, combine_ports.c_str(), "", DAQmx_Val_Cfg_Default, -5.0, 5.0, DAQmx_Val_Volts, NULL);
+	combine_ports = combine_ports.substr(2);
+	//DAQmxCreateAIVoltageChan(_inputTaskHandle, combine_ports.c_str(), "", DAQmx_Val_Cfg_Default, -5.0, 5.0, DAQmx_Val_Volts, NULL);
 }
 
 void Trial::initTrialKillers() {

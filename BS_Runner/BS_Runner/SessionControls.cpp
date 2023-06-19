@@ -17,8 +17,9 @@ void SessionControls::run(char* configFilePath) {
 	do {
 		TaskHandle inputTaskHandle = conf.getInputTaskHandle();
 		std::vector<Event*> inputEvents = conf.getInputEvents();
-		int inputPortsSize = conf.getInputEvents().size();
-		std::vector<float64> data(inputPortsSize * SAMPLE_PER_PORT);
+		int inputPortsSize = conf.getInputEvents().size()+1;
+		//std::vector<float64> data(inputPortsSize * SAMPLE_PER_PORT);
+		float64 data[10];
 		int32 read;
 		setIsTrialRuning(true);
 		setIsPaused(false);
@@ -29,12 +30,23 @@ void SessionControls::run(char* configFilePath) {
 		for (auto envOutputer : conf.getEnvironmentOutputer()) { envOutputer->output(); }
 		do {
 			if (!this->_isPaused) {
-				DAQmxReadAnalogF64(inputTaskHandle, SAMPLE_PER_PORT, 5.0, DAQmx_Val_GroupByScanNumber, data.data(), SAMPLE_PER_PORT, &read, NULL);
-				for (int portIndex = 0; portIndex < inputPortsSize; ++portIndex) {
-					float64 sampleValue = data[portIndex * SAMPLE_PER_PORT];
-					std::thread t(&Event::set, inputEvents[portIndex], sampleValue);
-					t.detach();
+				DAQmxReadAnalogF64(inputTaskHandle, 1, 10.0, DAQmx_Val_GroupByChannel, data, sizeof(data), &read, nullptr);
+
+				// Print the data
+				for (int i = 0; i < read * 2; i++) {
+					if (data[i]>2) {
+						std::cout << "Channel " << (i % 2) + 1 << ": " << data[i] << " volts" << std::endl;
+					}
 				}
+				//DAQmxReadAnalogF64(inputTaskHandle, SAMPLE_PER_PORT, 5.0, DAQmx_Val_GroupByScanNumber, data.data(), SAMPLE_PER_PORT, &read, NULL);
+				//for (int portIndex = 0; portIndex < inputPortsSize; ++portIndex) {
+				//	float64 sampleValue = data[portIndex * SAMPLE_PER_PORT];
+				//	if (sampleValue > 0) {
+				//		std::cout << sampleValue;
+				//	}
+				//	//std::thread t(&Event::set, inputEvents[portIndex], sampleValue);
+				//	//t.detach();
+				//}
 			}
 			else { std::this_thread::sleep_for(std::chrono::milliseconds(300)); }
 		} while (isTrialRunning());
@@ -101,7 +113,9 @@ void SessionControls::finishSession() {
 	setIsPaused(true);
 	setIsSessionRunning(false);
 	setIsTrialRuning(false);
-	if (std::this_thread::get_id() != _runThread.get_id()) { _runThread.join(); }
+	if (std::this_thread::get_id() != _runThread.get_id()) {
+		_runThread.join();
+	}
 }
 
 std::string SessionControls::getCurrentRunningTrial() {

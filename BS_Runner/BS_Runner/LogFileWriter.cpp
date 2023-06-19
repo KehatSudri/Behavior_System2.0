@@ -4,6 +4,7 @@
 #include "Consts.h"
 
 void LogFileWriter::createLogFile() {
+	return;
 	if (!_sessionName.empty()) {
 		std::time_t now_c = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 		std::stringstream ss;
@@ -17,6 +18,7 @@ void LogFileWriter::createLogFile() {
 
 
 void LogFileWriter::write(int indicator, std::string port) {
+	return;
 	std::ofstream file(_logFileName, std::ios::app);
 	auto now = std::chrono::system_clock::now();
 	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
@@ -37,7 +39,7 @@ void LogFileWriter::write(int indicator, std::string port) {
 		message << "Trial Timeout at: ";
 		break;
 	case TRIAL_START:
-		message << " trial started at: ";
+		message << " started at: ";
 		break;
 	case SESSION_TIMEOUT_INDICATOR:
 		message << "Session Timeout at: ";

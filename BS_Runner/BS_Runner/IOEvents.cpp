@@ -75,15 +75,16 @@ void SimpleDigitalOutputer::output() {
 	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DELAY_PARAM]) {
 		continue;
 	}
-	bool32 dataHigh = 1, dataLow = 0;
+	uInt8 dataHigh[] = { 1 };
+	uInt8 dataLow[] = { 0 };
 	start_time = std::chrono::high_resolution_clock::now();
-	DAQmxWriteDigitalScalarU32(_handler, 1, 10.0, dataHigh, nullptr);
+	DAQmxWriteDigitalLines(_handler, 1, 1, 10.0, DAQmx_Val_GroupByChannel, dataHigh, NULL, nullptr);
 	notifyListeners();
 	LogFileWriter::getInstance().write(OUTPUT_INDICATOR, this->getPort());
 	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DURATION_PARAM]) {
 		continue;
 	}
-	DAQmxWriteDigitalScalarU32(_handler, 1, 10.0, dataLow, nullptr);
+	DAQmxWriteDigitalLines(_handler, 1, 1, 10.0, DAQmx_Val_GroupByChannel, dataLow, NULL, nullptr);
 }
 
 void EnvironmentOutputer::output() {
