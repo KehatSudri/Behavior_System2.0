@@ -45,7 +45,6 @@ def prepare_session_information(session_name, ports, dependencies, trial_name, i
         for dep in dependencies_arr:
             file.write(dep + "\n")
             parameters = trials_in_session[index + 1][db.get_event_name_by_port_and_trial(dep.split(",")[0],trial_name)[0]]
-            isRandom = \
             isReward = db.isReward(db.get_event_name_by_port_and_trial(dep, trial_name)[0])
             if isReward[0]:
                 file.write("1,")
