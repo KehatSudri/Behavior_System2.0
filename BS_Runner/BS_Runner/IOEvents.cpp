@@ -119,7 +119,7 @@ SimpleToneOutputer::SimpleToneOutputer(std::string port, std::map<std::string, i
 	header.subchunk2Size = numSamples * sizeof(short);
 	std::time_t now_c = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 	std::stringstream ss;
-	ss << std::put_time(std::localtime(&now_c), "%T") << ".wav";
+	ss << attributes[FREQUENCY_PARAM] << ".wav";
 	std::string filename = ss.str();
 	std::replace(filename.begin(), filename.end(), ':', ';');
 	_wav = filename;
@@ -134,6 +134,10 @@ SimpleToneOutputer::SimpleToneOutputer(std::string port, std::map<std::string, i
 	file.close();
 }
 
+SimpleToneOutputer::~SimpleToneOutputer() {
+	std::remove(_wav.c_str());
+}
+
 void SimpleToneOutputer::output() {
 	while (SessionControls::getInstance().getIsPaused()) {
 		continue;
@@ -144,7 +148,7 @@ void SimpleToneOutputer::output() {
 	}
 	notifyListeners();
 	LogFileWriter::getInstance().write(OUTPUT_INDICATOR, this->getPort());
-	std::wstring filePathWide(_wav.begin(), _wav.end());
+	std::wstring filePathWide(this->_wav.begin(), this->_wav.end());
 	LPCWSTR filePath = filePathWide.c_str();
 	PlaySound(filePath, NULL, SND_FILENAME);
 	return;

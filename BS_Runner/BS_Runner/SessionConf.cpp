@@ -64,13 +64,10 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 			setMaxITI(std::stoi(element.substr(pos + delimiter.length())));
 		}
 		else {
-			setMinITI(std::stoi(element) / 1000);
+			setMinITI(std::stoi(element));
 		}
 		std::getline(ss, element, ',');
-		if (element == "True") {
-			setisSessionRandom(true);
-		}
-
+		if (element == "True") { setisSessionRandom(true); }
 		int category = 0;
 		int flag = 2;
 		while (flag) {
@@ -151,6 +148,7 @@ bool allZeros(const std::vector<int>& vec) {
 
 int SessionConf::changeCurrentTrial() {
 	if (_sessionComplete) { return END_OF_SESSION; }
+	LogFileWriter::getInstance().write(TRIAL_END_INDICATOR, getCurrentRunningTrial());
 	auto start_time = std::chrono::high_resolution_clock::now();
 	int code = CONTINUE_SESSION;
 	--_trials[_currentTrial]._remainingRuns;
@@ -213,7 +211,8 @@ void Trial::initInputEvents() {
 }
 
 Outputer* getOutputer(std::string port, std::map<std::string, int> attr) {
-	if (port == TONE) {
+	size_t isTone = port.find(TONE);
+	if (isTone != std::string::npos) {
 		return new SimpleToneOutputer(port, attr);
 	}
 	size_t isAnalog = port.find(ANALOG_OUTPUT);
@@ -298,6 +297,7 @@ std::vector<Event*> Trial::getInputEvents() const {
 
 void Trial::giveReward() {
 	if (_rewardOutputers.size()) {
+		LogFileWriter::getInstance().write(REWARD_INDICATOR, "");
 		_rewardOutputers[0]->output();
 	}
 }

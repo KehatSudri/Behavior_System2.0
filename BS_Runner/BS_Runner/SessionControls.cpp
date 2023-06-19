@@ -14,6 +14,7 @@ void SessionControls::run(char* configFilePath) {
 
 	_conf = &conf;
 	_sessionTimeoutIndicator = _conf->getMaxSessionWaitTime();
+	_sessionStartTime = std::chrono::high_resolution_clock::now();
 	do {
 		TaskHandle inputTaskHandle = conf.getInputTaskHandle();
 		std::vector<Event*> inputEvents = conf.getInputEvents();
@@ -24,7 +25,7 @@ void SessionControls::run(char* configFilePath) {
 		setIsPaused(false);
 
 		_trialTimeoutIndicator = _conf->getMaxTrialWaitTime();
-		LogFileWriter::getInstance().write(TRIAL_START, getCurrentRunningTrial());
+		LogFileWriter::getInstance().write(TRIAL_START_INDICATOR, getCurrentRunningTrial());
 		_trialStartTime = std::chrono::high_resolution_clock::now();
 		for (auto envOutputer : conf.getEnvironmentOutputer()) { envOutputer->output(); }
 		do {
@@ -57,7 +58,7 @@ bool SessionControls::isSessionRunning() {
 		return false;
 	}
 	if (_conf->isSessionComplete()) {
-		LogFileWriter::getInstance().write(SESSION_END, "");
+		LogFileWriter::getInstance().write(SESSION_END_INDICATOR, "");
 		return false;
 	}
 	return true;
