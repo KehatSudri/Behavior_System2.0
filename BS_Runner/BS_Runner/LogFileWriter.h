@@ -11,6 +11,7 @@
 
 public class LogFileWriter {
 	std::string _sessionName;
+	std::string _dir;
 	std::string _logFileName;
 	LogFileWriter() {}
 	~LogFileWriter() {}
@@ -22,6 +23,7 @@ public:
 		return instance;
 	}
 	void setSessionName(std::string sessionName) { _sessionName = sessionName; }
+	void setLogDirectory(std::string dir) { _dir = dir; }
 	void createLogFile();
 	void write(int indicator, std::string port);
 };

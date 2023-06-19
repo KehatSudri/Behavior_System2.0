@@ -19,6 +19,7 @@ namespace BSRunner {
 		SessionController(int argc, char* argv[]) {
 			_configFilePath = argv[1];
 			LogFileWriter::getInstance().setSessionName(argv[2]);
+			LogFileWriter::getInstance().setSessionName(argv[3]);
 			InitializeComponent();
 		}
 
