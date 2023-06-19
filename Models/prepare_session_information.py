@@ -38,19 +38,19 @@ def prepare_session_information(session_name, ports, dependencies, trial_name, i
         if len(input_ports) > 0:
             for port in input_ports:
                 file.write(
-                    port + "," + str(db.isEndConditionEvent(db.get_event_name_by_port(port)[0], trial_name)[0]) + "\n")
+                    port + "," + str(db.isEndConditionEvent(db.get_event_name_by_port_and_trial(port,trial_name)[0], trial_name)[0]) + "\n")
         else:
             file.write("None\n")
         file.write("$Output Ports\n")
         for dep in dependencies_arr:
             file.write(dep + "\n")
-            parameters = trials_in_session[index + 1][db.get_event_name_by_port(dep.split(",")[0])[0]]
+            parameters = trials_in_session[index + 1][db.get_event_name_by_port_and_trial(dep.split(",")[0],trial_name)[0]]
             file.write(','.join(parameters) + "\n")
         for port in [item for item in output_ports ]:
-            isRandom = db.is_random_event_in_a_given_trial(trial_name,db.get_event_name_by_port(port)[0])[0]
+            isRandom = db.is_random_event_in_a_given_trial(trial_name,db.get_event_name_by_port_and_trial(port,trial_name)[0])[0]
             file.write(port + "\n")
-            parameters = trials_in_session[index + 1][db.get_event_name_by_port(port)[0]]
-            isReward = db.isReward(db.get_event_name_by_port(port)[0])
+            parameters = trials_in_session[index + 1][db.get_event_name_by_port_and_trial(port,trial_name)[0]]
+            isReward = db.isReward(db.get_event_name_by_port_and_trial(port,trial_name)[0])
             if isReward[0]:
                 file.write("1,")
             else:

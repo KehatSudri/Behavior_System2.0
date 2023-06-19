@@ -203,7 +203,12 @@ class DB:
             cur.execute(sql, (port,))
             names = cur.fetchone()
         return names
-
+    def get_event_name_by_port_and_trial(self, port, trial):
+        with self.conn.cursor() as cur:
+            sql = f"SELECT name FROM events , events_to_trials WHERE port=%s AND events_to_trials.trial_name = %s "
+            cur.execute(sql, (port,trial,))
+            name = cur.fetchone()
+        return name
     def get_session_trials(self, sess_id):
         with self.conn.cursor() as cur:
             cur.execute(f'SELECT * FROM session_to_trials WHERE session_id={sess_id}')
