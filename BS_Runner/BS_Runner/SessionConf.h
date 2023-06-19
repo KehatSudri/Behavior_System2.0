@@ -17,8 +17,8 @@ public:
 	int _remainingRuns = 0;
 	const std::string _trialName;
 	Trial(std::string trialName) :_trialName(trialName) {}
-	std::vector<std::string> _AIPorts;
-	std::vector<std::tuple<std::string, std::vector<int>>> _AOPorts;
+	std::vector<std::string> _inputPorts;
+	std::vector<std::tuple<std::string, std::vector<int>>> _outputPorts;
 	std::vector<std::string> _trialKillers;
 	void initInputEvents();
 	int initAnalogOutputTasks();
