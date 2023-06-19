@@ -78,7 +78,7 @@ class RandomOrderUi(object):
 
     def accept(self):
         for row in range(self.trials_tableWidget.rowCount()):
-            if not self.trials_tableWidget.item(row, 1).text().isdigit() and self.trials_tableWidget.item(row, 2).text().isdigit():
+            if not self.trials_tableWidget.item(row, 1).text().isdigit() or not  self.trials_tableWidget.item(row, 2).text().isdigit():
                 error_warning("Please enter only numbers")
                 return
             if self.isRandomOrder.isChecked():

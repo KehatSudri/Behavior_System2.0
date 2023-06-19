@@ -92,15 +92,15 @@ class AddTrialUi(object):
 
     def set_trial_form_handler(self, event_name: str, chosenTrial):
         if self.db.is_random_event_in_a_given_trial(chosenTrial,event_name)[0]:
-            dict=["min delay","max delay"]
+            dict=["min delay (ms)","max delay (ms)"]
         else:
-            dict = ["delay"]
+            dict = ["delay (ms)"]
         if event_name == 'Tone':
-            dict = dict + ['duration', 'frequency','tone amplitude']
+            dict = dict + ['duration (ms)', 'frequency (ms)','amplitude (ms)']
         elif event_name == 'Reward':
-            dict = dict + ['duration']
+            dict = dict + ['duration (ms)']
         else:
-            dict = dict + ["duration"]
+            dict = dict + ["duration (ms)"]
 
         for param in dict:
             label = QLabel(param)

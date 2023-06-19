@@ -365,7 +365,7 @@ class CreateSessionUi(object):
                 if event == 'Tone':
                     params += event + ":" + " min delay - " + parameters[0] + ", max delay - " + parameters[
                         1] + ", duration - " + parameters[
-                                  2] + ", frequency - " + parameters[3] + ", tone amplitude - " + parameters[4] + "\n"
+                                  2] + ", frequency - " + parameters[3] + ", amplitude - " + parameters[4] + "\n"
                 elif event == 'Reward':
                     params += event + ":" + " min delay - " + parameters[0] + ", max delay - " + parameters[
                         1] + ", duration - " + parameters[2] + "\n"
@@ -376,7 +376,7 @@ class CreateSessionUi(object):
             else:
                 if event == 'Tone':
                     params += event + ":" + " delay - " + parameters[0] + ", duration - " + parameters[
-                        1] + ", frequency - " + parameters[2] + ", tone amplitude - " + parameters[3] + "\n"
+                        1] + ", frequency - " + parameters[2] + ", amplitude - " + parameters[3] + "\n"
                 elif event == 'Reward':
                     params += event + ":" + " delay - " + parameters[0] + ", duration - " + parameters[1] + "\n"
                 else:
@@ -443,7 +443,7 @@ class CreateSessionUi(object):
                         if event == 'Tone':
                             params += event + ":" + " min delay - " + parameters[0] + ", max delay - " + parameters[
                                 1] + ", duration - " + parameters[
-                                          2] + ", frequency - " + parameters[3] + ", tone amplitude - " + parameters[
+                                          2] + ", frequency - " + parameters[3] + ", amplitude - " + parameters[
                                           4] + "\n"
                         elif event == 'Reward':
                             params += event + ":" + " min delay - " + parameters[0] + ", max delay - " + parameters[
@@ -455,7 +455,7 @@ class CreateSessionUi(object):
                     else:
                         if event == 'Tone':
                             params += event + ":" + " delay - " + parameters[0] + ", duration - " + parameters[
-                                1] + ", frequency - " + parameters[2] + ", tone amplitude - " + parameters[3] + "\n"
+                                1] + ", frequency - " + parameters[2] + ", amplitude - " + parameters[3] + "\n"
                         elif event == 'Reward':
                             params += event + ":" + " delay - " + parameters[0] + ", duration - " + parameters[1] + "\n"
                         else:

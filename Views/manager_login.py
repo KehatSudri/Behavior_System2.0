@@ -1,6 +1,6 @@
 from PyQt6 import QtCore, QtGui, QtWidgets, uic
 from PyQt6.QtWidgets import QLineEdit, QPushButton
-
+import hashlib
 from Views.utils import error_warning, get_ui_path
 
 
@@ -23,10 +23,15 @@ class ManagerLoginUi(object):
         self.setupUi(self.main_window)
         self.main_window.close()
 
+    def calculate_sha256(self,data):
+        sha256_hash = hashlib.sha256()
+        sha256_hash.update(data.encode('utf-8'))  # Encode the string as bytes and update the hash object
+        return sha256_hash.hexdigest()
+
     def on_login_click(self):
         password = self.password_lineEdit.text()
         # check login password
-        if password == "1234":
+        if self.calculate_sha256(password) == "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4":
             self.parent.is_manager = True
             self.parent.main_window.show()
             self.parent.manager_show()

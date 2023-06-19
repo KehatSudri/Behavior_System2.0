@@ -48,7 +48,10 @@ def prepare_session_information(session_name, ports, dependencies, trial_name, i
             file.write(','.join(parameters) + "\n")
         for port in [item for item in output_ports ]:
             isRandom = db.is_random_event_in_a_given_trial(trial_name,db.get_event_name_by_port_and_trial(port,trial_name)[0])[0]
-            file.write(port + "\n")
+            if "Tone" in db.get_event_name_by_port_and_trial(port,trial_name)[0]:
+                file.write(db.get_event_name_by_port_and_trial(port,trial_name)[0]+"\n")
+            else:
+                file.write(port + "\n")
             parameters = trials_in_session[index + 1][db.get_event_name_by_port_and_trial(port,trial_name)[0]]
             isReward = db.isReward(db.get_event_name_by_port_and_trial(port,trial_name)[0])
             if isReward[0]:
