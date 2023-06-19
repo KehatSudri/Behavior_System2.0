@@ -113,7 +113,7 @@ void TrialKiller::update(Event* event) {
 }
 
 SimpleToneOutputer::SimpleToneOutputer(std::string port, std::map<std::string, int> attributes) : Outputer(NULL, port, attributes) {
-	int numSamples = static_cast<int>(SAMPLE_RATE * attributes[DURATION_PARAM]);
+	int numSamples = static_cast<int>(SAMPLE_RATE * attributes[DURATION_PARAM]/1000);
 	WAVHeader header;
 	header.chunkSize = 36 + numSamples * sizeof(short);
 	header.subchunk2Size = numSamples * sizeof(short);
@@ -147,4 +147,5 @@ void SimpleToneOutputer::output() {
 	std::wstring filePathWide(_wav.begin(), _wav.end());
 	LPCWSTR filePath = filePathWide.c_str();
 	PlaySound(filePath, NULL, SND_FILENAME);
+	return;
 }

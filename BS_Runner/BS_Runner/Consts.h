@@ -6,10 +6,7 @@
 #define DI_PORTS 3
 #define DO_PORTS 4
 
-#define MOCK1 'Dev1/ao0'
-#define MOCK2 'Dev1/ao1'
-#define MOCK3 'Dev1/do0'
-#define MOCK4 'Dev1/do1'
+#define TONE "Tone"
 
 #define ANALOG_OUTPUT "ao"
 #define ANALOG_INPUT "ai"

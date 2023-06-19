@@ -84,7 +84,7 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 							break;
 						}
 						_trials[_numOfTrials].initTrialKillers();
-						if (_trials[_numOfTrials]._AIPorts.empty()) {
+						if (_trials[_numOfTrials]._inputPorts.empty()) {
 							_validFlag = false;
 							break;
 						}
@@ -121,12 +121,12 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 				pos = line.find(delimiter);
 				name = line.substr(0, pos);
 				token2 = line.substr(pos + delimiter.length());
-				_trials[_numOfTrials]._AIPorts.push_back(name);
+				_trials[_numOfTrials]._inputPorts.push_back(name);
 				if (token2 == "True") { _trials[_numOfTrials]._trialKillers.push_back(name); }
 				break;
 			case 2:
 				std::getline(inputFile, line);
-				_trials[_numOfTrials]._AOPorts.push_back({ name ,getParams(line) });
+				_trials[_numOfTrials]._outputPorts.push_back({ name ,getParams(line) });
 				break;
 			default:
 				break;
@@ -209,11 +209,11 @@ void SessionConf::giveReward() {
 }
 
 void Trial::initInputEvents() {
-	for (auto& port : _AIPorts) { _events.push_back(new Event(port)); }
+	for (auto& port : _inputPorts) { _events.push_back(new Event(port)); }
 }
 
 Outputer* getOutputer(std::string port, std::map<std::string, int> attr) {
-	if (port == "Dev1/port0/line9") {
+	if (port == TONE) {
 		return new SimpleToneOutputer(port, attr);
 	}
 	size_t isAnalog = port.find(ANALOG_OUTPUT);
@@ -234,7 +234,7 @@ Outputer* getOutputer(std::string port, std::map<std::string, int> attr) {
 }
 
 int Trial::initAnalogOutputTasks() {
-	for (auto& it : _AOPorts) {
+	for (auto& it : _outputPorts) {
 		const std::string& portName = std::get<0>(it);
 		const std::vector<int>& params = std::get<1>(it);
 		std::string delimiter = ",";
@@ -246,7 +246,9 @@ int Trial::initAnalogOutputTasks() {
 		}
 
 		Outputer* sm = getOutputer(token1, getAttributes(portName, params));
-		if (sm == NULL) { return INIT_ERROR; }
+		if (sm == NULL) {
+			return INIT_ERROR;
+		}
 		if (params[0]) {
 			_rewardOutputers.push_back(sm);
 		}
@@ -267,13 +269,9 @@ int Trial::initAnalogOutputTasks() {
 void Trial::initInputTaskHandle() {
 	DAQmxCreateTask("", &_inputTaskHandle);
 	std::string combine_ports = "";
-	for (auto& port : _AIPorts) {
-		DAQmxCreateAIVoltageChan(_inputTaskHandle, "Dev1/ai11", "", DAQmx_Val_Cfg_Default, -5.0, 5.0, DAQmx_Val_Volts, NULL);
-		DAQmxCreateAIVoltageChan(_inputTaskHandle, "Dev1/ai14", "", DAQmx_Val_Cfg_Default, -5.0, 5.0, DAQmx_Val_Volts, NULL);
-		combine_ports = combine_ports + ", " + port;
+	for (auto& port : _inputPorts) {
+		DAQmxCreateAIVoltageChan(_inputTaskHandle, port.c_str(), "", DAQmx_Val_Cfg_Default, -5.0, 5.0, DAQmx_Val_Volts, NULL);
 	}
-	combine_ports = combine_ports.substr(2);
-	//DAQmxCreateAIVoltageChan(_inputTaskHandle, combine_ports.c_str(), "", DAQmx_Val_Cfg_Default, -5.0, 5.0, DAQmx_Val_Volts, NULL);
 }
 
 void Trial::initTrialKillers() {
