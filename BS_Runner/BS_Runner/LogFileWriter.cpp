@@ -36,15 +36,20 @@ void LogFileWriter::write(int indicator, std::string port) {
 	case TRIAL_TIMEOUT_INDICATOR:
 		message << "Trial Timeout at: ";
 		break;
-	case TRIAL_START:
+	case TRIAL_START_INDICATOR:
 		message << " started at: ";
 		break;
 	case SESSION_TIMEOUT_INDICATOR:
 		message << "Session Timeout at: ";
 		break;
-	case SESSION_END:
+	case SESSION_END_INDICATOR:
 		message << "Session Finished at: ";
 		break;
+	case TRIAL_END_INDICATOR:
+		message << " Finished at: ";
+		break;
+	case REWARD_INDICATOR:
+		message << "Gave reward at: ";
 	default:
 		message << " Undefined indicator at: ";
 		break;
