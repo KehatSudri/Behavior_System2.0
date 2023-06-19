@@ -117,7 +117,6 @@ class BehaviorSystemModel:
 
     def get_hardware_events_from_DB(self):
         self.event_config = self.db.get_hardware_events()
-        # self.parse_ports()
         return self.event_config
 
     def get_all_events_by_name(self):
@@ -126,7 +125,6 @@ class BehaviorSystemModel:
 
     def insert_hardware_event_to_DB(self, port, name, type, format, is_reward):
         return self.db.insert_hardware_event(port, name, type, format, is_reward)
-        # self.get_hardware_events_from_DB()
 
     @property
     def subject_sessions(self):
