@@ -5,6 +5,8 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <random>
+#include <numeric>
 #include "LogFileWriter.h"
 
 class Listener;

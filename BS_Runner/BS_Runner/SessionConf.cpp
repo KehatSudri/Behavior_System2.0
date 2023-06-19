@@ -1,7 +1,5 @@
 #include "SessionConf.h"
 #include "Consts.h"
-#include <random>
-#include <numeric>
 
 std::map<std::string, int>  getAttributes(std::string port, const std::vector<int>& params) {
 	std::map<std::string, int> attributes;

@@ -8,7 +8,7 @@ from Models.DB_INIT import DB
 
 class EditSessionUi(object):
     def __init__(self, parent):
-        self.db=DB()
+        self.db = DB()
         self.index = 0
         self.parent = parent
         self.vm = parent.vm
@@ -28,12 +28,12 @@ class EditSessionUi(object):
         # TODO delete when self.vm.is_contingent(event_name) implemented
         self.are_contingents = []
         self.formLayout = parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
-        self.db=DB()
+        self.db = DB()
 
-    def setupUi(self, dialog ,session_name):
+    def setupUi(self, dialog, session_name):
         uic.loadUi(get_ui_path('edit_session_template.ui'), dialog)
         self.trial_types_comboBox = dialog.findChild(QtWidgets.QComboBox, 'trial_types_comboBox')
-        trials=self.db.get_trial_name_by_session(session_name)
+        trials = self.db.get_trial_name_by_session(session_name)
         self.trial_types_comboBox.addItems([name[0] for name in trials])
         self.trial_types_comboBox.activated.connect(self.trial_types_click)
         self.trial_types_click(0)
@@ -58,7 +58,7 @@ class EditSessionUi(object):
                 # Remove the current row from the layout
                 self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').removeRow(i)
 
-    def set_trial_form(self, events_name: list,chosenTrial):
+    def set_trial_form(self, events_name: list, chosenTrial):
         # add row for each event and it's parameters
         for i, event_name in enumerate(events_name):
             bold_font = QtGui.QFont()
@@ -68,26 +68,24 @@ class EditSessionUi(object):
             self.trial_params_labels.append(label)
             formLayout = self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
             if not self.vm.is_input_event(event_name):
-
                 formLayout.addRow(label)
 
-            # add line edit accordingly for the parameters
+                # add line edit accordingly for the parameters
                 self.set_trial_form_handler(event_name, chosenTrial)
-
 
     def set_trial_form_handler(self, event_name: str, chosenTrial):
         if self.db.is_random_event_in_a_given_trial(chosenTrial, event_name)[0]:
-            dict = ["min delay (ms)", "max delay (ms)"]
+            params = ["min delay (ms)", "max delay (ms)"]
         else:
-            dict = ["delay (ms)"]
-        if event_name == 'Tone':
-            dict = dict + ['duration (ms)', 'frequency (ms)','amplitude (ms)']
+            params = ["delay (ms)"]
+        if event_name.find("Tone") != -1:
+            params = params + ['duration (ms)', 'frequency (Hz)', 'amplitude (Hz)']
         elif event_name == 'Reward':
-            dict = dict + ['duration (ms)']
+            params = params + ['duration (ms)']
         else:
-            dict = dict + ["duration (ms)"]
+            params = params + ["duration (ms)"]
 
-        for param in dict:
+        for param in params:
             label = QLabel(param)
             line_edit = QLineEdit()
             line_edit.setText("0")
@@ -103,7 +101,7 @@ class EditSessionUi(object):
         events_name = self.vm.get_events_by_trial_name(chosen)
         events_name = [item[0] for item in events_name]
         self.clear_form()
-        self.set_trial_form(events_name,chosen)
+        self.set_trial_form(events_name, chosen)
 
     def clear_form(self):
         if len(self.trial_params_labels) != 0:
@@ -124,7 +122,6 @@ class EditSessionUi(object):
 
             if event != "" and event is not None:
                 event_and_params[event] = params
-
 
         self.parent.trials_in_session.extend([new_trial, event_and_params])
         self.parent.set_trials_table()

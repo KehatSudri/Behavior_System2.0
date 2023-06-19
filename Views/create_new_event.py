@@ -20,7 +20,8 @@ class CreateEventUi(object):
         self.analogPorts = ['ao0', 'ao1']
         self.analogInputPorts = ['ai0', 'ai1', 'ai2', 'ai3', 'ai4', 'ai5', 'ai6', 'ai7', 'ai8', 'ai9', 'ai10',
                                  'ai11', 'ai12', 'ai13', 'ai14', 'ai15', 'ai16']
-        self.digitalPorts = ['p0.1', 'p0.2', 'p0.3', 'p0.4', 'p0.5', 'p0.6', 'p0.7', 'p0.8', 'p0.9']
+        self.digitalPorts = ['p0.1', 'p0.2', 'p0.3', 'p0.4', 'p0.5', 'p0.6', 'p0.7', 'p0.8', 'p0.9', 'p0.10', 'p0.11',
+                             'p0.12']
 
     def setupUi(self, main_window):
         uic.loadUi(get_ui_path('create_new_event.ui'), main_window)

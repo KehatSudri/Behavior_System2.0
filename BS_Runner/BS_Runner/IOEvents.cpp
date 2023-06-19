@@ -21,6 +21,23 @@ struct WAVHeader {
 	int subchunk2Size = 0;
 };
 
+void performDelay(std::map<std::string, int>& attr) {
+	if (attr[MAX_DELAY_PARAM]) {
+		return;
+	}
+	auto start_time = std::chrono::high_resolution_clock::now();
+	if (attr[MAX_DELAY_PARAM]) {
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_real_distribution<double> dis(attr[MIN_DELAY_PARAM], attr[MAX_DELAY_PARAM]);
+		double random_iti = dis(gen);
+		while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < random_iti) { continue; }
+	}
+	else {
+		while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < attr[DELAY_PARAM]) { continue; }
+	}
+}
+
 void Event::attachListener(Listener* listener) {
 	_listeners.push_back(listener);
 }
@@ -53,11 +70,8 @@ void SimpleAnalogOutputer::output() {
 	while (SessionControls::getInstance().getIsPaused()) {
 		continue;
 	}
+	performDelay(_attributes);
 	auto start_time = std::chrono::high_resolution_clock::now();
-	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DELAY_PARAM]) {
-		continue;
-	}
-	start_time = std::chrono::high_resolution_clock::now();
 	DAQmxWriteAnalogScalarF64(_handler, true, 5.0, 3.7, NULL);
 	notifyListeners();
 	LogFileWriter::getInstance().write(OUTPUT_INDICATOR, this->getPort());
@@ -71,13 +85,10 @@ void SimpleDigitalOutputer::output() {
 	while (SessionControls::getInstance().getIsPaused()) {
 		continue;
 	}
-	auto start_time = std::chrono::high_resolution_clock::now();
-	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DELAY_PARAM]) {
-		continue;
-	}
+	performDelay(_attributes);
 	uInt8 dataHigh[] = { 1 };
 	uInt8 dataLow[] = { 0 };
-	start_time = std::chrono::high_resolution_clock::now();
+	auto start_time = std::chrono::high_resolution_clock::now();
 	DAQmxWriteDigitalLines(_handler, 1, 1, 10.0, DAQmx_Val_GroupByChannel, dataHigh, NULL, nullptr);
 	notifyListeners();
 	LogFileWriter::getInstance().write(OUTPUT_INDICATOR, this->getPort());
@@ -142,10 +153,7 @@ void SimpleToneOutputer::output() {
 	while (SessionControls::getInstance().getIsPaused()) {
 		continue;
 	}
-	auto start_time = std::chrono::high_resolution_clock::now();
-	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DELAY_PARAM]) {
-		continue;
-	}
+	performDelay(_attributes);
 	notifyListeners();
 	LogFileWriter::getInstance().write(OUTPUT_INDICATOR, this->getPort());
 	std::wstring filePathWide(this->_wav.begin(), this->_wav.end());
