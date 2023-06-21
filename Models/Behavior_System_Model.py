@@ -181,147 +181,6 @@ class BehaviorSystemModel:
         if self._session_trials != value:
             self._session_trials = value
 
-    # find the trial type id by a name
-    def find_trial_id_by_name(self, name: str):
-        if self.trial_types is None:
-            self.trial_types = self._DB.get_trial_types()
-        # go over the trial types if exists
-        if self.trial_types is not None:
-            for trial in self.trial_types:
-                # if the name of current type is the given name, return the id
-                if trial.name == name:
-                    return trial.trial_id
-                # else notify no such trial
-        else:
-            # TODO error message that there are no types existing
-            pass
-
-    # find the trial type id by a name
-    def find_trial_name_by_id(self, t_id: str):
-        # go over the trial types if exists
-        if self.trial_types is None:
-            self.trial_types = self._DB.get_trial_types()
-        if self.trial_types is not None:
-            for trial in self.trial_types:
-                # if the name of current type is the given name, return the id
-                if trial[0] == t_id:
-                    return trial[1]
-            # else notify no such trial
-        else:
-            # extract from DB or send message that no such exist
-            # TODO error message that there are no types existing
-            pass
-
-    # find the session template that matches the given data. if no match found, return -1
-    def find_template(self, sess_name, exp_name, trials_def, iti_type, end_def, trials_order, iti_min, iti_max, iti_def,
-                      total_num, block_size, blocks_ord, rnd_rew_prcnt):
-        # first get list of templates from the DB
-        if self.session_templates is None:
-            self.get_templates_from_db()
-
-        # go over the templates
-        for tmp in self.session_templates:
-            # extract all data of current template
-            t_sess_id, t_sess_name, t_exp_name, t_iti_type, t_iti_min, t_iti_max, t_iti_behave, t_end_def, t_end_val, \
-                t_trials_order, t_total, t_block_sizes, t_blocks_ord, t_rnd_rew, date = tmp
-            # if there is a template with the exact data, proceed to validate it's trials
-            if t_exp_name == exp_name and t_sess_name == sess_name and t_iti_type == iti_type and (
-                    t_end_def, t_end_val) == end_def and t_trials_order == trials_order and \
-                    t_iti_min == iti_min and t_iti_max == iti_max and t_iti_behave == iti_def and \
-                    t_total == total_num and t_block_sizes == str(block_size) and t_blocks_ord == str(blocks_ord) \
-                    and t_rnd_rew == rnd_rew_prcnt:
-                # get the trials of the given session_id
-                trials = self._DB.get_session_trials(t_sess_id)
-                # if the number of trials doesn't match - proceed to next template
-                if len(trials) != len(trials_def.trials):
-                    continue
-                # validate that at least one trial exists
-                if len(trials) != 0:
-                    # set flag for match on
-                    flag_found_match = True
-                    # go over the trials
-                    for i in range(len(trials)):
-                        t = trials_def.trials[i]
-                        # create a string list of the events in the trial
-                        list_events = ""
-                        for e in t.events:
-                            list_events += str(self.find_event_id(type(e).__name__,
-                                                                  e.get_params())) + ","
-                        # create list of intervals for the trial
-                        intvs = None
-                        if trials[i][7] is not None:
-                            intvs = create_intervals_list(trials[i][7])
-                        if t.trial_id == trials[i][2] and intvs == [(int(a[0]), int(a[1])) for a in t.intervals] and \
-                                trials[i][6] == list_events:
-                            continue
-                        # turn off the flag as a mismatch is found
-                        flag_found_match = False
-                        break  # TODO validate this
-                    # if a total match was found return the template id
-                    if flag_found_match:
-                        return tmp[0]
-        # no match was found - return -1
-        return -1
-
-    # fill out the given trials_def fields from the trial_types data
-    def fill_trials_def(self, trials_def):
-        types = self.trial_types
-        if types is None:
-            types = self.get_trial_types()
-
-        type_events = None
-        # validate integrity of value given
-        for t in trials_def.trials:
-            # validate id matches to name
-            if t.name is not None:
-                if t.trial_id is not None:
-                    for i in types:
-                        if i[1] == t.name:
-                            if i[0] != t.trial_id:
-                                # TODO error
-                                pass
-                            else:
-                                type_events = i[2]
-                                break
-                        # TODO error not existing or create new type?
-                        pass
-                else:
-                    # get trial_id by name
-                    for i in types:
-                        if i[1] == t.name:
-                            t.trial_id = i[0]
-                            type_events = i[2]
-                            break
-                    if t.trial_id is None:
-                        # TODO error
-                        pass
-            elif t.trial_id is not None:
-                # get name by id
-                for i in types:
-                    if t.trial_id == i.trial_id:
-                        t.name = i.name
-                        type_events = i.events
-                if t.name is None:
-                    # TODO error
-                    pass
-            else:
-                # TODO error, no name and no id
-                pass
-            # convert type_events string to list
-            type_events = type_events.split(",")[:-1]
-            # validate intervals
-            if len(t.events) != 1 and len(t.intervals) != (len(t.events) - 1):
-                # TODO error
-                pass
-            # validate events
-            if len(t.events) != len(type_events):
-                # TODO error
-                pass
-            else:
-                for i in range(len(t.events)):
-                    if t.events[i].get_type_str() != type_events[i]:
-                        # TODO error
-                        pass
 
     def choose_template_from_list(self, temp_id):
         for tmp in self.session_templates:
@@ -398,7 +257,7 @@ class BehaviorSystemModel:
                     break
         return list_TrialEvents
 
-    def get_list_trials_types_def(self):  # TODO change
+    def get_list_trials_types_def(self):
         trials = self.get_trial_types_from_db()
         trials_name_list = []
         for trial in trials:
@@ -479,9 +338,7 @@ class BehaviorSystemModel:
     def set_trials_list(self, trials):
         self.curr_session.trials_def.trials = trials
 
-    def set_trials_def(self, some_stuff):
-        # TODO once the data from user is full
-        pass
+
 
     def get_template_list_by_date_exp_sess_names(self):
         if self._session_templates is None:
@@ -598,7 +455,6 @@ class BehaviorSystemModel:
             else:
                 self.delete_template_from_db_by_id(sess[0])
 
-    # TODO verify
     def delete_templates_by_experimenter_name(self, exp_name):
         if self.session_templates is None:
             self.get_templates_from_db()
@@ -611,7 +467,6 @@ class BehaviorSystemModel:
         self.get_templates_from_db()
         pass
 
-    # TODO verify
     def delete_template_from_db_by_id(self, temp_id):
         # maybe verify authorization before?
         self.db.delete_template(temp_id)

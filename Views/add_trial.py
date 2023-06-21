@@ -3,7 +3,7 @@ from PyQt6 import QtWidgets, QtGui, uic
 from PyQt6.QtWidgets import QVBoxLayout, QLabel, QLineEdit, QFormLayout
 from Models.DB_INIT import DB
 from Views.utils import get_ui_path
-
+from Views.utils import error_warning
 
 class AddTrialUi(object):
     def __init__(self, parent):
@@ -50,8 +50,7 @@ class AddTrialUi(object):
         # init the lists tha holds the widgets for each row
         self.trial_params_labels = []
         self.trial_params_widgets = defaultdict(list)
-        self.are_contingents.clear()  # TODO delete when self.vm.is_contingent(event_name) implemented
-
+        self.are_contingents.clear()
         for i in range(self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').rowCount() - 1, -1, -1):
             # Get the widget in the current row
             widget = self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').itemAt(i).widget()
@@ -98,40 +97,24 @@ class AddTrialUi(object):
         self.parent.trial_index = index
         if len(self.parent.trials_names) == 0:
             return
-        chosen = self.parent.chosen_trial_type_name = [name[0] for name in self.parent.trials_names][index]
-        events_name = self.vm.get_events_by_trial_name(chosen)
+        self.chosen = self.parent.chosen_trial_type_name = [name[0] for name in self.parent.trials_names][index]
+        events_name = self.vm.get_events_by_trial_name(self.chosen)
         events_name = [item[0] for item in events_name]
         self.clear_form()
-        self.set_trial_form(events_name, chosen)
+        self.set_trial_form(events_name, self.chosen)
 
     def clear_form(self):
         if len(self.trial_params_labels) != 0:
             self.delete_params()
 
-    def are_valid_values(self, new_trial):
-        index = 0
-        for event, event_params in new_trial.items():
-            if self.vm.is_contingent(event, new_trial):
-                # if self.are_contingents[index]:
-                for parameter, value in event.items():  # event's
-                    if type(value) != bool:  # check if range case
-                        for key, val in value.items():
-                            if not val:  # SpinBox case
-                                params_values = {param: self.trial_params_widgets[event][i].text() for i, param in
-                                                 enumerate(event_params)}
-                                for params_key in params_values:
-                                    if not params_values[params_key]:
-                                        return False
-            else:
-                params_values = {param: self.trial_params_widgets[event][i].text() for i, param in
-                                 enumerate(event_params)}
-                for params_key in params_values:
-                    if not params_values[params_key]:
-                        return False
-            index += 1
-        return True
 
     def accept(self):
+        for row in range(self.parent.trials_table.rowCount()):
+                item = self.parent.trials_table.item(row, 0)
+                if item is not None:
+                    if item.text() == self.chosen:
+                        error_warning("Cant insert same trial more then 1 time")
+                        return
         new_trial = self.parent.chosen_trial_type_name
         event_and_params = {}
         params = []

@@ -24,7 +24,6 @@ class EditSessionUi(object):
         self.set_trials_table_pointer = None
         self.trial_params_labels = []
         self.trial_params_widgets = defaultdict(list)
-        # TODO delete when self.vm.is_contingent(event_name) implemented
         self.are_contingents = []
         self.formLayout = parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
         self.db = DB()

@@ -281,7 +281,7 @@ class DB:
             events = cur.fetchall()
         return events
 
-    def get_all_sess_for_subject(self, sub_id):  # TODO validate work
+    def get_all_sess_for_subject(self, sub_id):
         with self.conn.cursor() as cur:
             cur.execute(f'SELECT * FROM subject_to_session WHERE subject_id={sub_id} ORDER BY last_used')
             sessions = cur.fetchall()

@@ -147,7 +147,6 @@ class CreateSessionUi(object):
         self.max_trial_time = self.main_window.findChild(QtWidgets.QDoubleSpinBox, "doubleSpinBox")
 
     def on_choose_template_click(self):
-        # TODO add on clicked event handler for component
         self.chosen_window = QtWidgets.QDialog()
         choose_template = ChooseTemplateUi(self)
         choose_template.setup_ui(self.chosen_window, self.on_template_change_event_handler)
@@ -366,17 +365,6 @@ class CreateSessionUi(object):
         self.parent.main_window.show()
         self.main_window.close()
 
-    def parse_trial_params(self, trials):
-        trials_names, trials_params = [], []
-        for trial in trials:
-            pair = [(keys, val) for keys, val in trial.items()]
-            name = [i[0] for i in pair]
-            param = [i[1] for i in pair]
-            trials_names += name
-            trials_params.append(param)
-        return trials_names, trials_params
-
-    # we need this
     def on_template_change_event_handler(self, template):
         if not template:
             return
