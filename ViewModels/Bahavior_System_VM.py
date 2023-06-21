@@ -8,7 +8,6 @@ class BehaviorSystemViewModel:
         super(BehaviorSystemViewModel, self).__init__()
         self.model = BehaviorSystemModel()
         self.sessionVM = SessionViewModel()
-        self.timer = None
 
     @property
     def is_running_session(self):
@@ -33,14 +32,6 @@ class BehaviorSystemViewModel:
     @trial_types.setter
     def trial_types(self, value):
         self.model.trial_types = value
-
-    @property
-    def output_ports(self):
-        return self.model.output_ports
-
-    @output_ports.setter
-    def output_ports(self, value):
-        self.model.output_ports = value
 
     @property
     def output_events_names(self):
@@ -73,9 +64,6 @@ class BehaviorSystemViewModel:
     @input_ports.setter
     def input_ports(self, value):
         self.model.input_ports = value
-
-    def give_reward(self, name):
-        self.model.give_reward(name)
 
     @property
     def session_templates(self):
@@ -193,9 +181,6 @@ class BehaviorSystemViewModel:
 
     def get_list_of_subjects(self):
         return self.model.get_list_of_subjects()
-
-    def get_trials_def_for_sess(self, sess_id, order):
-        return self.model.get_trials_def_for_sess(sess_id, order)
 
     def create_trial_list(self, trial_list: list):
         return self.model.create_trial_list(trial_list)

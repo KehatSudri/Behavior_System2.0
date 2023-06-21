@@ -22,15 +22,13 @@ def prepare_session_information(session_name, ports, dependencies, trial_name, i
 
     with open(configs_path, "a") as file:
         db = DB()
-        # max_session_time = db.get_max_trial_time(session_name)
-        # file.write(str(max_session_time[0]) + ",")
         iti_vals = db.get_iti_vals(session_name)
         if is_fixed_iti:
             file.write(str(iti_vals[0]) + ",")
         else:
             file.write(str(iti_vals[0]) + ";" + str(iti_vals[1]) + ",")
         file.write(str(isRandomOrder) + "\n")
-        if (isRandomOrder):
+        if isRandomOrder:
             file.write(
                 "Trial name: " + trial_name + "\n" + repeats[int(index / 2)] + "," + MaxTime[int(index / 2)] + "," +
                 Percent[int(index / 2)] + "\n")
@@ -60,7 +58,8 @@ def prepare_session_information(session_name, ports, dependencies, trial_name, i
             file.write(','.join(parameters) + "\n")
         for port in [item for item in output_ports if item not in [tup[0] for tup in dependencies]]:
             isRandom = \
-            db.is_random_event_in_a_given_trial(trial_name, db.get_event_name_by_port_and_trial(port, trial_name)[0])[0]
+                db.is_random_event_in_a_given_trial(trial_name,
+                                                    db.get_event_name_by_port_and_trial(port, trial_name)[0])[0]
             if "Tone" in db.get_event_name_by_port_and_trial(port, trial_name)[0]:
                 file.write(db.get_event_name_by_port_and_trial(port, trial_name)[0] + "\n")
             else:

@@ -18,13 +18,11 @@ class SettingsUi(object):
         self.db_path_textEdit = None
         self.max_identical_consecutive_trials_spinBox = None
         self.file_db_file_path = self.vm.db_config_file_path
-        # self.db_section = self.vm.db_section
         self.max_identical_consecutive_trial = self.vm.max_successive_trials
         self.max_time_duration = self.vm.max_trial_length
         self.input_events = self.vm.input_events_names
         self.input_ports = self.vm.input_ports
         self.output_events = self.vm.output_events_names
-        self.output_ports = self.vm.output_ports
         self.event_config = self.vm.event_config
 
     def setupUi(self, main_window):
