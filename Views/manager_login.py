@@ -1,4 +1,5 @@
 import hashlib
+from PyQt6 import uic
 from PyQt6.QtWidgets import QLineEdit, QPushButton
 from Views.utils import error_warning, get_ui_path
 
@@ -11,7 +12,7 @@ class ManagerLoginUi(object):
 
     def setupUi(self, main_window):
         self.main_window = main_window
-        PyQt6.uic.loadUi(get_ui_path('manager_login.ui'), main_window)
+        uic.loadUi(get_ui_path('manager_login.ui'), main_window)
         back_pushButton = main_window.findChild(QPushButton, 'Back_btn')
         back_pushButton.clicked.connect(self.on_back_click)
         login_pushButton = main_window.findChild(QPushButton, 'login_pushButton')
