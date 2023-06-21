@@ -169,7 +169,7 @@ class CreateSessionUi(object):
         self.chosen_window.show()
 
     def on_add_click(self):
-        if not self.trials_in_session:
+        if not self.db.get_trial_types():
             error_warning("Please create trial first.")
             return
         self.add_window = QtWidgets.QDialog()
