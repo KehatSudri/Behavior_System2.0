@@ -33,7 +33,7 @@ class SystemMainUi(object):
             back_pushButton.clicked.connect(self.on_back_click)
         else:
             self.main_window = main_window
-            uic.loadUi(get_ui_path('system_main.ui'), self.main_window)
+            uic.loadUi("D:\\PycharmProjects\\Behavior_System2.0\\UI\\system_main.ui", self.main_window)
             manager_login_push_button = self.main_window.findChild(QPushButton, 'manager_login_pushButton')
             manager_login_push_button.clicked.connect(self.on_manager_login_click)
             create_trial_type_push_button = self.main_window.findChild(QPushButton, 'create_trial_type_pushButton')

@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from PyQt6.QtWidgets import QMessageBox
 
@@ -47,9 +48,15 @@ def list_to_str(my_list):
     return result[:-2]
 
 
-def get_ui_path(name):
-    return str(Path(__file__).parent.parent / 'UI' / name)
+def get_resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
+def get_ui_path(name):
+    return get_resource_path(os.path.join('UI', name))
 
 def get_qss_path(name):
     return str(Path(__file__).parent.parent / 'QSS' / name)
