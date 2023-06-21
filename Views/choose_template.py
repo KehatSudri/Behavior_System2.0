@@ -18,16 +18,16 @@ class ChooseTemplateUi(object):
         self.init()
 
     def init(self):
-        self.db = DB()
-        subjects = self.db.get_subjects()
+        db = DB()
+        subjects = db.get_subjects()
         subjectsArray = [x[0] for x in subjects]
         for subject in subjectsArray:
-            related_sessions = self.db.get_sessions_by_subject(subject)
+            related_sessions = db.get_sessions_by_subject(subject)
             self.subjects.add(subject)
             self.templates[subject] = [subject + " " + x[0] for x in related_sessions]
 
     def setup_ui(self, dialog, event_handler):
-        self.all_templates = self.get_all_templates()
+        self.get_all_templates()
         uic.loadUi(get_ui_path('choose_template.ui'), dialog)
         dialog.accepted.connect(lambda: event_handler(self.choose_template_cb.currentText()))
         self.choose_template_cb = dialog.findChild(QtWidgets.QComboBox, 'choose_template_cb')
@@ -70,7 +70,7 @@ class ChooseTemplateUi(object):
 
     def set_template_data_in_parent(self, temp_id):
         sess_id, sess_name, exp_name, iti_type, iti_min, iti_max, iti_behave, end_def, end_val, order, total, \
-        block_sizes, blocks_order, rew_prcnt, last_used = self.parent.vm.get_data_for_template_id(temp_id)
+            block_sizes, blocks_order, rew_prcnt, last_used = self.parent.vm.get_data_for_template_id(temp_id)
         if order != 'random':
             block_sizes = ([int(val) for val in block_sizes.replace("[", "").replace("]", "").split(",")])
         self.parent.vm.sessionVM.session_name = sess_name
@@ -201,10 +201,11 @@ class ChooseTemplateUi(object):
             self.choose_template_cb.clear()
             self.choose_template_cb.addItems(self.current_all_templates)
         elif self.filter_by_id_radio_btn.isChecked():
-            self.choose_subject_id_cb.setEnabled(True)
-            self.choose_template_cb.clear()
-            template_key = self.choose_subject_id_cb.currentText()
-            self.choose_template_cb.addItems(self.templates[template_key])
+            if self.templates:
+                self.choose_subject_id_cb.setEnabled(True)
+                self.choose_template_cb.clear()
+                template_key = self.choose_subject_id_cb.currentText()
+                self.choose_template_cb.addItems(self.templates[template_key])
 
     # we need this
     def on_filter_by_id_change_event_handler(self):

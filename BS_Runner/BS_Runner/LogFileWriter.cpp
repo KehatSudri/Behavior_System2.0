@@ -6,10 +6,12 @@ void LogFileWriter::createLogFile() {
 	if (!_sessionName.empty()) {
 		std::time_t now_c = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 		std::stringstream ss;
-		ss << _sessionName << std::put_time(std::localtime(&now_c), "-%d-%m-%Y-%T") << ".txt";
-		std::string filename = ss.str();
-		std::replace(filename.begin(), filename.end(), ':', ';');
-		std::ofstream file(filename.c_str());
+		ss << std::put_time(std::localtime(&now_c), "-%d-%m-%Y-%T");
+		std::string time = ss.str();
+		std::replace(time.begin(), time.end(), ':', ';');
+		std::string fullPath = _dir + "\\" + _sessionName + time + ".txt";
+		std::ofstream MyFile(fullPath);
+		MyFile.close();
 	}
 }
 

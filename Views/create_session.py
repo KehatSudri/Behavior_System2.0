@@ -293,7 +293,7 @@ class CreateSessionUi(object):
             error_warning("Please set ITI")
             return
         if self.max_trial_time.value() == 0:
-            error_warning("Please fill max Trial duration")
+            error_warning("Please fill max session duration")
             return
 
         if flag:  # only when flag=1 I want to insert information to DB
@@ -375,6 +375,8 @@ class CreateSessionUi(object):
 
     # we need this
     def on_template_change_event_handler(self, template):
+        if not template:
+            return
         subject, session_name = template.split()
         self.trials_in_session = []
         trials_dict = {}
@@ -406,6 +408,8 @@ class CreateSessionUi(object):
             params = ""
             for event in events:
                 parameters = self.db.get_params_by_event_and_trial_name(event, trial)
+                if parameters[0][0] is None:
+                    continue
                 parameters = [x[0] for x in parameters]
                 parameters_ar = [item.split(',') for item in parameters]
                 trials_dict[event] = parameters[0].split(',')
@@ -448,7 +452,7 @@ class CreateSessionUi(object):
     def on_session_define_event_handler(self):
         config_path = str(Path(__file__).parent.parent / 'config_files' / 'session_config.txt')
         bs_runner_path = r"BS_Runner/Debug/BS_Runner.exe"
-        log_path = self.vm.model.logs_path + "/"
+        log_path = self.vm.model.logs_path
         command = [bs_runner_path, config_path, self.session_name_te.toPlainText(), log_path]
         subprocess_thread = threading.Thread(target=run_subprocess, args=(command,))
         subprocess_thread.start()
