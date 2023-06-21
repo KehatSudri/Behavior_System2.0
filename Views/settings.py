@@ -40,6 +40,9 @@ class SettingsUi(object):
         self.log_file_path_text_edit.setText(self.new_folder_path)
 
     def on_settings_ok_click(self):
+        if self.new_folder_path is None:
+            self.main_window.close()
+            return
         with open(self.vm.model.settings_file, 'r') as f:
             lines = f.readlines()
         lines[0] = f'log file location={self.new_folder_path}\n'
