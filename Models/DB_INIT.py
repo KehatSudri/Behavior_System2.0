@@ -10,8 +10,6 @@ def config(filename):
     section = 'postgresql'
     parser = ConfigParser()
     parser.read(filename)
-
-    # get section, default to postgresql
     db = {}
     if parser.has_section(section):
         params = parser.items(section)
@@ -72,7 +70,8 @@ class DB:
             self.conn.commit()
 
     def insert_mock_events(self):
-        sql = """INSERT INTO events(port, name, type, format, is_reward) VALUES (%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"""
+        sql = """INSERT INTO events(port, name, type, format, is_reward) VALUES (%s,%s,%s,%s,%s) ON CONFLICT DO 
+        NOTHING"""
         with self.conn.cursor() as cur:
             cur.execute(sql, ("Tone", "Tone", "Output", "Analog", False))
             self.conn.commit()
@@ -90,23 +89,19 @@ class DB:
     def insert_session(self, name, subjectid, experimenter_name, last_used, min_iti,
                        max_iti, is_fixed_iti, max_trial_time, notes):
         try:
-            sql = """
-                INSERT INTO sessions(name,subjectid,experimenter_name,last_used,min_iti,max_iti,is_fixed_iti,max_trial_time,notes)
-                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                 """
+            sql = """INSERT INTO sessions(name,subjectid,experimenter_name,last_used,min_iti,max_iti,is_fixed_iti,
+            max_trial_time,notes) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
             with self.conn.cursor() as cur:
                 cur.execute(sql, (
-                name, subjectid, experimenter_name, last_used, min_iti, max_iti, is_fixed_iti, max_trial_time, notes))
+                    name, subjectid, experimenter_name, last_used, min_iti, max_iti, is_fixed_iti, max_trial_time,
+                    notes))
                 self.conn.commit()
         except Exception as e:
             self.conn.rollback()
             raise e
 
     def insert_session_to_trials(self, session_name, trial_name):
-        sql = """
-                        INSERT INTO session_to_trials(session_name, trial_name)
-                         VALUES (%s,%s)
-                         """
+        sql = """INSERT INTO session_to_trials(session_name, trial_name) VALUES (%s,%s)"""
         with self.conn.cursor() as cur:
             cur.execute(sql, (session_name, trial_name))
             self.conn.commit()
@@ -122,7 +117,8 @@ class DB:
 
     def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on, isRandom,
                                     isEndCondition):
-        sql = """INSERT INTO events_to_trials(event_name, trial_name, is_contingent, contingent_on,israndom,isendcondition) VALUES (%s,%s,%s,%s,%s,%s)"""
+        sql = """INSERT INTO events_to_trials(event_name, trial_name, is_contingent, contingent_on,israndom,
+        isendcondition) VALUES (%s,%s,%s,%s,%s,%s)"""
         with self.conn.cursor() as cur:
             cur.execute(sql, (event_name, trial_name, is_contingent, contingent_on, isRandom, isEndCondition))
             self.conn.commit()
@@ -134,21 +130,15 @@ class DB:
         cur = self.conn.cursor()
         cur.execute(sql, (
             session_id, trial_type_id, percent_in_session, percent_in_block, block_number, event_list, interval_list))
-        # session_id, trial_type_id, percent_in_session, percent_in_block, block_number, event_list, interval_list))
         sess_trial_id = cur.fetchone()[0]
-        # sess_id = cur.fetchone()[0]
         self.conn.commit()
-        # close communication with the PostgreSQL database server
         cur.close()
-        # commit the changes
-        self.conn.commit()
         return sess_trial_id
 
     def isEndConditionEvent(self, event_name, trial_name):
         with self.conn.cursor() as cur:
             sql = """SELECT isendcondition FROM events_to_trials WHERE event_name=%s AND trial_name=%s"""
             cur.execute(sql, (event_name, trial_name))
-            # cur.execute(f'SELECT isendcondition FROM events_to_trials WHERE event_name={event_name} AND trial_name={trial_name}')
             isEndConditionEvent = cur.fetchone()
         return isEndConditionEvent
 
@@ -157,33 +147,24 @@ class DB:
         cur = self.conn.cursor()
         cur.execute(sql, (event_type, parameters))
         fetch = cur.fetchone()
-        event_id = None
         if cur.statusmessage != "INSERT 0 0":
             event_id = fetch[0]
-            self.conn.commit()
         else:
             sql = """SELECT event_id FROM events WHERE event_type=%s AND parameters=%s"""
             cur.execute(sql, (event_type, parameters))
             event_id = cur.fetchone()[0]
-        # close communication with the PostgreSQL database server
-        cur.close()
-        # commit the changes
         self.conn.commit()
+        cur.close()
         return event_id
 
     def insert_subject_session(self, subject_id, session_id, counter=0):
-        # on conflict increment counter by 1, and last used is now
         sql = """INSERT INTO subjectSession(subject_id, session_id, counter,last_used) VALUES (%s,%s,%s,%s) 
                 ON CONFLICT ON CONSTRAINT sbjsess_pkey DO UPDATE SET last_used=%s"""
         cur = self.conn.cursor()
-        # cur.execute(sql, ("A15B6", "behaviour", None, None, 15, 20, "time"))
         cur.execute(sql, (subject_id, session_id, counter, datetime.date.today(), datetime.date.today()))
         self.conn.commit()
-        # close communication with the PostgreSQL database server
         cur.close()
-        # commit the changes
         self.conn.commit()
-        return
 
     def get_session_templates(self):
         with self.conn.cursor() as cur:
@@ -197,17 +178,10 @@ class DB:
             events = cur.fetchall()
         return events
 
-    def get_hardware_events_byname(self):
+    def get_hardware_events_by_name(self):
         with self.conn.cursor() as cur:
             cur.execute("SELECT name FROM events")
             names = cur.fetchall()
-        return names
-
-    def get_event_name_by_port(self, port):
-        with self.conn.cursor() as cur:
-            sql = f"SELECT name FROM events WHERE port=%s"
-            cur.execute(sql, (port,))
-            names = cur.fetchone()
         return names
 
     def get_event_name_by_port_and_trial(self, port, trial):
@@ -307,48 +281,17 @@ class DB:
             events = cur.fetchall()
         return events
 
-    def get_event_by_id(self, event_id):
-        with self.conn.cursor() as cur:
-            cur.execute(f'SELECT * FROM events WHERE event_id={event_id}')
-            events = cur.fetchall()
-        return events
-
-    def get_all_subject_sessions(self):
-        # with self.conn.cursor() as cur:
-        #     cur.execute("SELECT * FROM subject_to_session")
-        #     ans = cur.fetchall()
-        return []
-
-    def get_last_sess_for_subject(self, sub_id):
-        with self.conn.cursor() as cur:
-            cur.execute(f'SELECT * FROM subject_to_session WHERE subject_id={sub_id} ORDER BY last_used')
-            session_id = cur.fetchone()
-        return session_id
-
     def get_all_sess_for_subject(self, sub_id):  # TODO validate work
         with self.conn.cursor() as cur:
             cur.execute(f'SELECT * FROM subject_to_session WHERE subject_id={sub_id} ORDER BY last_used')
             sessions = cur.fetchall()
         return sessions
 
-    def get_session_by_id(self, sess_id):
-        with self.conn.cursor() as cur:
-            cur.execute(f'SELECT * FROM sessions WHERE session_id={sess_id}')
-            session_id = cur.fetchone()
-        return session_id
-
-    def update_subject_session(self, sub_id, sess_id, counter):
-        with self.conn.cursor() as cur:
-            cur.execute(
-                f'UPDATE subjectsession SET counter={counter}, last_used={datetime.date.today()} WHERE subject_id={sub_id} AND session_id={sess_id}')
-            self.conn.commit()
-
     def update_session_date(self, sess_id):
         with self.conn.cursor() as cur:
             cur.execute(f'UPDATE sessions SET last_used={datetime.date.today()} WHERE session_id={sess_id}')
             self.conn.commit()
 
-    # TODO validate this functions
     def update_trial_type(self, type_id, name=None, events=None):
         cur = self.conn.cursor()
         if name is not None and events is not None:
@@ -459,24 +402,6 @@ class DB:
             cur.execute(f"SELECT is_reward FROM events WHERE name = '{event}'")
             isreward = cur.fetchone()
         return isreward
-
-    def delete_all_rows(self):
-        # on conflict increment counter by 1, and last used is now
-        sql = """
-        DELETE FROM events
-        DELETE FROM session_to_trials
-        DELETE FROM subject_to_session"""
-        cur = self.conn.cursor()
-        cur.execute("""DELETE FROM events""")
-        cur.execute("""DELETE FROM subject_to_session""")
-        cur.execute("""DELETE FROM session_to_trials""")
-        cur.execute("""DELETE FROM sessions""")
-
-        self.conn.commit()
-        # close communication with the PostgreSQL database server
-        cur.close()
-        # commit the changes
-        self.conn.commit()
 
 
 commands = (

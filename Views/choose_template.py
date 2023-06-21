@@ -68,41 +68,6 @@ class ChooseTemplateUi(object):
                     self.parent.vm.get_template_list_by_subject(self.subject_id_comboBox.currentText()).values())
                 self.is_filtered_by_subject = True
 
-    def set_template_data_in_parent(self, temp_id):
-        sess_id, sess_name, exp_name, iti_type, iti_min, iti_max, iti_behave, end_def, end_val, order, total, \
-            block_sizes, blocks_order, rew_prcnt, last_used = self.parent.vm.get_data_for_template_id(temp_id)
-        if order != 'random':
-            block_sizes = ([int(val) for val in block_sizes.replace("[", "").replace("]", "").split(",")])
-        self.parent.vm.sessionVM.session_name = sess_name
-        self.parent.vm.sessionVM.trials_order = order
-        blocks_order = blocks_order.replace("\'", "").replace(" ", "").replace("[", "").replace("]", "").split(",")
-        self.parent.session_name_lineEdit.setText(sess_name)
-        self.parent.experimenter_name_lineEdit.setText(exp_name)
-        self.parent.random_reward_percent_spinBox.setValue(rew_prcnt)
-        # trials order
-        index = self.parent.trials_order_comboBox.findText(order, QtCore.Qt.MatchFixedString)
-        if index >= 0:
-            self.parent.trials_order_comboBox.setCurrentIndex(index)
-        # chosen iti type
-        if iti_type == "random":
-            self.parent.random_iti_radioBtn.setChecked(True)
-            self.parent.min_iti_spinBox.setValue(iti_min)
-            self.parent.max_iti_spinBox.setValue(iti_max)
-        else:
-            self.parent.chosen_behavior = iti_behave
-            self.parent.behavior_iti_radioBtn.setChecked(True)
-            index = self.parent.behaviors_comboBox.findText(iti_behave, QtCore.Qt.MatchFixedString)
-            if index >= 0:
-                self.parent.behaviors_comboBox.setCurrentIndex(index)
-        # end definition
-        index = self.parent.end_def_comboBox.findText(end_def, QtCore.Qt.MatchFixedString)
-        if index >= 0:
-            self.parent.end_def_comboBox.setCurrentIndex(index)
-        self.parent.end_def_spinBox.setValue(end_val)
-        # trials def
-        trials_def = self.parent.vm.get_trials_def_for_sess(sess_id, order)
-        self.set_trials_in_parent(order, trials_def, total, block_sizes, blocks_order)
-
     def set_subject_id_in_parent(self):
         if self.is_filtered_by_subject:
             # extract also subject id if relevant
@@ -178,15 +143,12 @@ class ChooseTemplateUi(object):
             self.parent.total_num = 0
 
     def accept(self):
-        # TODO: update all relevant fields in parent
         chosen_temp_id = self.templates_comboBox.currentText()
 
         if chosen_temp_id == "":
             error_warning("There are no templates in the system.")
-            # TODO check what should we do in this case
         chosen_temp_id = int(chosen_temp_id.split(":")[0])
         self.parent.vm.choose_template_from_list(chosen_temp_id)
-        self.set_template_data_in_parent(chosen_temp_id)
         self.set_subject_id_in_parent()
         self.parent.choose_template_window.close()
 

@@ -6,15 +6,6 @@ class SessionViewModel:
         super(SessionViewModel, self).__init__()
         self.model = SessionModel()
 
-    def pause_session(self):
-        self.model.pause()
-
-    def resume_session(self):
-        self.model.resume()
-
-    def finish_session(self):
-        self.model.finish()
-
     @property
     def trial_types_successive_counter(self):
         return self.model.trial_types_successive_counter
@@ -48,14 +39,6 @@ class SessionViewModel:
         self.model.subject_id = value
 
     @property
-    def end_session(self):
-        return self.model.end_session
-
-    @end_session.setter
-    def end_session(self, value):
-        self.model.end_session = value
-
-    @property
     def trials_def(self):
         return self.model.trials_def
 
@@ -77,21 +60,7 @@ class SessionViewModel:
     @experimenter_name.setter
     def experimenter_name(self, value):
         self.model.experimenter_name = value
-    @property
-    def trial_types_successive_counter(self):
-        return self.model.trial_types_successive_counter
 
-    @trial_types_successive_counter.setter
-    def trial_types_successive_counter(self, value):
-        self.model.trial_types_successive_counter = value
-
-    @property
-    def trial_types_total_counter(self):
-        return self.model.trial_types_total_counter
-
-    @trial_types_total_counter.setter
-    def trial_types_total_counter(self, value):
-        self.model.trial_types_total_counter = value
 
     @property
     def iti(self):
@@ -109,16 +78,6 @@ class SessionViewModel:
     def trials_order(self, value):
         self.model.trials_order = value
 
-    # make properties
-    @property
-    def timer(self):
-        return self.model.timer
-
-    @timer.setter
-    def timer(self, value):
-        # if value < -273.15:
-        #     raise ValueError("Temperature below -273 is not possible")
-        self.model.timer = value
 
     # select to notify only events that are relevant
     def SessionVMEventHandler(self, sender, *event_args):
