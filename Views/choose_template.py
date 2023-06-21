@@ -86,13 +86,11 @@ class ChooseTemplateUi(object):
             t[trial.name] = OrderedDict()  # TODO missing intervals
             for i in range(len(trial.events)):
                 event = trial.events[i]
-                # for event in trial.events:
                 e = {}
                 params = event.get_list_params()
                 for param in params:
                     e[param] = getattr(event, param)
                 if event.get_type_str() in t[trial.name]:
-                    # get max rep
                     max_rep = 0
                     key_list = list(t[trial.name].keys())
                     for key in key_list:
@@ -105,8 +103,7 @@ class ChooseTemplateUi(object):
                                     max_rep = split_key[1]
                     t[trial.name][event.get_type_str() + "#" + str(max_rep + 1)] = e
                 else:
-                    t[trial.name][event.get_type_str()] = e  # this is the problem! same type goes to same place
-                # put interval in list
+                    t[trial.name][event.get_type_str()] = e
                 if len(trial.events) > 1 and i != len(trial.events) - 1:
                     intv_str = "interval"
                     if i > 0:
@@ -120,25 +117,19 @@ class ChooseTemplateUi(object):
             self.parent.set_trials_table_pointer()
 
         if order == "random":
-            # set random order fields to the given data
             self.parent.percentages = trials_def.percent_list
             self.parent.total_num = total
-            # nullify block fields in case some was already put
             self.parent.blocks_ord.clear()
             self.parent.block_list.clear()
             self.parent.percent_per_block.clear()
             self.parent.block_sizes.clear()
-            # create empty list of percentages for each existing trial to carry future changes
             for i in range(len(self.parent.percentages)):
                 self.parent.percent_per_block.append([])
-
         else:
-            # set blocks order fields to the given data
             self.parent.blocks_ord = blocks_order
             self.parent.block_list = trials_def.block_list
             self.parent.percent_per_block = trials_def.percent_per_block
             self.parent.block_sizes = block_sizes
-            # nullify random order fields
             self.parent.percentages = [0] * len(self.parent.percent_per_block)
             self.parent.total_num = 0
 

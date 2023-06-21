@@ -18,12 +18,6 @@ class SettingsUi(object):
         self.db_path_textEdit = None
         self.max_identical_consecutive_trials_spinBox = None
         self.file_db_file_path = self.vm.db_config_file_path
-        self.max_identical_consecutive_trial = self.vm.max_successive_trials
-        self.max_time_duration = self.vm.max_trial_length
-        self.input_events = self.vm.input_events_names
-        self.input_ports = self.vm.input_ports
-        self.output_events = self.vm.output_events_names
-        self.event_config = self.vm.event_config
 
     def setupUi(self, main_window):
         self.main_window = main_window
@@ -46,6 +40,9 @@ class SettingsUi(object):
         self.log_file_path_text_edit.setText(self.new_folder_path)
 
     def on_settings_ok_click(self):
+        if self.new_folder_path is None:
+            self.main_window.close()
+            return
         with open(self.vm.model.settings_file, 'r') as f:
             lines = f.readlines()
         lines[0] = f'log file location={self.new_folder_path}\n'
@@ -53,12 +50,6 @@ class SettingsUi(object):
             for line in lines:
                 f.write(line)
         self.main_window.close()
-
-    def get_max_identical_consecutive_trial(self):
-        self.max_identical_consecutive_trial = self.max_identical_consecutive_trials_spinBox.value()
-
-    def get_max_time_duration(self):
-        self.max_time_duration = self.max_time_duration_spinBox.value()
 
     def accept(self):
         from os import path
@@ -71,7 +62,6 @@ class SettingsUi(object):
         if not path.exists(self.file_db_file_path):
             error_warning("DB file path is invalid")
             return
-        # parse table
         e_config_list = []
         for i in range(self.event_port_tableWidget.rowCount()):
             l = []

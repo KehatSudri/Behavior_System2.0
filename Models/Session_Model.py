@@ -1,22 +1,4 @@
-import csv
-import queue
-import sys
-import threading
-
-import random
-import time
-from datetime import date, datetime, timedelta
-
-import nidaqmx
-from nidaqmx.constants import AcquisitionType, TerminalConfiguration, Edge, WAIT_INFINITELY, LineGrouping
-from nidaqmx.stream_readers import AnalogMultiChannelReader
-
-import numpy as np
-
-from Models.Trial_Model import Trials_def, Interval, TrialModel
-
-BUFFER_SIZE = 50
-LOG_DATA_IDX = 0
+from Models.Trial_Model import Trials_def, Interval
 
 
 class BehaviourInterval(Interval):
@@ -31,9 +13,9 @@ class BehaviourInterval(Interval):
 class SessionTemplate:
     def __init__(self):
         self._session_id = None
-        self._iti = None  # object type ITI holds the required inter-trial intervals
-        self._end_def = None  # tuple of type and value
-        self._trials_order = None  # blocks or random
+        self._iti = None
+        self._end_def = None
+        self._trials_order = None
         self._trials_def = None
         self._session_name = None
         self._experimenter_name = None

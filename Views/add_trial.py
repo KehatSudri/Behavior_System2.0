@@ -16,9 +16,6 @@ class AddTrialUi(object):
         self.add_trial_label = None
         self.trial_types_label = None
         self.trial_types_comboBox = None
-        self.scrollArea = None
-        self.scrollAreaWidgetContents = None
-        self.verticalLayout = None
         self.ok_btn = None
         self.verticalScrollBar = None
         self.set_trials_table_pointer = None

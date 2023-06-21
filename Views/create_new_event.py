@@ -28,11 +28,9 @@ class CreateEventUi(object):
         qss = get_qss_path('create_new_event')
         with open(qss, "r") as fh:
             main_window.setStyleSheet(fh.read())
-
         self.main_window = main_window
         self.event_name_lineEdit = main_window.findChild(QtWidgets.QLineEdit, 'event_name_lineEdit')
         self.input_radio_btn = main_window.findChild(QtWidgets.QRadioButton, 'input_radio_btn')
-
         self.output_radio_btn = main_window.findChild(QtWidgets.QRadioButton, 'output_radio_btn')
         self.is_reward_comboBox = main_window.findChild(QtWidgets.QComboBox, 'is_reward_comboBox')
         self.ports_comboBox = main_window.findChild(QtWidgets.QComboBox, 'ports_comboBox')

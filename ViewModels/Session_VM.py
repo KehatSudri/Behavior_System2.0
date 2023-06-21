@@ -45,6 +45,7 @@ class SessionViewModel:
     @trials_def.setter
     def trials_def(self, value):
         self.model.trials_def = value
+
     @property
     def session_name(self):
         return self.model.session_name
@@ -61,7 +62,6 @@ class SessionViewModel:
     def experimenter_name(self, value):
         self.model.experimenter_name = value
 
-
     @property
     def iti(self):
         return self.model.iti
@@ -77,9 +77,3 @@ class SessionViewModel:
     @trials_order.setter
     def trials_order(self, value):
         self.model.trials_order = value
-
-
-    # select to notify only events that are relevant
-    def SessionVMEventHandler(self, sender, *event_args):
-        if type(sender) != SessionModel:
-            self.subject_id = sender.subject_id

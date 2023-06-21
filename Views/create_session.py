@@ -35,7 +35,6 @@ class CreateSessionUi(object):
         self.central_widget = None
         self.window_gridLayout = None
         self.main_gridLayout = QtWidgets.QGridLayout()
-        self.headline_label = None
         self.choose_template_horizontalLayout = QtWidgets.QHBoxLayout()
         self.choose_template_pushButton = None
         self.session_name_and_date_horizontalLayout = QtWidgets.QHBoxLayout()
