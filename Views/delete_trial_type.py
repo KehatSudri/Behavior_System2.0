@@ -21,9 +21,6 @@ class DeleteTrialTypeUi(object):
         self.main_window = None
         self.central_widget = None
         self.window_gridLayout = None
-        self.headline_label = None
-        self.scrollArea = None
-        self.scrollAreaWidgetContents = None
         self.gridLayout = None
         self.scroll_verticalLayout = QtWidgets.QVBoxLayout()
         self.remove_horizontalLayout = QtWidgets.QHBoxLayout()

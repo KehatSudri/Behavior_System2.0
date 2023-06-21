@@ -8,11 +8,14 @@ from Views.utils import error_warning, dict_one_line_style, get_ui_path
 
 class RandomOrderUi(object):
     def __init__(self, parent):
+        self.on_next_click = None
+        self.event_handler = None
+        self.config_info = None
+        self.isRandomOrder = None
         self.parent = parent
         self.vm = self.parent.vm
         self.window_gridLayout = None
         self.main_window_gridLayout = QtWidgets.QGridLayout()
-        self.explanation_label = None
         self.total_num_of_trials_label = None
         self.total_num_of_trials_spinBox = None
         self.trials_tableWidget = None

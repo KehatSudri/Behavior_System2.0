@@ -1,15 +1,10 @@
 import os.path
-import sys
 from pathlib import Path
-import threading
-from collections import OrderedDict
-from datetime import datetime
-from importlib import import_module
-
-import numpy as np
+import sys
 import logging
-
 import Models.Trial_Model as Trial
+from collections import OrderedDict
+from importlib import import_module
 from Models.DB_INIT import DB
 from Models.Session_Model import BehaviourInterval, SessionTemplate
 from Models.Trial_Model import TrialModel, RandInterval

@@ -121,13 +121,6 @@ class BehaviorSystemViewModel:
     def max_successive_trials(self, value):
         self.model.max_successive_trials = value
 
-    def get_input(self):
-        for i in range(5):
-            time.sleep(5)
-            self.model.curr_session.input_flag = True
-            time.sleep(3)
-            self.model.curr_session.input_flag = False
-
     def choose_template_from_list(self, tmp_id):
         self.model.choose_template_from_list(tmp_id)
 
@@ -167,9 +160,6 @@ class BehaviorSystemViewModel:
     def set_trials_list(self, trials):
         self.model.set_trials_list(trials)
 
-    def connect_to_DB(self):
-        self.model.connect_to_db()
-
     def get_template_list_by_date_exp_sess_names(self):
         return self.model.get_template_list_by_date_exp_sess_names()
 
@@ -207,9 +197,6 @@ class BehaviorSystemViewModel:
     def insert_session_to_trials(self, session_name, trial_name):
         return self.model.insert_session_to_trials(session_name, trial_name)
 
-    def verify_insert_hardware_event(self, name, port, in_out, dig_an, is_rew):
-        return self.model.verify_insert_hardware_event(name, port, in_out, dig_an, is_rew)
-
     def insert_new_trial(self, name):
         self.model.insert_new_trial(name)
 
@@ -233,11 +220,6 @@ class BehaviorSystemViewModel:
 
     def delete_templates_by_experimenter_name(self, exp_name):
         self.model.delete_templates_by_experimenter_name(exp_name)
-
-    # select to notify only events that are relevant
-    def SystemVMEventHandler(self, sender, *event_args):
-        if type(sender) != BehaviorSystemModel:
-            self.is_running_session = sender.is_running_session
 
     def is_contingent(self, event, trial):
         return self.model.is_contingent(event, trial)

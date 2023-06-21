@@ -1,8 +1,5 @@
-from collections import defaultdict
-
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import QLabel, QDialogButtonBox, QVBoxLayout, QLineEdit, QComboBox
-
 from Views.utils import error_warning, get_string_dict
 
 
@@ -19,7 +16,7 @@ class EditTrialUi(object):
         self.buttonBox = None
         self.formLayout = QtWidgets.QFormLayout()
         self.trial_params_labels = []
-        self.trial_params_widgets = defaultdict(list)
+        self.trial_params_widgets = collections.defaultdict(list)
         self.set_trials_table_pointer = None
 
     def setupUi(self, dialog):
@@ -28,12 +25,10 @@ class EditTrialUi(object):
         self.window_gridLayout = QtWidgets.QGridLayout(dialog)
         self.window_gridLayout.setObjectName("window_gridLayout")
         self.main_verticalLayout.setObjectName("main_verticalLayout")
-        # set header
         self.edit_trial_label = QtWidgets.QLabel(dialog)
         self.edit_trial_label.setStyleSheet("font: 22pt \"Arial\";")
         self.edit_trial_label.setObjectName("edit_trial_label")
         self.main_verticalLayout.addWidget(self.edit_trial_label)
-        # add a scroll area to edit params of chosen trial
         self.scrollArea = QtWidgets.QScrollArea(dialog)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
@@ -49,7 +44,6 @@ class EditTrialUi(object):
         self.main_verticalLayout.setStretch(3, 10)
         self.window_gridLayout.addLayout(self.main_verticalLayout, 0, 0, 1, 1)
         self.retranslateUi(dialog)
-        # set a buttonBom for OK and Cancel buttons
         self.buttonBox = QtWidgets.QDialogButtonBox(dialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
@@ -137,14 +131,16 @@ class EditTrialUi(object):
                             self.formLayout.addRow(label, spin_box)
         else:  # simple event case
             event_params = \
-                list(self.parent.trials_in_session[self.parent.selected_trial][self.parent.chosen_trial_type_name][event_name].keys())
+                list(self.parent.trials_in_session[self.parent.selected_trial][self.parent.chosen_trial_type_name][
+                         event_name].keys())
             for param in event_params:  # event's params
                 label = QLabel(param)
                 line_edit = QLineEdit()
                 self.trial_params_labels.append(label)
                 # set current text value of param on line edit button
                 line_edit.setText(str(
-                    self.parent.trials_in_session[self.parent.selected_trial][self.parent.chosen_trial_type_name][event_name][
+                    self.parent.trials_in_session[self.parent.selected_trial][self.parent.chosen_trial_type_name][
+                        event_name][
                         param]))
                 self.trial_params_widgets[event_name].append(line_edit)
                 self.formLayout.addRow(label, line_edit)
@@ -173,5 +169,3 @@ class EditTrialUi(object):
         # update trials table on the window
         self.set_trials_table_pointer()
         self.parent.edit_window.close()
-
-

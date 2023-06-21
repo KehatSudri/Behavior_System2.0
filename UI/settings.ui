@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>420</width>
-    <height>416</height>
+    <width>551</width>
+    <height>413</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,8 +28,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>400</width>
-         <height>255</height>
+         <width>531</width>
+         <height>252</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -135,10 +135,10 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="max_identical_consecutive_trials_horizontalLayout" stretch=""/>
+         <layout class="QHBoxLayout" name="max_identical_consecutive_trials_horizontalLayout"/>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="max_trial_duration_horizontalLayout" stretch=""/>
+         <layout class="QHBoxLayout" name="max_trial_duration_horizontalLayout"/>
         </item>
        </layout>
       </widget>

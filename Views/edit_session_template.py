@@ -16,15 +16,11 @@ class EditSessionUi(object):
         self.add_trial_label = None
         self.trial_types_label = None
         self.trial_types_comboBox = None
-        self.scrollArea = None
-        self.scrollAreaWidgetContents = None
-        self.verticalLayout = None
         self.ok_btn = None
         self.verticalScrollBar = None
         self.set_trials_table_pointer = None
         self.trial_params_labels = []
         self.trial_params_widgets = defaultdict(list)
-        # TODO delete when self.vm.is_contingent(event_name) implemented
         self.are_contingents = []
         self.formLayout = parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
         self.db = DB()

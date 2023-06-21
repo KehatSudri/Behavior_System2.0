@@ -13,26 +13,11 @@ from Views.utils import get_ui_path
 class SystemMainUi(object):
     def __init__(self):
         self.vm = None
-        self.scrollArea = None
-        self.scrollAreaWidgetContents = None
-        self.verticalLayout = None
-        self.headline_label = None
-        self.explanation_label = None
-        self.create_session_pushButton = None
-        self.present_session_data_pushButton = None
         self.chosen_window = None
         self.chosen_window_ui = None
         self.is_manager = False
         self.main_window = None
-        # with manager permissions
-        self.edit_trial_type_pushButton = None
-        self.delete_template_pushButton = None
-        self.delete_trial_type_pushButton = None
-        self.delete_templates_pushButton = None
-        self.is_session_running = False
-        self.control_session_board = None
 
-    # def setupUi(self, main_window, sysVM):
     def setupUi(self, main_window, system_vm, isManager=False):
         self.vm = system_vm
         if isManager:
@@ -51,10 +36,8 @@ class SystemMainUi(object):
             uic.loadUi(get_ui_path('system_main.ui'), self.main_window)
             manager_login_push_button = self.main_window.findChild(QPushButton, 'manager_login_pushButton')
             manager_login_push_button.clicked.connect(self.on_manager_login_click)
-
             create_trial_type_push_button = self.main_window.findChild(QPushButton, 'create_trial_type_pushButton')
             create_trial_type_push_button.clicked.connect(self.on_create_trial_type)
-
             create_session_push_button = self.main_window.findChild(QPushButton, 'create_session_btn')
             create_session_push_button.clicked.connect(self.on_create_session_click)
 
@@ -68,10 +51,10 @@ class SystemMainUi(object):
         if self.is_manager:
             manager_window = QtWidgets.QMainWindow()
             uic.loadUi(get_ui_path('system_main_plus.ui'), manager_window)
-            self.delete_trial_type_pushButton = manager_window.findChild(QPushButton, 'delete_trial_types_pushButton')
-            self.delete_trial_type_pushButton.clicked.connect(self.on_delete_trial_type_click)
-            self.removeEvent_pushButton = manager_window.findChild(QPushButton, 'removeEvent')
-            self.removeEvent_pushButton.clicked.connect(self.on_removeEvent_click)
+            delete_trial_type_pushButton = manager_window.findChild(QPushButton, 'delete_trial_types_pushButton')
+            delete_trial_type_pushButton.clicked.connect(self.on_delete_trial_type_click)
+            removeEvent_pushButton = manager_window.findChild(QPushButton, 'removeEvent')
+            removeEvent_pushButton.clicked.connect(self.on_removeEvent_click)
             self.setupUi(manager_window, self.vm, True)
 
     def on_settings_click(self):

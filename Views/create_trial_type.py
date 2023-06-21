@@ -197,7 +197,6 @@ class CreateTrialTypeUi(object):
         else:
             self.isEndCondition.setChecked(False)
             self.isEndCondition.setEnabled(False)
-
             self.random_comboBox.setEnabled(True)
             self.random_comboBox.setEnabled(True)
             if self.contingent_comboBox.count() >= 1:
