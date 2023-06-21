@@ -1,4 +1,5 @@
 import os
+import sys
 import urllib.request
 import subprocess
 import requests
@@ -48,10 +49,6 @@ if not os.path.exists(bs_runner_path):
     subprocess.run(command)
 else:
     print("BS_Runner is already built.")
-
-import os
-import requests
-import subprocess
 
 # Check if PostgreSQL is installed
 postgresql_installed = os.path.exists(r"C:\Program Files\PostgreSQL\15")
