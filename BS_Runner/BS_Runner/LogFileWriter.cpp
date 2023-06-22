@@ -2,6 +2,8 @@
 
 #include "LogFileWriter.h"
 #include "Consts.h"
+#include <iostream>
+
 void LogFileWriter::createLogFile() {
 	if (!_sessionName.empty()) {
 		std::time_t now_c = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -9,8 +11,8 @@ void LogFileWriter::createLogFile() {
 		ss << std::put_time(std::localtime(&now_c), "-%d-%m-%Y-%T");
 		std::string time = ss.str();
 		std::replace(time.begin(), time.end(), ':', ';');
-		std::string fullPath = _dir + "\\" + _sessionName + time + ".txt";
-		std::ofstream MyFile(fullPath);
+		_logFileName = _dir + "\\" + _sessionName +"_" + time + ".txt";
+		std::ofstream MyFile(_logFileName);
 		MyFile.close();
 	}
 }

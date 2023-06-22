@@ -145,10 +145,6 @@ SimpleToneOutputer::SimpleToneOutputer(std::string port, std::map<std::string, i
 	file.close();
 }
 
-SimpleToneOutputer::~SimpleToneOutputer() {
-	std::remove(_wav.c_str());
-}
-
 void SimpleToneOutputer::output() {
 	while (SessionControls::getInstance().getIsPaused()) {
 		continue;

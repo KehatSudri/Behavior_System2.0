@@ -26,8 +26,6 @@ class CreateEventUi(object):
     def setupUi(self, main_window):
         uic.loadUi(get_ui_path('create_new_event.ui'), main_window)
         qss = get_qss_path('create_new_event')
-        with open(qss, "r") as fh:
-            main_window.setStyleSheet(fh.read())
         self.main_window = main_window
         self.event_name_lineEdit = main_window.findChild(QtWidgets.QLineEdit, 'event_name_lineEdit')
         self.input_radio_btn = main_window.findChild(QtWidgets.QRadioButton, 'input_radio_btn')
@@ -96,7 +94,7 @@ class CreateEventUi(object):
         port = "Dev1/" + self.ports_comboBox.currentText()
         if self.ports_comboBox.currentText() in self.digitalPorts:
             line = self.ports_comboBox.currentText().split(".")[1]
-            port = port + "/line" + line
+            port = "port0/line" + line
         in_use_ports = self.db.get_used_ports()
         string_in_use_ports = [p[0] for p in in_use_ports]
         used_port_flag = 0

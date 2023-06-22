@@ -55,8 +55,11 @@ def get_resource_path(relative_path):
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
 
+
 def get_ui_path(name):
-    return get_resource_path(os.path.join('UI', name))
+    # return get_resource_path(os.path.join('UI', name))
+    return str(Path(__file__).parent.parent / 'UI' / name)
+
 
 def get_qss_path(name):
     return str(Path(__file__).parent.parent / 'QSS' / name)

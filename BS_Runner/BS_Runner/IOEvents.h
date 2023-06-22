@@ -54,7 +54,7 @@ class SimpleToneOutputer : public Outputer {
 	std::string _wav;
 public:
 	SimpleToneOutputer(std::string port, std::map<std::string, int> attributes);
-	~SimpleToneOutputer();
+	~SimpleToneOutputer() {};
 	void output() override;
 };
 

@@ -69,26 +69,25 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 		int category = 0;
 		int flag = 2;
 		while (flag) {
-			std::getline(inputFile, line); {
-				if (line.empty()) {
-					if (flag == 2) {
-						_trials[_numOfTrials].initInputTaskHandle();
-						_trials[_numOfTrials].initInputEvents();
-						if (_trials[_numOfTrials].initAnalogOutputTasks() == INIT_ERROR) {
-							_validFlag = false;
-							break;
-						}
-						_trials[_numOfTrials].initTrialKillers();
-						if (_trials[_numOfTrials]._inputPorts.empty()) {
-							_validFlag = false;
-							break;
-						}
-						++_numOfTrials;
-						category = 0;
+			std::getline(inputFile, line);
+			if (line.empty()) {
+				if (flag == 2) {
+					_trials[_numOfTrials].initInputTaskHandle();
+					_trials[_numOfTrials].initInputEvents();
+					if (_trials[_numOfTrials].initAnalogOutputTasks() == INIT_ERROR) {
+						_validFlag = false;
+						break;
 					}
-					--flag;
-					continue;
+					_trials[_numOfTrials].initTrialKillers();
+					if (_trials[_numOfTrials]._inputPorts.empty()) {
+						_validFlag = false;
+						break;
+					}
+					++_numOfTrials;
+					category = 0;
 				}
+				--flag;
+				continue;
 			}
 			if (line[0] == NEW_LINE_CATEGORY) {
 				++category;
@@ -294,9 +293,11 @@ std::vector<Event*> Trial::getInputEvents() const {
 }
 
 void Trial::giveReward() {
+	// TODO add pick option for specific reward
+	Outputer* chosenRewardOutput = _rewardOutputers[0];
 	if (_rewardOutputers.size()) {
-		LogFileWriter::getInstance().write(REWARD_INDICATOR, "");
-		_rewardOutputers[0]->output();
+		LogFileWriter::getInstance().write(REWARD_INDICATOR, chosenRewardOutput->getPort());
+		chosenRewardOutput->output();
 	}
 }
 
