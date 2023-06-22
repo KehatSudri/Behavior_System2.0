@@ -71,16 +71,23 @@ class RandomOrderUi(object):
         trials_table_adaptive_width = self.trials_tableWidget.horizontalHeader()
         trials_table_adaptive_width.setSectionResizeMode(QHeaderView.Stretch)
 
+    def is_float(self,str):
+        try:
+            float(str)
+            return True
+        except ValueError:
+            return False
     def accept(self):
         for row in range(self.trials_tableWidget.rowCount()):
-            if not self.trials_tableWidget.item(row, 1).text().isdigit() or not self.trials_tableWidget.item(row,
-                                                                                                             2).text().isdigit():
+            if not self.trials_tableWidget.item(row, 1).text().isnumeric() and not self.is_float(self.trials_tableWidget.item(row, 1).text()):
                 error_warning("Please enter only numbers")
                 return
-            if self.isRandomOrder.isChecked():
-                if not self.trials_tableWidget.item(row, 3).text().isdigit():
-                    error_warning("Please enter only numbers")
-                    return
+            if not self.trials_tableWidget.item(row, 2).text().isnumeric() and not self.is_float(self.trials_tableWidget.item(row, 2).text()):
+                error_warning("Please enter only numbers")
+                return
+            if not self.trials_tableWidget.item(row, 3).text().isnumeric() and not self.is_float(self.trials_tableWidget.item(row, 3).text()):
+                error_warning("Please enter only numbers")
+                return
         self.on_next_click(1)
         session_name = self.config_info[0]
         trials_in_session = self.config_info[1]
@@ -108,11 +115,20 @@ class RandomOrderUi(object):
             db = DB()
             max_session_time = db.get_max_trial_time(session_name)
             file.write(str(max_session_time[0]) + "\n")
+
+            iti_vals = db.get_iti_vals(session_name)
+            if is_fixed_iti:
+                file.write(str(iti_vals[0]) + ",")
+            else:
+                file.write(str(iti_vals[0]) + ";" + str(iti_vals[1]) + ",")
+            file.write(str(isRandomOrder) + "\n")
+
+
         for i in range(0, len(trials_in_session), 2):
             ports = (self.vm.get_ports(trials_in_session[i]))
             dependencies = self.vm.get_dependencies(trials_in_session[i])
-            prepare_session_information(session_name, ports, dependencies, trials_in_session[i], i, trials_in_session,
-                                        is_fixed_iti, repeats, isRandomOrder, MaxTime, Percent)
+            prepare_session_information( ports, dependencies, trials_in_session[i], i, trials_in_session
+                                        , repeats, isRandomOrder, MaxTime, Percent)
         self.event_handler()
 
     def reject(self):

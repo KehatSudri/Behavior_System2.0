@@ -2,7 +2,7 @@ from pathlib import Path
 from Models.DB_INIT import DB
 
 
-def prepare_session_information(session_name, ports, dependencies, trial_name, index, trials_in_session, is_fixed_iti,
+def prepare_session_information(ports, dependencies, trial_name, index, trials_in_session,
                                 repeats, isRandomOrder, MaxTime, Percent):
     input_ports = []
     output_ports = []
@@ -21,12 +21,6 @@ def prepare_session_information(session_name, ports, dependencies, trial_name, i
 
     with open(configs_path, "a") as file:
         db = DB()
-        iti_vals = db.get_iti_vals(session_name)
-        if is_fixed_iti:
-            file.write(str(iti_vals[0]) + ",")
-        else:
-            file.write(str(iti_vals[0]) + ";" + str(iti_vals[1]) + ",")
-        file.write(str(isRandomOrder) + "\n")
         if isRandomOrder:
             file.write(
                 "Trial name: " + trial_name + "\n" + repeats[int(index / 2)] + "," + MaxTime[int(index / 2)] + "," +
@@ -61,24 +55,27 @@ def prepare_session_information(session_name, ports, dependencies, trial_name, i
             else:
                 file.write("0,")
             file.write(','.join(parameters) + "\n")
-        for port in [item for item in output_ports if item not in [tup[0] for tup in dependencies]]:
-            isRandom = \
-                db.is_random_event_in_a_given_trial(trial_name,
-                                                    db.get_event_name_by_port_and_trial(port, trial_name)[0])[0]
-            if "Tone" in db.get_event_name_by_port_and_trial(port, trial_name)[0]:
-                file.write(db.get_event_name_by_port_and_trial(port, trial_name)[0] + "\n")
-            else:
-                file.write(port + "\n")
-            parameters = trials_in_session[index + 1][db.get_event_name_by_port_and_trial(port, trial_name)[0]]
-            isReward = db.isReward(db.get_event_name_by_port_and_trial(port, trial_name)[0])
-            if isReward[0]:
-                file.write("1,")
-            else:
-                file.write("0,")
-            if isRandom:
-                file.write("1,")
-            else:
-                file.write("0,")
-            file.write(','.join(parameters) + "\n")
+        if len(output_ports) == 0:
+            file.write("None\n")
+        else:
+            for port in [item for item in output_ports if item not in [tup[0] for tup in dependencies]]:
+                isRandom = \
+                    db.is_random_event_in_a_given_trial(trial_name,
+                                                        db.get_event_name_by_port_and_trial(port, trial_name)[0])[0]
+                if "Tone" in db.get_event_name_by_port_and_trial(port, trial_name)[0]:
+                    file.write(db.get_event_name_by_port_and_trial(port, trial_name)[0] + "\n")
+                else:
+                    file.write(port + "\n")
+                parameters = trials_in_session[index + 1][db.get_event_name_by_port_and_trial(port, trial_name)[0]]
+                isReward = db.isReward(db.get_event_name_by_port_and_trial(port, trial_name)[0])
+                if isReward[0]:
+                    file.write("1,")
+                else:
+                    file.write("0,")
+                if isRandom:
+                    file.write("1,")
+                else:
+                    file.write("0,")
+                file.write(','.join(parameters) + "\n")
 
         file.write("\n")
