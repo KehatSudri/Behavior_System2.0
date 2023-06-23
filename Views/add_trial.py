@@ -76,7 +76,7 @@ class AddTrialUi(object):
         else:
             params = ["delay (ms)"]
         if event_name.find("Tone") != -1:
-            params = params + ['duration (ms)', 'frequency (Hz)', 'amplitude (Hz)']
+            params = params + ['duration (ms)', 'frequency (Hz)', 'amplitude (db)']
         elif event_name == 'Reward':
             params = params + ['duration (ms)']
         else:
