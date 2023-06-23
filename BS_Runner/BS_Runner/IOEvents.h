@@ -33,10 +33,11 @@ public:
 
 class Outputer : public Event {
 	bool _isReward;
-	bool _gaveReward = false;
+	bool _gaveReward;
 public:
 	Outputer(TaskHandle handler, std::string port, std::map<std::string, int> attributes) :Event(port), _handler(handler), _attributes(attributes) {
 		_isReward = _attributes[IS_REWARD_PARAM];
+		_gaveReward = false;
 	}
 	bool getIsReward() { return _isReward; }
 	bool getGaveReward() { return _gaveReward; }

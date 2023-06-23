@@ -112,7 +112,7 @@ void EnvironmentOutputer::output() {
 }
 
 void ContingentOutputer::update(Event* event) {
-	if (!_outputer->getIsReward() || _outputer->getGaveReward()) {
+	if (_outputer->getIsReward() && _outputer->getGaveReward()) {
 		return;
 	}
 	_outputer->updateRewardState();
