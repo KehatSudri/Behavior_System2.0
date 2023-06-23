@@ -8,7 +8,7 @@
 #include "IOEvents.h"
 
 class Trial {
-	double _maxTrialWaitTime;
+	int _maxTrialWaitTime;
 	std::vector<Event*> _events;
 	std::vector<EnvironmentOutputer*> _environmentOutputer;
 	std::vector<Outputer*> _rewardOutputers;
@@ -24,8 +24,8 @@ public:
 	int initAnalogOutputTasks();
 	void initInputTaskHandle();
 	void initTrialKillers();
-	double getMaxTrialWaitTime() { return _maxTrialWaitTime; }
-	void setMaxTrialWaitTime(double val) { _maxTrialWaitTime = val; }
+	int getMaxTrialWaitTime() { return _maxTrialWaitTime; }
+	void setMaxTrialWaitTime(int val) { _maxTrialWaitTime = val; }
 	TaskHandle getInputTaskHandle() { return _inputTaskHandle; }
 	const std::vector<EnvironmentOutputer*>& getEnvironmentOutputer() const { return _environmentOutputer; }
 	std::vector<Event*> getInputEvents() const;
@@ -53,7 +53,7 @@ public:
 	int getNumOfTrials() { return _numOfTrials; }
 	bool isValid() { return _validFlag; }
 	bool isSessionComplete() { return _sessionComplete; }
-	double getMaxTrialWaitTime();
+	int getMaxTrialWaitTime();
 	int getMaxSessionWaitTime() { return _maxSessionWaitTime; }
 	void setSessionComplete(bool state) { _sessionComplete = state; }
 	std::string getCurrentRunningTrial();

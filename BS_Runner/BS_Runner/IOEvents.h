@@ -7,6 +7,7 @@
 #include <map>
 #include <random>
 #include <numeric>
+#include "Consts.h"
 #include "LogFileWriter.h"
 
 class Listener;
@@ -14,9 +15,10 @@ class Listener;
 class Event {
 	std::vector<Listener*> _listeners;
 	std::string _port;
+	bool _started;
 	bool _beenUpdated;
 public:
-	Event(std::string port) : _port(port), _beenUpdated(false) {}
+	Event(std::string port) : _port(port), _beenUpdated(true), _started(false) {}
 	std::string getPort() { return this->_port; }
 	void attachListener(Listener* listener);
 	void detachListener(Listener* listener);
@@ -30,8 +32,15 @@ public:
 };
 
 class Outputer : public Event {
+	bool _isReward;
+	bool _gaveReward = false;
 public:
-	Outputer(TaskHandle handler, std::string port, std::map<std::string, int> attributes) :Event(port), _handler(handler), _attributes(attributes) {}
+	Outputer(TaskHandle handler, std::string port, std::map<std::string, int> attributes) :Event(port), _handler(handler), _attributes(attributes) {
+		_isReward = _attributes[IS_REWARD_PARAM];
+	}
+	bool getIsReward() { return _isReward; }
+	bool getGaveReward() { return _gaveReward; }
+	void updateRewardState() { _gaveReward = true; }
 	virtual void output() = 0;
 protected:
 	TaskHandle _handler;

@@ -28,16 +28,19 @@ void SessionControls::run(char* configFilePath) {
 		LogFileWriter::getInstance().write(TRIAL_START_INDICATOR, getCurrentRunningTrial());
 		_trialStartTime = std::chrono::high_resolution_clock::now();
 		for (auto envOutputer : conf.getEnvironmentOutputer()) { envOutputer->output(); }
-		do {
-			if (!this->_isPaused) {
-				DAQmxReadAnalogF64(inputTaskHandle, 1, 10.0, DAQmx_Val_GroupByChannel, data.data(), sizeof(data), &read, nullptr);
-				for (int i = 0; i < read * inputPortsSize; ++i) {
-					std::thread t(&Event::set, inputEvents[i], data[i]);
-					t.detach();
+		if (inputPortsSize) {
+			do {
+				if (!this->_isPaused) {
+					DAQmxReadAnalogF64(inputTaskHandle, 1, 10.0, DAQmx_Val_GroupByChannel, data.data(), sizeof(data), &read, nullptr);
+					for (int i = 0; i < read * inputPortsSize; ++i) {
+						std::thread t(&Event::set, inputEvents[i], data[i]);
+						t.detach();
+					}
 				}
-			}
-			else { std::this_thread::sleep_for(std::chrono::milliseconds(300)); }
-		} while (isTrialRunning());
+				else { std::this_thread::sleep_for(std::chrono::milliseconds(300)); }
+			} while (isTrialRunning());
+		}
+		while (_Outputing) { continue; }
 		if (conf.changeCurrentTrial() == END_OF_SESSION) { conf.setSessionComplete(true); }
 	} while (isSessionRunning());
 	finishSession();

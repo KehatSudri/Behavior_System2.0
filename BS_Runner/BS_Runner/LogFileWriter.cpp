@@ -26,11 +26,17 @@ void LogFileWriter::write(int indicator, std::string port) {
 
 	std::ostringstream message;
 	switch (indicator) {
-	case OUTPUT_INDICATOR:
-		message << " Sent output at: ";
+	case OUTPUT_START_INDICATOR:
+		message << " S output at: ";
 		break;
-	case INPUT_INDICATOR:
-		message << " Got input at: ";
+	case OUTPUT_FINISH_INDICATOR:
+		message << " F output at: ";
+		break;
+	case INPUT_START_INDICATOR:
+		message << " G input at: ";
+		break;
+	case INPUT_FINISH_INDICATOR:
+		message << " L input at: ";
 		break;
 	case TRIAL_END_CONDITION_INDICATOR:
 		message << "Reached end condition at: ";

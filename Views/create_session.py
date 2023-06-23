@@ -440,7 +440,6 @@ class CreateSessionUi(object):
         config_path = str(Path(__file__).parent.parent / 'config_files' / 'session_config.txt')
         bs_runner_path = r"BS_Runner/Debug/BS_Runner.exe"
         log_path = self.vm.model.logs_path
-        print(log_path)
         command = [bs_runner_path, config_path, self.session_name_te.toPlainText(), log_path]
         subprocess_thread = threading.Thread(target=run_subprocess, args=(command,))
         subprocess_thread.start()

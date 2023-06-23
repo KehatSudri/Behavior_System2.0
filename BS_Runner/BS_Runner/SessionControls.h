@@ -6,8 +6,9 @@
 public class SessionControls {
 	bool _isSessionRunning = false;
 	bool _isTrialRunning = false;
+	int _Outputing = 0;
 	bool _isPaused = false;
-	double _trialTimeoutIndicator;
+	int _trialTimeoutIndicator;
 	double _sessionTimeoutIndicator;
 	std::chrono::duration<double> _elapsedTime;
 	std::chrono::time_point <std::chrono::steady_clock> _trialStartTime;
@@ -43,6 +44,8 @@ public:
 	void setIsTrialRuning(bool state) { _isTrialRunning = state; }
 	bool& getIsPaused() { return _isPaused; }
 	bool& getIsSessionRunning() { return _isSessionRunning; }
+	void incOutputing() { ++_Outputing; }
+	void decOutputing() { --_Outputing; }
 	void nextTrial();
 	void giveReward();
 };

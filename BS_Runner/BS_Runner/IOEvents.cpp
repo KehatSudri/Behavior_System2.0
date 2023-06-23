@@ -3,7 +3,6 @@
 #include <windows.h>
 #include "IOEvents.h"
 #include "SessionControls.h"
-#include "Consts.h"
 
 struct WAVHeader {
 	char chunkId[4] = { 'R', 'I', 'F', 'F' };
@@ -58,11 +57,15 @@ void Event::notifyListeners() {
 void Event::set(float64 value) {
 	if (!_beenUpdated && value > 2) {
 		_beenUpdated = true;
+		_started= true;
 		notifyListeners();
-		LogFileWriter::getInstance().write(INPUT_INDICATOR, this->getPort());
+		LogFileWriter::getInstance().write(INPUT_START_INDICATOR, this->getPort());
 	}
 	else if (_beenUpdated && value < 2) {
 		_beenUpdated = false;
+		if (_started) {
+			LogFileWriter::getInstance().write(INPUT_FINISH_INDICATOR, this->getPort());
+		}
 	}
 }
 
@@ -74,11 +77,13 @@ void SimpleAnalogOutputer::output() {
 	auto start_time = std::chrono::high_resolution_clock::now();
 	DAQmxWriteAnalogScalarF64(_handler, true, 5.0, 3.7, NULL);
 	notifyListeners();
-	LogFileWriter::getInstance().write(OUTPUT_INDICATOR, this->getPort());
+	LogFileWriter::getInstance().write(OUTPUT_START_INDICATOR, this->getPort());
 	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DURATION_PARAM]) {
 		continue;
 	}
 	DAQmxWriteAnalogScalarF64(_handler, true, 5.0, 0.0, NULL);
+	LogFileWriter::getInstance().write(OUTPUT_FINISH_INDICATOR, this->getPort());
+	SessionControls::getInstance().decOutputing();
 }
 
 void SimpleDigitalOutputer::output() {
@@ -91,19 +96,27 @@ void SimpleDigitalOutputer::output() {
 	auto start_time = std::chrono::high_resolution_clock::now();
 	DAQmxWriteDigitalLines(_handler, 1, 1, 10.0, DAQmx_Val_GroupByChannel, dataHigh, NULL, nullptr);
 	notifyListeners();
-	LogFileWriter::getInstance().write(OUTPUT_INDICATOR, this->getPort());
+	LogFileWriter::getInstance().write(OUTPUT_START_INDICATOR, this->getPort());
 	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DURATION_PARAM]) {
 		continue;
 	}
 	DAQmxWriteDigitalLines(_handler, 1, 1, 10.0, DAQmx_Val_GroupByChannel, dataLow, NULL, nullptr);
+	LogFileWriter::getInstance().write(OUTPUT_FINISH_INDICATOR, this->getPort());
+	SessionControls::getInstance().decOutputing();
 }
 
 void EnvironmentOutputer::output() {
+	SessionControls::getInstance().incOutputing();
 	std::thread t(&Outputer::output, _outputer);
 	t.detach();
 }
 
 void ContingentOutputer::update(Event* event) {
+	if (!_outputer->getIsReward() || _outputer->getGaveReward()) {
+		return;
+	}
+	_outputer->updateRewardState();
+	SessionControls::getInstance().incOutputing();
 	std::thread t(&Outputer::output, _outputer);
 	t.detach();
 }
@@ -151,9 +164,11 @@ void SimpleToneOutputer::output() {
 	}
 	performDelay(_attributes);
 	notifyListeners();
-	LogFileWriter::getInstance().write(OUTPUT_INDICATOR, this->getPort());
+	LogFileWriter::getInstance().write(OUTPUT_START_INDICATOR, this->getPort());
 	std::wstring filePathWide(this->_wav.begin(), this->_wav.end());
 	LPCWSTR filePath = filePathWide.c_str();
 	PlaySound(filePath, NULL, SND_FILENAME);
+	LogFileWriter::getInstance().write(OUTPUT_FINISH_INDICATOR, this->getPort());
+	SessionControls::getInstance().decOutputing();
 	return;
 }

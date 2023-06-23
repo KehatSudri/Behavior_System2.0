@@ -71,21 +71,25 @@ class RandomOrderUi(object):
         trials_table_adaptive_width = self.trials_tableWidget.horizontalHeader()
         trials_table_adaptive_width.setSectionResizeMode(QHeaderView.Stretch)
 
-    def is_float(self,str):
+    def is_float(self, str):
         try:
             float(str)
             return True
         except ValueError:
             return False
+
     def accept(self):
         for row in range(self.trials_tableWidget.rowCount()):
-            if not self.trials_tableWidget.item(row, 1).text().isnumeric() and not self.is_float(self.trials_tableWidget.item(row, 1).text()):
+            if not self.trials_tableWidget.item(row, 1).text().isnumeric() and not self.is_float(
+                    self.trials_tableWidget.item(row, 1).text()):
                 error_warning("Please enter only numbers")
                 return
-            if not self.trials_tableWidget.item(row, 2).text().isnumeric() and not self.is_float(self.trials_tableWidget.item(row, 2).text()):
+            if not self.trials_tableWidget.item(row, 2).text().isnumeric() and not self.is_float(
+                    self.trials_tableWidget.item(row, 2).text()):
                 error_warning("Please enter only numbers")
                 return
-            if not self.trials_tableWidget.item(row, 3).text().isnumeric() and not self.is_float(self.trials_tableWidget.item(row, 3).text()):
+            if self.trials_tableWidget.item(row, 3) and (not self.trials_tableWidget.item(row, 3).text().isnumeric() and not self.is_float(
+                    self.trials_tableWidget.item(row, 3).text())):
                 error_warning("Please enter only numbers")
                 return
         self.on_next_click(1)
@@ -123,11 +127,10 @@ class RandomOrderUi(object):
                 file.write(str(iti_vals[0]) + ";" + str(iti_vals[1]) + ",")
             file.write(str(isRandomOrder) + "\n")
 
-
         for i in range(0, len(trials_in_session), 2):
             ports = (self.vm.get_ports(trials_in_session[i]))
             dependencies = self.vm.get_dependencies(trials_in_session[i])
-            prepare_session_information( ports, dependencies, trials_in_session[i], i, trials_in_session
+            prepare_session_information(ports, dependencies, trials_in_session[i], i, trials_in_session
                                         , repeats, isRandomOrder, MaxTime, Percent)
         self.event_handler()
 

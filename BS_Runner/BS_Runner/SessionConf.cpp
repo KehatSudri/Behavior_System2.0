@@ -79,10 +79,6 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 						break;
 					}
 					_trials[_numOfTrials].initTrialKillers();
-					if (_trials[_numOfTrials]._inputPorts.empty()) {
-						_validFlag = false;
-						break;
-					}
 					++_numOfTrials;
 					category = 0;
 				}
@@ -97,9 +93,12 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 			if (category == 0) {
 				std::getline(inputFile, line);
 			}
+			if (line == NONE) {
+				continue;
+			}
 			std::stringstream ss(line);
 			switch (category) {
-			case 0:
+			case NEW_TRIAL_CASE:
 				flag = 2;
 				_trials.push_back({ name });
 				std::getline(ss, element, ',');
@@ -111,14 +110,14 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 					_trialProbabilities.push_back(stoi(element));
 				}
 				break;
-			case 1:
+			case NEW_INPUT_CASE:
 				pos = line.find(delimiter);
 				name = line.substr(0, pos);
 				token2 = line.substr(pos + delimiter.length());
 				_trials[_numOfTrials]._inputPorts.push_back(name);
 				if (token2 == "True") { _trials[_numOfTrials]._trialKillers.push_back(name); }
 				break;
-			case 2:
+			case NEW_OUTPUT_CASE:
 				std::getline(inputFile, line);
 				_trials[_numOfTrials]._outputPorts.push_back({ name ,getParams(line) });
 				break;
@@ -187,7 +186,7 @@ TaskHandle SessionConf::getInputTaskHandle() {
 	return _trials[_currentTrial].getInputTaskHandle();
 }
 
-double SessionConf::getMaxTrialWaitTime() {
+int SessionConf::getMaxTrialWaitTime() {
 	return _trials[_currentTrial].getMaxTrialWaitTime();
 }
 
