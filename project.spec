@@ -5,20 +5,17 @@ import os
 block_cipher = None
 
 # Get the current directory (where the .spec file is located)
-current_directory = os.path.dirname(os.path.abspath(__name__))
-bs_runner_directory = os.path.join(current_directory, 'BS_Runner')
 
-# Build the paths relative to the current directory
+current_directory = os.path.dirname(os.path.abspath(__name__))
 ui_directory = os.path.join(current_directory, 'UI')
-config_directory = os.path.join(current_directory, 'config_files')
+bs_runner_directory = os.path.join(current_directory, 'BS_Runner')
 
 a = Analysis(['start_prog.py'],
              pathex=[current_directory],
              binaries=[],
              datas=[
               (os.path.join(ui_directory, '*'), 'UI'),
-              (os.path.join(bs_runner_directory, '*'), 'BS_Runner'),
-              (os.path.join(config_directory, '*'), 'config_files')
+              (os.path.join(bs_runner_directory, '*'), 'BS_Runner')
              ],
              hiddenimports=[],
              hookspath=[],
@@ -44,7 +41,7 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=True,
+          console=False,
           icon='Behavior_System.ico')
 
 # This will create a folder with your executable and all dependencies

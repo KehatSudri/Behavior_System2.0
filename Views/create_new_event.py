@@ -1,6 +1,6 @@
 from PyQt6 import QtWidgets, uic
 from PyQt6.QtWidgets import QPushButton, QMessageBox
-from Views.utils import error_warning, notification, get_ui_path, get_qss_path
+from Views.utils import error_warning, notification, get_ui_path
 from Models.DB_INIT import DB
 
 
@@ -25,7 +25,6 @@ class CreateEventUi(object):
 
     def setupUi(self, main_window):
         uic.loadUi(get_ui_path('create_new_event.ui'), main_window)
-        qss = get_qss_path('create_new_event')
         self.main_window = main_window
         self.event_name_lineEdit = main_window.findChild(QtWidgets.QLineEdit, 'event_name_lineEdit')
         self.input_radio_btn = main_window.findChild(QtWidgets.QRadioButton, 'input_radio_btn')
