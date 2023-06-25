@@ -21,9 +21,6 @@ struct WAVHeader {
 };
 
 void performDelay(std::map<std::string, int>& attr) {
-	if (attr[MAX_DELAY_PARAM]) {
-		return;
-	}
 	auto start_time = std::chrono::high_resolution_clock::now();
 	if (attr[MAX_DELAY_PARAM]) {
 		std::random_device rd;
@@ -57,7 +54,7 @@ void Event::notifyListeners() {
 void Event::set(float64 value) {
 	if (!_beenUpdated && value > 2) {
 		_beenUpdated = true;
-		_started= true;
+		_started = true;
 		notifyListeners();
 		LogFileWriter::getInstance().write(INPUT_START_INDICATOR, this->getPort());
 	}
@@ -70,11 +67,10 @@ void Event::set(float64 value) {
 }
 
 void SimpleAnalogOutputer::output() {
-	while (SessionControls::getInstance().getIsPaused()) {
-		continue;
-	}
+	while (SessionControls::getInstance().getIsPaused()) { continue; }
 	performDelay(_attributes);
 	auto start_time = std::chrono::high_resolution_clock::now();
+	if (SessionControls::getInstance().getHitEndCon()) { return; }
 	DAQmxWriteAnalogScalarF64(_handler, true, 5.0, 3.7, NULL);
 	notifyListeners();
 	LogFileWriter::getInstance().write(OUTPUT_START_INDICATOR, this->getPort());
@@ -87,13 +83,12 @@ void SimpleAnalogOutputer::output() {
 }
 
 void SimpleDigitalOutputer::output() {
-	while (SessionControls::getInstance().getIsPaused()) {
-		continue;
-	}
+	while (SessionControls::getInstance().getIsPaused()) { continue; }
 	performDelay(_attributes);
 	uInt8 dataHigh[] = { 1 };
 	uInt8 dataLow[] = { 0 };
 	auto start_time = std::chrono::high_resolution_clock::now();
+	if (SessionControls::getInstance().getHitEndCon()) { return; }
 	DAQmxWriteDigitalLines(_handler, 1, 1, 10.0, DAQmx_Val_GroupByChannel, dataHigh, NULL, nullptr);
 	notifyListeners();
 	LogFileWriter::getInstance().write(OUTPUT_START_INDICATOR, this->getPort());
@@ -112,9 +107,7 @@ void EnvironmentOutputer::output() {
 }
 
 void ContingentOutputer::update(Event* event) {
-	if (_outputer->getIsReward() && _outputer->getGaveReward()) {
-		return;
-	}
+	if (_outputer->getIsReward() && _outputer->getGaveReward()) { return; }
 	_outputer->updateRewardState(true);
 	SessionControls::getInstance().incOutputing();
 	std::thread t(&Outputer::output, _outputer);
@@ -137,7 +130,7 @@ void TrialKiller::update(Event* event) {
 }
 
 SimpleToneOutputer::SimpleToneOutputer(std::string port, std::map<std::string, int> attributes) : Outputer(NULL, port, attributes) {
-	int numSamples = static_cast<int>(SAMPLE_RATE * attributes[DURATION_PARAM]/1000);
+	int numSamples = static_cast<int>(SAMPLE_RATE * attributes[DURATION_PARAM] / 1000);
 	WAVHeader header;
 	header.chunkSize = 36 + numSamples * sizeof(short);
 	header.subchunk2Size = numSamples * sizeof(short);
@@ -159,10 +152,9 @@ SimpleToneOutputer::SimpleToneOutputer(std::string port, std::map<std::string, i
 }
 
 void SimpleToneOutputer::output() {
-	while (SessionControls::getInstance().getIsPaused()) {
-		continue;
-	}
+	while (SessionControls::getInstance().getIsPaused()) { continue; }
 	performDelay(_attributes);
+	if (SessionControls::getInstance().getHitEndCon()) { return; }
 	notifyListeners();
 	LogFileWriter::getInstance().write(OUTPUT_START_INDICATOR, this->getPort());
 	std::wstring filePathWide(this->_wav.begin(), this->_wav.end());
