@@ -116,12 +116,17 @@ class DB:
             raise e
 
     def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on, isRandom,
-                                    isEndCondition):
+                                    isEndCondition,preCondition):
         sql = """INSERT INTO events_to_trials(event_name, trial_name, is_contingent, contingent_on,israndom,
-        isendcondition) VALUES (%s,%s,%s,%s,%s,%s)"""
+        isendcondition,preCondition) VALUES (%s,%s,%s,%s,%s,%s,%s)"""
         with self.conn.cursor() as cur:
-            cur.execute(sql, (event_name, trial_name, is_contingent, contingent_on, isRandom, isEndCondition))
+            cur.execute(sql, (event_name, trial_name, is_contingent, contingent_on, isRandom, isEndCondition,preCondition))
             self.conn.commit()
+    def getPreCondition(self,event,trial):
+        with self.conn.cursor() as cur:
+            cur.execute(f"SELECT preCondition FROM events_to_trials WHERE event_name='{event}' AND trial_name='{trial}'")
+            preCondition = cur.fetchall()
+        return preCondition
 
     def insert_session_trials(self, session_id, trial_type_id, percent_in_session=None,
                               percent_in_block=None, block_number=None, event_list=None, interval_list=None):
@@ -190,6 +195,12 @@ class DB:
             cur.execute(sql, (port, trial,))
             name = cur.fetchone()
         return name
+    def get_port_by_event_name_and_trial(self, event, trial):
+        with self.conn.cursor() as cur:
+            sql = f"SELECT port FROM events , events_to_trials WHERE name=%s AND events_to_trials.trial_name = %s "
+            cur.execute(sql, (event, trial,))
+            port = cur.fetchone()
+        return port
 
     def get_session_trials(self, sess_id):
         with self.conn.cursor() as cur:
@@ -439,6 +450,7 @@ commands = (
         contingent_on VARCHAR(100),
         isRandom BOOLEAN,
         isEndCondition BOOLEAN,
+        preCondition VARCHAR(255),
         params VARCHAR(255))""",
 
     """CREATE TABLE IF NOT EXISTS public.session_to_trials(

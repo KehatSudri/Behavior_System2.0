@@ -61,7 +61,9 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
                     file.write("0,")
                 file.write(','.join(parameters) + "\n")
         for dep in dependencies_arr:
-            file.write(dep + "\n")
+            preCond = db.getPreCondition(db.get_event_name_by_port_and_trial(dep.split(",")[0], trial_name)[0],trial_name)
+            preCond=preCond[0][0]
+            file.write(dep + ","+preCond+"\n")
             parameters = trials_in_session[index + 1][
                 db.get_event_name_by_port_and_trial(dep.split(",")[0], trial_name)[0]]
             isReward = db.isReward(db.get_event_name_by_port_and_trial(dep.split(",")[0], trial_name)[0])

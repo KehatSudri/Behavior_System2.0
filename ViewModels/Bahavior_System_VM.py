@@ -201,9 +201,9 @@ class BehaviorSystemViewModel:
         self.model.insert_new_trial(name)
 
     def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on, isRandom,
-                                    isEndCondition):
+                                    isEndCondition,preCondition):
         self.model.insert_new_events_to_trials(trial_name, event_name, is_contingent, contingent_on, isRandom,
-                                               isEndCondition)
+                                               isEndCondition,preCondition)
 
     def verify_trial_insert(self, name, events):
         return self.model.verify_trial_insert(name, events)

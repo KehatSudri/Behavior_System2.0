@@ -300,9 +300,9 @@ class BehaviorSystemModel:
         self.db.insert_new_trial(name)
 
     def insert_new_events_to_trials(self, trial_name, event_name, is_contingent, contingent_on, isRandom,
-                                    isEndCondition):
+                                    isEndCondition,preCondition):
         self.db.insert_new_events_to_trials(trial_name, event_name, is_contingent, contingent_on, isRandom,
-                                            isEndCondition)
+                                            isEndCondition,preCondition)
 
     def verify_trial_insert(self, name, events):
         # before adding the trial type, check that name or list of events is not already in it
