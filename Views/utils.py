@@ -57,9 +57,28 @@ def get_resource_path(relative_path):
 
 
 def get_ui_path(name):
-    # return get_resource_path(os.path.join('UI', name))
-    return str(Path(__file__).parent.parent / 'UI' / name)
+    return get_resource_path(os.path.join('UI', name))
 
 
-def get_qss_path(name):
-    return str(Path(__file__).parent.parent / 'QSS' / name)
+def get_file_path_from_configs(name):
+    return get_resource_path(os.path.join('config_files', name))
+
+
+def get_default_log_path():
+    return os.path.join(get_base_path(), 'logs')
+
+
+def get_default_config_files_path():
+    return os.path.join(get_base_path(), 'config_files')
+
+
+def get_default_wav_folder_path():
+    return os.path.join(get_base_path(), 'wav_files')
+
+
+def get_base_path():
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return base_path

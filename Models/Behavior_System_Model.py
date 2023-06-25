@@ -1,16 +1,16 @@
 import os.path
-from pathlib import Path
 import sys
 import logging
-import Models.Trial_Model as Trial
+from pathlib import Path
 from collections import OrderedDict
 from importlib import import_module
 from Models.DB_INIT import DB
 from Models.Session_Model import BehaviourInterval, SessionTemplate
 from Models.Trial_Model import TrialModel, RandInterval
+from Views.utils import get_base_path, get_file_path_from_configs, get_default_log_path, get_default_config_files_path, \
+    get_default_wav_folder_path
 
 
-# function to create list of intervals from a given string in specific format
 def create_intervals_list(intervals_str: str):
     intervals = []
     tmp = intervals_str.split("\"")[1:-1]
@@ -39,12 +39,15 @@ class BehaviorSystemModel:
         if settings_file is not None:
             self.settings_file = settings_file
         else:
-            config_path = str(Path(__file__).parent.parent / 'config_files')
-            log_path = str(Path(__file__).parent.parent / 'logs')
-            database_path = config_path + '/database.ini'
-            settings_path = config_path + '/settings.txt'
+            config_path = get_default_config_files_path()
+            log_path = get_default_log_path()
+            wav_files = get_default_wav_folder_path()
+            database_path = get_file_path_from_configs('database.ini')
+            settings_path = get_file_path_from_configs('settings.txt')
             if not os.path.exists(config_path):
                 os.makedirs(config_path)
+            if not os.path.exists(wav_files):
+                os.makedirs(wav_files)
             if not os.path.exists(log_path):
                 os.makedirs(log_path)
             if not os.path.exists(database_path):
@@ -176,12 +179,11 @@ class BehaviorSystemModel:
         if self._session_trials != value:
             self._session_trials = value
 
-
     def choose_template_from_list(self, temp_id):
         for tmp in self.session_templates:
             if tmp[0] == temp_id:
                 t_sess_id, t_sess_name, t_exp_name, t_iti_type, t_iti_min, t_iti_max, t_iti_behave, t_end_def, \
-                    t_end_val, t_trials_order, t_total, t_block_sizes, t_blocks_ord, t_rnd_rew, date = tmp
+                t_end_val, t_trials_order, t_total, t_block_sizes, t_blocks_ord, t_rnd_rew, date = tmp
                 self.curr_session.session_id = t_sess_id
                 self.curr_session.session_name = t_sess_name
                 self.curr_session.experimenter_name = t_exp_name
@@ -332,8 +334,6 @@ class BehaviorSystemModel:
 
     def set_trials_list(self, trials):
         self.curr_session.trials_def.trials = trials
-
-
 
     def get_template_list_by_date_exp_sess_names(self):
         if self._session_templates is None:
