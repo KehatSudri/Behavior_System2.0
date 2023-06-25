@@ -1,5 +1,6 @@
 from pathlib import Path
 from Models.DB_INIT import DB
+from Views.utils import get_base_path, get_file_path_from_configs
 
 
 def prepare_session_information(ports, dependencies, trial_name, index, trials_in_session,
@@ -17,7 +18,7 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
             separator = ","
             output_string = separator.join(pair)
             dependencies_arr.append(output_string)
-    configs_path = str(Path(__file__).parent.parent / 'config_files' / 'session_config.txt')
+    configs_path = get_file_path_from_configs('session_config.txt')
 
     with open(configs_path, "a") as file:
         db = DB()
@@ -67,7 +68,8 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
             isReward = db.isReward(db.get_event_name_by_port_and_trial(dep.split(",")[0], trial_name)[0])
             isRandom = \
                 db.is_random_event_in_a_given_trial(trial_name,
-                                                    db.get_event_name_by_port_and_trial(dep.split(",")[0], trial_name)[0])[0]
+                                                    db.get_event_name_by_port_and_trial(dep.split(",")[0], trial_name)[
+                                                        0])[0]
             if isReward[0]:
                 file.write("1,")
             else:

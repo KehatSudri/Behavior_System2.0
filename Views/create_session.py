@@ -1,3 +1,4 @@
+import os
 import subprocess
 import threading
 
@@ -9,13 +10,16 @@ from Views.add_trial import AddTrialUi
 from Views.edit_session_template import EditSessionUi
 from Views.choose_template import ChooseTemplateUi
 from Views.edit_trial import EditTrialUi
-from Views.utils import error_warning, get_ui_path
+from Views.utils import error_warning, get_ui_path, get_file_path_from_configs, get_base_path
 from Views.random_order import RandomOrderUi
 from Views.notes import NotesUi
 
 
-def run_subprocess(command):
+def run_session_subprocess(command):
     subprocess.run(command)
+    session_config_path = get_file_path_from_configs("session_config.txt")
+    if os.path.isfile(session_config_path):
+        os.remove(session_config_path)
 
 
 class CreateSessionUi(object):
@@ -437,9 +441,10 @@ class CreateSessionUi(object):
             self.random_iti_radioBtn.setChecked(True)
 
     def on_session_define_event_handler(self):
-        config_path = str(Path(__file__).parent.parent / 'config_files' / 'session_config.txt')
-        bs_runner_path = r"BS_Runner/Debug/BS_Runner.exe"
+        config_path = get_file_path_from_configs('session_config.txt')
+        bs_runner_path = r"BS_Runner/BS_Runner.exe"
         log_path = self.vm.model.logs_path
+        print(log_path)
         command = [bs_runner_path, config_path, self.session_name_te.toPlainText(), log_path]
-        subprocess_thread = threading.Thread(target=run_subprocess, args=(command,))
+        subprocess_thread = threading.Thread(target=run_session_subprocess, args=(command,))
         subprocess_thread.start()

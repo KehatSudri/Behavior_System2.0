@@ -6,6 +6,7 @@
 public class SessionControls {
 	bool _isSessionRunning = false;
 	bool _isTrialRunning = false;
+	bool _hitEndCon = false;
 	int _Outputing = 0;
 	bool _isPaused = false;
 	int _trialTimeoutIndicator;
@@ -44,9 +45,9 @@ public:
 	void setIsTrialRuning(bool state) { _isTrialRunning = state; }
 	bool& getIsPaused() { return _isPaused; }
 	bool& getIsSessionRunning() { return _isSessionRunning; }
+	bool& getHitEndCon() { return _hitEndCon; }
 	void incOutputing() { ++_Outputing; }
 	void decOutputing() { --_Outputing; }
-	void nextTrial();
 	void giveReward();
 };
 #endif // __SessionControls__

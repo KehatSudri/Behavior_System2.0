@@ -3,7 +3,7 @@ from Models.DB_INIT import DB
 from PyQt6 import QtWidgets, uic
 from PyQt6.QtWidgets import QHeaderView, QTableWidgetItem
 from Models.prepare_session_information import prepare_session_information
-from Views.utils import error_warning, dict_one_line_style, get_ui_path
+from Views.utils import error_warning, dict_one_line_style, get_ui_path, get_base_path, get_file_path_from_configs
 
 
 class RandomOrderUi(object):
@@ -88,7 +88,8 @@ class RandomOrderUi(object):
                     self.trials_tableWidget.item(row, 2).text()):
                 error_warning("Please enter only numbers")
                 return
-            if self.trials_tableWidget.item(row, 3) and (not self.trials_tableWidget.item(row, 3).text().isnumeric() and not self.is_float(
+            if self.trials_tableWidget.item(row, 3) and (
+                    not self.trials_tableWidget.item(row, 3).text().isnumeric() and not self.is_float(
                     self.trials_tableWidget.item(row, 3).text())):
                 error_warning("Please enter only numbers")
                 return
@@ -113,7 +114,7 @@ class RandomOrderUi(object):
         if not repeats:
             error_warning("Number of repetition should be at least 1")
             return
-        configs_path = str(Path(__file__).parent.parent / 'config_files' / 'session_config.txt')
+        configs_path = get_file_path_from_configs('session_config.txt')
 
         with open(configs_path, "a") as file:
             db = DB()
