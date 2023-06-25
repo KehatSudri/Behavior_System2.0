@@ -148,6 +148,7 @@ int SessionConf::changeCurrentTrial() {
 	auto start_time = std::chrono::high_resolution_clock::now();
 	int code = CONTINUE_SESSION;
 	--_trials[_currentTrial]._remainingRuns;
+	_trials[_currentTrial].setDefaultState();
 	if (!_isSessionRandom) {
 		if (_trials[_currentTrial]._remainingRuns == 0) {
 			if (++_currentTrial == _numOfTrials) {
@@ -297,6 +298,15 @@ void Trial::giveReward() {
 	if (_rewardOutputers.size()) {
 		LogFileWriter::getInstance().write(REWARD_INDICATOR, chosenRewardOutput->getPort());
 		chosenRewardOutput->output();
+	}
+}
+
+void Trial::setDefaultState() {
+	for (auto outputer : _rewardOutputers) {
+		outputer->updateRewardState(false);
+	}
+	for (auto eve : _events) {
+		eve->setDefaultState();
 	}
 }
 

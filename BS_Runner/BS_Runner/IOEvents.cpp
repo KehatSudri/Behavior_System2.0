@@ -115,7 +115,7 @@ void ContingentOutputer::update(Event* event) {
 	if (_outputer->getIsReward() && _outputer->getGaveReward()) {
 		return;
 	}
-	_outputer->updateRewardState();
+	_outputer->updateRewardState(true);
 	SessionControls::getInstance().incOutputing();
 	std::thread t(&Outputer::output, _outputer);
 	t.detach();

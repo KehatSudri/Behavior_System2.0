@@ -20,6 +20,7 @@ class Event {
 public:
 	Event(std::string port) : _port(port), _beenUpdated(true), _started(false) {}
 	std::string getPort() { return this->_port; }
+	void setDefaultState() { _started = false; }
 	void attachListener(Listener* listener);
 	void detachListener(Listener* listener);
 	void notifyListeners();
@@ -41,7 +42,7 @@ public:
 	}
 	bool getIsReward() { return _isReward; }
 	bool getGaveReward() { return _gaveReward; }
-	void updateRewardState() { _gaveReward = true; }
+	void updateRewardState(bool state) { _gaveReward = state; }
 	virtual void output() = 0;
 protected:
 	TaskHandle _handler;

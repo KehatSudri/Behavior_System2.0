@@ -30,6 +30,7 @@ public:
 	const std::vector<EnvironmentOutputer*>& getEnvironmentOutputer() const { return _environmentOutputer; }
 	std::vector<Event*> getInputEvents() const;
 	void giveReward();
+	void setDefaultState();
 	~Trial();
 };
 
