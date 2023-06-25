@@ -94,7 +94,7 @@ class CreateEventUi(object):
         port = "Dev1/" + self.ports_comboBox.currentText()
         if self.ports_comboBox.currentText() in self.digitalPorts:
             line = self.ports_comboBox.currentText().split(".")[1]
-            port = "port0/line" + line
+            port = "Dev1/port0/line" + line
         in_use_ports = self.db.get_used_ports()
         string_in_use_ports = [p[0] for p in in_use_ports]
         used_port_flag = 0
