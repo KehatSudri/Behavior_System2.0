@@ -7,7 +7,8 @@ from importlib import import_module
 from Models.DB_INIT import DB
 from Models.Session_Model import BehaviourInterval, SessionTemplate
 from Models.Trial_Model import TrialModel, RandInterval
-from Views.utils import get_base_path, get_file_path_from_configs, get_default_log_path, get_default_config_files_path
+from Views.utils import get_base_path, get_file_path_from_configs, get_default_log_path, get_default_config_files_path, \
+    get_default_wav_folder_path
 
 
 def create_intervals_list(intervals_str: str):
@@ -40,10 +41,13 @@ class BehaviorSystemModel:
         else:
             config_path = get_default_config_files_path()
             log_path = get_default_log_path()
+            wav_files = get_default_wav_folder_path()
             database_path = get_file_path_from_configs('database.ini')
             settings_path = get_file_path_from_configs('settings.txt')
             if not os.path.exists(config_path):
                 os.makedirs(config_path)
+            if not os.path.exists(wav_files):
+                os.makedirs(wav_files)
             if not os.path.exists(log_path):
                 os.makedirs(log_path)
             if not os.path.exists(database_path):

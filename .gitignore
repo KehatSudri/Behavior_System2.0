@@ -1,5 +1,6 @@
 /.idea/
 /config_files/
+/wav_files/
 /vs_buildtools.exe
 /venv/
 /logs/

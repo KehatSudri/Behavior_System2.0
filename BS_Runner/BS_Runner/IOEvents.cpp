@@ -137,9 +137,17 @@ SimpleToneOutputer::SimpleToneOutputer(std::string port, std::map<std::string, i
 	std::time_t now_c = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 	std::stringstream ss;
 	ss << attributes[FREQUENCY_PARAM] << ".wav";
-	std::string filename = ss.str();
+	std::string wav_file = ss.str();
+	std::string filename = "wav_files\\" + wav_file;
 	std::replace(filename.begin(), filename.end(), ':', ';');
 	_wav = filename;
+
+	/*ss << std::put_time(std::localtime(&now_c), "-%d-%m-%Y-%T");
+	std::string time = ss.str();
+	std::replace(time.begin(), time.end(), ':', ';');
+	_logFileName = _dir + "\\" + _sessionName + "_" + time + ".txt";*/
+
+
 	std::ofstream file(filename.c_str(), std::ios::binary);
 	file.write(reinterpret_cast<const char*>(&header), sizeof(header));
 	for (int i = 0; i < numSamples; i++) {

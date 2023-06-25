@@ -72,6 +72,10 @@ def get_default_config_files_path():
     return os.path.join(get_base_path(), 'config_files')
 
 
+def get_default_wav_folder_path():
+    return os.path.join(get_base_path(), 'wav_files')
+
+
 def get_base_path():
     try:
         base_path = sys._MEIPASS
