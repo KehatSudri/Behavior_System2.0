@@ -64,12 +64,18 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
         for dep in dependencies_arr:
             preCond = db.getPreCondition(db.get_event_name_by_port_and_trial(dep.split(",")[0], trial_name)[0],trial_name)
             preCond=preCond[0][0]
-
+            print(dep.split(",")[1])
+            print(db.get_event_name_by_port_and_trial(dep.split(",")[1],trial_name)[0])
+            if "Tone" in db.get_event_name_by_port_and_trial(dep.split(",")[1],trial_name)[0]:
+                dep = dep.split(",")[0]+",Tone"
             if not preCond:
                 file.write(dep + ",None\n")
             else:
-                preCond_port = db.get_port_by_event_name_and_trial(preCond, trial_name)[0]
-                file.write(dep + ","+preCond_port+"\n")
+                if "Tone" in preCond:
+                    file.write(dep + "," + preCond + "\n")
+                else:
+                    preCond_port = db.get_port_by_event_name_and_trial(preCond, trial_name)[0]
+                    file.write(dep + ","+preCond_port+"\n")
 
             parameters = trials_in_session[index + 1][
                 db.get_event_name_by_port_and_trial(dep.split(",")[0], trial_name)[0]]
