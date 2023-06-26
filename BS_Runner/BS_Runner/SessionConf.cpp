@@ -234,7 +234,7 @@ int Trial::initAnalogOutputTasks() {
 		const std::string& portName = std::get<0>(it);
 		const std::vector<int>& params = std::get<1>(it);
 		std::string delimiter = ",";
-		std::string token1 = portName, token2;
+		std::string token1 = portName, token2, contingentOn, preCondition;
 		size_t pos = portName.find(delimiter);
 		if (pos != std::string::npos) {
 			token1 = portName.substr(0, pos);
@@ -250,11 +250,23 @@ int Trial::initAnalogOutputTasks() {
 		}
 		_events.push_back(sm);
 		if (!token2.empty()) {
+			pos = token2.find(delimiter);
+			contingentOn = token2.substr(0, pos);
+			preCondition = token2.substr(pos + delimiter.length());
+			ContingentOutputer* con = new ContingentOutputer(sm, preCondition);
+			_contingentOutputer.push_back(con);
+			bool foundContingentOn = false;
+			bool foundPreCondition = false;
 			for (auto& eve : _events) {
-				if (eve->getPort() == token2) {
-					eve->attachListener(new ContingentOutputer(sm));
-					break;
+				if (eve->getPort() == contingentOn) {
+					eve->attachListener(con);
+					foundContingentOn = true;
 				}
+				else if (eve->getPort() == preCondition) {
+					eve->attachListener(con);
+					foundPreCondition = true;
+				}
+				if (foundContingentOn && foundPreCondition) { break; }
 			}
 		}
 		else { _environmentOutputer.push_back(new EnvironmentOutputer(sm)); }
@@ -302,8 +314,8 @@ void Trial::giveReward() {
 }
 
 void Trial::setDefaultState() {
-	for (auto outputer : _rewardOutputers) {
-		outputer->updateRewardState(false);
+	for (auto outputer : _contingentOutputer) {
+		outputer->setDefaultState();
 	}
 	for (auto eve : _events) {
 		eve->setDefaultState();

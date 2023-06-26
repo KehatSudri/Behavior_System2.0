@@ -103,6 +103,7 @@ void SessionControls::finishSession() {
 	if (std::this_thread::get_id() != _runThread.get_id()) {
 		_runThread.join();
 	}
+	MessageBox::Show("Session was finished");
 }
 
 std::string SessionControls::getCurrentRunningTrial() {

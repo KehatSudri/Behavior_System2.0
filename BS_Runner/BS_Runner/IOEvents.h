@@ -33,16 +33,9 @@ public:
 };
 
 class Outputer : public Event {
-	bool _isReward;
-	bool _gaveReward;
 public:
-	Outputer(TaskHandle handler, std::string port, std::map<std::string, int> attributes) :Event(port), _handler(handler), _attributes(attributes) {
-		_isReward = _attributes[IS_REWARD_PARAM];
-		_gaveReward = false;
-	}
-	bool getIsReward() { return _isReward; }
-	bool getGaveReward() { return _gaveReward; }
-	void updateRewardState(bool state) { _gaveReward = state; }
+	Outputer(TaskHandle handler, std::string port, std::map<std::string, int> attributes) :Event(port), _handler(handler), _attributes(attributes) {}
+	bool getIsReward() { return _attributes[IS_REWARD_PARAM]; }
 	virtual void output() = 0;
 protected:
 	TaskHandle _handler;
@@ -75,28 +68,42 @@ public:
 };
 
 class EnvironmentOutputer {
+	Outputer* _outputer;
 public:
 	EnvironmentOutputer(Outputer* outputer) : _outputer(outputer) {}
 	void output();
-private:
-	Outputer* _outputer;
 };
 
 class ContingentOutputer : public Listener {
-public:
-	ContingentOutputer(Outputer* outputer) : _outputer(outputer) {}
-	void update(Event* event) override;
-private:
+	bool _gaveReward;
+	bool _metPreCon;
+	bool _isReward;
+	std::string _preCon;
 	Outputer* _outputer;
+public:
+	ContingentOutputer(Outputer* outputer, std::string preCon = "None") : _outputer(outputer), _preCon(preCon) {
+		_gaveReward = false;
+		_isReward = _outputer->getIsReward();
+		if (_preCon == "None") {
+			_metPreCon = true;
+		}
+		else {
+			_metPreCon = false;
+		}
+	}
+	bool getGaveReward() { return _gaveReward; }
+	bool getMetPreCon() { return _metPreCon; }
+	void updateMetPreConState(bool state) { _metPreCon = state; }
+	void updateRewardState(bool state) { _gaveReward = state; }
+	void setDefaultState();
+	void update(Event* event) override;
 };
 
 class SerialOutputer {
+	Outputer* _outputer;
 public:
 	SerialOutputer(Outputer* outputer) : _outputer(outputer) {}
 	void run();
-
-private:
-	Outputer* _outputer;
 };
 
 #endif // __IOEvents__

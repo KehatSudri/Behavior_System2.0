@@ -11,6 +11,7 @@ class Trial {
 	int _maxTrialWaitTime;
 	std::vector<Event*> _events;
 	std::vector<EnvironmentOutputer*> _environmentOutputer;
+	std::vector<ContingentOutputer*> _contingentOutputer;
 	std::vector<Outputer*> _rewardOutputers;
 	TaskHandle _inputTaskHandle;
 public:

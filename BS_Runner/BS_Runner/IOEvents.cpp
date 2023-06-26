@@ -106,9 +106,21 @@ void EnvironmentOutputer::output() {
 	t.detach();
 }
 
+void ContingentOutputer::setDefaultState() {
+	updateRewardState(false);
+	if (_preCon != "None") {
+		updateMetPreConState(false);
+	}
+}
+
 void ContingentOutputer::update(Event* event) {
-	if (_outputer->getIsReward() && _outputer->getGaveReward()) { return; }
-	_outputer->updateRewardState(true);
+	if (_isReward && _gaveReward) { return; }
+	if (_preCon != "None" && event->getPort() == _preCon) {
+		this->updateMetPreConState(true);
+		return;
+	}
+	if (!getMetPreCon()) { return; }
+	updateRewardState(true);
 	SessionControls::getInstance().incOutputing();
 	std::thread t(&Outputer::output, _outputer);
 	t.detach();
@@ -141,12 +153,6 @@ SimpleToneOutputer::SimpleToneOutputer(std::string port, std::map<std::string, i
 	std::string filename = "wav_files\\" + wav_file;
 	std::replace(filename.begin(), filename.end(), ':', ';');
 	_wav = filename;
-
-	/*ss << std::put_time(std::localtime(&now_c), "-%d-%m-%Y-%T");
-	std::string time = ss.str();
-	std::replace(time.begin(), time.end(), ':', ';');
-	_logFileName = _dir + "\\" + _sessionName + "_" + time + ".txt";*/
-
 
 	std::ofstream file(filename.c_str(), std::ios::binary);
 	file.write(reinterpret_cast<const char*>(&header), sizeof(header));
