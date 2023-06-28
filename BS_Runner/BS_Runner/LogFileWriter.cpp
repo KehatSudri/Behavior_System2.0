@@ -11,7 +11,7 @@ void LogFileWriter::createLogFile() {
 		ss << std::put_time(std::localtime(&now_c), "-%d-%m-%Y-%T");
 		std::string time = ss.str();
 		std::replace(time.begin(), time.end(), ':', ';');
-		_logFileName = _dir + "\\" + _sessionName +"_" + time + ".txt";
+		_logFileName = _dir + "\\" + _experimenterMame + "_" + _subjectId + "_" + _sessionName + "_" + time + ".txt";
 		std::ofstream MyFile(_logFileName);
 		MyFile.close();
 	}

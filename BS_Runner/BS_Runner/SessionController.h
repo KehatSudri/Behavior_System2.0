@@ -20,7 +20,8 @@ namespace BSRunner {
 			_configFilePath = argv[1];
 			LogFileWriter::getInstance().setSessionName(argv[2]);
 			LogFileWriter::getInstance().setLogDirectory(argv[3]);
-			InitializeComponent();
+			LogFileWriter::getInstance().setSubjectId(argv[4]);
+			LogFileWriter::getInstance().setExperimenterMame(argv[5]);
 		}
 
 	protected:
