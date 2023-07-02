@@ -1,7 +1,7 @@
 #include "SessionConf.h"
 #include "Consts.h"
 
-std::map<std::string, int>  getAttributes(std::string port, const std::vector<int>& params) {
+std::map<std::string, int>  getAttributes(const std::vector<int>& params) {
 	std::map<std::string, int> attributes;
 	auto it = params.begin();
 	attributes[IS_REWARD_PARAM] = *(it++);
@@ -241,7 +241,7 @@ int Trial::initAnalogOutputTasks() {
 			token2 = portName.substr(pos + delimiter.length());
 		}
 
-		Outputer* sm = getOutputer(token1, getAttributes(portName, params));
+		Outputer* sm = getOutputer(token1, getAttributes(params));
 		if (sm == NULL) {
 			return INIT_ERROR;
 		}

@@ -22,6 +22,7 @@ namespace BSRunner {
 			LogFileWriter::getInstance().setLogDirectory(argv[3]);
 			LogFileWriter::getInstance().setSubjectId(argv[4]);
 			LogFileWriter::getInstance().setExperimenterMame(argv[5]);
+			InitializeComponent();
 		}
 
 	protected:

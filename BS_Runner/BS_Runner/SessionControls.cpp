@@ -27,7 +27,9 @@ void SessionControls::run(char* configFilePath) {
 		_trialTimeoutIndicator = _conf->getMaxTrialWaitTime();
 		LogFileWriter::getInstance().write(TRIAL_START_INDICATOR, getCurrentRunningTrial());
 		_trialStartTime = std::chrono::high_resolution_clock::now();
-		for (auto envOutputer : conf.getEnvironmentOutputer()) { envOutputer->output(); }
+		for (auto envOutputer : conf.getEnvironmentOutputer()) {
+			envOutputer->output();
+		}
 		if (inputPortsSize) {
 			do {
 				if (!this->_isPaused) {

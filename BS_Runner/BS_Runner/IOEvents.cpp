@@ -70,7 +70,12 @@ void SimpleAnalogOutputer::output() {
 	while (SessionControls::getInstance().getIsPaused()) { continue; }
 	performDelay(_attributes);
 	auto start_time = std::chrono::high_resolution_clock::now();
-	if (SessionControls::getInstance().getHitEndCon()) { return; }
+	if (SessionControls::getInstance().getHitEndCon()) {
+		SessionControls::getInstance().decOutputing();
+		return; }
+	if (!_metPreCon) {
+		SessionControls::getInstance().decOutputing();
+		return; }
 	DAQmxWriteAnalogScalarF64(_handler, true, 5.0, 3.7, NULL);
 	notifyListeners();
 	LogFileWriter::getInstance().write(OUTPUT_START_INDICATOR, this->getPort());
@@ -88,7 +93,12 @@ void SimpleDigitalOutputer::output() {
 	uInt8 dataHigh[] = { 1 };
 	uInt8 dataLow[] = { 0 };
 	auto start_time = std::chrono::high_resolution_clock::now();
-	if (SessionControls::getInstance().getHitEndCon()) { return; }
+	if (SessionControls::getInstance().getHitEndCon()) {
+		SessionControls::getInstance().decOutputing();
+		return; }
+	if (!_metPreCon) {
+		SessionControls::getInstance().decOutputing();
+		return; }
 	DAQmxWriteDigitalLines(_handler, 1, 1, 10.0, DAQmx_Val_GroupByChannel, dataHigh, NULL, nullptr);
 	notifyListeners();
 	LogFileWriter::getInstance().write(OUTPUT_START_INDICATOR, this->getPort());
@@ -109,14 +119,14 @@ void EnvironmentOutputer::output() {
 void ContingentOutputer::setDefaultState() {
 	updateRewardState(false);
 	if (_preCon != "None") {
-		updateMetPreConState(false);
+		_outputer->updateMetPrecon(false);
 	}
 }
 
 void ContingentOutputer::update(Event* event) {
 	if (_isReward && _gaveReward) { return; }
 	if (_preCon != "None" && event->getPort() == _preCon) {
-		this->updateMetPreConState(true);
+		_outputer->updateMetPrecon(true);
 		return;
 	}
 	if (!getMetPreCon()) { return; }
@@ -168,13 +178,18 @@ SimpleToneOutputer::SimpleToneOutputer(std::string port, std::map<std::string, i
 void SimpleToneOutputer::output() {
 	while (SessionControls::getInstance().getIsPaused()) { continue; }
 	performDelay(_attributes);
-	if (SessionControls::getInstance().getHitEndCon()) { return; }
+	if (SessionControls::getInstance().getHitEndCon()) {
+		SessionControls::getInstance().decOutputing();
+		return; }
+	if (!_metPreCon) {
+		SessionControls::getInstance().decOutputing();
+		return; }
 	notifyListeners();
-	LogFileWriter::getInstance().write(OUTPUT_START_INDICATOR, this->getPort());
-	std::wstring filePathWide(this->_wav.begin(), this->_wav.end());
+	LogFileWriter::getInstance().write(OUTPUT_START_INDICATOR, getPort());
+	std::wstring filePathWide(_wav.begin(), _wav.end());
 	LPCWSTR filePath = filePathWide.c_str();
 	PlaySound(filePath, NULL, SND_FILENAME);
-	LogFileWriter::getInstance().write(OUTPUT_FINISH_INDICATOR, this->getPort());
+	LogFileWriter::getInstance().write(OUTPUT_FINISH_INDICATOR, getPort());
 	SessionControls::getInstance().decOutputing();
 	return;
 }
