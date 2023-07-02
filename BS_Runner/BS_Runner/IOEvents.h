@@ -24,6 +24,7 @@ public:
 		_started = false;
 		_beenUpdated = false;
 	}
+	~Event();
 	void attachListener(Listener* listener);
 	void detachListener(Listener* listener);
 	void notifyListeners();
@@ -79,6 +80,7 @@ class EnvironmentOutputer {
 	Outputer* _outputer;
 public:
 	EnvironmentOutputer(Outputer* outputer) : _outputer(outputer) {}
+	~EnvironmentOutputer();
 	void output();
 };
 
@@ -95,6 +97,7 @@ public:
 			_outputer->updateMetPrecon(false);
 		}
 	}
+	~ContingentOutputer();
 	bool getGaveReward() { return _gaveReward; }
 	bool getMetPreCon() { return _outputer->getMetPreCon(); }
 	void updateRewardState(bool state) { _gaveReward = state; }
@@ -106,6 +109,7 @@ class SerialOutputer {
 	Outputer* _outputer;
 public:
 	SerialOutputer(Outputer* outputer) : _outputer(outputer) {}
+	~SerialOutputer();
 	void run();
 };
 

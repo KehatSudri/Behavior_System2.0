@@ -51,6 +51,12 @@ void performDelay(std::map<std::string, int>& attr) {
 	}
 }
 
+Event::~Event() {
+	for (auto& listener : _listeners) {
+		delete listener;
+	}
+}
+
 void Event::attachListener(Listener* listener) {
 	_listeners.push_back(listener);
 }
@@ -129,6 +135,18 @@ void SimpleDigitalOutputer::output() {
 	DAQmxWriteDigitalLines(_handler, 1, 1, 10.0, DAQmx_Val_GroupByChannel, dataLow, NULL, nullptr);
 	LogFileWriter::getInstance().write(OUTPUT_FINISH_INDICATOR, this->getPort());
 	SessionControls::getInstance().decOutputing();
+}
+
+ContingentOutputer::~ContingentOutputer() {
+	delete _outputer;
+}
+
+EnvironmentOutputer::~EnvironmentOutputer() {
+	delete _outputer;
+}
+
+SerialOutputer::~SerialOutputer() {
+	delete _outputer;
 }
 
 void EnvironmentOutputer::output() {
