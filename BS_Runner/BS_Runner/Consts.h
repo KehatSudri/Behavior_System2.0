@@ -46,6 +46,7 @@
 
 #define MAX_WATTAGE 5.0
 #define MIN_WATTAGE -5.0
+#define MIN_THRESHOLD 3.7
 
 #define NEW_LINE_CATEGORY '$'
 #define NONE "None"

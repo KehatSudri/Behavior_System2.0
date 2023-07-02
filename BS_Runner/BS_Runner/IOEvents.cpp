@@ -52,17 +52,17 @@ void Event::notifyListeners() {
 }
 
 void Event::set(float64 value) {
-	if (!_beenUpdated && value > 2) {
+	if (!_beenUpdated && value > MIN_THRESHOLD && _started) {
 		_beenUpdated = true;
-		_started = true;
-		notifyListeners();
 		LogFileWriter::getInstance().write(INPUT_START_INDICATOR, this->getPort());
+		notifyListeners();
 	}
-	else if (_beenUpdated && value < 2) {
+	else if (_beenUpdated && value < MIN_THRESHOLD) {
 		_beenUpdated = false;
-		if (_started) {
-			LogFileWriter::getInstance().write(INPUT_FINISH_INDICATOR, this->getPort());
-		}
+		LogFileWriter::getInstance().write(INPUT_FINISH_INDICATOR, this->getPort());
+	}
+	else if (!_started && value < MIN_THRESHOLD) {
+		_started = true;
 	}
 }
 
@@ -70,7 +70,7 @@ void SimpleAnalogOutputer::output() {
 	while (SessionControls::getInstance().getIsPaused()) { continue; }
 	performDelay(_attributes);
 	auto start_time = std::chrono::high_resolution_clock::now();
-	if (SessionControls::getInstance().getHitEndCon()) {
+	if (!SessionControls::getInstance().getIsTrialRunning()) {
 		SessionControls::getInstance().decOutputing();
 		return; }
 	if (!_metPreCon) {
@@ -93,7 +93,7 @@ void SimpleDigitalOutputer::output() {
 	uInt8 dataHigh[] = { 1 };
 	uInt8 dataLow[] = { 0 };
 	auto start_time = std::chrono::high_resolution_clock::now();
-	if (SessionControls::getInstance().getHitEndCon()) {
+	if (!SessionControls::getInstance().getIsTrialRunning()) {
 		SessionControls::getInstance().decOutputing();
 		return; }
 	if (!_metPreCon) {
@@ -129,11 +129,12 @@ void ContingentOutputer::update(Event* event) {
 		_outputer->updateMetPrecon(true);
 		return;
 	}
-	if (!getMetPreCon()) { return; }
-	updateRewardState(true);
 	SessionControls::getInstance().incOutputing();
 	std::thread t(&Outputer::output, _outputer);
 	t.detach();
+	if (_outputer->getMetPreCon()) {
+		updateRewardState(true);
+	}
 }
 
 void SerialOutputer::run() {
@@ -178,7 +179,7 @@ SimpleToneOutputer::SimpleToneOutputer(std::string port, std::map<std::string, i
 void SimpleToneOutputer::output() {
 	while (SessionControls::getInstance().getIsPaused()) { continue; }
 	performDelay(_attributes);
-	if (SessionControls::getInstance().getHitEndCon()) {
+	if (!SessionControls::getInstance().getIsTrialRunning()) {
 		SessionControls::getInstance().decOutputing();
 		return; }
 	if (!_metPreCon) {
