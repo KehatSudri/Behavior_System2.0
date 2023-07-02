@@ -1,16 +1,15 @@
 import os
 import subprocess
 import threading
-
+import glob
 from datetime import datetime
-from pathlib import Path
 from PyQt6 import QtCore, QtWidgets, uic
 from Models.DB_INIT import DB
 from Views.add_trial import AddTrialUi
 from Views.edit_session_template import EditSessionUi
 from Views.choose_template import ChooseTemplateUi
 from Views.edit_trial import EditTrialUi
-from Views.utils import error_warning, get_ui_path, get_file_path_from_configs, get_base_path
+from Views.utils import error_warning, get_ui_path, get_file_path_from_configs, get_default_wav_folder_path
 from Views.random_order import RandomOrderUi
 from Views.notes import NotesUi
 
@@ -20,6 +19,10 @@ def run_session_subprocess(command):
     session_config_path = get_file_path_from_configs("session_config.txt")
     if os.path.isfile(session_config_path):
         os.remove(session_config_path)
+    wav_files_path = get_default_wav_folder_path()
+    files = glob.glob(os.path.join(wav_files_path, '*.wav'))
+    for file in files:
+        os.remove(file)
 
 
 class CreateSessionUi(object):
