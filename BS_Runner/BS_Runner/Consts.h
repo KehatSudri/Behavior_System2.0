@@ -55,6 +55,7 @@
 #define CONFIGURATION_FILE_ERROR_MESSAGE "Failed to load session configuration file"
 
 #define SAMPLE_RATE 44100
+#define MAX_AMPLITUDE 32760
 #define TWO_PI 6.2831853071795
 
 #endif // __Consts__
