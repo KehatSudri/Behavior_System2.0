@@ -23,7 +23,6 @@ void SessionControls::run(char* configFilePath) {
 		int32 read;
 		setIsTrialRuning(true);
 		setIsPaused(false);
-
 		_trialTimeoutIndicator = _conf->getMaxTrialWaitTime();
 		LogFileWriter::getInstance().write(TRIAL_START_INDICATOR, getCurrentRunningTrial());
 		_trialStartTime = std::chrono::high_resolution_clock::now();

@@ -323,5 +323,21 @@ void Trial::setDefaultState() {
 }
 
 Trial::~Trial() {
+	for (auto eve : _events) {
+		delete eve;
+	}
+	_events.clear();
+	for (auto rew : _rewardOutputers) {
+		delete rew;
+	}
+	_rewardOutputers.clear();
+	for (auto out : _environmentOutputer) {
+		delete out;
+	}
+	_environmentOutputer.clear();
+	for (auto out : _contingentOutputer) {
+		delete out;
+	}
+	_contingentOutputer.clear();
 	DAQmxClearTask(_inputTaskHandle);
 }

@@ -18,9 +18,13 @@ class Event {
 	bool _started;
 	bool _beenUpdated;
 public:
-	Event(std::string port) : _port(port), _beenUpdated(true), _started(false) {}
+	Event(std::string port) : _port(port), _beenUpdated(false), _started(false) {}
 	std::string getPort() { return this->_port; }
-	void setDefaultState() { _started = false; }
+	void setDefaultState() {
+		_started = false;
+		_beenUpdated = false;
+	}
+	~Event();
 	void attachListener(Listener* listener);
 	void detachListener(Listener* listener);
 	void notifyListeners();
@@ -76,6 +80,7 @@ class EnvironmentOutputer {
 	Outputer* _outputer;
 public:
 	EnvironmentOutputer(Outputer* outputer) : _outputer(outputer) {}
+	~EnvironmentOutputer();
 	void output();
 };
 
@@ -88,7 +93,11 @@ public:
 	ContingentOutputer(Outputer* outputer, std::string preCon = "None") : _outputer(outputer), _preCon(preCon) {
 		_gaveReward = false;
 		_isReward = _outputer->getIsReward();
+		if (preCon != "None") {
+			_outputer->updateMetPrecon(false);
+		}
 	}
+	~ContingentOutputer();
 	bool getGaveReward() { return _gaveReward; }
 	bool getMetPreCon() { return _outputer->getMetPreCon(); }
 	void updateRewardState(bool state) { _gaveReward = state; }
@@ -100,6 +109,7 @@ class SerialOutputer {
 	Outputer* _outputer;
 public:
 	SerialOutputer(Outputer* outputer) : _outputer(outputer) {}
+	~SerialOutputer();
 	void run();
 };
 

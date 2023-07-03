@@ -64,8 +64,6 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
         for dep in dependencies_arr:
             preCond = db.getPreCondition(db.get_event_name_by_port_and_trial(dep.split(",")[0], trial_name)[0],trial_name)
             preCond=preCond[0][0]
-            print(dep.split(",")[1])
-            print(db.get_event_name_by_port_and_trial(dep.split(",")[1],trial_name)[0])
             if "Tone" in db.get_event_name_by_port_and_trial(dep.split(",")[1],trial_name)[0]:
                 dep = dep.split(",")[0]+",Tone"
             if not preCond:

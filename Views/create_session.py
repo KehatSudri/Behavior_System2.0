@@ -445,7 +445,7 @@ class CreateSessionUi(object):
 
     def on_session_define_event_handler(self):
         config_path = get_file_path_from_configs('session_config.txt')
-        bs_runner_path = r"BS_Runner/BS_Runner.exe"
+        bs_runner_path = r"BS_Runner/Debug/BS_Runner.exe"
         log_path = self.vm.model.logs_path
         command = [bs_runner_path, config_path, self.session_name_te.toPlainText(), log_path,
                    self.subject_id_te.toPlainText(), self.exp_name_te.toPlainText()]
