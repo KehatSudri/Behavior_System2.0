@@ -91,6 +91,7 @@ class EditSessionUi(object):
         if len(self.parent.trials_names) == 0:
             return
         chosen = self.parent.chosen_trial_type_name = [name[0] for name in self.parent.trials_names][index]
+        chosen = self.trial_types_comboBox.currentText()
         events_name = self.vm.get_events_by_trial_name(chosen)
         events_name = [item[0] for item in events_name]
         self.clear_form()
@@ -115,7 +116,22 @@ class EditSessionUi(object):
 
             if event != "" and event is not None:
                 event_and_params[event] = params
+        #find the index to replace with the updated value
+        rowsCount = self.parent.trials_table.rowCount()
+        index=0
+        for row in range(rowsCount):
+            if self.parent.trials_table.item(row,0) is not None:
+                if self.parent.trials_table.item(row,0).text() == new_trial:
+                    index=row
+        self.parent.trials_table.removeRow(index)
 
+        for i in range(len(self.parent.trials_in_session)):
+            if self.parent.trials_in_session[i] == new_trial:
+                del self.parent.trials_in_session[i]
+                del self.parent.trials_in_session[i]
+                break
         self.parent.trials_in_session.extend([new_trial, event_and_params])
+
+
         self.parent.set_trials_table()
         self.parent.add_window.close()

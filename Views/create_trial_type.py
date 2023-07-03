@@ -200,6 +200,7 @@ class CreateTrialTypeUi(object):
         self.contingent_comboBox.clear()
         self.preCondition_comboBox.clear()
         self.preCondition_comboBox.addItems(["None"])
+        self.simple_radioButton.setChecked(True)
 
 
 
