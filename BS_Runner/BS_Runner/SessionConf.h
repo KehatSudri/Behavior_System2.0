@@ -8,7 +8,7 @@
 #include "IOEvents.h"
 
 class Trial {
-	int _maxTrialWaitTime;
+	double _maxTrialWaitTime;
 	std::vector<Event*> _events;
 	std::vector<EnvironmentOutputer*> _environmentOutputer;
 	std::vector<ContingentOutputer*> _contingentOutputer;
@@ -25,8 +25,8 @@ public:
 	int initAnalogOutputTasks();
 	void initInputTaskHandle();
 	void initTrialKillers();
-	int getMaxTrialWaitTime() { return _maxTrialWaitTime; }
-	void setMaxTrialWaitTime(int val) { _maxTrialWaitTime = val; }
+	double getMaxTrialWaitTime() { return _maxTrialWaitTime; }
+	void setMaxTrialWaitTime(double val) { _maxTrialWaitTime = val; }
 	TaskHandle getInputTaskHandle() { return _inputTaskHandle; }
 	const std::vector<EnvironmentOutputer*>& getEnvironmentOutputer() const { return _environmentOutputer; }
 	std::vector<Event*> getInputEvents() const;
@@ -43,20 +43,20 @@ public class SessionConf {
 	bool _validFlag = true;
 	bool _sessionComplete = false;
 	bool _isSessionRandom = false;
-	int _maxSessionWaitTime;
+	double _maxSessionWaitTime;
 	std::vector<Trial> _trials;
 	std::vector<int> _trialProbabilities;
 	void setMinITI(double val) { _minITI = val; }
 	void setMaxITI(double val) { _maxITI = val; }
 	void setisSessionRandom(bool val) { _isSessionRandom = val; }
-	void setMaxSessionWaitTime(int val) { _maxSessionWaitTime = val; }
+	void setMaxSessionWaitTime(double val) { _maxSessionWaitTime = val; }
 public:
 	SessionConf(std::string path);
 	int getNumOfTrials() { return _numOfTrials; }
 	bool isValid() { return _validFlag; }
 	bool isSessionComplete() { return _sessionComplete; }
-	int getMaxTrialWaitTime();
-	int getMaxSessionWaitTime() { return _maxSessionWaitTime; }
+	double getMaxTrialWaitTime();
+	double getMaxSessionWaitTime() { return _maxSessionWaitTime; }
 	void setSessionComplete(bool state) { _sessionComplete = state; }
 	std::string getCurrentRunningTrial();
 	int changeCurrentTrial();

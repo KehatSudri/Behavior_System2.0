@@ -98,8 +98,6 @@ void SimpleAnalogOutputer::output() {
 void SimpleDigitalOutputer::output() {
 	while (SessionControls::getInstance().getIsPaused()) { continue; }
 	performDelay(_attributes);
-	uInt8 dataHigh[] = { 1 };
-	uInt8 dataLow[] = { 0 };
 	auto start_time = std::chrono::high_resolution_clock::now();
 	if (!SessionControls::getInstance().getIsTrialRunning()) {
 		SessionControls::getInstance().decOutputing();
@@ -109,6 +107,8 @@ void SimpleDigitalOutputer::output() {
 		SessionControls::getInstance().decOutputing();
 		return;
 	}
+	uInt8 dataHigh[] = { 1 };
+	uInt8 dataLow[] = { 0 };
 	DAQmxWriteDigitalLines(_handler, 1, 1, 10.0, DAQmx_Val_GroupByChannel, dataHigh, NULL, nullptr);
 	LogFileWriter::getInstance().write(OUTPUT_START_INDICATOR, this->getPort());
 	notifyListeners();
@@ -118,18 +118,6 @@ void SimpleDigitalOutputer::output() {
 	DAQmxWriteDigitalLines(_handler, 1, 1, 10.0, DAQmx_Val_GroupByChannel, dataLow, NULL, nullptr);
 	LogFileWriter::getInstance().write(OUTPUT_FINISH_INDICATOR, this->getPort());
 	SessionControls::getInstance().decOutputing();
-}
-
-ContingentOutputer::~ContingentOutputer() {
-	delete _outputer;
-}
-
-EnvironmentOutputer::~EnvironmentOutputer() {
-	delete _outputer;
-}
-
-SerialOutputer::~SerialOutputer() {
-	delete _outputer;
 }
 
 void EnvironmentOutputer::output() {
@@ -176,7 +164,6 @@ void TrialKiller::update(Event* event) {
 
 SimpleToneOutputer::SimpleToneOutputer(std::string port, std::map<std::string, int> attributes) : Outputer(NULL, port, attributes) {
 	int numSamples = static_cast<int>(SAMPLE_RATE * attributes[DURATION_PARAM] / 1000);
-	numSamples /= 2;
 	WAVHeader header;
 	header.chunkSize = 36 + numSamples * sizeof(short);
 	header.subchunk2Size = numSamples * sizeof(short);
@@ -212,7 +199,7 @@ void SimpleToneOutputer::output() {
 	auto start_time = std::chrono::high_resolution_clock::now();
 	LogFileWriter::getInstance().write(OUTPUT_START_INDICATOR, getPort());
 	notifyListeners();
-	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < dur) {
+	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count() < _attributes[DURATION_PARAM]) {
 		continue;
 	}
 	LogFileWriter::getInstance().write(OUTPUT_FINISH_INDICATOR, getPort());
