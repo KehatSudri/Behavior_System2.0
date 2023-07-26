@@ -266,8 +266,8 @@ class BehaviorSystemModel:
         return self.db.insert_session(session_name, subject_id, experimenter_name, last_used, min_iti,
                                       max_iti, is_fixed_iti, max_trial_time, notes)
 
-    def insert_session_to_trials(self, session_name, trial_name):
-        return self.db.insert_session_to_trials(session_name, trial_name)
+    def insert_session_to_trials(self, session_id, trial_name):
+        return self.db.insert_session_to_trials(session_id, trial_name)
 
     def get_trials_names(self):
         return self.db.get_trial_names()
@@ -382,89 +382,6 @@ class BehaviorSystemModel:
                 chosen_tmp = tmp
         return chosen_tmp
 
-    def create_trial_list(self, trial_list: list):
-        trial_type_idx = 0
-        t_list = []
-        for t in trial_list:
-            t_name = list(t.keys())[0]
-            t_events = list(t.values())[0]
-            events = []
-            intervs = []
-            # find trial type
-            for i in range(len(self.trial_types)):
-                # if self.trial_types[i][1] == list(t.keys())[0]:
-                if self.trial_types[i][1] == t_name:
-                    trial_type_idx = i
-                    break
-            try:
-                for e_type, e_params in t_events.items():
-                    e_type = e_type.split("#")[0]
-                    # e_params = self.create_str_from_dict(e_params)
-                    if e_type == "interval":
-                        intervs.append((e_params["min"], e_params["max"]))
-                        continue
-                    else:
-                        e_params = create_str_from_dict(e_params)
-                    # create object of type e_type
-                    class_str = "Models.TrialEvents." + e_type
-                    try:
-                        module_path, class_name = class_str.rsplit('.', 1)
-                        module = import_module(module_path)
-                        kclass = getattr(module, class_name)
-                        event = kclass()
-                    except (ImportError, AttributeError) as e:
-                        raise ImportError(class_str)
-                    event.set_params(e_params)
-                    events.append(event)
-                    # set parameters
-            except Exception as e:  # didnt find a matching trial
-                pass
-            t_list.append(TrialModel(t_id=self.trial_types[trial_type_idx][0], name=self.trial_types[trial_type_idx][1],
-                                     events=events, inters=intervs))
-            # create a new trial of such type
-            # go over events and set parameters
-        return t_list
-
-    def delete_templates_by_subject_name(self, sub_name):
-        if self.session_templates is None:
-            self.get_templates_from_db()
-        relevant_sessions = self.db.get_all_sess_for_subject(sub_name)
-        # check for each session that it is not used for different subject
-        for sess in relevant_sessions:
-            found_another_subj = False
-            for subject in self.subject_sessions:
-                sub_id, sess_id, count, last_used = subject
-                # if not the current session, skip it
-                if sess_id != sess[0]:
-                    continue
-                # if different subject, then skip it.
-                if sub_id == sub_name:
-                    continue
-                if sub_id != sub_name:
-                    found_another_subj = True
-                    break
-            if found_another_subj:
-                # delete only the subject_session row
-                self.db.delete_subject_session(sub_name, sess[0])
-                pass
-            else:
-                self.delete_template_from_db_by_id(sess[0])
-
-    def delete_templates_by_experimenter_name(self, exp_name):
-        if self.session_templates is None:
-            self.get_templates_from_db()
-        # go over each template and delete it if matches experimenter_name
-        for tmp in self.session_templates:
-            t_sess_id, t_sess_name, t_exp_name, t_iti_type, t_iti_min, t_iti_max, t_iti_behave, t_end_def, t_end_val, t_trials_order, t_total, t_block_sizes, t_blocks_ord, t_rnd_rew, date = tmp
-            if t_exp_name == exp_name:
-                self.delete_template_from_db_by_id(t_sess_id)
-        # update the local data
-        self.get_templates_from_db()
-        pass
-
-    def delete_template_from_db_by_id(self, temp_id):
-        # maybe verify authorization before?
-        self.db.delete_template(temp_id)
 
     def insert_new_trial(self, name):
         self.db.insert_new_trial(name)

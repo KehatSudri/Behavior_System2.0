@@ -117,7 +117,6 @@ class CreateTrialTypeUi(object):
             self.preCondition_comboBox.addItems([current_event])
         if self.contingent_comboBox.count() >= 1:
             self.name_comboBox_handler()
-        self.isEndCondition.setChecked(False)
 
     def on_remove_click(self):
         is_not_empty = len(self.events_order) > 0
@@ -221,10 +220,7 @@ class CreateTrialTypeUi(object):
             self.conti_label.setEnabled(False)
             self.conti_radioButton.setEnabled(False)
             self.simple_radioButton.setChecked(True)
-            self.isEndCondition.setEnabled(True)
         else:
-            self.isEndCondition.setChecked(False)
-            self.isEndCondition.setEnabled(False)
             self.random_comboBox.setEnabled(True)
             self.random_comboBox.setEnabled(True)
             if self.contingent_comboBox.count() >= 1:

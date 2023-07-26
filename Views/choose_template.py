@@ -24,7 +24,7 @@ class ChooseTemplateUi(object):
         for subject in subjectsArray:
             related_sessions = db.get_sessions_by_subject(subject)
             self.subjects.add(subject)
-            self.templates[subject] = [subject + " " + x[0] for x in related_sessions]
+            self.templates[subject] = [subject + " " + x[1] + " " + str(x[0]) for x in related_sessions]
 
     def setup_ui(self, dialog, event_handler):
         self.get_all_templates()

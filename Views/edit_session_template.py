@@ -25,10 +25,10 @@ class EditSessionUi(object):
         self.formLayout = parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout')
         self.db = DB()
 
-    def setupUi(self, dialog, session_name):
+    def setupUi(self, dialog, session_id):
         uic.loadUi(get_ui_path('edit_session_template.ui'), dialog)
         self.trial_types_comboBox = dialog.findChild(QtWidgets.QComboBox, 'trial_types_comboBox')
-        trials = self.db.get_trial_name_by_session(session_name)
+        trials = self.db.get_trial_name_by_session(session_id)
         self.trial_types_comboBox.addItems([name[0] for name in trials])
         self.trial_types_comboBox.activated.connect(self.trial_types_click)
         self.trial_types_click(0)
@@ -102,7 +102,8 @@ class EditSessionUi(object):
             self.delete_params()
 
     def accept(self):
-        new_trial = self.parent.chosen_trial_type_name
+        # new_trial = self.parent.chosen_trial_type_name
+        new_trial=self.trial_types_comboBox.currentText()
         event_and_params = {}
         params = []
         for i in range(self.parent.add_window.findChild(QtWidgets.QFormLayout, 'formLayout').rowCount()):

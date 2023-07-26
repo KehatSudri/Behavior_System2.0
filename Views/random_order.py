@@ -94,6 +94,7 @@ class RandomOrderUi(object):
                 error_warning("Please enter only numbers")
                 return
         self.on_next_click(1)
+
         session_name = self.config_info[0]
         trials_in_session = self.config_info[1]
         is_fixed_iti = self.config_info[2]
@@ -118,7 +119,9 @@ class RandomOrderUi(object):
 
         with open(configs_path, "a") as file:
             db = DB()
+            print(session_name)
             max_session_time = db.get_max_trial_time(session_name)
+
             file.write(str(max_session_time[0]) + "\n")
 
             iti_vals = db.get_iti_vals(session_name)

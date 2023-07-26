@@ -90,20 +90,22 @@ class DB:
                        max_iti, is_fixed_iti, max_trial_time, notes):
         try:
             sql = """INSERT INTO sessions(name,subjectid,experimenter_name,last_used,min_iti,max_iti,is_fixed_iti,
-            max_trial_time,notes) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+            max_trial_time,notes) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id"""
             with self.conn.cursor() as cur:
                 cur.execute(sql, (
                     name, subjectid, experimenter_name, last_used, min_iti, max_iti, is_fixed_iti, max_trial_time,
                     notes))
                 self.conn.commit()
+                row_id= cur.fetchone()[0]
+            return row_id
         except Exception as e:
             self.conn.rollback()
             raise e
 
-    def insert_session_to_trials(self, session_name, trial_name):
-        sql = """INSERT INTO session_to_trials(session_name, trial_name) VALUES (%s,%s)"""
+    def insert_session_to_trials(self, session_id, trial_name):
+        sql = """INSERT INTO session_to_trials(session_id, trial_name) VALUES (%s,%s)"""
         with self.conn.cursor() as cur:
-            cur.execute(sql, (session_name, trial_name))
+            cur.execute(sql, (session_id, trial_name))
             self.conn.commit()
 
     def insert_new_trial(self, name):
@@ -268,9 +270,9 @@ class DB:
             trials_types_events = cur.fetchone()
         return trials_types_events
 
-    def get_trial_name_by_session(self, session):
+    def get_trial_name_by_session(self, session_id):
         with self.conn.cursor() as cur:
-            cur.execute(f"SELECT trial_name FROM session_to_trials  WHERE session_name = '{session}'")
+            cur.execute(f"SELECT trial_name FROM session_to_trials  WHERE session_id = '{session_id}'")
             trials = cur.fetchall()
         return trials
 
@@ -279,10 +281,9 @@ class DB:
             cur.execute(f"SELECT event_name FROM events_to_trials WHERE trial_name = '{trial}'")
             events = cur.fetchall()
         return events
-
-    def get_params_by_event_and_trial_name(self, event, trial):
+    def get_params_by_event_and_trial_name(self, event, trial,session_id):
         with self.conn.cursor() as cur:
-            cur.execute(f"SELECT params FROM events_to_trials WHERE event_name = '{event}' AND trial_name='{trial}' ")
+            cur.execute(f"SELECT params FROM session_trial_event_params WHERE event_name = '{event}' AND trial_name='{trial}'AND session_id={session_id}")
             params = cur.fetchall()
         return params
 
@@ -320,6 +321,8 @@ class DB:
     def delete_trial_type(self, name):
         with self.conn.cursor() as cur:
             cur.execute("DELETE FROM trials WHERE name = %s", (name,))
+            cur.execute(
+                "DELETE FROM sessions WHERE NOT EXISTS (SELECT session_id FROM session_to_trials WHERE session_id = sessions.id)")
             self.conn.commit()
 
     def is_random_event_in_a_given_trial(self, trial, event):
@@ -341,17 +344,6 @@ class DB:
             cur.execute(
                 "DELETE FROM sessions WHERE NOT EXISTS (SELECT session_name FROM session_to_trials WHERE session_name = sessions.name)")
             self.conn.commit()
-
-    def delete_template(self, temp_id):
-        cur = self.conn.cursor()
-        # delete session subjects
-        cur.execute("DELETE FROM subjectSession WHERE session_id=%s", (temp_id,))
-        # delete session trials
-        cur.execute("DELETE FROM sessionTrials WHERE session_id=%s", (temp_id,))
-        # delete session
-        cur.execute("DELETE FROM sessions WHERE session_id=%s", (temp_id,))
-        self.conn.commit()
-        cur.close()
 
     def get_iti_vals(self, session_name):
         with self.conn.cursor() as cur:
@@ -385,7 +377,7 @@ class DB:
 
     def get_sessions_by_subject(self, subject):
         with self.conn.cursor() as cur:
-            cur.execute(f"SELECT name FROM sessions WHERE subjectid='{subject}'")
+            cur.execute(f"SELECT id,name FROM sessions WHERE subjectid='{subject}'")
             sessions = cur.fetchall()
         return sessions
 
@@ -394,17 +386,15 @@ class DB:
             cur.execute(f"SELECT type FROM events WHERE name='{name}' AND type='Input'")
             isInput = cur.fetchone()
         return isInput is not None
-
-    def insert_params(self, trial_name, event_name, params):
+    def insert_params(self, trial_name, event_name, params,session_id):
+        sql = """INSERT INTO session_trial_event_params (session_id, trial_name,event_name ,params) VALUES (%s,%s,%s,%s)"""
         with self.conn.cursor() as cur:
-            sql = ("""UPDATE events_to_trials SET params=%s WHERE event_name=%s AND trial_name=%s""")
-            cur.execute(sql, (params, event_name, trial_name,))
+            cur.execute(sql, (session_id, trial_name,event_name ,params))
             self.conn.commit()
-            cur.close()
 
-    def get_template(self, session_name, subject):
+    def get_template(self, session_id, subject):
         with self.conn.cursor() as cur:
-            cur.execute(f"SELECT * FROM sessions WHERE name='{session_name}' AND subjectid='{subject}'")
+            cur.execute(f"SELECT * FROM sessions WHERE id='{session_id}' AND subjectid='{subject}'")
             template = cur.fetchall()
             return template
 
@@ -431,7 +421,7 @@ commands = (
 
     """CREATE TABLE IF NOT EXISTS public.sessions(
         id SERIAL PRIMARY KEY,
-        name VARCHAR(255) UNIQUE,
+        name VARCHAR(255) ,
         subjectID VARCHAR(100),
         experimenter_name VARCHAR(100),
         last_used DATE NOT NULL,
@@ -450,12 +440,19 @@ commands = (
         contingent_on VARCHAR(100),
         isRandom BOOLEAN,
         isEndCondition BOOLEAN,
-        preCondition VARCHAR(255),
-        params VARCHAR(255))""",
+        preCondition VARCHAR(255))""",
 
     """CREATE TABLE IF NOT EXISTS public.session_to_trials(
         id SERIAL PRIMARY KEY,
-        session_name VARCHAR(100) REFERENCES sessions(name),
+        session_id INTEGER REFERENCES sessions(id),
         trial_name VARCHAR(255) REFERENCES trials(name) ON DELETE CASCADE)""",
+
+    """CREATE TABLE IF NOT EXISTS public.session_trial_event_params(
+        id SERIAL PRIMARY KEY,
+        session_id INTEGER REFERENCES sessions(id),
+        trial_name VARCHAR(255) REFERENCES trials(name) ON DELETE CASCADE,
+        event_name VARCHAR(255) REFERENCES events(name) ON DELETE CASCADE,
+        params VARCHAR (255))""",
+
 
 )

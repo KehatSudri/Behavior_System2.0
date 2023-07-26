@@ -64,6 +64,7 @@ class EditTrialUi(object):
         main_layout.addWidget(self.buttonBox)
 
     def create_form(self):
+
         # get the chosen trial type and set it's parameters
         self.parent.selected_trial = self.parent.trials_tableWidget.currentRow()
         self.parent.chosen_trial_type_name = [*self.parent.trials_in_session[self.parent.selected_trial].keys()][0]

@@ -60,6 +60,7 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
                     file.write("1,")
                 else:
                     file.write("0,")
+                #----TODO---------
                 file.write(','.join(parameters) + "\n")
         for dep in dependencies_arr:
             preCond = db.getPreCondition(db.get_event_name_by_port_and_trial(dep.split(",")[0], trial_name)[0],trial_name)
@@ -90,5 +91,6 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
                 file.write("1,")
             else:
                 file.write("0,")
+            #TODO-----------
             file.write(','.join(parameters) + "\n")
         file.write("\n")

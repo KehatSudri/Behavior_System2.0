@@ -151,29 +151,14 @@ class BehaviorSystemViewModel:
     def get_end_def_list(self):
         return self.model.get_end_def_list()
 
-    def set_iti(self, type, min, max, behave):
-        self.model.set_iti(type, min, max, behave)
-
-    def set_end_def(self, description, value):
-        self.model.set_end_def(description, value)
-
-    def set_trials_list(self, trials):
-        self.model.set_trials_list(trials)
-
     def get_template_list_by_date_exp_sess_names(self):
         return self.model.get_template_list_by_date_exp_sess_names()
 
     def get_template_list_by_subject(self, sub_id):
         return self.model.get_template_list_by_subject(sub_id)
 
-    def get_data_for_template_id(self, sess_id):
-        return self.model.get_data_for_template_id(sess_id)
-
     def get_list_of_subjects(self):
         return self.model.get_list_of_subjects()
-
-    def create_trial_list(self, trial_list: list):
-        return self.model.create_trial_list(trial_list)
 
     def get_event_list_for_sess(self):
         return self.model.get_event_list_for_sess()
@@ -194,8 +179,8 @@ class BehaviorSystemViewModel:
         return self.model.insert_session_to_DB(session_name, subject_id, experimenter_name, last_used, min_iti,
                                                max_iti, is_fixed_iti, max_trial_time, notes)
 
-    def insert_session_to_trials(self, session_name, trial_name):
-        return self.model.insert_session_to_trials(session_name, trial_name)
+    def insert_session_to_trials(self, session_id, trial_name):
+        return self.model.insert_session_to_trials(session_id, trial_name)
 
     def insert_new_trial(self, name):
         self.model.insert_new_trial(name)
@@ -205,21 +190,8 @@ class BehaviorSystemViewModel:
         self.model.insert_new_events_to_trials(trial_name, event_name, is_contingent, contingent_on, isRandom,
                                                isEndCondition,preCondition)
 
-    def verify_trial_insert(self, name, events):
-        return self.model.verify_trial_insert(name, events)
-
-    # validate this
-    def update_trial_type(self, name, new_name, new_events):
-        self.model.update_trial_type(name, new_name, new_events)
-
     def delete_trial_type(self, name):
         return self.model.delete_trial_type(name)
-
-    def delete_templates_by_subject_name(self, sub_name):
-        self.model.delete_templates_by_subject_name(sub_name)
-
-    def delete_templates_by_experimenter_name(self, exp_name):
-        self.model.delete_templates_by_experimenter_name(exp_name)
 
     def is_contingent(self, event, trial):
         return self.model.is_contingent(event, trial)

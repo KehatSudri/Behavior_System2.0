@@ -27,6 +27,7 @@ def run_session_subprocess(command):
 
 class CreateSessionUi(object):
     def __init__(self, parent):
+        self.current_id = None
         self.add_ui = None
         self.add_window = None
         self.trials_ord_dialog_ui = None
@@ -183,7 +184,7 @@ class CreateSessionUi(object):
     def on_edit_click(self):
         self.add_window = QtWidgets.QDialog()
         self.add_ui = EditSessionUi(self)
-        self.add_ui.setupUi(self.add_window, self.session_name_te.toPlainText())
+        self.add_ui.setupUi(self.add_window, self.current_id)
         self.add_window.show()
 
     def deal_with_trial(self, treatment):
@@ -279,9 +280,9 @@ class CreateSessionUi(object):
         max_trial_time = self.max_trial_time.value()
         sessions_names = self.db.get_sessions_names()
         notes = self.notes
-        if session_name in ([x[0] for x in sessions_names]):
-            error_warning("Error: Session name already exists.")
-            return
+        # if session_name in ([x[0] for x in sessions_names]):
+        #     error_warning("Error: Session name already exists.")
+        #     return
         if session_name == "":
             error_warning("Please enter Session name")
             return
@@ -300,10 +301,9 @@ class CreateSessionUi(object):
         if self.max_trial_time.value() == 0:
             error_warning("Please fill max session duration")
             return
-
         if flag:  # only when flag=1 I want to insert information to DB
             try:
-                self.vm.insert_session_to_DB(
+                row_id=self.vm.insert_session_to_DB(
                     session_name,
                     subject_id,
                     experimenter_name,
@@ -318,16 +318,22 @@ class CreateSessionUi(object):
                 if "name" in msg:  # here I need to check if something was edit then to create new sesion on DB if no just continue
                     error_warning("Error: Session name already exists.")
                 return
-
             # insert to session to trials table
             for i in range(0, len(self.trials_in_session), 2):
-                self.vm.insert_session_to_trials(session_name, self.trials_in_session[i])
+                self.vm.insert_session_to_trials(row_id, self.trials_in_session[i])
+            table = self.trials_table
+            index = table.rowCount()
+            for i in range(0,index*2,2):
+                for event, parameters in self.trials_in_session[i+1].items():
+                    trial_name = self.trials_in_session[i]
+                    self.db.insert_params(trial_name, event, str(','.join(parameters)), row_id)
             return
         config_data = [session_name, self.trials_in_session, is_fixed_iti]
         self.trials_ord_dialog = QtWidgets.QDialog()
         self.trials_ord_dialog_ui = RandomOrderUi(self)
         self.trials_ord_dialog_ui.setupUi(self.trials_ord_dialog, self.on_session_define_event_handler, config_data,
                                           self.on_next_click)
+
         self.trials_ord_dialog.show()
 
     def set_trials_table(self):
@@ -361,8 +367,6 @@ class CreateSessionUi(object):
 
             table.setItem(index, 1, QtWidgets.QTableWidgetItem(params))
             self.db = DB()
-            trial_name = self.trials_in_session[index * 2]
-            self.db.insert_params(trial_name, event, str(','.join(parameters)))
 
     def on_back_click(self):
         self.parent.main_window.show()
@@ -371,12 +375,13 @@ class CreateSessionUi(object):
     def on_template_change_event_handler(self, template):
         if not template:
             return
-        subject, session_name = template.split()
+        subject, session_name ,session_id = template.split()
         self.trials_in_session = []
         trials_dict = {}
-        template_info = self.db.get_template(session_name, subject)
+        template_info = self.db.get_template(session_id, subject)
         var1, session_name, subject, exp_name, date, min_iti, max_iti, is_fixed_iti_type, max_trial_time, notes = \
             template_info[0]
+        self.current_id = session_id
         self.session_name_te.setText(session_name)
         self.subject_id_te.setText(subject)
         self.exp_name_te.setText(exp_name)
@@ -386,7 +391,7 @@ class CreateSessionUi(object):
         self.trials_table.setRowCount(0)
         self.max_trial_time.setValue(max_trial_time)
         self.notes = notes
-        trials = self.db.get_trial_name_by_session(session_name)
+        trials = self.db.get_trial_name_by_session(session_id)
         trials_ = [x[0] for x in trials]
         col1 = QtWidgets.QTableWidgetItem("Trial name")
         col2 = QtWidgets.QTableWidgetItem("parameters")
@@ -401,7 +406,7 @@ class CreateSessionUi(object):
             events = [x[0] for x in events]
             params = ""
             for event in events:
-                parameters = self.db.get_params_by_event_and_trial_name(event, trial)
+                parameters = self.db.get_params_by_event_and_trial_name(event, trial,session_id)
                 if parameters[0][0] is None:
                     continue
                 parameters = [x[0] for x in parameters]
