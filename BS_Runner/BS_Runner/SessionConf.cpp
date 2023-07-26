@@ -50,7 +50,7 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 	if (inputFile.is_open()) {
 		std::string line, delimiter = ",";
 		std::getline(inputFile, line);
-		setMaxSessionWaitTime(std::stoi(line));
+		setMaxSessionWaitTime(std::stod(line));
 		std::getline(inputFile, line);
 		std::stringstream ss(line);
 		std::string element;
@@ -104,7 +104,7 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 				std::getline(ss, element, ',');
 				_trials[_numOfTrials]._remainingRuns = std::stoi(element);
 				std::getline(ss, element, ',');
-				_trials[_numOfTrials].setMaxTrialWaitTime(std::stoi(element));
+				_trials[_numOfTrials].setMaxTrialWaitTime(std::stod(element));
 				if (_isSessionRandom) {
 					std::getline(ss, element, ',');
 					_trialProbabilities.push_back(stoi(element));
@@ -187,7 +187,7 @@ TaskHandle SessionConf::getInputTaskHandle() {
 	return _trials[_currentTrial].getInputTaskHandle();
 }
 
-int SessionConf::getMaxTrialWaitTime() {
+double SessionConf::getMaxTrialWaitTime() {
 	return _trials[_currentTrial].getMaxTrialWaitTime();
 }
 
@@ -323,21 +323,5 @@ void Trial::setDefaultState() {
 }
 
 Trial::~Trial() {
-	for (auto eve : _events) {
-		delete eve;
-	}
-	_events.clear();
-	for (auto rew : _rewardOutputers) {
-		delete rew;
-	}
-	_rewardOutputers.clear();
-	for (auto out : _environmentOutputer) {
-		delete out;
-	}
-	_environmentOutputer.clear();
-	for (auto out : _contingentOutputer) {
-		delete out;
-	}
-	_contingentOutputer.clear();
 	DAQmxClearTask(_inputTaskHandle);
 }

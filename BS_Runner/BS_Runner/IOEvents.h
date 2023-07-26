@@ -80,7 +80,6 @@ class EnvironmentOutputer {
 	Outputer* _outputer;
 public:
 	EnvironmentOutputer(Outputer* outputer) : _outputer(outputer) {}
-	~EnvironmentOutputer();
 	void output();
 };
 
@@ -97,7 +96,6 @@ public:
 			_outputer->updateMetPrecon(false);
 		}
 	}
-	~ContingentOutputer();
 	bool getGaveReward() { return _gaveReward; }
 	bool getMetPreCon() { return _outputer->getMetPreCon(); }
 	void updateRewardState(bool state) { _gaveReward = state; }
@@ -109,7 +107,6 @@ class SerialOutputer {
 	Outputer* _outputer;
 public:
 	SerialOutputer(Outputer* outputer) : _outputer(outputer) {}
-	~SerialOutputer();
 	void run();
 };
 

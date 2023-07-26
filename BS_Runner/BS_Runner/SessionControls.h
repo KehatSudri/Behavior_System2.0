@@ -4,11 +4,11 @@
 #include "SessionConf.h"
 
 public class SessionControls {
-	bool _isSessionRunning = false;
-	bool _isTrialRunning = false;
-	int _Outputing = 0;
-	bool _isPaused = false;
-	int _trialTimeoutIndicator;
+	bool _isSessionRunning;
+	bool _isTrialRunning;
+	int _Outputing;
+	bool _isPaused;
+	double _trialTimeoutIndicator;
 	double _sessionTimeoutIndicator;
 	std::chrono::duration<double> _elapsedTime;
 	std::chrono::time_point <std::chrono::steady_clock> _trialStartTime;
@@ -20,7 +20,12 @@ public class SessionControls {
 	bool isTrialRunning();
 	bool isSessionRunning();
 	std::string _sessionName;
-	SessionControls() {}
+	SessionControls() {
+		_isSessionRunning = false;
+		_isTrialRunning = false;
+		_Outputing = 0;
+		_isPaused = false;
+	}
 	~SessionControls() {}
 	SessionControls(const SessionControls&) = delete;
 	SessionControls& operator=(const SessionControls&) = delete;
