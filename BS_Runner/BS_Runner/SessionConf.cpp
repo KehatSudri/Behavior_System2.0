@@ -118,6 +118,14 @@ SessionConf::SessionConf(std::string path) : _numOfTrials(0), _validFlag(true) {
 				if (token2 == "True") { _trials[_numOfTrials]._trialKillers.push_back(name); }
 				break;
 			case NEW_OUTPUT_CASE:
+				// TODO test new logic
+				std::getline(inputFile, line);
+				token2 = line;
+				if (token2 == "True") {
+					std::stringstream ss(name);
+					std::getline(ss, element, ',');
+					_trials[_numOfTrials]._trialKillers.push_back(element);
+				}
 				std::getline(inputFile, line);
 				_trials[_numOfTrials]._outputPorts.push_back({ name ,getParams(line) });
 				break;
