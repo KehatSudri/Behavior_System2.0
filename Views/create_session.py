@@ -318,6 +318,7 @@ class CreateSessionUi(object):
                 if "name" in msg:  # here I need to check if something was edit then to create new sesion on DB if no just continue
                     error_warning("Error: Session name already exists.")
                 return
+            self.current_id=row_id
             # insert to session to trials table
             for i in range(0, len(self.trials_in_session), 2):
                 self.vm.insert_session_to_trials(row_id, self.trials_in_session[i])
@@ -406,8 +407,9 @@ class CreateSessionUi(object):
             events = [x[0] for x in events]
             params = ""
             for event in events:
+
                 parameters = self.db.get_params_by_event_and_trial_name(event, trial,session_id)
-                if parameters[0][0] is None:
+                if not parameters:
                     continue
                 parameters = [x[0] for x in parameters]
                 parameters_ar = [item.split(',') for item in parameters]
