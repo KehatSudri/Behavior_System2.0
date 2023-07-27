@@ -119,12 +119,9 @@ class RandomOrderUi(object):
 
         with open(configs_path, "a") as file:
             db = DB()
-            print(session_name)
-            max_session_time = db.get_max_trial_time(session_name)
-
+            max_session_time = db.get_max_trial_time(self.parent.current_id)
             file.write(str(max_session_time[0]) + "\n")
-
-            iti_vals = db.get_iti_vals(session_name)
+            iti_vals = db.get_iti_vals(self.parent.current_id)
             if is_fixed_iti:
                 file.write(str(iti_vals[0]) + ",")
             else:

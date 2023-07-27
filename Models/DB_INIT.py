@@ -342,18 +342,18 @@ class DB:
                 self.delete_trial_type(t)
             cur.execute("DELETE FROM events WHERE name =  %s ", (name,))
             cur.execute(
-                "DELETE FROM sessions WHERE NOT EXISTS (SELECT session_name FROM session_to_trials WHERE session_name = sessions.name)")
+                "DELETE FROM sessions WHERE NOT EXISTS (SELECT session_id FROM session_to_trials WHERE session_id = sessions.id)")
             self.conn.commit()
 
-    def get_iti_vals(self, session_name):
+    def get_iti_vals(self, session_id):
         with self.conn.cursor() as cur:
-            cur.execute(f"SELECT min_iti , max_iti FROM sessions WHERE name='{session_name}'")
+            cur.execute(f"SELECT min_iti , max_iti FROM sessions WHERE id={session_id}")
             vals = cur.fetchone()
         return vals
 
-    def get_max_trial_time(self, session_name):
+    def get_max_trial_time(self, session_id):
         with self.conn.cursor() as cur:
-            cur.execute(f"SELECT max_trial_time FROM sessions WHERE name='{session_name}'")
+            cur.execute(f"SELECT max_trial_time FROM sessions WHERE id={session_id}")
             max_trial_time = cur.fetchone()
         return max_trial_time
 

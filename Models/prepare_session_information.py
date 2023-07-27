@@ -50,6 +50,10 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
                     file.write(db.get_event_name_by_port_and_trial(port, trial_name)[0] + "\n")
                 else:
                     file.write(port + "\n")
+                file.write(
+                     str(
+                        db.isEndConditionEvent(db.get_event_name_by_port_and_trial(port, trial_name)[0], trial_name)[
+                            0]) + "\n")
                 parameters = trials_in_session[index + 1][db.get_event_name_by_port_and_trial(port, trial_name)[0]]
                 isReward = db.isReward(db.get_event_name_by_port_and_trial(port, trial_name)[0])
                 if isReward[0]:
@@ -60,7 +64,7 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
                     file.write("1,")
                 else:
                     file.write("0,")
-                #----TODO---------
+
                 file.write(','.join(parameters) + "\n")
         for dep in dependencies_arr:
             preCond = db.getPreCondition(db.get_event_name_by_port_and_trial(dep.split(",")[0], trial_name)[0],trial_name)
@@ -83,6 +87,10 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
                 db.is_random_event_in_a_given_trial(trial_name,
                                                     db.get_event_name_by_port_and_trial(dep.split(",")[0], trial_name)[
                                                         0])[0]
+            file.write(
+                str(
+                    db.isEndConditionEvent(db.get_event_name_by_port_and_trial(port, trial_name)[0], trial_name)[
+                        0]) + "\n")
             if isReward[0]:
                 file.write("1,")
             else:
@@ -91,6 +99,6 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
                 file.write("1,")
             else:
                 file.write("0,")
-            #TODO-----------
+
             file.write(','.join(parameters) + "\n")
         file.write("\n")
