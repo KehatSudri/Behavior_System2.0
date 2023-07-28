@@ -15,14 +15,16 @@ from Views.notes import NotesUi
 
 
 def run_session_subprocess(command):
-    subprocess.run(command)
-    session_config_path = get_file_path_from_configs("session_config.txt")
-    if os.path.isfile(session_config_path):
-        os.remove(session_config_path)
-    wav_files_path = get_default_wav_folder_path()
-    files = glob.glob(os.path.join(wav_files_path, '*.wav'))
-    for file in files:
-        os.remove(file)
+    try:
+        subprocess.run(command)
+    finally:
+        session_config_path = get_file_path_from_configs("session_config.txt")
+        if os.path.isfile(session_config_path):
+            os.remove(session_config_path)
+        wav_files_path = get_default_wav_folder_path()
+        files = glob.glob(os.path.join(wav_files_path, '*.wav'))
+        for file in files:
+            os.remove(file)
 
 
 class CreateSessionUi(object):
