@@ -56,7 +56,8 @@ class CreateTrialTypeUi(object):
         self.random_comboBox.setEnabled(False)
         self.conti_radioButton.setEnabled(False)
         self.conti_radioButton.toggled.connect(lambda: (
-            self.contingent_comboBox.setEnabled(True), self.conti_label.setEnabled(True),self.preCondition_comboBox.setEnabled(True),self.preCondi_label.setEnabled(True)))
+            self.contingent_comboBox.setEnabled(True), self.conti_label.setEnabled(True),
+            self.preCondition_comboBox.setEnabled(True), self.preCondi_label.setEnabled(True)))
         self.events_tableWidget.setColumnWidth(0, int(self.events_tableWidget.width() / 2))
         add_event_pushButton.clicked.connect(self.on_add_click)
         remove_event_pushButton.clicked.connect(self.on_remove_click)
@@ -127,7 +128,7 @@ class CreateTrialTypeUi(object):
             del self.events_order[chosen_row]
             del self.is_contingent_order[chosen_row]
             index = self.contingent_comboBox.findText(self.events_tableWidget.item(chosen_row, 0).text())
-            index2= self.preCondition_comboBox.findText(self.events_tableWidget.item(chosen_row, 0).text())
+            index2 = self.preCondition_comboBox.findText(self.events_tableWidget.item(chosen_row, 0).text())
             if index >= 0:
                 self.contingent_comboBox.removeItem(index)
                 self.preCondition_comboBox.removeItem(index2)
@@ -176,19 +177,21 @@ class CreateTrialTypeUi(object):
                     row_items.append(None)
 
             preCond = row_items[6]
-            if preCond=="None":
-                preCond=None
+            if preCond == "None":
+                preCond = None
 
             if row_items[1] == "Contingent":
+                print(row_items[5])
                 self.parent.vm.insert_new_events_to_trials(name, row_items[0], True, row_items[2],
-                                                           row_items[4] == "Random", False,preCond)
+                                                           row_items[4] == "Random", row_items[5] == "True", preCond)
             else:
                 if self.vm.is_input_event(row_items[0]):
                     self.parent.vm.insert_new_events_to_trials(name, row_items[0], False, None, None,
-                                                               row_items[5] == "True",None)
+                                                               row_items[5] == "True", None)
                 else:
                     self.parent.vm.insert_new_events_to_trials(name, row_items[0], False, None,
-                                                               row_items[4] == "Random", row_items[5] == "True",preCond)
+                                                               row_items[4] == "Random", row_items[5] == "True",
+                                                               preCond)
 
         msgBox.setText("The trial was created successfully!")
         msgBox.exec()
@@ -200,8 +203,6 @@ class CreateTrialTypeUi(object):
         self.preCondition_comboBox.clear()
         self.preCondition_comboBox.addItems(["None"])
         self.simple_radioButton.setChecked(True)
-
-
 
     def simple_event_handler(self):
         self.contingent_comboBox.setEnabled(False)
