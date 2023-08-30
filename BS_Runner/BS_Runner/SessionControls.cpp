@@ -13,7 +13,7 @@ void SessionControls::run(char* configFilePath) {
 	}
 
 	_conf = &conf;
-	_sessionTimeoutIndicator = _conf->getMaxSessionWaitTime();
+	_sessionTimeoutIndicator = _conf->getMaxSessionWaitTime() * 1000;
 	_sessionStartTime = std::chrono::high_resolution_clock::now();
 	do {
 		TaskHandle inputTaskHandle = conf.getInputTaskHandle();
@@ -23,7 +23,7 @@ void SessionControls::run(char* configFilePath) {
 		int32 read;
 		setIsTrialRuning(true);
 		setIsPaused(false);
-		_trialTimeoutIndicator = _conf->getMaxTrialWaitTime();
+		_trialTimeoutIndicator = _conf->getMaxTrialWaitTime() * 1000;
 		LogFileWriter::getInstance().write(TRIAL_START_INDICATOR, getCurrentRunningTrial());
 		_trialStartTime = std::chrono::high_resolution_clock::now();
 		for (auto envOutputer : conf.getEnvironmentOutputer()) {
@@ -48,7 +48,7 @@ void SessionControls::run(char* configFilePath) {
 }
 
 bool SessionControls::isTrialRunning() {
-	if (_isTrialRunning && std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - _trialStartTime).count() >= _trialTimeoutIndicator) {
+	if (_isTrialRunning && std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - _trialStartTime).count() >= _trialTimeoutIndicator) {
 		setIsTrialRuning(false);
 		LogFileWriter::getInstance().write(TRIAL_TIMEOUT_INDICATOR, "");
 	}
@@ -56,7 +56,7 @@ bool SessionControls::isTrialRunning() {
 }
 
 bool SessionControls::isSessionRunning() {
-	bool isSessionTimeout = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - _sessionStartTime).count() >= _sessionTimeoutIndicator;
+	bool isSessionTimeout = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - _sessionStartTime).count() >= _sessionTimeoutIndicator;
 	if (isSessionTimeout){
 		LogFileWriter::getInstance().write(SESSION_TIMEOUT_INDICATOR, "");
 		return false;
