@@ -51,7 +51,7 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
                 else:
                     file.write(port + "\n")
                 file.write(
-                     str(
+                    str(
                         db.isEndConditionEvent(db.get_event_name_by_port_and_trial(port, trial_name)[0], trial_name)[
                             0]) + "\n")
                 parameters = trials_in_session[index + 1][db.get_event_name_by_port_and_trial(port, trial_name)[0]]
@@ -67,10 +67,12 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
 
                 file.write(','.join(parameters) + "\n")
         for dep in dependencies_arr:
-            preCond = db.getPreCondition(db.get_event_name_by_port_and_trial(dep.split(",")[0], trial_name)[0],trial_name)
-            preCond=preCond[0][0]
-            if "Tone" in db.get_event_name_by_port_and_trial(dep.split(",")[1],trial_name)[0]:
-                dep = dep.split(",")[0]+",Tone"
+            port = dep.split(",")[0]
+            preCond = db.getPreCondition(db.get_event_name_by_port_and_trial(port, trial_name)[0],
+                                         trial_name)
+            preCond = preCond[0][0]
+            if "Tone" in db.get_event_name_by_port_and_trial(dep.split(",")[1], trial_name)[0]:
+                dep = port + ",Tone"
             if not preCond:
                 file.write(dep + ",None\n")
             else:
@@ -78,14 +80,14 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
                     file.write(dep + "," + preCond + "\n")
                 else:
                     preCond_port = db.get_port_by_event_name_and_trial(preCond, trial_name)[0]
-                    file.write(dep + ","+preCond_port+"\n")
+                    file.write(dep + "," + preCond_port + "\n")
 
             parameters = trials_in_session[index + 1][
-                db.get_event_name_by_port_and_trial(dep.split(",")[0], trial_name)[0]]
-            isReward = db.isReward(db.get_event_name_by_port_and_trial(dep.split(",")[0], trial_name)[0])
+                db.get_event_name_by_port_and_trial(port, trial_name)[0]]
+            isReward = db.isReward(db.get_event_name_by_port_and_trial(port, trial_name)[0])
             isRandom = \
                 db.is_random_event_in_a_given_trial(trial_name,
-                                                    db.get_event_name_by_port_and_trial(dep.split(",")[0], trial_name)[
+                                                    db.get_event_name_by_port_and_trial(port, trial_name)[
                                                         0])[0]
             file.write(
                 str(

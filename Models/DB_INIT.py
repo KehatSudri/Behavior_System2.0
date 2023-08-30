@@ -146,8 +146,8 @@ class DB:
         with self.conn.cursor() as cur:
             sql = """SELECT isendcondition FROM events_to_trials WHERE event_name=%s AND trial_name=%s"""
             cur.execute(sql, (event_name, trial_name))
-            isEndConditionEvent = cur.fetchone()
-        return isEndConditionEvent
+            isEndCondition = cur.fetchone()
+        return isEndCondition
 
     def insert_event(self, event_type, parameters=None):
         sql = """INSERT INTO events(event_type, parameters) VALUES (%s,%s) ON CONFLICT DO NOTHING RETURNING event_id"""
