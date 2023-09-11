@@ -101,6 +101,6 @@ def prepare_session_information(ports, dependencies, trial_name, index, trials_i
                 file.write("1,")
             else:
                 file.write("0,")
-
+            print(parameters)
             file.write(','.join(parameters) + "\n")
         file.write("\n")

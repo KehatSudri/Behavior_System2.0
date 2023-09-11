@@ -328,6 +328,7 @@ class CreateSessionUi(object):
             index = table.rowCount()
             for i in range(0,index*2,2):
                 for event, parameters in self.trials_in_session[i+1].items():
+                    print(parameters)
                     trial_name = self.trials_in_session[i]
                     self.db.insert_params(trial_name, event, str(','.join(parameters)), row_id)
             return
@@ -380,7 +381,6 @@ class CreateSessionUi(object):
             return
         subject, session_name ,session_id = template.split()
         self.trials_in_session = []
-        trials_dict = {}
         template_info = self.db.get_template(session_id, subject)
         var1, session_name, subject, exp_name, date, min_iti, max_iti, is_fixed_iti_type, max_trial_time, notes = \
             template_info[0]
@@ -401,6 +401,7 @@ class CreateSessionUi(object):
         self.trials_table.setHorizontalHeaderItem(0, col1)
         self.trials_table.setHorizontalHeaderItem(1, col2)
         for trial in trials_:
+            trials_dict = {}
             table = self.trials_table
             index = table.rowCount()
             table.insertRow(index)
@@ -409,7 +410,6 @@ class CreateSessionUi(object):
             events = [x[0] for x in events]
             params = ""
             for event in events:
-
                 parameters = self.db.get_params_by_event_and_trial_name(event, trial,session_id)
                 if not parameters:
                     continue
@@ -454,7 +454,7 @@ class CreateSessionUi(object):
 
     def on_session_define_event_handler(self):
         config_path = get_file_path_from_configs('session_config.txt')
-        bs_runner_path = r"BS_Runner/BS_Runner.exe"
+        bs_runner_path = r"BS_Runner/Debug/BS_Runner.exe"
         log_path = self.vm.model.logs_path
         command = [bs_runner_path, config_path, self.session_name_te.toPlainText(), log_path,
                    self.subject_id_te.toPlainText(), self.exp_name_te.toPlainText()]
