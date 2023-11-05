@@ -61,9 +61,10 @@ void LogFileWriter::write(int indicator, std::string port) {
 	default:
 		message << " Undefined indicator at: ";
 		break;
+
 	}
 
-	message << std::put_time(std::localtime(&now_c), "%T") << "." << std::setfill('0') << std::setw(6) << ms.count() << std::endl;
+	message << " MIN_THRESHOLD: " << c << std::put_time(std::localtime(&now_c), "%T") << "." << std::setfill('0') << std::setw(6) << ms.count() << std::endl;
 	file << port << message.str();
 	file.close();
 }
