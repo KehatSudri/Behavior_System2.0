@@ -15,6 +15,7 @@ public class LogFileWriter {
 	std::string _experimenterName;
 	std::string _dir;
 	std::string _logFileName;
+
 	LogFileWriter() {}
 	~LogFileWriter() {}
 	LogFileWriter(const LogFileWriter&) = delete;
@@ -29,7 +30,7 @@ public:
 	void setSubjectId(std::string subjectId) { _subjectId = subjectId; }
 	void setExperimenterMame(std::string experimenterMame) { _experimenterName = experimenterMame; }
 	void createLogFile();
-	void write(int indicator, std::string port);
+	void write(int indicator, const std::string& port);
 };
 
 #endif // __LogFileWriter__
