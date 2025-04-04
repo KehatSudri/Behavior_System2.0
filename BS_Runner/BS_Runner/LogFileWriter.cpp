@@ -5,10 +5,6 @@
 #include <iostream>
 
 void LogFileWriter::createLogFile() {
-	//std::ofstream MyFile("C:\\Users\\user\\Desktop\\gagaGugu");
-	//MyFile << "Hello world";
-	//MyFile.close();
-	//return;
 	if (!_sessionName.empty()) {
 		std::time_t now_c = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 		std::stringstream ss;
@@ -34,6 +30,8 @@ void LogFileWriter::write(int indicator, const std::string& port) {
 	if (!_logFile.is_open()) {
 		return;
 	}
+
+	EnterCriticalSection(&_criticalSection);
 
 	auto now = std::chrono::system_clock::now();
 	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
@@ -80,4 +78,6 @@ void LogFileWriter::write(int indicator, const std::string& port) {
 
 	message << std::put_time(std::localtime(&now_c), "%T") << "." << std::setfill('0') << std::setw(6) << ms.count() << std::endl;
 	_logFile << port << message.str();
+
+	LeaveCriticalSection(&_criticalSection);
 }

@@ -34,10 +34,7 @@ public:
 		static SessionControls instance;
 		return instance;
 	}
-	void temp(System::Action<System::String^>^ kak) {
-		System::String^ currentTrialName = gcnew System::String(_currentTrialName);
-		kak(currentTrialName);
-	}
+
 	void startSession(char* configFilePath);
 	void pauseSession();
 	void resumeSession();
