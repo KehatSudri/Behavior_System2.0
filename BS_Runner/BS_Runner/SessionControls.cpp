@@ -69,6 +69,9 @@ bool SessionControls::isSessionRunning() {
 }
 
 void SessionControls::startSession(char* configFilePath) {
+	//LogFileWriter::getInstance().createLogFile();
+	//MessageBox::Show("hello world");
+	//return;
 	if (_isSessionRunning) return;
 	if (!configFilePath) {
 		MessageBox::Show(CONFIGURATION_FILE_ERROR_MESSAGE);

@@ -5,18 +5,21 @@
 #include <iostream>
 
 void LogFileWriter::createLogFile() {
+	//std::ofstream MyFile("C:\\Users\\user\\Desktop\\gagaGugu");
+	//MyFile << "Hello world";
+	//MyFile.close();
+	//return;
 	if (!_sessionName.empty()) {
 		std::time_t now_c = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 		std::stringstream ss;
 		ss << std::put_time(std::localtime(&now_c), "-%d-%m-%Y-%T");
 		std::string time = ss.str();
 		std::replace(time.begin(), time.end(), ':', ';');
-		_logFileName = _dir + "\\" + _experimenterMame + "_" + _subjectId + "_" + _sessionName + "_" + time + ".txt";
+		_logFileName = _dir + "\\" + _experimenterName + "_" + _subjectId + "_" + _sessionName + "_" + time + ".txt";
 		std::ofstream MyFile(_logFileName);
 		MyFile.close();
 	}
 }
-
 
 void LogFileWriter::write(int indicator, std::string port) {
 	std::ofstream file(_logFileName, std::ios::app);
@@ -61,10 +64,9 @@ void LogFileWriter::write(int indicator, std::string port) {
 	default:
 		message << " Undefined indicator at: ";
 		break;
-
 	}
 
-	message << " MIN_THRESHOLD: " << c << std::put_time(std::localtime(&now_c), "%T") << "." << std::setfill('0') << std::setw(6) << ms.count() << std::endl;
+	message << " MIN_THRESHOLD: " << std::put_time(std::localtime(&now_c), "%T") << "." << std::setfill('0') << std::setw(6) << ms.count() << std::endl;
 	file << port << message.str();
 	file.close();
 }
