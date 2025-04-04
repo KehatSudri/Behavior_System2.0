@@ -13,16 +13,28 @@ void LogFileWriter::createLogFile() {
 		std::time_t now_c = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 		std::stringstream ss;
 		ss << std::put_time(std::localtime(&now_c), "-%d-%m-%Y-%T");
-		std::string time = ss.str();
-		std::replace(time.begin(), time.end(), ':', ';');
-		_logFileName = _dir + "\\" + _experimenterName + "_" + _subjectId + "_" + _sessionName + "_" + time + ".txt";
-		std::ofstream MyFile(_logFileName);
-		MyFile.close();
+
+		std::string timeStr = ss.str();
+		std::replace(timeStr.begin(), timeStr.end(), ':', ';');
+
+		_logFileName = _dir + "\\" + _experimenterName + "_" + _subjectId + "_" + _sessionName + "_" + timeStr + ".txt";
+
+		if (_logFile.is_open()) {
+			_logFile.close();
+		}
+
+		_logFile.open(_logFileName, std::ios::out);
+		if (!_logFile) {
+			std::cerr << "Failed to create log file: " << _logFileName << std::endl;
+		}
 	}
 }
 
 void LogFileWriter::write(int indicator, const std::string& port) {
-	std::ofstream file(_logFileName, std::ios::app);
+	if (!_logFile.is_open()) {
+		return;
+	}
+
 	auto now = std::chrono::system_clock::now();
 	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
 	auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
@@ -66,7 +78,6 @@ void LogFileWriter::write(int indicator, const std::string& port) {
 		break;
 	}
 
-	message << " MIN_THRESHOLD: " << std::put_time(std::localtime(&now_c), "%T") << "." << std::setfill('0') << std::setw(6) << ms.count() << std::endl;
-	file << port << message.str();
-	file.close();
+	message << std::put_time(std::localtime(&now_c), "%T") << "." << std::setfill('0') << std::setw(6) << ms.count() << std::endl;
+	_logFile << port << message.str();
 }

@@ -16,8 +16,15 @@ public class LogFileWriter {
 	std::string _dir;
 	std::string _logFileName;
 
+	std::ofstream _logFile;
+
 	LogFileWriter() {}
-	~LogFileWriter() {}
+	~LogFileWriter() {
+		if (_logFile.is_open()) {
+			_logFile.close();
+		}
+	}
+
 	LogFileWriter(const LogFileWriter&) = delete;
 	LogFileWriter& operator=(const LogFileWriter&) = delete;
 public:
@@ -29,6 +36,7 @@ public:
 	void setLogDirectory(std::string dir) { _dir = dir; }
 	void setSubjectId(std::string subjectId) { _subjectId = subjectId; }
 	void setExperimenterMame(std::string experimenterMame) { _experimenterName = experimenterMame; }
+
 	void createLogFile();
 	void write(int indicator, const std::string& port);
 };
